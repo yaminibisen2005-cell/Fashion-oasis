@@ -1,0 +1,586 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap");
+
+/* ==========================
+   SPECIAL OFFER SECTION
+========================== */
+
+.special-offer{
+    padding:100px 0;
+    background:#FFF8FA;
+}
+
+/* ==========================
+   BANNER
+========================== */
+
+.offer-banner{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:16/5;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    /* box-shadow:0 25px 60px rgba(0,0,0,.08); */
+
+}
+
+/* ==========================
+   BACKGROUND IMAGE
+========================== */
+
+.offer-bg{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+/* ==========================
+   LEFT OVERLAY
+========================== */
+
+.offer-overlay{
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    width:36%;
+
+    height:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+     align-items:flex-start;
+
+    padding:45px 55px;
+    background:linear-gradient(
+        90deg,
+        rgba(255,255,255,.95) 0%,
+        rgba(255,255,255,.82) 45%,
+        rgba(255,255,255,.15) 100%
+    );
+
+}
+
+/* ==========================
+   TAG
+========================== */
+
+.offer-tag{
+
+    display:inline-block;
+
+    margin-bottom:18px;
+
+    color:#EF6F8F;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    letter-spacing:4px;
+
+    font-family:"Poppins",sans-serif;
+
+}
+
+/* ==========================
+   HEADING
+========================== */
+
+.offer-overlay h2{
+
+    font-family:"Playfair Display",serif;
+
+    font-size:52px;
+
+    line-height:1.12;
+
+    color:#34211D;
+
+    margin-bottom:18px;
+
+}
+
+/* ==========================
+   DISCOUNT
+========================== */
+
+.offer-overlay h3{
+
+    font-family:"Poppins",sans-serif;
+
+    font-size:28px;
+
+    font-weight:500;
+
+    color:#555;
+
+    margin-bottom:18px;
+
+}
+
+.offer-overlay h3 span{
+
+    color:#EF6F8F;
+
+    font-size:52px;
+
+    font-weight:700;
+
+}
+
+/* ==========================
+   DESCRIPTION
+========================== */
+
+.offer-overlay p{
+
+    max-width:330px;
+
+    font-family:"Poppins",sans-serif;
+
+    font-size:16px;
+
+    color:#666;
+
+    line-height:1.8;
+
+    margin-bottom:35px;
+
+}
+/* ==========================
+   SHOP BUTTON
+========================== */
+
+.offer-btn{
+
+    width:220px;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#EF6F8F,#D9557E);
+
+    color:#fff;
+
+    font-family:"Poppins",sans-serif;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+    cursor:pointer;
+    margin-top:20px;
+
+    transition:.35s ease;
+
+    box-shadow:0 15px 35px rgba(239,111,143,.25);
+
+}
+
+.offer-btn:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 25px 45px rgba(239,111,143,.35);
+
+}
+
+.offer-btn svg{
+
+    transition:.35s;
+
+}
+
+.offer-btn:hover svg{
+
+    transform:translateX(6px);
+
+}
+
+/* ==========================
+   FEATURES
+========================== */
+
+.offer-features{
+
+    display:flex;
+
+    gap:35px;
+
+    margin-top:45px;
+
+    flex-wrap:wrap;
+
+}
+
+.feature-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.feature-item svg{
+
+    width:46px;
+
+    height:46px;
+
+    padding:12px;
+
+    border-radius:50%;
+
+    background:#FFF2F6;
+
+    color:#EF6F8F;
+
+    transition:.35s;
+
+}
+
+.feature-item span{
+
+    font-family:"Poppins",sans-serif;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    color:#555;
+
+}
+
+.feature-item:hover svg{
+
+    background:#EF6F8F;
+
+    color:#fff;
+
+    transform:rotate(10deg);
+
+}
+
+/* ==========================
+   IMAGE HOVER
+========================== */
+
+.offer-bg{
+     width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    object-position:center;
+
+    transition:.7s ease;
+
+}
+
+.offer-banner:hover .offer-bg{
+
+    transform:scale(1.05);
+
+}
+
+/* ==========================
+   PREMIUM SHADOW
+========================== */
+
+.offer-banner{
+
+    transition:.4s;
+
+}
+
+.offer-banner:hover{
+
+    box-shadow:0 30px 70px rgba(0,0,0,.12);
+
+}
+/* ====================================
+   RESPONSIVE DESIGN
+==================================== */
+
+/* ---------- Laptop ---------- */
+
+@media (max-width:1200px){
+
+.offer-overlay{
+
+    width:48%;
+
+    padding:45px;
+
+}
+
+.offer-overlay h2{
+
+    font-size:48px;
+
+}
+
+.offer-overlay h3{
+
+    font-size:28px;
+
+}
+
+.offer-overlay h3 span{
+
+    font-size:46px;
+
+}
+
+.offer-overlay p{
+
+    font-size:15px;
+
+}
+
+.offer-features{
+
+    gap:22px;
+
+}
+
+}
+
+
+/* ---------- Tablet ---------- */
+
+@media (max-width:992px){
+
+.special-offer{
+
+    padding:80px 0;
+
+}
+
+.offer-banner{
+
+    aspect-ratio:auto;
+
+    min-height:700px;
+
+}
+
+.offer-bg{
+
+    object-position:right center;
+
+}
+
+.offer-overlay{
+
+    width:100%;
+
+    background:linear-gradient(
+        180deg,
+        rgba(255,255,255,.95) 0%,
+        rgba(255,255,255,.82) 45%,
+        rgba(255,255,255,.20) 100%
+    );
+
+    padding:50px;
+
+}
+
+.offer-overlay h2{
+
+    font-size:42px;
+
+}
+
+.offer-overlay h3{
+
+    font-size:26px;
+
+}
+
+.offer-overlay h3 span{
+
+    font-size:40px;
+
+}
+
+.offer-features{
+
+    margin-top:30px;
+
+}
+
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width:768px){
+
+.special-offer{
+
+    padding:60px 0;
+
+}
+
+.offer-banner{
+
+    border-radius:20px;
+
+    min-height:620px;
+
+}
+
+.offer-overlay{
+
+    padding:30px;
+
+    justify-content:flex-start;
+
+    padding-top:50px;
+
+}
+
+.offer-tag{
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+}
+
+.offer-overlay h2{
+
+    font-size:30px;
+
+}
+
+.offer-overlay h3{
+
+    font-size:22px;
+
+}
+
+.offer-overlay h3 span{
+
+    font-size:34px;
+
+}
+
+.offer-overlay p{
+
+    font-size:14px;
+
+    line-height:1.7;
+
+}
+
+.offer-btn{
+
+    width:100%;
+
+    max-width:230px;
+
+    height:52px;
+
+    font-size:15px;
+
+}
+
+.offer-features{
+
+    gap:15px;
+
+}
+
+.feature-item{
+
+    width:100%;
+
+}
+
+.feature-item svg{
+
+    width:42px;
+
+    height:42px;
+
+}
+
+}
+
+
+/* ---------- Small Mobile ---------- */
+
+@media (max-width:480px){
+
+.offer-overlay{
+
+    padding:22px;
+
+}
+
+.offer-overlay h2{
+
+    font-size:26px;
+
+}
+
+.offer-overlay h3 span{
+
+    font-size:30px;
+
+}
+
+.offer-btn{
+
+    max-width:200px;
+
+    height:48px;
+
+}
+
+.feature-item span{
+
+    font-size:13px;
+
+}
+
+}

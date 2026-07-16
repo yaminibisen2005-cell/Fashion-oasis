@@ -1,0 +1,468 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Allura&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  
+    padding-top:70px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #fff8f6;
+}
+
+/* ============================
+   Swiper Container
+============================ */
+
+.hero-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================
+   Banner
+============================ */
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ============================
+   Overlay
+============================ */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 250, 248, 0.94) 0%,
+    rgba(255, 247, 245, 0.80) 28%,
+    rgba(255, 243, 242, 0.25) 58%,
+    rgba(255, 243, 242, 0) 100%
+  );
+  z-index: 2;
+}
+
+/* ============================
+   Container
+============================ */
+
+.hero .container {
+  position: relative;
+  z-index: 5;
+  max-width: 1350px;
+}
+
+.hero-row {
+  height: 100vh;
+  align-items: center;
+}
+
+/* ============================
+   Left Content
+============================ */
+
+.hero-content {
+  margin-top: 20px;
+  width: 520px;
+  margin-top: -80px;
+  animation: fadeLeft 1s ease;
+}
+
+@keyframes fadeLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-section {
+  padding-top: 90px;
+}
+
+.hero-tag {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.hero-tag span {
+  font-size: 15px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: #ef6f8f;
+}
+
+.hero-tag .line {
+  width: 90px;
+  height: 2px;
+  background: #d4a04b;
+}
+
+.hero-tag svg {
+  font-size: 18px;
+  color: #d4a04b;
+}
+
+.hero h1 {
+  font-family: "DM Serif Display", serif;
+  font-size: 110px;
+  font-weight: 400;
+  line-height: 0.85;
+  color: #34211d;
+  margin-bottom: 18px;
+}
+
+.hero h1 span {
+  display: block;
+  margin-top: 18px;
+  font-family: "Allura", cursive;
+  font-size: 120px;
+  color: #d39c42;
+  font-weight: 400;
+}
+
+.hero p {
+  margin-top: 30px;
+  font-family: "Poppins", sans-serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 40px;
+  color: #555;
+  max-width: 500px;
+}
+
+/* ============================
+   BUTTON
+============================ */
+
+.hero button {
+  margin-top: 40px;
+  border: none;
+  outline: none;
+  background: linear-gradient(90deg, #ef6f8f, #ef839d);
+  color: #fff;
+  padding: 18px 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  transition: 0.35s;
+  box-shadow: 0 18px 35px rgba(239, 111, 143, 0.35);
+}
+
+.hero button:hover {
+  transform: translateY(-5px);
+  background: linear-gradient(90deg, #e65c7e, #eb6f8d);
+  box-shadow: 0 25px 40px rgba(239, 111, 143, 0.45);
+}
+
+.hero button svg {
+  font-size: 18px;
+}
+
+/* ============================
+   FEATURES
+============================ */
+
+.hero-features {
+  display: flex;
+  align-items: center;
+  gap: 55px;
+  margin-top: 70px;
+}
+
+.hero-features > div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.hero-features svg {
+  font-size: 34px;
+  color: #ef6f8f;
+}
+
+.hero-features h6 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #2e2e2e;
+  font-family: "Poppins", sans-serif;
+}
+
+.hero-features small {
+  display: block;
+  margin-top: 3px;
+  color: #777;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ============================
+   Swiper Navigation
+============================ */
+
+.swiper-button-prev,
+.swiper-button-next {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: #d4a04b;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #fff;
+  color: #ef6f8f;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.swiper-button-prev {
+  left: 30px;
+}
+
+.swiper-button-next {
+  right: 30px;
+}
+
+/* ============================
+   Swiper Pagination
+============================ */
+
+.swiper-pagination {
+  bottom: 30px !important;
+}
+
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: #d4a04b;
+  width: 35px;
+  border-radius: 6px;
+}
+
+/* ============================
+   RESPONSIVE TABLET
+============================ */
+
+@media (max-width: 992px) {
+  .hero {
+    height: auto;
+    padding: 150px 0 80px;
+  }
+
+  .hero-swiper {
+    height: auto;
+  }
+
+  .hero-slide {
+    height: auto;
+  }
+
+  .hero-row {
+    height: auto;
+  }
+
+  .hero-content {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-tag {
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: 72px;
+  }
+
+  .hero h1 span {
+    font-size: 82px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    line-height: 32px;
+    margin: auto;
+    margin-top: 25px;
+  }
+
+  .hero button {
+    margin: 35px auto 0;
+  }
+
+  .hero-features {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 35px;
+    margin-top: 50px;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 250, 248, 0.95) 0%,
+      rgba(255, 248, 246, 0.82) 22%,
+      rgba(255, 246, 244, 0.45) 45%,
+      rgba(255, 246, 244, 0.10) 70%,
+      transparent 100%
+    );
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    font-size: 16px;
+  }
+
+  .swiper-button-prev {
+    left: 15px;
+  }
+
+  .swiper-button-next {
+    right: 15px;
+  }
+}
+
+/* ============================
+   MOBILE
+============================ */
+
+@media (max-width: 576px) {
+  .hero {
+    padding: 120px 20px 60px;
+  }
+
+  .hero-content {
+    width: 100%;
+  }
+
+  .hero .container {
+    max-width: 1450px;
+  }
+
+  .hero h1 {
+    font-size: 50px;
+  }
+
+  .hero h1 span {
+    font-size: 58px;
+  }
+
+  .hero p {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .hero button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-features {
+    flex-direction: column;
+    gap: 22px;
+    align-items: flex-start;
+    margin-top: 40px;
+  }
+
+  .hero-features svg {
+    font-size: 28px;
+  }
+
+  .hero-tag span {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .hero-tag .line {
+    width: 50px;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 35px;
+    height: 35px;
+  }
+
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    font-size: 14px;
+  }
+
+  .swiper-button-prev {
+    left: 10px;
+  }
+
+  .swiper-button-next {
+    right: 10px;
+  }
+
+  .swiper-pagination {
+    bottom: 20px !important;
+  }
+
+  .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 30px;
+  }
+}
