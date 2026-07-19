@@ -11,3 +11,35 @@ body {
   color: #3E2C1C;
   font-family: 'Poppins', sans-serif;
 }
+
+:root{
+--primary:#C56A6A;
+--primary-dark:#B75555;
+--background:#FFFDFC;
+--light:#FDF5F5;
+--text:#3D2D2D;
+--border:#E8DADA;
+--rating:#FDBA12;
+--success:#3FAF5A;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:var(--background);
+color:var(--text);
+}
+h1,h2,h3,h4{
+font-family:'Playfair Display',serif;
+}
+a{
+text-decoration:none;
+color:inherit;
+}
+img{
+width:100%;
+display:block;
+}
+
+button{
+cursor:pointer;
+}
