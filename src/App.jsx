@@ -10,6 +10,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import Payment from "./pages/Payment/Payment";
 import ThankYou from "./pages/ThankYou/ThankYou";
 import TrackOrder from "./pages/TrackOrder/TrackOrder";
+import AdminLayout from "./pages/Admin/AdminLayout";
 
 function App() {
   return (
@@ -25,10 +26,12 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/admin/*" element={<AdminLayout />} />
         </Routes>
       </Router>
     </ShopProvider>
   );
 }
 
-export default App;
+export default App;
+
