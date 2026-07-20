@@ -1,0 +1,97 @@
+.about-hero{
+    background:#FFFDFD;
+    padding:90px 0;
+}
+
+.hero-tag{
+    display:inline-block;
+    background:#FFEFF4;
+    color:#EF6F8F;
+    padding:10px 22px;
+    border-radius:30px;
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+.hero-title{
+    font-family:'Cormorant Garamond',serif;
+    color:#352525;
+    font-size:64px;
+    font-weight:700;
+    line-height:1.1;
+    margin-bottom:25px;
+}
+
+.hero-title span{
+    color:#EF6F8F;
+}
+
+.hero-text{
+    font-family:'Poppins',sans-serif;
+    color:#666666;
+    font-size:17px;
+    line-height:1.9;
+    margin-bottom:35px;
+}
+
+.hero-btn{
+    background:#EF6F8F;
+    color:white;
+    border:none;
+    padding:15px 40px;
+    border-radius:30px;
+    font-family:'Poppins',sans-serif;
+    font-size:16px;
+    font-weight:600;
+    transition:.3s;
+    box-shadow:0 12px 25px rgba(239,111,143,.25);
+}
+
+.hero-btn:hover{
+    background:#D4AF37;
+    transform:translateY(-3px);
+}
+
+.hero-image{
+    max-width:90%;
+    border-radius:30px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+/*==========================
+      RESPONSIVE
+==========================*/
+
+@media(max-width:992px){
+
+.hero-title{
+    font-size:48px;
+}
+
+.about-hero{
+    text-align:center;
+}
+
+.hero-image{
+    margin-top:50px;
+}
+
+}
+
+@media(max-width:768px){
+
+.hero-title{
+    font-size:40px;
+}
+
+.hero-text{
+    font-size:16px;
+}
+
+.hero-btn{
+    width:100%;
+}
+
+}

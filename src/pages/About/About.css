@@ -1,0 +1,409 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap");
+
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#FFFDFD;
+    font-family:'Poppins',sans-serif;
+    color:#666666;
+}
+
+.about-page{
+    background:#FFFDFD;
+}
+
+
+
+.about-hero{
+    min-height:90vh;
+    background:linear-gradient(rgba(53,37,37,.45),rgba(53,37,37,.45)),
+    url("https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1600&q=80");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:30px;
+}
+
+.hero-content{
+    max-width:800px;
+    color:#fff;
+}
+
+.hero-content p{
+    color:#F7A5B7;
+    letter-spacing:3px;
+    font-weight:600;
+    text-transform:uppercase;
+    margin-bottom:15px;
+}
+
+.hero-content h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:72px;
+    color:#fff;
+    margin-bottom:15px;
+}
+
+.hero-content h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:34px;
+    color:#FFF8F8;
+    margin-bottom:20px;
+}
+
+.hero-content span{
+    display:block;
+    font-size:18px;
+    line-height:1.9;
+    margin-bottom:35px;
+}
+
+.hero-content button{
+    background:#EF6F8F;
+    color:#fff;
+    border:none;
+    padding:15px 40px;
+    border-radius:40px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 10px 25px rgba(239,111,143,.25);
+}
+
+.hero-content button:hover{
+    background:#D4AF37;
+    transform:translateY(-4px);
+}
+
+
+
+.story{
+    padding:100px 8%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+    background:#FFFDFD;
+}
+
+.story-image img{
+    width:100%;
+    border-radius:28px;
+    box-shadow:0 18px 40px rgba(0,0,0,.08);
+}
+
+.story-content p{
+    color:#EF6F8F;
+    font-weight:600;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.story-content h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:52px;
+    color:#352525;
+    margin-bottom:25px;
+}
+
+.story-content span{
+    font-size:17px;
+    line-height:2;
+}
+
+/* =========================
+ Mission
+========================= */
+
+.mission{
+    padding:100px 8%;
+    background:#FFEFF4;
+}
+
+.mission h2{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:52px;
+    color:#352525;
+    margin-bottom:60px;
+}
+
+.mission-box{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:35px;
+   
+}
+
+.card{
+    background:#FFFDFD;
+    border-radius:28px;
+    padding:40px;
+    display:flex;
+    align-items:flex-start;
+    gap:25px;
+    box-shadow:0 15px 35px rgba(0,0,0,.06);
+    transition:.35s;
+    height: 320px;
+    width: 550px;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.circle{
+    width:75px;
+    height:75px;
+    border-radius:50%;
+    background:#EF6F8F;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    font-size:28px;
+    flex-shrink:0;
+}
+
+.card h3{
+    font-family:'Cormorant Garamond',serif;
+    color:#352525;
+    font-size:34px;
+    margin-bottom:12px;
+}
+
+.card p{
+    line-height:1.9;
+}
+
+/* =========================
+ Values
+========================= */
+
+.values{
+    padding:100px 8%;
+    background:#FFFDFD;
+}
+
+.values h2{
+    text-align:center;
+    font-size:52px;
+    font-family:'Cormorant Garamond',serif;
+    color:#352525;
+    margin-bottom:60px;
+}
+
+.value-container{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+    
+}
+
+.value-card{
+    background:#FFF8F8;
+    border-radius:28px;
+    padding:40px 30px;
+    text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,.05);
+    transition:.35s;
+    border: 0.5px solid black;
+    
+}
+
+.value-card:hover{
+    transform:translateY(-10px);
+}
+
+.value-card svg{
+    font-size:42px;
+    color:#EF6F8F;
+    margin-bottom:20px;
+}
+
+.value-card h3{
+    font-family:'Cormorant Garamond',serif;
+    color:#352525;
+    font-size:30px;
+    margin-bottom:15px;
+}
+
+.value-card p{
+    line-height:1.8;
+}
+
+/* =========================
+ Stats
+========================= */
+
+.stats{
+    padding:90px 8%;
+    background:#c56666;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+    text-align:center;
+}
+
+.stats div{
+    color:#fff;
+    
+}
+
+.stats svg{
+    color:#D4AF37;
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.stats h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    margin-bottom:10px;
+}
+
+.stats p{
+    color:#F7A5B7;
+}
+
+/* =========================
+ CTA
+========================= */
+
+.cta{
+    padding:100px 20px;
+    background:#FFF8F8;
+}
+
+.cta div{
+    max-width:900px;
+    margin:auto;
+    background:linear-gradient(135deg,#EF6F8F,#F7A5B7);
+    border-radius:30px;
+    padding:70px;
+    text-align:center;
+    color:#fff;
+    box-shadow:0 20px 45px rgba(239,111,143,.25);
+}
+
+.cta h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:56px;
+    margin-bottom:20px;
+}
+
+.cta p{
+    font-size:18px;
+    margin-bottom:35px;
+    line-height:1.8;
+}
+
+.cta button{
+    background:#fff;
+    color:#EF6F8F;
+    border:none;
+    padding:15px 42px;
+    border-radius:40px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.cta button:hover{
+    background:#D4AF37;
+    color:#fff;
+}
+
+/* =========================
+ Responsive
+========================= */
+
+@media(max-width:992px){
+
+.story{
+    grid-template-columns:1fr;
+}
+
+.mission-box{
+    grid-template-columns:1fr;
+}
+
+.value-container{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.stats{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.hero-content h1{
+    font-size:56px;
+}
+
+.story-content h2,
+.values h2,
+.mission h2,
+.cta h1{
+    font-size:42px;
+}
+
+}
+
+@media(max-width:768px){
+
+.hero-content h1{
+    font-size:42px;
+}
+
+.hero-content h3{
+    font-size:28px;
+}
+
+.story,
+.values,
+.mission{
+    padding:70px 20px;
+}
+
+.value-container{
+    grid-template-columns:1fr;
+}
+
+.stats{
+    grid-template-columns:1fr;
+}
+
+.cta div{
+    padding:45px 25px;
+}
+
+.cta h1{
+    font-size:36px;
+}
+
+.story-content h2,
+.values h2,
+.mission h2{
+    font-size:36px;
+}
+
+.card{
+    flex-direction:column;
+    text-align:center;
+    align-items:center;
+}
+
+.circle{
+    margin-bottom:10px;
+}
+
+}
