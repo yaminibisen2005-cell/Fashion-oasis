@@ -30,7 +30,35 @@ const occasions = [
 export default function Sidebar({
   selectedCategory,
   setSelectedCategory,
+  priceRange,
+  setPriceRange,
+  selectedMaterials,
+  setSelectedMaterials,
+  selectedOccasions,
+  setSelectedOccasions,
+  onClearFilters,
 }) {
+  const handleMaterialToggle = (material) => {
+    setSelectedMaterials(prev =>
+      prev.includes(material)
+        ? prev.filter(m => m !== material)
+        : [...prev, material]
+    );
+  };
+
+  const handleOccasionToggle = (occasion) => {
+    setSelectedOccasions(prev =>
+      prev.includes(occasion)
+        ? prev.filter(o => o !== occasion)
+        : [...prev, occasion]
+    );
+  };
+
+  const handlePriceChange = (e) => {
+    const value = parseInt(e.target.value);
+    setPriceRange([499, value]);
+  };
+
   return (
     <aside className="shop-sidebar">
 
@@ -67,13 +95,19 @@ export default function Sidebar({
 
         <h4>Price Range</h4>
 
-        <input type="range" />
+        <input
+          type="range"
+          min="499"
+          max="5000"
+          value={priceRange[1]}
+          onChange={handlePriceChange}
+        />
 
         <div className="price-values">
 
-          <span>₹499</span>
+          <span>₹{priceRange[0]}</span>
 
-          <span>₹5000+</span>
+          <span>₹{priceRange[1]}+</span>
 
         </div>
 
@@ -89,7 +123,11 @@ export default function Sidebar({
 
           <label className="check-item" key={item}>
 
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={selectedMaterials.includes(item)}
+              onChange={() => handleMaterialToggle(item)}
+            />
 
             <span>{item}</span>
 
@@ -109,7 +147,11 @@ export default function Sidebar({
 
           <label className="check-item" key={item}>
 
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={selectedOccasions.includes(item)}
+              onChange={() => handleOccasionToggle(item)}
+            />
 
             <span>{item}</span>
 
@@ -118,6 +160,11 @@ export default function Sidebar({
         ))}
 
       </div>
+
+      {/* Clear Filters */}
+      <button className="clear-filters-btn" onClick={onClearFilters}>
+        Clear All Filters
+      </button>
 
     </aside>
   );

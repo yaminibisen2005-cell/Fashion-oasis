@@ -52,14 +52,33 @@ fashion-oasis/
 │   │   ├── SpecialOffer/  # Special offers/promotions
 │   │   ├── Testimonials/  # Customer testimonials
 │   │   ├── Footer/        # Footer component
-│   │   └── Newsletter/    # Newsletter subscription
+│   │   ├── Shop/          # Shop page components
+│   │   │   ├── HeroBanner/    # Shop hero banner
+│   │   │   ├── Sidebar/        # Filter sidebar
+│   │   │   ├── SearchSort/     # Search and sort toolbar
+│   │   │   ├── ProductGrid/   # Product grid layout
+│   │   │   ├── Pagination/    # Pagination component
+│   │   │   └── ProductCard/   # Individual product card
+│   │   └── ProductDetails/    # Product details page components
+│   │       ├── ProductGallery/   # Image gallery with thumbnails
+│   │       ├── ProductInfo/      # Product information panel
+│   │       ├── ProductActions/   # Add to cart, quantity, wishlist
+│   │       ├── ServiceFeatures/  # Service feature badges
+│   │       ├── RelatedProducts/  # Related products carousel
+│   │       ├── ProductTabs/      # Product description/reviews tabs
+│   │       └── RecentlyViewed/   # Recently viewed products
 │   ├── pages/             # Main page components
 │   │   ├── Home.jsx       # Landing page
-│   │   ├── Collections.jsx  # Product catalog page
-│   │   ├── ProductDetails.jsx  # Individual product page
-│   │   ├── Collections.css
+│   │   ├── Shop/          # Shop page with filtering
+│   │   │   └── Shop.jsx
+│   │   │   └── Shop.css
+│   │   └── ProductDetails.jsx  # Individual product page
 │   │   └── ProductDetails.css
+│   ├── data/              # Data files
+│   │   └── products.js    # Product data with gallery arrays
 │   ├── assets/            # Images and static assets
+│   │   ├── shop/          # Shop product images
+│   │   └── viewproducts/  # Product detail gallery images
 │   ├── App.jsx            # Main app component with routing
 │   ├── main.jsx           # Application entry point
 │   ├── index.css          # Global styles
@@ -103,50 +122,57 @@ fashion-oasis/
 - Testimonials - Customer reviews
 - Footer - Site navigation and links
 
-### 2. Collections Page (`/collections`)
-**Purpose:** Product catalog with filtering and search
+### 2. Shop Page (`/shop`)
+**Purpose:** Product catalog with comprehensive filtering and search
 
 **Features:**
-- **Category Filtering** - Filter by: All, Earrings, Necklaces, Bracelets, Rings, Accessories, Gift Items, Personalized Gifts
+- **Hero Banner** - Full-width premium banner with overlay
+- **Category Filtering** - Filter by: All, Necklaces, Earrings, Rings, Bracelets, Mangalsutra, Wedding
+- **Price Range Filter** - Slider-based price range filtering (₹499 - ₹5000)
+- **Material Filter** - Multi-select filter: Gold Plated, Rose Gold, Silver, Pearl, Diamond, Kundan
+- **Occasion Filter** - Multi-select filter: Daily Wear, Party Wear, Wedding, Festive, Gift
 - **Search Functionality** - Real-time search by product name
-- **Sorting Options** - Featured, Price Low to High, Price High to Low, New Arrivals, Best Sellers
-- **URL Query Parameters** - Category can be set via URL (?category=earrings)
-- **Product Cards** - Display with image, name, rating, price, and actions
+- **Sorting Options** - Popularity, Newest, Price Low to High, Price High to Low
+- **Clear Filters** - Reset all filters with one click
+- **Filter Logic** - AND across categories, OR within same category
+- **Product Cards** - Display with image, name, rating, price, discount, and actions
 - **Wishlist Button** - Add products to wishlist
-- **Add to Cart** - Quick add to cart functionality
 - **View Details** - Navigate to product details page
+- **Pagination** - Navigate through product pages
 
 **Product Categories:**
-- Earrings
 - Necklaces
-- Bracelets
+- Earrings
 - Rings
-- Accessories
-- Gift Items
-- Personalized Gifts
+- Bracelets
+- Mangalsutra
+- Wedding
 
 ### 3. Product Details Page (`/product/:id`)
 **Purpose:** Detailed product view with purchase options
 
 **Features:**
-- **Image Gallery** - Multiple product images with thumbnail navigation
-- **Product Information** - Name, category, rating, reviews count
-- **Pricing** - Displayed in Indian Rupees (₹)
+- **Image Gallery** - Multiple product images with thumbnail navigation (using gallery array)
+- **Product Information** - Name, category, rating, reviews count, stock status
+- **Pricing** - Displayed in Indian Rupees (₹) with discount badge
 - **Description** - Detailed product description
+- **Product Specifications** - Grid layout of product details
 - **Quantity Selector** - Increment/decrement quantity
 - **Add to Cart** - Add selected quantity to cart
+- **Buy Now** - Direct purchase option
 - **Wishlist** - Add to wishlist functionality
-- **Share** - Share product (UI only)
-- **Product Features** - Free shipping, 30-day returns, authenticity certificate
-- **Related Products** - Show similar products from same category
-- **Back Navigation** - Return to collections page
+- **Service Features** - Full-width badges: Free Shipping, 30-Day Returns, Authenticity Certificate, Secure Payment
+- **Product Tabs** - Description, Reviews, Shipping tabs
+- **Related Products** - Swiper carousel of similar products from same category
+- **Recently Viewed** - Grid of recently viewed products
+- **Breadcrumb Navigation** - Return to shop page
 
 ## Component Details
 
 ### Navbar Component
 - Responsive navigation bar
 - Logo and brand name
-- Navigation links (Home, Collections)
+- Navigation links (Home, Shop)
 - Cart and wishlist icons
 - Mobile-friendly menu
 
@@ -164,7 +190,7 @@ fashion-oasis/
 ### Categories Component
 - Grid layout of category cards
 - Category images and names
-- Click to filter in collections page
+- Click to filter in shop page
 
 ### Why Choose Us Component
 - Feature highlights with icons
@@ -186,6 +212,98 @@ fashion-oasis/
 - Contact information
 - Social media links
 - Newsletter signup
+
+### Shop Page Components
+
+#### HeroBanner Component
+- Full-width premium banner with overlay
+- Responsive height (desktop ~480px, scales down on mobile)
+- Centered text with dark overlay
+- Hero image from assets/shop/hero-banner.jpg
+
+#### Sidebar Component
+- Category filter with counts
+- Price range slider (₹499 - ₹5000)
+- Material multi-select checkboxes
+- Occasion multi-select checkboxes
+- Clear Filters button
+- Sticky positioning on desktop
+
+#### SearchSort Component
+- Search input with clear button
+- Sort dropdown (Popularity, Newest, Price Low-High, Price High-Low)
+- Product count display
+- Clear Filters link (shows when filters active)
+
+#### ProductGrid Component
+- Responsive grid layout
+- ProductCard components
+- Gap and column adjustments for breakpoints
+
+#### ProductCard Component
+- Product image with aspect ratio 4/3
+- Discount badge
+- Wishlist button
+- Product name (2-line clamp)
+- Rating with stars and review count
+- Price row with current price and old-price
+- View Details button
+- Hover effects with pink glow
+- Scoped price styling (.product-card .price-row .price)
+
+#### Pagination Component
+- Page number buttons
+- Active state styling
+- Hover effects
+
+### Product Details Page Components
+
+#### ProductGallery Component
+- Accepts product prop with gallery array
+- Safe fallback for products without gallery
+- Thumbnail navigation with active state
+- Main image preview with hover zoom
+- Fluid responsive sizing (flex: 1, max-width: 520px, aspect-ratio: 1/1)
+
+#### ProductInfo Component
+- Product name and rating
+- Stock status badge
+- Price section with discount
+- Product description
+- Product specifications grid (2 columns)
+- min-width: 0 for flex overflow prevention
+
+#### ProductActions Component
+- Quantity selector with +/- buttons
+- Add to Cart button (gradient)
+- Buy Now button (outline)
+- Wishlist button (icon)
+- Responsive layout (stacks on mobile)
+- width: 100% and min-width: 0 for overflow prevention
+
+#### ServiceFeatures Component
+- Full-width service feature badges
+- Features: Free Shipping, 30-Day Returns, Authenticity Certificate, Secure Payment
+- Responsive layout (wraps on mobile)
+- Card-based design with icons
+
+#### RelatedProducts Component
+- Swiper carousel for related products
+- Uses ProductCard component
+- Filters products by category
+- Section title with divider
+- Responsive breakpoints (1, 2, 4 slides)
+
+#### ProductTabs Component
+- Tab navigation (Description, Reviews, Shipping)
+- Tab content with animations
+- Responsive layout
+
+#### RecentlyViewed Component
+- Grid layout for recently viewed products
+- Uses ProductCard component
+- Section heading
+- Responsive grid (4, 2, 1 columns)
 
 ## Styling Approach
 
@@ -214,21 +332,27 @@ fashion-oasis/
 {
   id: number,
   name: string,
-  price: number,
-  rating: number,
-  reviews: number,
   category: string,
-  description: string,
-  image: string,           // Single image for collections
-  images: string[]         // Multiple images for details
+  material: string,        // Gold Plated, Rose Gold, Silver, Pearl, Diamond, Kundan
+  occasion: string,        // Daily Wear, Party Wear, Wedding, Festive, Gift
+  image: string,           // Main product image
+  gallery: string[],       // Array of gallery images for product details
+  price: number,
+  oldPrice: number,
+  discount: number,
+  rating: number,
+  reviews: number
 }
 ```
 
 ### Current Product Data
-- 8 sample products across categories
-- Price range: ₹1,899 - ₹7,999
+- 12 sample products across categories
+- Price range: ₹699 - ₹4,999
 - Rating range: 4.5 - 5.0
-- Images from Unsplash
+- Categories: Necklaces, Earrings, Rings, Bracelets, Mangalsutra, Wedding
+- Materials: Gold Plated, Rose Gold, Silver, Pearl, Diamond, Kundan
+- Occasions: Daily Wear, Party Wear, Wedding, Festive, Gift
+- Gallery images for Product 1 (5 images in viewproducts folder)
 
 ## Future Enhancement Opportunities
 

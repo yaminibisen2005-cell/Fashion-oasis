@@ -36,3 +36,9 @@ grid-template-columns:1fr;
 
 }
 }
+
+@media(max-width:390px){
+.product-grid{
+gap:16px;
+}
+}

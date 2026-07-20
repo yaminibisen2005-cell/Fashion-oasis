@@ -72,6 +72,38 @@ background:none;
 
 }
 
+.clear-search-btn{
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:#999;
+  padding:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.3s;
+}
+
+.clear-search-btn:hover{
+  color:#ef6f8f;
+}
+
+.clear-filters-link{
+  background:none;
+  border:none;
+  color:#ef6f8f;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  padding:8px 16px;
+  border-radius:8px;
+  transition:.3s;
+}
+
+.clear-filters-link:hover{
+  background:#fdecef;
+}
+
 .toolbar-right{
 
 display:flex;
@@ -142,4 +174,55 @@ justify-content:space-between;
 
 }
 
+}
+
+@media(max-width:576px){
+  .shop-toolbar{
+    margin-bottom: 25px;
+    gap: 16px;
+  }
+
+  .search-box{
+    height: 50px;
+    padding: 0 14px;
+  }
+
+  .search-box input{
+    font-size: 14px;
+  }
+
+  .sort-box select{
+    height: 44px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  .product-count{
+    font-size: 13px;
+  }
+}
+
+@media(max-width:390px){
+  .shop-toolbar{
+    gap: 12px;
+  }
+
+  .search-box{
+    height: 46px;
+    padding: 0 12px;
+  }
+
+  .search-box input{
+    font-size: 13px;
+  }
+
+  .sort-box label{
+    font-size: 13px;
+  }
+
+  .sort-box select{
+    height: 42px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
 }

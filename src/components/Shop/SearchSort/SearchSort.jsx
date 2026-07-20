@@ -1,5 +1,5 @@
 import "./SearchSort.css";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiX } from "react-icons/fi";
 
 const SearchSort = ({
   searchTerm,
@@ -7,6 +7,8 @@ const SearchSort = ({
   sortBy,
   setSortBy,
   totalProducts,
+  onClearFilters,
+  hasActiveFilters,
 }) => {
   return (
     <div className="shop-toolbar">
@@ -21,6 +23,11 @@ const SearchSort = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search jewellery..."
           />
+          {searchTerm && (
+            <button className="clear-search-btn" onClick={() => setSearchTerm("")}>
+              <FiX />
+            </button>
+          )}
         </div>
 
       </div>
@@ -46,6 +53,12 @@ const SearchSort = ({
         <span className="product-count">
           Showing {totalProducts} Products
         </span>
+
+        {hasActiveFilters && (
+          <button className="clear-filters-link" onClick={onClearFilters}>
+            Clear Filters
+          </button>
+        )}
 
       </div>
 

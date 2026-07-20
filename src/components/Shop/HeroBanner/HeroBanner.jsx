@@ -1,12 +1,16 @@
 import "./HeroBanner.css";
 import { Link } from "react-router-dom";
-import banner from "../../../assets/shop/hero-banner.jpg"; // Replace with your banner
+import banner from "../../../assets/shop/hero-banner1.png"; // Replace with your banner
 
 const HeroBanner = () => {
   return (
     <section className="shop-hero">
-      <div className="shop-hero-content">
+      <div className="hero-background">
+        <img src={banner} alt="Jewellery Collection" />
+        <div className="hero-overlay"></div>
+      </div>
 
+      <div className="shop-hero-content">
         <div className="hero-left">
 
           <div className="breadcrumb">
@@ -23,11 +27,6 @@ const HeroBanner = () => {
 </p>
 
         </div>
-
-        <div className="hero-right">
-          <img src={banner} alt="Jewellery Collection" />
-        </div>
-
       </div>
     </section>
   );

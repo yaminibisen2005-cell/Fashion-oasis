@@ -40,7 +40,7 @@ justify-content:center;
 }
 .page-number.active{
 
-background:var(--primary);
+background:#ef6f8f;
 
 color:white;
 
@@ -52,6 +52,6 @@ border:none;
 
 background:#FBECEC;
 
-color:var(--primary);
+color:#ef6f8f;
 
 }

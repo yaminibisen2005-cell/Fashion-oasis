@@ -1,0 +1,171 @@
+.product-info-panel{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.product-info-panel h1{
+  font-size: 32px;
+  font-weight: 700;
+  color: #34211d;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.product-rating{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stars{
+  display: flex;
+  gap: 4px;
+  color: #f7b500;
+}
+
+.product-rating span{
+  color: #666;
+  font-size: 15px;
+}
+
+.stock{
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 14px;
+  background: #e8f5e9;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.price-section{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.price{
+  font-size: 36px;
+  font-weight: 700;
+  color: #ef6f8f;
+}
+
+.old-price{
+  font-size: 24px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.discount-badge{
+  background: #ef6f8f;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.description{
+  font-size: 16px;
+  line-height: 1.7;
+  color: #666;
+  margin: 0;
+}
+
+.product-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  min-width: 0; /* Allows grid items to shrink */
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #faf7f7;
+  border-radius: 10px;
+  min-width: 0; /* Prevents overflow inside grid cells */
+  gap: 8px; /* Prevents text from colliding */
+}
+
+.spec-label{
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.spec-value{
+  color: #333;
+  font-size: 14px;
+}
+
+@media (max-width: 768px){
+  .product-info-panel h1{
+    font-size: 28px;
+  }
+
+  .product-specs{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px){
+  .product-info-panel{
+    gap: 12px;
+  }
+
+  .product-info-panel h1{
+    font-size: 24px;
+  }
+
+  .price-section{
+    gap: 10px;
+  }
+
+  .price{
+    font-size: 28px;
+  }
+
+  .old-price{
+    font-size: 18px;
+  }
+
+  .description{
+    font-size: 14px;
+  }
+
+  .product-specs{
+    gap: 12px;
+  }
+
+  .spec-item{
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 390px){
+  .product-info-panel{
+    gap: 10px;
+  }
+
+  .product-info-panel h1{
+    font-size: 22px;
+  }
+
+  .price{
+    font-size: 26px;
+  }
+
+  .old-price{
+    font-size: 16px;
+  }
+
+  .description{
+    font-size: 13px;
+  }
+}
