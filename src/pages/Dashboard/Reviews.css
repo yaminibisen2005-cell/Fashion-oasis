@@ -1,75 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap");
+
 .reviews-page{
-    padding:30px;
-    background:#f8f9fb;
-    min-height:100vh;
+    width:100%;
 }
 
-.reviews-page h2{
-    margin-bottom:25px;
-    color:#333;
+.reviews-header{
+    margin-bottom:30px;
+}
+
+.reviews-header h2{
+    font-family:"Cormorant Garamond",serif;
+    font-size:42px;
+    color:#4B2E2E;
+}
+
+.reviews-header p{
+    font-family:Poppins,sans-serif;
+    color:#777;
+    margin-top:8px;
 }
 
 .review-card{
-    display:flex;
-    align-items:center;
+
     background:#fff;
-    padding:20px;
-    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+    padding:25px;
+
     margin-bottom:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+
+    transition:.3s;
+
+}
+
+.review-card:hover{
+
+    transform:translateY(-5px);
+
 }
 
 .review-card img{
-    width:120px;
-    height:120px;
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:15px;
+
     object-fit:cover;
-    border-radius:12px;
+
 }
 
 .review-content{
-    margin-left:25px;
+
     flex:1;
+
 }
 
-.review-content h4{
-    color:#333;
-    margin-bottom:8px;
+.review-content h3{
+
+    font-family:"Cormorant Garamond",serif;
+
+    font-size:32px;
+
+    color:#4B2E2E;
+
+    margin-bottom:10px;
+
 }
 
 .stars{
-    color:#ffc107;
-    font-size:18px;
-    margin-bottom:10px;
+
+    display:flex;
+
+    gap:5px;
+
+    color:#FFC107;
+
+    margin-bottom:15px;
+
 }
 
 .review-content p{
+
     color:#666;
-    margin-bottom:15px;
+
+    font-family:Poppins,sans-serif;
+
+    line-height:1.8;
+
+    margin-bottom:20px;
+
 }
 
 .review-content button{
-    background:#e85d75;
-    color:#fff;
+
+    background:#EB879D;
+
+    color:white;
+
     border:none;
-    padding:10px 20px;
-    border-radius:8px;
+
+    padding:12px 25px;
+
+    border-radius:10px;
+
     cursor:pointer;
-    font-weight:600;
+
+    font-family:Poppins,sans-serif;
+
+    transition:.3s;
+
 }
 
 .review-content button:hover{
-    background:#d94b65;
+
+    background:#D96D86;
+
 }
 
 @media(max-width:768px){
 
 .review-card{
-    flex-direction:column;
-    text-align:center;
+
+flex-direction:column;
+
+text-align:center;
+
 }
 
-.review-content{
-    margin:20px 0 0;
+.review-card img{
+
+width:220px;
+
+height:220px;
+
+}
+
+.stars{
+
+justify-content:center;
+
 }
 
 }
