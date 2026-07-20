@@ -1,0 +1,367 @@
+.thank-you-page {
+  padding: 120px 0 80px 0;
+  background-color: var(--background-color);
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.thank-you-page .container {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.thank-you-card {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 50px 40px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.success-badge-icon {
+  color: var(--primary-color);
+  font-size: 75px;
+  margin-bottom: 20px;
+  animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.thank-you-card h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.success-sub {
+  font-family: var(--body-font);
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 35px;
+}
+
+/* Receipt Details Box */
+.receipt-box {
+  display: flex;
+  background-color: #FFF8FA;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 40px;
+  justify-content: space-around;
+}
+
+.receipt-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 5px;
+  font-family: var(--body-font);
+}
+
+.receipt-column.border-left {
+  border-left: 1px solid var(--border-color);
+}
+
+.receipt-column span {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.receipt-column strong {
+  font-size: 16px;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* What's Next list */
+.whats-next-section {
+  text-align: left;
+  background-color: #FFFDFE;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 40px;
+}
+
+.whats-next-section h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.next-checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.next-checklist li {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.bullet-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #FFF2F5;
+  color: var(--primary-color);
+  font-size: 11px;
+  font-weight: bold;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.next-checklist p {
+  font-family: var(--body-font);
+  font-size: 14px;
+  color: var(--text-dark);
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+/* Actions Buttons */
+.thank-you-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ty-btn-primary {
+  width: 100%;
+  max-width: 350px;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-family: var(--body-font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(239, 111, 143, 0.25);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ty-btn-primary:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(217, 76, 122, 0.35);
+}
+
+.ty-btn-secondary {
+  width: 100%;
+  max-width: 350px;
+  padding: 14px;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+  color: var(--text-dark);
+  font-family: var(--body-font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.ty-btn-secondary:hover, .ty-btn-secondary.active {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background-color: #FFF8FA;
+}
+
+.ty-btn-whatsapp {
+  width: 100%;
+  max-width: 350px;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  background-color: #25D366; /* WhatsApp Green */
+  color: var(--white);
+  font-family: var(--body-font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ty-btn-whatsapp:hover {
+  background-color: #20BA56;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+}
+
+.ty-btn-whatsapp.sent {
+  background-color: #128C7E;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.ty-btn-whatsapp.loading {
+  background-color: #79E4A0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Expandable Drawer */
+.order-details-drawer {
+  text-align: left;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 30px;
+  background-color: #FFFDFE;
+}
+
+.order-details-drawer h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.drawer-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 15px 0;
+}
+
+.drawer-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.drawer-item-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.drawer-item-row img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: #FFF2F5;
+  border: 1px solid var(--border-color);
+}
+
+.drawer-item-meta {
+  flex-grow: 1;
+}
+
+.drawer-item-meta h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+}
+
+.drawer-item-meta p {
+  font-family: var(--body-font);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+.drawer-item-price {
+  font-family: var(--body-font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.drawer-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.d-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--body-font);
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.d-row.discount {
+  color: #2BA84A;
+  font-weight: 500;
+}
+
+.d-row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+
+/* Animations */
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 576px) {
+  .thank-you-card {
+    padding: 30px 20px;
+  }
+  .receipt-box {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  .receipt-column.border-left {
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+    width: 100%;
+  }
+}
