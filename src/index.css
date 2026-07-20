@@ -1,4 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #EF6F8F;
+  --secondary-color: #D94C7A;
+  --background-color: #FFF8FA;
+  --accent-color: #D4AF37;
+  --heading-font: 'Playfair Display', serif;
+  --body-font: 'Poppins', sans-serif;
+  --text-dark: #34211D;
+  --text-muted: #8E7A6B;
+  --white: #ffffff;
+  --card-shadow: 0 10px 30px rgba(239, 111, 143, 0.06);
+  --border-color: #F7E3E7;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 * {
   margin: 0;
@@ -7,7 +22,13 @@
 }
 
 body {
-  background: #F8F4EC;
-  color: #3E2C1C;
-  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-dark);
+  font-family: var(--body-font);
+  overflow-x: hidden;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  color: var(--text-dark);
+}
