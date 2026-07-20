@@ -1,284 +1,619 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap");
+/* ===========================
+   TESTIMONIAL SECTION
+=========================== */
 
-.testimonial-section{
-    padding:90px 0;
-    background:#FFF8FA;
+.testimonial-section {
+  padding: 80px 0 70px;
+  background: linear-gradient(
+    135deg,
+    #fff8fa 0%,
+    #fff3f7 55%,
+    #ffffff 100%
+  );
+  overflow: hidden;
 }
 
-.testimonial-title{
-    font-family:"Playfair Display",serif;
-    font-size:52px;
-    font-weight:600;
-    color:#34211D;
-    margin-bottom:18px;
+.testimonial-section .container {
+  max-width: 1150px;
+  margin: auto;
 }
 
-.testimonial-subtitle{
-    max-width:620px;
-    margin:auto;
-    font-family:"Poppins",sans-serif;
-    color:#6D6D6D;
-    font-size:17px;
-    line-height:1.8;
+/* ===========================
+   Heading
+=========================== */
+
+.testimonial-heading {
+  text-align: center;
+  margin-bottom: 40px;
 }
+
+.testimonial-heading span {
+  color: #ef6f8f;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.testimonial-heading h2 {
+  margin-top: 12px;
+  font-size: 40px;
+  color: #34211d;
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+}
+
+/* ===========================
+      CARD
+=========================== */
+
+.testimonial-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 35px 40px;
+
+  border: 1px solid #f7dce5;
+
+  box-shadow: 0 18px 45px rgba(239, 111, 143, 0.12);
+      min-height:480px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* decorative blur */
+
+.testimonial-card::before {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  background: rgba(239, 111, 143, 0.08);
+
+  border-radius: 50%;
+
+  top: -120px;
+
+  right: -120px;
+
+  filter: blur(20px);
+}
+
+/* ===========================
+LEFT
+=========================== */
+
+.testimonial-left {
+  width: 46%;
+  z-index: 2;
+}
+
+/* Rating */
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #d4a04b;
+
+  font-size: 22px;
+
+  margin-bottom: 25px;
+}
+
+.rating span {
+  margin-left: 15px;
+
+  color: #6b5e5e;
+
+  font-size: 17px;
+
+  font-weight: 500;
+}
+
+/* Quote */
+
+.quote {
+  font-size: 55px;
+
+  color: #f7bfd0;
+
+  margin-bottom: 10px;
+}
+
+/* Review */
+
+.review {
+  font-size: 20px;
+
+  line-height: 1.8;
+
+  color: #34211d;
+
+  margin-bottom: 35px;
+    max-width:500px;
+
+  font-family: "Playfair Display", serif;
+}
+
+/* Author */
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.author img {
+  width: 75px;
+  height: 75px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 4px solid #fff;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.author h5 {
+  margin-bottom: 4px;
+
+  color: #34211d;
+
+  font-size: 22px;
+
+  font-family: "Playfair Display", serif;
+}
+
+.author span {
+  color: #ef6f8f;
+
+  font-size: 15px;
+}
+
+/* ===========================
+RIGHT
+=========================== */
+
+.testimonial-right {
+  width: 42%;
+
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.woman-image {
+  width: 100%;
+
+  height: 500px;
+
+  object-fit: cover;
+
+  border-radius: 28px;
+
+  border: 5px solid #fff0f5;
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* ===========================
+Circle Jewellery
+=========================== */
+
+.jewelry-circle {
+  position: absolute;
+
+  left: -40px;
+
+  bottom: 30px;
+
+  width: 180px;
+
+  height: 180px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  padding: 8px;
+
+  box-shadow: 0 15px 30px rgba(239, 111, 143, 0.18);
+}
+
+.jewelry-circle img {
+  width: 150px;
+
+  height: 150px;
+
+    left:-30px;
+
+    bottom:25px;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+}
+/* ===========================
+        SWIPER BUTTONS
+=========================== */
+
+.testimonialSwiper{
+    padding-bottom:70px;
+}
+.swiper-button-prev,
+.swiper-button-next{
+    display:none !important;
+}
+/* 
+.swiper-button-next,
+.swiper-button-prev{
+
+    width:55px !important;
+    height:55px !important;
+
+    background:#EF6F8F;
+
+    border-radius:50%;
+
+    color:#fff !important;
+
+    box-shadow:0 10px 25px rgba(239,111,143,.25);
+
+    transition:.35s ease;
+
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover{
+
+    background:#D95B7D;
+
+    transform:scale(1.08);
+
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after{
+
+    font-size:18px !important;
+
+    font-weight:bold;
+
+} */
+
+
+/* ===========================
+      PAGINATION
+=========================== */
+
+.swiper-pagination{
+
+    bottom:5px !important;
+
+}
+
+.swiper-pagination-bullet{
+
+    width:12px;
+    height:12px;
+
+    background:#F6C8D5;
+
+    opacity:1;
+
+    transition:.3s;
+
+}
+
+.swiper-pagination-bullet-active{
+
+    width:35px;
+
+    border-radius:50px;
+
+    background:#EF6F8F;
+
+}
+
+
+/* ===========================
+      HOVER EFFECT
+=========================== */
 
 .testimonial-card{
 
-    background:#fff;
-
-    border-radius:28px;
-
-    padding:40px 35px;
-
-    height:100%;
-
-    position:relative;
-
-    transition:.45s;
-
-    border:1px solid rgba(239,111,143,.08);
-
-    box-shadow:0 20px 45px rgba(0,0,0,.06);
-
-    overflow:hidden;
-
-}
-
-.testimonial-card::before{
-
-content:"";
-
-position:absolute;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:5px;
-
-background:linear-gradient(90deg,#EF6F8F,#D4A04B);
-
-transform:scaleX(0);
-
-transition:.45s;
+    transition:.4s;
 
 }
 
 .testimonial-card:hover{
 
-transform:translateY(-12px);
+    transform:translateY(-8px);
 
-box-shadow:0 28px 60px rgba(0,0,0,.12);
-
-}
-
-.testimonial-card:hover::before{
-
-transform:scaleX(1);
+    box-shadow:0 25px 60px rgba(239,111,143,.18);
 
 }
 
-.quote-icon{
+.woman-image{
 
-width:62px;
+    transition:.45s;
+  height:420px;
 
-height:62px;
+    border-radius:22px;
+}
 
-border-radius:50%;
+.testimonial-card:hover .woman-image{
 
-background:#FFF1F5;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-margin-bottom:25px;
+    transform:scale(1.03);
 
 }
 
-.quote-icon svg{
+.jewelry-circle{
 
-font-size:26px;
-
-color:#EF6F8F;
+    transition:.45s;
 
 }
 
-.stars{
+.testimonial-card:hover .jewelry-circle{
 
-display:flex;
-
-gap:5px;
-
-margin-bottom:20px;
+    transform:rotate(8deg) scale(1.05);
 
 }
 
-.stars svg{
 
-color:#FDBA12;
+/* ===========================
+     AUTHOR IMAGE
+=========================== */
 
-font-size:18px;
+.author img{
 
-}
+    transition:.35s;
+      width:60px;
 
-.review-text{
-
-font-family:"Poppins",sans-serif;
-
-font-size:15px;
-
-line-height:1.9;
-
-color:#666;
-
-margin-bottom:28px;
-
-min-height:115px;
+    height:60px;
 
 }
 
-.testimonial-card hr{
+.author:hover img{
 
-border:none;
-
-height:1px;
-
-background:#F1F1F1;
-
-margin-bottom:22px;
+    transform:scale(1.08);
 
 }
 
-.customer-info{
 
-display:flex;
+/* ===========================
+      RESPONSIVE
+=========================== */
 
-align-items:center;
+@media(max-width:1200px){
 
-gap:16px;
+.testimonial-card{
 
-}
-
-.customer-img{
-
-width:68px;
-
-height:68px;
-
-border-radius:50%;
-
-object-fit:cover;
-
-border:3px solid #FFE3EC;
+    padding:40px;
 
 }
 
-.customer-info h6{
+.review{
 
-font-family:"Playfair Display",serif;
-
-font-size:20px;
-
-margin:0;
-
-color:#34211D;
+    font-size:21px;
 
 }
 
-.customer-info span{
+.woman-image{
 
-font-family:"Poppins",sans-serif;
-
-font-size:14px;
-
-color:#EF6F8F;
+    height:430px;
 
 }
 
-.dots{
+.jewelry-circle{
 
-display:flex;
+    width:160px;
 
-justify-content:center;
-
-gap:10px;
-
-margin-top:45px;
+    height:160px;
 
 }
 
-.dot{
-
-width:12px;
-
-height:12px;
-
-border-radius:50%;
-
-background:#E3E3E3;
-
-transition:.35s;
-
-cursor:pointer;
-
 }
 
-.dot.active{
 
-width:34px;
-
-border-radius:30px;
-
-background:#EF6F8F;
-
-}
+/* ===========================
+      TABLET
+=========================== */
 
 @media(max-width:992px){
 
-.testimonial-title{
+.testimonial-card{
 
-font-size:40px;
+    flex-direction:column;
 
-}
+    text-align:center;
 
-.review-text{
-
-min-height:auto;
+    gap:40px;
 
 }
 
+.testimonial-left{
+
+    width:100%;
+
 }
+
+.testimonial-right{
+
+    width:100%;
+
+}
+
+.author{
+
+    justify-content:center;
+
+}
+
+.rating{
+
+    justify-content:center;
+
+}
+
+.review{
+
+    max-width:100%;
+
+}
+
+.woman-image{
+
+    width:80%;
+
+    height:450px;
+
+}
+
+.jewelry-circle{
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    bottom:-30px;
+
+}
+
+}
+
+
+/* ===========================
+      MOBILE
+=========================== */
 
 @media(max-width:768px){
 
 .testimonial-section{
 
-padding:70px 0;
+    padding:60px 20px 50px;
 
 }
 
-.testimonial-title{
+.testimonial-heading h2{
 
-font-size:34px;
+    font-size:34px;
 
 }
 
 .testimonial-card{
 
-padding:30px 24px;
+    padding:25px;
+
+    border-radius:22px;
 
 }
 
-.customer-img{
+.review{
 
-width:60px;
+    font-size:18px;
 
-height:60px;
+    line-height:1.7;
+
+}
+
+.rating{
+
+    font-size:18px;
+
+    flex-wrap:wrap;
+
+}
+
+.rating span{
+
+    font-size:15px;
+
+}
+
+.author img{
+
+    width:60px;
+
+    height:60px;
+
+}
+
+.author h5{
+
+    font-size:19px;
+
+}
+
+.woman-image{
+
+    width:100%;
+
+    height:340px;
+
+}
+
+.jewelry-circle{
+
+    width:120px;
+
+    height:120px;
+
+}
+
+.swiper-button-next,
+.swiper-button-prev{
+
+    display:none;
+
+}
+
+}
+
+
+/* ===========================
+     SMALL MOBILE
+=========================== */
+
+@media(max-width:480px){
+
+.testimonial-heading span{
+
+    font-size:12px;
+
+}
+
+.testimonial-heading h2{
+
+    font-size:28px;
+
+}
+
+.review{
+
+    font-size:16px;
+
+}
+
+.woman-image{
+
+    height:280px;
 
 }
 

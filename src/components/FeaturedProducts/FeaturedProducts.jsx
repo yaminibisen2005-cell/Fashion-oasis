@@ -1,7 +1,10 @@
 import "./FeaturedProducts.css";
+import { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 
 import {
   FaHeart,
+  FaRegHeart,
   FaStar,
   FaArrowRight,
 } from "react-icons/fa";
@@ -43,12 +46,34 @@ const products = [
 ];
 
 const FeaturedProducts = () => {
+
+
+  const [wishlist, setWishlist] = useState(() => {
+    return JSON.parse(localStorage.getItem("wishlist")) || [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const toggleWishlist = (id) => {
+    setWishlist((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id]
+    );
+  };
+
+ const handleBuyNow = (product) => {
+    alert(`${product.title} selected for purchase.`);
+};
   return (
     <section className="featured-section">
 
       <div className="container">
 
         <div className="featured-heading">
+
           <span>FEATURED COLLECTION</span>
 
           <h2>Handpicked For You</h2>
@@ -56,6 +81,7 @@ const FeaturedProducts = () => {
           <p>
             Timeless handcrafted jewellery curated for every occasion.
           </p>
+
         </div>
 
         <div className="products-grid">
@@ -64,8 +90,15 @@ const FeaturedProducts = () => {
 
             <div className="product-card" key={item.id}>
 
-              <button className="card-heart">
-                <FaHeart />
+              <button
+                className="card-heart"
+                onClick={() => toggleWishlist(item.id)}
+              >
+                {wishlist.includes(item.id) ? (
+                  <FaHeart className="heart-active" />
+                ) : (
+                  <FaRegHeart />
+                )}
               </button>
 
               <div className="product-image">
@@ -85,9 +118,18 @@ const FeaturedProducts = () => {
                 </div>
 
                 <div className="card-price">
-                  <span>{item.price}</span>
-                  <del>{item.oldPrice}</del>
-                </div>
+  <span>{item.price}</span>
+  <del>{item.oldPrice}</del>
+</div>
+
+<button
+  className="buy-btn"
+  onClick={() => handleBuyNow(item)}
+>
+  Buy Now
+</button>
+
+               
 
               </div>
 

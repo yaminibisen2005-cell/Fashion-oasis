@@ -1,17 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap");
-
-/* ==========================
-   SPECIAL OFFER SECTION
-========================== */
+/*==========================================
+        SPECIAL OFFER SECTION
+==========================================*/
 
 .special-offer{
-    padding:100px 0;
+    padding:80px 0 80px;
     background:#FFF8FA;
 }
 
-/* ==========================
-   BANNER
-========================== */
+.special-offer .container{
+    width:92%;
+    max-width:1450px;
+    margin:auto;
+}
+
+/*==========================================
+            OFFER BANNER
+==========================================*/
 
 .offer-banner{
 
@@ -19,21 +23,31 @@
 
     width:100%;
 
-    aspect-ratio:16/5;
-
-    border-radius:30px;
+    height:760px;
 
     overflow:hidden;
 
-    /* box-shadow:0 25px 60px rgba(0,0,0,.08); */
+    border-radius:30px;
+
+    box-shadow:0 20px 50px rgba(239,111,143,.18);
+
+    transition:.4s ease;
 
 }
 
-/* ==========================
-   BACKGROUND IMAGE
-========================== */
+.offer-banner:hover{
 
-.offer-bg{
+    transform:translateY(-5px);
+
+    box-shadow:0 30px 60px rgba(239,111,143,.22);
+
+}
+
+/*==========================================
+            BACKGROUND IMAGE
+==========================================*/
+
+.offer-image{
 
     position:absolute;
 
@@ -45,15 +59,23 @@
 
     object-fit:cover;
 
-    display:block;
+    object-position:right center;
+
+    transition:.5s ease;
 
 }
 
-/* ==========================
-   LEFT OVERLAY
-========================== */
+.offer-banner:hover .offer-image{
 
-.offer-overlay{
+    transform:scale(1.04);
+
+}
+
+/*==========================================
+            LEFT CONTENT
+==========================================*/
+
+.offer-content{
 
     position:absolute;
 
@@ -61,7 +83,7 @@
 
     left:0;
 
-    width:36%;
+    width:38%;
 
     height:100%;
 
@@ -69,518 +91,664 @@
 
     flex-direction:column;
 
-    justify-content:center;
+    justify-content:flex-start;
 
-     align-items:flex-start;
+    padding:60px;
 
-    padding:45px 55px;
+    box-sizing:border-box;
+
+    z-index:2;
+
     background:linear-gradient(
         90deg,
-        rgba(255,255,255,.95) 0%,
-        rgba(255,255,255,.82) 45%,
-        rgba(255,255,255,.15) 100%
+        rgba(255,248,250,.98) 0%,
+        rgba(255,248,250,.92) 28%,
+        rgba(255,248,250,.45) 58%,
+        rgba(255,248,250,0) 100%
     );
 
 }
 
-/* ==========================
-   TAG
-========================== */
+/*==========================================
+        SPECIAL OFFER LABEL
+==========================================*/
 
-.offer-tag{
+.offer-label{
 
-    display:inline-block;
-
-    margin-bottom:18px;
-
-    color:#EF6F8F;
-
-    font-size:13px;
-
-    font-weight:600;
-
-    letter-spacing:4px;
-
-    font-family:"Poppins",sans-serif;
-
-}
-
-/* ==========================
-   HEADING
-========================== */
-
-.offer-overlay h2{
-
-    font-family:"Playfair Display",serif;
-
-    font-size:52px;
-
-    line-height:1.12;
-
-    color:#34211D;
-
-    margin-bottom:18px;
-
-}
-
-/* ==========================
-   DISCOUNT
-========================== */
-
-.offer-overlay h3{
-
-    font-family:"Poppins",sans-serif;
-
-    font-size:28px;
-
-    font-weight:500;
-
-    color:#555;
-
-    margin-bottom:18px;
-
-}
-
-.offer-overlay h3 span{
-
-    color:#EF6F8F;
-
-    font-size:52px;
-
-    font-weight:700;
-
-}
-
-/* ==========================
-   DESCRIPTION
-========================== */
-
-.offer-overlay p{
-
-    max-width:330px;
-
-    font-family:"Poppins",sans-serif;
-
-    font-size:16px;
-
-    color:#666;
-
-    line-height:1.8;
-
-    margin-bottom:35px;
-
-}
-/* ==========================
-   SHOP BUTTON
-========================== */
-
-.offer-btn{
-
-    width:220px;
-
-    height:58px;
-
-    border:none;
-
-    border-radius:50px;
-
-    background:linear-gradient(135deg,#EF6F8F,#D9557E);
-
-    color:#fff;
-
-    font-family:"Poppins",sans-serif;
-
-    font-size:16px;
-
-    font-weight:600;
-
-    display:flex;
+    display:inline-flex;
 
     align-items:center;
 
     justify-content:center;
 
-    gap:12px;
+    width:max-content;
 
-    cursor:pointer;
-    margin-top:20px;
+    padding:10px 22px;
 
-    transition:.35s ease;
+    border-radius:50px;
 
-    box-shadow:0 15px 35px rgba(239,111,143,.25);
+    background:#fff;
 
-}
+    border:1px solid #FFD7E4;
 
-.offer-btn:hover{
+    color:#D94C7A;
 
-    transform:translateY(-5px);
+    font-size:16px;
 
-    box-shadow:0 25px 45px rgba(239,111,143,.35);
+    font-weight:700;
 
-}
+    letter-spacing:2px;
 
-.offer-btn svg{
+    text-transform:uppercase;
 
-    transition:.35s;
+    margin-bottom:25px;
 
-}
-
-.offer-btn:hover svg{
-
-    transform:translateX(6px);
+    box-shadow:0 10px 20px rgba(239,111,143,.12);
 
 }
 
-/* ==========================
-   FEATURES
-========================== */
+/*==========================================
+            HEADING
+==========================================*/
 
-.offer-features{
+.offer-content h2{
+
+    font-family:"Playfair Display", serif;
+
+    font-size:50px;
+
+    font-weight:700;
+
+    line-height:1.1;
+
+    color:#222;
+
+    margin-bottom:25px;
+
+}
+
+.offer-content h2 span{
+
+    color:#EF6F8F;
+
+}
+
+/*==========================================
+            DISCOUNT
+==========================================*/
+
+.discount-box{
+
+    margin-bottom:30px;
+
+}
+
+.discount-box p{
+
+    font-size:20px;
+
+    font-weight:600;
+
+    letter-spacing:2px;
+
+    color:#666;
+
+    margin-bottom:5px;
+
+}
+
+.discount-box h1{
+
+    margin:0;
+
+    font-size:62px;
+
+    font-weight:800;
+
+    line-height:1;
+
+    color:#EF6F8F;
+
+}
+/*==========================================
+            COUNTDOWN TIMER
+==========================================*/
+
+.offer-timer{
+
+    margin-bottom:35px;
+
+}
+
+.timer-heading{
 
     display:flex;
 
-    gap:35px;
+    align-items:center;
 
-    margin-top:45px;
+    gap:10px;
+
+    margin-bottom:18px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    color:#555;
+
+}
+
+.timer-heading svg{
+
+    font-size:18px;
+
+    color:#EF6F8F;
+
+}
+
+.timer{
+
+    display:flex;
+
+    gap:15px;
 
     flex-wrap:wrap;
 
 }
 
-.feature-item{
+.time-box{
+
+    width:70px;
+
+    height:70px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#fff;
+
+    border:1px solid #FFD8E5;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 20px rgba(239,111,143,.12);
+
+    transition:.35s ease;
+
+}
+
+.time-box:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 18px 35px rgba(239,111,143,.20);
+
+}
+
+.time-box h3{
+
+    margin:0;
+
+    font-size:24px;
+
+    font-weight:700;
+
+    line-height:1;
+
+    color:#EF6F8F;
+
+}
+
+.time-box p{
+
+    margin-top:6px;
+
+    margin-bottom:0;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    color:#666;
+
+}
+
+/*==========================================
+            SHOP NOW BUTTON
+==========================================*/
+
+.shop-btn{
+
+    width:310px;
+
+    height:62px;
+
+    margin-top:30px;
 
     display:flex;
 
     align-items:center;
 
+    justify-content:center;
+
     gap:12px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:50px;
+
+    background:linear-gradient(
+        90deg,
+        #EF6F8F,
+        #D94C7A
+    );
+
+    color:#fff;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 15px 30px rgba(239,111,143,.25);
+
+    transition:.35s ease;
 
 }
 
-.feature-item svg{
+.shop-btn:hover{
 
-    width:46px;
+    transform:translateY(-4px);
 
-    height:46px;
+    box-shadow:
+        0 22px 45px rgba(239,111,143,.35);
 
-    padding:12px;
+}
 
-    border-radius:50%;
+.shop-btn svg{
 
-    background:#FFF2F6;
-
-    color:#EF6F8F;
+    font-size:18px;
 
     transition:.35s;
 
 }
 
-.feature-item span{
+.shop-btn:hover svg{
 
-    font-family:"Poppins",sans-serif;
+    transform:translateX(5px);
+
+}
+
+/*==========================================
+        DISCOUNT BADGE
+==========================================*/
+
+.offer-badge{
+
+    position:absolute;
+
+    top:45px;
+
+    right:45px;
+
+    width:180px;
+
+    height:180px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    border:4px solid #FFE3EC;
+
+    box-shadow:0 18px 40px rgba(0,0,0,.12);
+
+    z-index:3;
+
+    transition:.4s ease;
+
+}
+
+.offer-banner:hover .offer-badge{
+
+    transform:rotate(8deg) scale(1.05);
+
+}
+
+.offer-badge span{
 
     font-size:14px;
 
-    font-weight:500;
-
-    color:#555;
-
-}
-
-.feature-item:hover svg{
-
-    background:#EF6F8F;
-
-    color:#fff;
-
-    transform:rotate(10deg);
-
-}
-
-/* ==========================
-   IMAGE HOVER
-========================== */
-
-.offer-bg{
-     width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-
-    object-position:center;
-
-    transition:.7s ease;
-
-}
-
-.offer-banner:hover .offer-bg{
-
-    transform:scale(1.05);
-
-}
-
-/* ==========================
-   PREMIUM SHADOW
-========================== */
-
-.offer-banner{
-
-    transition:.4s;
-
-}
-
-.offer-banner:hover{
-
-    box-shadow:0 30px 70px rgba(0,0,0,.12);
-
-}
-/* ====================================
-   RESPONSIVE DESIGN
-==================================== */
-
-/* ---------- Laptop ---------- */
-
-@media (max-width:1200px){
-
-.offer-overlay{
-
-    width:48%;
-
-    padding:45px;
-
-}
-
-.offer-overlay h2{
-
-    font-size:48px;
-
-}
-
-.offer-overlay h3{
-
-    font-size:28px;
-
-}
-
-.offer-overlay h3 span{
-
-    font-size:46px;
-
-}
-
-.offer-overlay p{
-
-    font-size:15px;
-
-}
-
-.offer-features{
-
-    gap:22px;
-
-}
-
-}
-
-
-/* ---------- Tablet ---------- */
-
-@media (max-width:992px){
-
-.special-offer{
-
-    padding:80px 0;
-
-}
-
-.offer-banner{
-
-    aspect-ratio:auto;
-
-    min-height:700px;
-
-}
-
-.offer-bg{
-
-    object-position:right center;
-
-}
-
-.offer-overlay{
-
-    width:100%;
-
-    background:linear-gradient(
-        180deg,
-        rgba(255,255,255,.95) 0%,
-        rgba(255,255,255,.82) 45%,
-        rgba(255,255,255,.20) 100%
-    );
-
-    padding:50px;
-
-}
-
-.offer-overlay h2{
-
-    font-size:42px;
-
-}
-
-.offer-overlay h3{
-
-    font-size:26px;
-
-}
-
-.offer-overlay h3 span{
-
-    font-size:40px;
-
-}
-
-.offer-features{
-
-    margin-top:30px;
-
-}
-
-}
-
-
-/* ---------- Mobile ---------- */
-
-@media (max-width:768px){
-
-.special-offer{
-
-    padding:60px 0;
-
-}
-
-.offer-banner{
-
-    border-radius:20px;
-
-    min-height:620px;
-
-}
-
-.offer-overlay{
-
-    padding:30px;
-
-    justify-content:flex-start;
-
-    padding-top:50px;
-
-}
-
-.offer-tag{
-
-    font-size:11px;
+    font-weight:600;
 
     letter-spacing:2px;
 
-}
-
-.offer-overlay h2{
-
-    font-size:30px;
+    color:#777;
 
 }
 
-.offer-overlay h3{
+.offer-badge h2{
 
-    font-size:22px;
+    margin:5px 0;
 
-}
+    font-size:64px;
 
-.offer-overlay h3 span{
+    font-weight:800;
 
-    font-size:34px;
+    line-height:1;
 
-}
-
-.offer-overlay p{
-
-    font-size:14px;
-
-    line-height:1.7;
+    color:#EF6F8F;
 
 }
 
-.offer-btn{
+.offer-badge p{
 
-    width:100%;
+    font-size:17px;
 
-    max-width:230px;
+    font-weight:700;
 
-    height:52px;
+    letter-spacing:2px;
 
-    font-size:15px;
+    color:#444;
+
+}
+/*==========================================
+            OVERLAY EFFECT
+==========================================*/
+
+.offer-banner::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+        180deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.05) 100%
+    );
+
+    pointer-events:none;
 
 }
 
-.offer-features{
+/*==========================================
+        DESKTOP (1400px)
+==========================================*/
 
-    gap:15px;
+@media (max-width:1400px){
+
+    .offer-banner{
+        height:700px;
+    }
+
+    .offer-content{
+        width:40%;
+        padding:55px;
+    }
+
+    .offer-content h2{
+        font-size:46px;
+    }
+
+    .discount-box h1{
+        font-size:58px;
+    }
+
+    .offer-badge{
+        width:160px;
+        height:160px;
+    }
+
+    .offer-badge h2{
+        font-size:56px;
+    }
 
 }
 
-.feature-item{
+/*==========================================
+            LAPTOP (1200px)
+==========================================*/
 
-    width:100%;
+@media (max-width:1200px){
+
+    .offer-banner{
+        height:650px;
+    }
+
+    .offer-content{
+        width:45%;
+        padding:45px;
+    }
+
+    .offer-content h2{
+        font-size:40px;
+    }
+
+    .discount-box h1{
+        font-size:52px;
+    }
+
+    .time-box{
+        width:64px;
+        height:64px;
+    }
+
+    .shop-btn{
+        width:280px;
+        height:58px;
+    }
+
+    .offer-badge{
+        width:145px;
+        height:145px;
+        top:35px;
+        right:35px;
+    }
+
+    .offer-badge h2{
+        font-size:48px;
+    }
 
 }
 
-.feature-item svg{
+/*==========================================
+            TABLET (992px)
+==========================================*/
 
-    width:42px;
+@media (max-width:992px){
 
-    height:42px;
+    .special-offer{
+        padding:60px 0 50px;
+    }
+
+    .offer-banner{
+        height:620px;
+        border-radius:24px;
+    }
+
+    .offer-content{
+        width:60%;
+        padding:35px;
+    }
+
+    .offer-content h2{
+        font-size:34px;
+    }
+
+    .discount-box h1{
+        font-size:44px;
+    }
+
+    .timer{
+        gap:10px;
+    }
+
+    .time-box{
+        width:60px;
+        height:60px;
+    }
+
+    .time-box h3{
+        font-size:20px;
+    }
+
+    .time-box p{
+        font-size:10px;
+    }
+
+    .shop-btn{
+        width:260px;
+        height:54px;
+        font-size:16px;
+    }
+
+    .offer-badge{
+        display:none;
+    }
 
 }
 
+/*==========================================
+            MOBILE (768px)
+==========================================*/
+
+@media (max-width:768px){
+
+    .special-offer{
+        padding:50px 15px;
+    }
+
+    .offer-banner{
+        height:560px;
+    }
+
+    .offer-content{
+        width:68%;
+        padding:28px;
+    }
+
+    .offer-label{
+        font-size:13px;
+        padding:8px 16px;
+    }
+
+    .offer-content h2{
+        font-size:28px;
+    }
+
+    .discount-box h1{
+        font-size:38px;
+    }
+
+    .timer{
+        gap:8px;
+    }
+
+    .time-box{
+        width:54px;
+        height:54px;
+    }
+
+    .time-box h3{
+        font-size:18px;
+    }
+
+    .time-box p{
+        font-size:9px;
+    }
+
+    .shop-btn{
+        width:100%;
+        margin-top:20px;
+        font-size:15px;
+        height:50px;
+    }
+
 }
 
-
-/* ---------- Small Mobile ---------- */
+/*==========================================
+        SMALL MOBILE (480px)
+==========================================*/
 
 @media (max-width:480px){
 
-.offer-overlay{
+    .offer-banner{
+        height:520px;
+        border-radius:18px;
+    }
 
-    padding:22px;
+    .offer-content{
+        width:100%;
+        padding:22px;
+        background:linear-gradient(
+            180deg,
+            rgba(255,248,250,.95),
+            rgba(255,248,250,.55),
+            rgba(255,248,250,0)
+        );
+    }
 
-}
+    .offer-label{
+        font-size:12px;
+    }
 
-.offer-overlay h2{
+    .offer-content h2{
+        font-size:24px;
+    }
 
-    font-size:26px;
+    .discount-box p{
+        font-size:16px;
+    }
 
-}
+    .discount-box h1{
+        font-size:34px;
+    }
 
-.offer-overlay h3 span{
+    .timer{
+        justify-content:center;
+    }
 
-    font-size:30px;
+    .time-box{
+        width:50px;
+        height:50px;
+    }
 
-}
+    .time-box h3{
+        font-size:16px;
+    }
 
-.offer-btn{
+    .time-box p{
+        font-size:8px;
+    }
 
-    max-width:200px;
-
-    height:48px;
-
-}
-
-.feature-item span{
-
-    font-size:13px;
-
-}
+    .shop-btn{
+        width:100%;
+        height:48px;
+        font-size:14px;
+    }
 
 }
