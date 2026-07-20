@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#FFFDFD;
+}
+
+.faq-page{
+padding:80px 0;
+background:#FFFDFD;
+}
+
+/* Header */
+
+.faq-header{
+text-align:center;
+max-width:700px;
+margin:auto;
+margin-bottom:60px;
+}
+
+.faq-tag{
+display:inline-block;
+padding:10px 25px;
+background:#FFEFF4;
+color:#EF6F8F;
+border-radius:30px;
+font-weight:600;
+margin-bottom:20px;
+}
+
+.faq-header h1{
+font-family:'Cormorant Garamond',serif;
+font-size:58px;
+color:#352525;
+margin-bottom:20px;
+}
+
+.faq-header p{
+color:#666666;
+line-height:1.8;
+}
+
+/* FAQ */
+
+.faq-container{
+max-width:900px;
+margin:auto;
+}
+
+.faq-item{
+background:#FFF8F8;
+margin-bottom:20px;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+transition:.3s;
+}
+
+.faq-item:hover{
+transform:translateY(-4px);
+}
+
+.faq-question{
+width:100%;
+background:none;
+border:none;
+padding:22px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:pointer;
+font-size:18px;
+font-weight:600;
+color:#352525;
+font-family:'Poppins',sans-serif;
+}
+
+.faq-question span{
+font-size:28px;
+color:#EF6F8F;
+}
+
+.faq-answer{
+padding:0 30px 25px;
+color:#666666;
+line-height:1.8;
+}
+
+/* CTA */
+
+.faq-contact{
+margin-top:80px;
+background:#FFEFF4;
+padding:60px;
+border-radius:30px;
+text-align:center;
+}
+
+.faq-contact h2{
+font-family:'Cormorant Garamond',serif;
+font-size:42px;
+color:#352525;
+margin-bottom:15px;
+}
+
+.faq-contact p{
+color:#666666;
+margin-bottom:30px;
+}
+
+.faq-contact button{
+background:#EF6F8F;
+color:#fff;
+padding:15px 35px;
+border:none;
+border-radius:30px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+transition:.3s;
+}
+
+.faq-contact button:hover{
+background:#D4AF37;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.faq-page{
+padding:50px 20px;
+}
+
+.faq-header h1{
+font-size:40px;
+}
+
+.faq-question{
+font-size:16px;
+padding:18px;
+}
+
+.faq-contact{
+padding:40px 20px;
+}
+
+.faq-contact h2{
+font-size:32px;
+}
+
+}

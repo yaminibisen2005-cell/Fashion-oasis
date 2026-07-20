@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+
+.testimonial-section{
+    background:linear-gradient(180deg,#FFF8F6,#FCEBE6);
+    padding:90px 0;
+}
+
+
+
+.testimonial-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:52px;
+    font-weight:700;
+    color:#3B1F24;
+    margin-bottom:10px;
+}
+
+.testimonial-title span{
+    font-family:'Great Vibes',cursive;
+    color:#A63D67;
+    font-size:58px;
+    font-weight:400;
+}
+
+.testimonial-subtitle{
+    font-family:'Poppins',sans-serif;
+    color:#6A5B5B;
+    font-size:17px;
+    margin-bottom:55px;
+}
+
+
+
+.testimonial-card{
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(18px);
+    border:1px solid #E9D2C7;
+    border-radius:24px;
+    padding:35px 28px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.35s ease;
+    height:100%;
+    overflow:hidden;
+    position:relative;
+}
+
+.testimonial-card::before{
+    content:"";
+    position:absolute;
+    top:-70px;
+    right:-70px;
+    width:160px;
+    height:160px;
+    background:rgba(166,61,103,.08);
+    border-radius:50%;
+}
+
+.testimonial-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(139,33,74,.18);
+}
+
+
+
+.quote-icon{
+    font-size:32px;
+    color:#8B214A;
+    margin-bottom:15px;
+}
+
+
+
+.stars{
+    color:#D8B46A;
+    font-size:16px;
+    margin-bottom:20px;
+}
+
+.stars svg{
+    margin-right:4px;
+}
+
+
+
+.review-text{
+    font-family:'Poppins',sans-serif;
+    font-size:15px;
+    line-height:30px;
+    color:#6A5B5B;
+    min-height:100px;
+}
+
+
+
+.testimonial-card hr{
+    margin:24px 0;
+    border-top:1px solid #E9D2C7;
+}
+
+
+
+.customer-info{
+    display:flex;
+    align-items:center;
+}
+
+.customer-img{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-right:15px;
+    border:2px solid #D8B46A;
+}
+
+.customer-info h6{
+    margin:0;
+    font-family:'Cormorant Garamond',serif;
+    font-size:24px;
+    font-weight:700;
+    color:#3B1F24;
+}
+
+.customer-info span{
+    font-family:'Poppins',sans-serif;
+    color:#8B214A;
+    font-size:14px;
+}
+
+
+
+.dots{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:45px;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#D9C7C7;
+    margin:0 6px;
+    transition:.3s;
+}
+
+.dot.active{
+    width:14px;
+    height:14px;
+    background:#8B214A;
+    box-shadow:0 0 10px rgba(139,33,74,.3);
+}
+
+
+
+@media(max-width:992px){
+
+.testimonial-title{
+    font-size:42px;
+}
+
+.testimonial-title span{
+    font-size:48px;
+}
+
+.review-text{
+    min-height:auto;
+}
+
+}
+
+@media(max-width:768px){
+
+.testimonial-section{
+    padding:70px 15px;
+}
+
+.testimonial-title{
+    font-size:34px;
+}
+
+.testimonial-title span{
+    font-size:40px;
+}
+
+.testimonial-subtitle{
+    font-size:15px;
+}
+
+.testimonial-card{
+    padding:28px 22px;
+}
+
+.review-text{
+    font-size:14px;
+    line-height:26px;
+}
+
+.customer-img{
+    width:55px;
+    height:55px;
+}
+
+.customer-info h6{
+    font-size:20px;
+}
+
+}

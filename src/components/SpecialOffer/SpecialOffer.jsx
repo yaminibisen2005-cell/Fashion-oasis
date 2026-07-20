@@ -1,95 +1,51 @@
+import { Link } from "react-router-dom";
 import "./SpecialOffer.css";
-import offerImage from "../../assets/special-offer.jpg";
-
-import {
-  FaArrowRight,
-  FaGem,
-  FaTruck,
-  FaShieldAlt,
-} from "react-icons/fa";
+import specialofferbanner from "../../assets/images/specialofferbanner.jpg";
 
 function SpecialOffer() {
   return (
     <section className="special-offer">
-
       <div className="container">
 
-        <div className="offer-banner">
+        <div
+          className="offer-banner"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)), url(${specialofferbanner})`
+          }}
+        >
 
-          {/* Background Image */}
+          <div className="offer-content">
 
-          <img
-            src={offerImage}
-            alt="Special Offer"
-            className="offer-bg"
-          />
-
-          {/* Left Content */}
-
-          <div className="offer-overlay">
-
-            <span className="offer-tag">
-              LIMITED TIME OFFER
-            </span>
-
-            <h2>
-              Celebrate Every
-              <br />
-              Beautiful Moment
-            </h2>
-
-            <h3>
-              Flat <span>30% OFF</span>
-            </h3>
-
-            <p>
-              Discover handcrafted jewellery designed with elegance,
-              luxury and timeless beauty. Make every occasion
-              unforgettable with Fashion Oasis.
+            <p className="offer-subtitle">
+              SPECIAL OFFER
             </p>
 
-            <button className="offer-btn">
+            <h1>
+              FLAT <span>20%</span> OFF
+            </h1>
 
-              Shop Collection
+            <p className="offer-text">
+              On your first order
+            </p>
 
-              <FaArrowRight />
-
-            </button>
-
-            <div className="offer-features">
-
-              <div className="feature-item">
-
-                <FaGem />
-
-                <span>Premium Quality</span>
-
-              </div>
-
-              <div className="feature-item">
-
-                <FaTruck />
-
-                <span>Fast Delivery</span>
-
-              </div>
-
-              <div className="feature-item">
-
-                <FaShieldAlt />
-
-                <span>Secure Payment</span>
-
-              </div>
-
+            <div className="divider">
+              <span>❤</span>
             </div>
+
+            <h2>
+              Use Code:
+              <span className="coupon"> WELCOME20</span>
+            </h2>
+
+            <Link to="/ShopNow" className="offer-btn">
+              SHOP NOW →
+            </Link>
 
           </div>
 
         </div>
 
       </div>
-
     </section>
   );
 }

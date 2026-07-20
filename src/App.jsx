@@ -1,34 +1,60 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ShopProvider } from "./context/ShopContext";
-import Home from "./pages/Home";
-import Collections from "./pages/Collections";
-import ProductDetails from "./pages/ProductDetails";
-import Wishlist from "./pages/Wishlist/Wishlist";
-import Cart from "./pages/Cart/Cart";
-import Checkout from "./pages/Checkout/Checkout";
-import Payment from "./pages/Payment/Payment";
-import ThankYou from "./pages/ThankYou/ThankYou";
-import TrackOrder from "./pages/TrackOrder/TrackOrder";
+import{BrowserRouter,Routes,Route}from "react-router-dom";
+import WhyChooseUs from "./components/WhyChooseUs/WhyChooseUs";
+import SpecialOffer from "./components/SpecialOffer/SpecialOffer";
+import Testimonial from "./components/Testimonials/Testimonial";
+// import ShopNow from "./pages/ShopNow/shopNow";
+import About from "./pages/About/About";
+import Contact from "./pages/Contact/Contact";
+import Faq from "./pages/Faq/Faq";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import ResetPassword from "./pages/Reset/ResetPassword";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Profile from "./pages/Dashboard/Profile";
+import Orders from "./pages/Dashboard/Orders";
+import Wishlist from "./pages/Dashboard/Wishlist";
+import Reviews from "./pages/Dashboard/Reviews";
+function Home(){
+  return(
+   
+    <>
+      <About />
+      <WhyChooseUs />
+      <Contact />
+      <Faq /> 
+      <SpecialOffer /> 
+      <Testimonial />
+      
+      
 
-function App() {
-  return (
-    <ShopProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/collections" element={<Collections />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment" element={<Payment />} />
-          <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/track-order" element={<TrackOrder />} />
-        </Routes>
-      </Router>
-    </ShopProvider>
+      
+    </>
   );
 }
-
-export default App;
+function App(){
+  return(
+     <BrowserRouter>
+      <Routes>
+      <Route path="/" element={<Login />}/>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/reset-password" element={<ResetPassword />} />
+  <Route path="/profile" element={<Profile />} />
+      <Route path="/orders" element={<Orders />}/>
+     <Route path="/dashboard" element={<Dashboard />}/> 
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/contact" element={<Contact />} />
+    <Route path="/faq" element={<Faq />} />
+     {/* <Route path="/ShopNow" element={<ShopNow />} /> */}
+     <Route path="/wishlist" element={<Wishlist />}/>
+     <Route path="/reviews" element={<Reviews />} />
+    
+  </Routes>
+</BrowserRouter>
+     
+  );
+}
+export default App;

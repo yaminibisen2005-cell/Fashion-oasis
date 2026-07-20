@@ -1,81 +1,73 @@
 import "./WhyChooseUs.css";
 import {
-  FaGem,
   FaHandHoldingHeart,
+  FaLeaf,
   FaTruck,
   FaShieldAlt,
 } from "react-icons/fa";
 
 const features = [
   {
-    icon: <FaGem />,
-    title: "Premium Quality",
-    description:
-      "Crafted with premium materials to ensure timeless elegance and lasting beauty.",
-  },
-  {
+    id: 1,
     icon: <FaHandHoldingHeart />,
-    title: "Handmade With Love",
-    description:
-      "Every jewellery piece is handcrafted by skilled artisans with attention to every detail.",
+    title: "Handcrafted",
+    description: "Beautifully crafted by skilled artisans with attention to every detail.",
   },
   {
+    id: 2,
+    icon: <FaLeaf />,
+    title: "Eco Friendly",
+    description: "Made with sustainable materials that care for the planet.",
+  },
+  {
+    id: 3,
     icon: <FaTruck />,
-    title: "Free & Fast Shipping",
-    description:
-      "Quick, safe and reliable delivery across India with secure packaging.",
+    title: "Fast Shipping",
+    description: "Quick delivery with secure packaging across the country.",
   },
   {
+    id: 4,
     icon: <FaShieldAlt />,
     title: "Secure Payments",
-    description:
-      "Shop confidently with 100% encrypted and secure payment methods.",
+    description: "Safe checkout with trusted and encrypted payment methods.",
   },
 ];
 
-const WhyChooseUs = () => {
+function WhyChooseUs() {
   return (
     <section className="why-section">
-
       <div className="container">
+        <div className="section-heading">
+          <span className="tag">WHY CHOOSE US</span>
 
-        <div className="why-heading">
-
-          <span>WHY CHOOSE US</span>
-
-          <h2>Crafted For Every Special Moment</h2>
+          <h2>
+            Crafted with <span>Passion</span>, Delivered with Care
+          </h2>
 
           <p>
-            Discover jewellery that combines elegance, craftsmanship,
-            and timeless beauty for every occasion.
+            We believe shopping should be simple, beautiful, and reliable.
+            Experience premium handcrafted products with exceptional service.
           </p>
-
         </div>
 
-        <div className="why-grid">
+        <div className="row g-4">
+          {features.map((feature) => (
+            <div className="col-lg-3 col-md-6" key={feature.id}>
+              <div className="feature-card">
+                <div className="icon-box">
+                  {feature.icon}
+                </div>
 
-          {features.map((item, index) => (
+                <h4>{feature.title}</h4>
 
-            <div className="why-card" key={index}>
-
-              <div className="why-icon">
-                {item.icon}
+                <p>{feature.description}</p>
               </div>
-
-              <h3>{item.title}</h3>
-
-              <p>{item.description}</p>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
-
     </section>
   );
-};
+}
 
 export default WhyChooseUs;
