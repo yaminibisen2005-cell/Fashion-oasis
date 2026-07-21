@@ -9,6 +9,8 @@ import ProductGrid from "../../components/Shop/ProductGrid/ProductGrid";
 import Pagination from "../../components/Shop/Pagination/Pagination";
 
 import { products } from "../../data/products";
+import Navbar from "../../Components/Navbar/Navbar";
+import Footer from "../../Components/Footer/Footer";
 
 export default function Shop() {
 
@@ -72,6 +74,7 @@ export default function Shop() {
 
   return (
     <div className="shop-page">
+      <Navbar/>
       <HeroBanner/>
       <div className="shop-layout">
         <Sidebar
@@ -97,6 +100,8 @@ export default function Shop() {
           />
           <ProductGrid products={filteredProducts} />
           <Pagination/>
+          <Footer/>
+          
         </div>
       </div>
     </div>

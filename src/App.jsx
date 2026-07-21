@@ -10,7 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import About from "./pages/About/About";
 import Shop from "./pages/Shop/Shop";
-import Collections from "./pages/Collections";
+
 import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import Cart from "./pages/Cart/Cart";
@@ -38,7 +38,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
-          <Route path="/collections" element={<Collections />} />
+        
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
