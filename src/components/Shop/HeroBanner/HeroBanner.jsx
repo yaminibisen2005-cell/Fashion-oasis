@@ -7,7 +7,7 @@ const HeroBanner = () => {
     <section className="shop-hero">
       <div className="hero-background">
         <img src={banner} alt="Jewellery Collection" />
-        <div className="hero-overlay"></div>
+        <div className="hero-overlay-shop"></div>
       </div>
 
       <div className="shop-hero-content">
