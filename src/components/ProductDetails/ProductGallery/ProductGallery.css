@@ -61,7 +61,15 @@
     gap: 16px;
   }
 
+  .gallery-main{
+    order: 1;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
   .gallery-thumbnails{
+    order: 2;
     flex-direction: row;
     justify-content: center;
     gap: 10px;
@@ -70,12 +78,6 @@
   .thumbnail{
     width: 70px;
     height: 70px;
-  }
-
-  .gallery-main{
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
   }
 }
 
