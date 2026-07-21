@@ -116,7 +116,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link to="/collections">
+              <Link to="/shop">
                 Shop
               </Link>
             </li>

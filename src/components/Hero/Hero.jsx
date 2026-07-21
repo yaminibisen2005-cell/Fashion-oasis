@@ -86,7 +86,7 @@ const Hero = () => {
                         Timeless handcrafted jewellery designed with elegance
                         and love to celebrate your unique style.
                       </p>
-                      <button onClick={() => navigate("/collections")}>
+                      <button onClick={() => navigate("/shop")}>
                         Explore Collection
                         <FaArrowRight />
                       </button>
