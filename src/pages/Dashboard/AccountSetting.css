@@ -1,115 +1,183 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+/* ===========================
+   Page
+=========================== */
 
 .account-settings-page{
-    width:100%;
-    min-height:100vh;
-    background:#FFF8F8;
-
-    display:flex;
-    justify-content:center;   /* Horizontal center */
-    align-items:center;       /* Vertical center */
-
     padding:35px;
+    background:#FFF8F8;
+    min-height:100vh;
 }
 
+/* ===========================
+   Main Card
+=========================== */
+
 .settings-card{
-    width:100%;
-    max-width:600px;
     background:#fff;
-    border-radius:16px;
-    padding:30px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    border-radius:22px;
+    padding:40px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
 }
 
 .settings-card h2{
     font-family:'Cormorant Garamond',serif;
-    font-size:34px;
+    font-size:42px;
     color:#352525;
-    margin-bottom:30px;
+    margin-bottom:8px;
 }
 
+.settings-subtitle{
+    color:#777;
+    font-size:15px;
+    margin-bottom:35px;
+}
+
+/* ===========================
+   Sections
+=========================== */
+
 .setting-section{
-    margin-bottom:40px;
+    margin-top:35px;
+    padding:28px;
+    border:1px solid #F6DCE2;
+    border-radius:18px;
+    background:#FFFDFD;
+    transition:.3s;
+}
+
+.setting-section:hover{
+    box-shadow:0 8px 25px rgba(239,111,143,.08);
 }
 
 .setting-section h3{
-    font-family:'Poppins',sans-serif;
-    font-size:18px;
-    font-weight:600;
+    font-family:'Cormorant Garamond',serif;
+    font-size:30px;
     color:#352525;
-    margin-bottom:20px;
+    margin-bottom:25px;
 }
+
+/* ===========================
+   Profile
+=========================== */
+
+.account-profile{
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+
+.setting-avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #EF6F8F;
+    box-shadow:0 10px 25px rgba(239,111,143,.18);
+}
+
+.account-profile h4{
+    font-size:28px;
+    color:#352525;
+    margin-bottom:6px;
+    font-family:'Cormorant Garamond',serif;
+}
+
+.account-profile p{
+    color:#777;
+    margin-bottom:12px;
+}
+
+.change-photo-btn{
+    border:none;
+    background:#EF6F8F;
+    color:#fff;
+    padding:11px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:500;
+    transition:.3s;
+}
+
+.change-photo-btn:hover{
+    background:#e15d81;
+}
+
+/* ===========================
+   Inputs
+=========================== */
 
 .input-group{
     display:flex;
     flex-direction:column;
-    margin-bottom:18px;
+    margin-bottom:22px;
 }
 
 .input-group label{
-    font-family:'Poppins',sans-serif;
-    font-size:14px;
-    color:#555;
     margin-bottom:8px;
+    font-weight:500;
+    color:#444;
 }
 
 .input-group input{
-    width:100%;
-    height:48px;
-    border:1px solid #E5E5E5;
-    border-radius:8px;
-    padding:0 15px;
-    font-size:14px;
-    font-family:'Poppins',sans-serif;
+    height:55px;
+    border:1px solid #ECD8DD;
+    border-radius:14px;
+    padding:0 18px;
+    font-size:15px;
     outline:none;
     transition:.3s;
 }
 
 .input-group input:focus{
     border-color:#EF6F8F;
-    box-shadow:0 0 0 3px rgba(239,111,143,.15);
+    box-shadow:0 0 0 4px rgba(239,111,143,.12);
 }
+
+/* ===========================
+   Buttons
+=========================== */
 
 .update-btn,
 .save-btn{
-    width:100%;
-    height:48px;
-    border:none;
-    border-radius:8px;
+
+    margin-top:15px;
+
     background:#EF6F8F;
     color:#fff;
-    font-family:'Poppins',sans-serif;
-    font-weight:600;
-    font-size:14px;
+
+    border:none;
+
+    padding:14px 28px;
+
+    border-radius:12px;
+
     cursor:pointer;
+
+    font-size:15px;
+    font-weight:600;
+
     transition:.3s;
-    margin-top:10px;
 }
 
 .update-btn:hover,
 .save-btn:hover{
-    background:#e55c7e;
+
+    background:#e35d80;
+    transform:translateY(-2px);
+
 }
 
-.notification-section{
-    border-top:1px solid #eee;
-    padding-top:30px;
-}
+/* ===========================
+   Checkbox
+=========================== */
 
 .checkbox{
     display:flex;
     align-items:center;
     gap:12px;
-    margin-bottom:16px;
-    font-family:'Poppins',sans-serif;
-    font-size:15px;
-    color:#444;
+    margin-bottom:18px;
     cursor:pointer;
 }
 
@@ -117,85 +185,328 @@
     width:18px;
     height:18px;
     accent-color:#EF6F8F;
-    cursor:pointer;
 }
 
-/* Tablet */
+.checkbox span{
+    color:#555;
+    font-size:15px;
+}
+
+/* ===========================
+   Setting Row
+=========================== */
+
+.setting-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.setting-row h4{
+    color:#352525;
+    margin-bottom:4px;
+    font-size:18px;
+}
+
+.setting-row p{
+    color:#777;
+    font-size:14px;
+}
+
+/* ===========================
+   Toggle Switch
+=========================== */
+
+.switch{
+    position:relative;
+    width:58px;
+    height:30px;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#ddd;
+    border-radius:40px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.slider::before{
+    content:"";
+    position:absolute;
+    width:24px;
+    height:24px;
+    top:3px;
+    left:3px;
+    border-radius:50%;
+    background:#fff;
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#EF6F8F;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(28px);
+}
+
+/* ===========================
+   Select
+=========================== */
+
+.setting-select{
+    width:250px;
+    height:50px;
+    border:1px solid #ECD8DD;
+    border-radius:12px;
+    padding:0 15px;
+    outline:none;
+    font-size:15px;
+    background:#fff;
+}
+
+.setting-select:focus{
+    border-color:#EF6F8F;
+}
+
+/* ===========================
+   Danger Zone
+=========================== */
+
+.danger-zone{
+    border:1px solid #FFD8D8;
+    background:#FFF6F6;
+}
+
+.danger-zone p{
+    color:#666;
+    line-height:1.6;
+    margin-bottom:18px;
+}
+
+.delete-btn{
+    background:#ff5a5a;
+    color:#fff;
+    border:none;
+    padding:14px 28px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:600;
+}
+
+.delete-btn:hover{
+    background:#e14444;
+}
+
+/* ===========================
+   Responsive
+=========================== */
 
 @media(max-width:992px){
 
-.account-settings-page{
-    padding:25px;
-}
-
 .settings-card{
-    max-width:100%;
+    padding:30px;
+}
+
+.setting-row{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+}
+
+.account-profile{
+    flex-direction:column;
+    text-align:center;
+}
+
+.setting-select{
+    width:100%;
 }
 
 }
-
-/* Mobile */
 
 @media(max-width:768px){
 
 .account-settings-page{
-    padding:18px;
+    padding:20px;
 }
 
-.settings-card{
+.settings-card h2{
+    font-size:34px;
+}
+
+.setting-section{
     padding:22px;
 }
 
-.settings-card h2{
-    font-size:28px;
-}
-
-.setting-section h3{
-    font-size:17px;
-}
-
-.input-group input{
-    height:46px;
-}
-
 .update-btn,
-.save-btn{
-    height:46px;
+.save-btn,
+.delete-btn,
+.change-photo-btn{
+    width:100%;
 }
 
 }
 
-/* Small Mobile */
-
-@media(max-width:480px){
-
-.account-settings-page{
-    padding:15px;
-}
+@media(max-width:576px){
 
 .settings-card{
     padding:18px;
-    border-radius:12px;
 }
 
-.settings-card h2{
+.setting-section{
+    padding:18px;
+}
+
+.setting-avatar{
+    width:75px;
+    height:75px;
+}
+
+.account-profile h4{
     font-size:24px;
 }
 
 .setting-section h3{
-    font-size:16px;
+    font-size:26px;
 }
+
+}
+/* Section Heading */
+
+.setting-section h3{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    font-family:'Cormorant Garamond',serif;
+    font-size:30px;
+    color:#352525;
+}
+
+/* Pink Section Icons */
+
+.section-icon{
+    color:#EF6F8F;
+    font-size:24px;
+}
+
+/* Red Danger Icon */
+
+.danger-icon{
+    color:#ff4d6d;
+}
+
+/* Label Icons */
 
 .input-group label{
-    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+    font-weight:500;
+    color:#555;
 }
 
-.input-group input{
-    font-size:13px;
-}
-
-.checkbox{
+.label-icon{
+    color:#EF6F8F;
     font-size:14px;
+}
+
+/* Button Icons */
+
+.change-photo-btn,
+.update-btn,
+.save-btn,
+.delete-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+}
+/* ===========================
+   Personal Information
+=========================== */
+
+.personal-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+    margin-top:25px;
+}
+
+.personal-input{
+    display:flex;
+    flex-direction:column;
+}
+
+.personal-input label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:15px;
+    font-weight:500;
+    color:#444;
+}
+
+.personal-input input,
+.personal-input select,
+.personal-input textarea{
+    width:100%;
+    border:1px solid #ECD8DD;
+    border-radius:14px;
+    padding:14px 18px;
+    font-size:15px;
+    font-family:'Poppins',sans-serif;
+    outline:none;
+    transition:.3s;
+    background:#fff;
+}
+
+.personal-input textarea{
+    resize:none;
+    min-height:120px;
+}
+
+.personal-input input:focus,
+.personal-input select:focus,
+.personal-input textarea:focus{
+    border-color:#EF6F8F;
+    box-shadow:0 0 0 4px rgba(239,111,143,.12);
+}
+
+.full-width{
+    grid-column:1 / -1;
+}
+
+.label-icon{
+    color:#EF6F8F;
+    font-size:15px;
+}
+
+.save-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+}
+
+@media(max-width:768px){
+
+.personal-grid{
+    grid-template-columns:1fr;
+}
+
+.full-width{
+    grid-column:auto;
 }
 
 }

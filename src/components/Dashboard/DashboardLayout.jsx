@@ -14,7 +14,7 @@ import {
 
 import logo from "../../assets/logo.png"; // Change to your logo
 
-function DashboardLayout({ children }) {
+function DashboardLayout({ children ,showProfile = true}) {
   return (
     <div className="dashboard-layout">
 
@@ -27,14 +27,29 @@ function DashboardLayout({ children }) {
   }}
 >
 
-        <div className="logo-section">
+       <div className="logo-section">
 
-          <img src={logo} alt="Fashion Oasis" />
+  {showProfile ? (
+    <>
+      <img
+        src="https://i.pravatar.cc/150?img=12"
+        alt="Profile"
+        className="sidebar-profile"
+      />
 
-          <h3>Fashion Oasis</h3>
+      <h3>Shwet Samrat</h3>
 
-        </div>
+      
+    </>
+  ) : (
+    <>
+      <img src={logo} alt="Fashion Oasis" />
 
+      <h3>Fashion Oasis</h3>
+    </>
+  )}
+
+</div>
         <ul className="menu">
 
           <li className="">

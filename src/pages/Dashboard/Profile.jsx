@@ -1,11 +1,18 @@
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Profile.css";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaVenusMars,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 
 // import avatar from "../../assets/avatar.jpg";
 
 function Profile() {
   return (
-    <DashboardLayout>
+    <DashboardLayout showProfile>
       <div className="profile-page">
 
         <div className="profile-card">
@@ -16,17 +23,13 @@ function Profile() {
             {/* <img src={avatar} alt="Profile" className="profile-avatar" /> */}
 
             {/* Temporary Avatar */}
-            <img
-              src="https://i.pravatar.cc/150?img=12"
-              alt="Profile"
-              className="profile-avatar"
-            />
+           
 
-            <div className="profile-user">
+            <div className="profile-information">
 
-              <h2>Shwet Samrat</h2>
+              <h2>Profile Infromation</h2>
 
-              <p>Member since July 2026</p>
+              <p>Manage your personal details</p>
 
             </div>
 
@@ -35,47 +38,70 @@ function Profile() {
           <div className="profile-info">
 
             <div className="info-box">
-              <label>Full Name</label>
-              <input
-                type="text"
-                defaultValue="Shwet Samrat"
-              />
+            <label>Full Name</label>
+              <div className="input-group">
+    <FaUser className="input-icon" />
+    <input
+      type="text"
+      defaultValue={"Shwet"}
+     
+    />
+            </div>
             </div>
 
-            <div className="info-box">
-              <label>Email</label>
-              <input
-                type="email"
-                defaultValue="shwet@example.com"
-              />
-            </div>
+           <div className="info-box">
+  <label>Email</label>
 
-            <div className="info-box">
-              <label>Phone</label>
-              <input
-                type="text"
-                defaultValue="+91 9876543210"
-              />
-            </div>
+  <div className="input-group">
+    <FaEnvelope className="input-icon" />
+    <input
+      type="email"
+      defaultValue={"shwet@gmail.com"}
+      
+    />
+  </div>
+</div>
 
-            <div className="info-box">
-              <label>Gender</label>
+           <div className="info-box">
+  <label>Phone</label>
 
-              <select defaultValue="Male">
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-            </div>
+  <div className="input-group">
+    <FaPhone className="input-icon" />
+    <input
+      type="text"
+      defaultValue={"+91 8709529162"}
+      
+    />
+  </div>
+</div>
+
+           <div className="info-box">
+  <label>Gender</label>
+
+  <div className="input-group">
+    <FaVenusMars className="input-icon" />
+
+    <select defaultValue="Male">
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+  </div>
+</div>
 
             <div className="info-box full">
-              <label>Address</label>
+  <label>Address</label>
 
-              <textarea
-                rows="4"
-                defaultValue="Purnia, Bihar, India"
-              />
-            </div>
+  <div className="input-group textarea-group">
+    <FaMapMarkerAlt className="input-icon textarea-icon" />
+
+    <textarea
+      rows="4"
+      defaultValue={"+Saket,New Delhi"}
+      
+    />
+  </div>
+</div>
 
           </div>
 
