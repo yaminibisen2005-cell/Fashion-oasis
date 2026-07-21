@@ -13,11 +13,7 @@ const HeroBanner = () => {
       <div className="shop-hero-content">
         <div className="hero-left">
 
-          <div className="breadcrumb">
-            <Link to="/">Home</Link>
-            <span>/</span>
-            <span>Shop</span>
-          </div>
+          
 
           <h1>Shop All Products</h1>
 

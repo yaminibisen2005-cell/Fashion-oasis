@@ -26,7 +26,7 @@ const About = () => {
 
           <div className="about-overlay" data-aos="fade-right">
 
-            <span>ABOUT US</span>
+            
 
             <h1>
               Timeless Jewellery
@@ -137,9 +137,9 @@ const About = () => {
 
       </section>
 
-  <div data-aos="zoom-in">
+ 
     <Newsletter />
-</div>
+
 
       <Footer />
 

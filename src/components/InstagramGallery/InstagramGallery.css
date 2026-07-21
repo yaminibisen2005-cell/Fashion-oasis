@@ -1,39 +1,43 @@
-/* ===========================
-   Instagram Gallery
-=========================== */
+/* ==========================================
+   INSTAGRAM GALLERY
+========================================== */
 
 .instagram-section {
-  padding: 90px 8%;
-  background: linear-gradient(to bottom, #fffaf9, #fdeff3);
+  padding: 90px 6%;
+  background: linear-gradient(180deg, #fffaf8 0%, #fff6f7 100%);
 }
 
 .instagram-container {
-  max-width: 1300px;
+  max-width: 1450px;
   margin: auto;
 }
 
+/* ===========================
+   Heading
+=========================== */
+
 .instagram-heading {
   text-align: center;
-  margin-bottom: 55px;
+  margin-bottom: 50px;
 }
 
 .instagram-heading span {
   color: #c89b5c;
   font-size: 14px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
   font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
 }
 
 .instagram-heading h2 {
-  font-size: 42px;
-  color: #2d2d2d;
-  margin: 15px 0;
   font-family: "Playfair Display", serif;
+  font-size: 52px;
+  color: #d96b8c;
+  margin: 18px 0;
 }
 
 .instagram-heading p {
-  max-width: 650px;
+  max-width: 700px;
   margin: auto;
   color: #666;
   line-height: 1.8;
@@ -41,37 +45,47 @@
 }
 
 /* ===========================
-   Grid
+   Swiper
 =========================== */
 
-.instagram-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+.swiper {
+  padding: 20px 45px 60px;
+}
+
+.swiper-slide {
+  display: flex;
 }
 
 /* ===========================
-   Card
+   Cards
 =========================== */
 
-.instagram-card {
-  position: relative;
+.instagram-card,
+.instagram-follow-card {
+  width: 100%;
+  border-radius: 20px;
   overflow: hidden;
-  border-radius: 18px;
+  position: relative;
   cursor: pointer;
+}
+
+.instagram-card {
   background: white;
-  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  box-shadow: 0 15px 35px rgba(0,0,0,.08);
+  transition: .35s;
+}
+
+.instagram-card:hover {
+  transform: translateY(-8px);
 }
 
 .instagram-card img {
   width: 100%;
-  height: 320px;
+  height: 270px;
   object-fit: cover;
   display: block;
-  transition: .6s;
+  transition: .5s;
 }
-
-/* Hover */
 
 .instagram-card:hover img {
   transform: scale(1.08);
@@ -84,7 +98,285 @@
 .instagram-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.45);
+  background: rgba(217,107,140,.65);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: .4s;
+}
+
+.instagram-card:hover .instagram-overlay {
+  opacity: 1;
+}
+
+.instagram-overlay svg {
+  color: white;
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.instagram-overlay h4 {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ===========================
+   FOLLOW CARD
+=========================== */
+
+.instagram-follow-card {
+  height: 270px;
+  background: linear-gradient(135deg,#d96b8c,#c89b5c);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,.1);
+}
+
+.instagram-follow-card svg {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.instagram-follow-card h3 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.instagram-follow-card p {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.instagram-follow-card button {
+  border: none;
+  background: white;
+  color: #d96b8c;
+  padding: 12px 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.instagram-follow-card button:hover {
+  background: #fff4f7;
+  transform: translateY(-3px);
+}
+
+/* ===========================
+   Navigation
+=========================== */
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #c89b5c;
+  transition: .3s;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #d96b8c;
+}
+
+/* ===========================
+   Pagination
+=========================== */
+
+.swiper-pagination {
+  position: relative;
+  margin-top: 30px;
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #c89b5c;
+  opacity: .4;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #d96b8c;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:1200px){
+
+.instagram-card img,
+.instagram-follow-card{
+    height:240px;
+}
+
+}
+
+@media(max-width:992px){
+
+.instagram-heading h2{
+    font-size:42px;
+}
+
+.instagram-card img,
+.instagram-follow-card{
+    height:220px;
+}
+
+}
+
+@media(max-width:768px){
+
+.instagram-section{
+    padding:70px 5%;
+}
+
+.instagram-heading h2{
+    font-size:34px;
+}
+
+.instagram-heading p{
+    font-size:15px;
+}
+
+.instagram-card img,
+.instagram-follow-card{
+    height:210px;
+}
+
+.swiper{
+    padding:10px 25px 50px;
+}
+
+}
+
+@media(max-width:576px){
+
+.instagram-heading h2{
+    font-size:28px;
+}
+
+.instagram-card img,
+.instagram-follow-card{
+    height:200px;
+}
+
+.instagram-follow-card h3{
+    font-size:20px;
+}
+
+.instagram-follow-card p{
+    font-size:14px;
+}
+
+}/* ========================================
+   Instagram Gallery
+======================================== */
+
+.instagram-section {
+  padding: 100px 6%;
+  background: linear-gradient(180deg, #fffaf8 0%, #fff6f7 100%);
+}
+
+.instagram-container {
+  max-width: 1450px;
+  margin: auto;
+}
+
+/* ========================================
+   Heading
+======================================== */
+
+.instagram-heading {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.instagram-heading span {
+  color: #c89b5c;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.instagram-heading h2 {
+  margin: 18px 0;
+  font-family: "Playfair Display", serif;
+  font-size: 52px;
+  color: #d96b8c;
+}
+
+.instagram-heading p {
+  max-width: 700px;
+  margin: auto;
+  color: #666;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+/* ========================================
+   Swiper
+======================================== */
+
+.swiper {
+  padding: 10px 45px 60px;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+/* ========================================
+   Card
+======================================== */
+
+.instagram-card {
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  background: white;
+  cursor: pointer;
+  transition: .35s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+.instagram-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: .5s ease;
+}
+
+.instagram-card:hover img {
+  transform: scale(1.08);
+}
+
+.instagram-card:hover {
+  transform: translateY(-8px);
+}
+
+/* ========================================
+   Overlay
+======================================== */
+
+.instagram-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      rgba(217,107,140,.15),
+      rgba(217,107,140,.70)
+  );
 
   display: flex;
   flex-direction: column;
@@ -100,98 +392,181 @@
 }
 
 .instagram-overlay svg {
-  font-size: 38px;
   color: white;
+  font-size: 40px;
   margin-bottom: 12px;
 }
 
 .instagram-overlay h4 {
   color: white;
-  font-size: 20px;
-  letter-spacing: 1px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-/* ===========================
-   Button
-=========================== */
+/* ========================================
+   Navigation
+======================================== */
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #c89b5c;
+  width: 42px;
+  height: 42px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: #d96b8c;
+}
+
+/* ========================================
+   Pagination
+======================================== */
+
+.swiper-pagination {
+  position: relative;
+  margin-top: 35px;
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #c89b5c;
+  opacity: .4;
+}
+
+.swiper-pagination-bullet-active {
+  background: #d96b8c;
+  opacity: 1;
+}
+
+/* ========================================
+   Follow Button
+======================================== */
 
 .instagram-button {
-  text-align: center;
-  margin-top: 55px;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
 }
 
-.instagram-button button {
-  border: none;
-  outline: none;
-  padding: 15px 34px;
-  border-radius: 40px;
-
-  background: #c89b5c;
-  color: white;
-
+.follow-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+
+  text-decoration: none;
+
+  padding: 16px 38px;
+
+  background: linear-gradient(
+      135deg,
+      #d8a35d,
+      #c89b5c
+  );
+
+  color: white;
+
+  border-radius: 50px;
 
   font-size: 16px;
   font-weight: 600;
 
-  cursor: pointer;
   transition: .35s;
 }
 
-.instagram-button button:hover {
-  background: #b78545;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(200,155,92,.35);
+.follow-btn svg {
+  font-size: 22px;
 }
 
-/* ===========================
+.follow-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(200,155,92,.35);
+}
+
+/* ========================================
    Responsive
-=========================== */
+======================================== */
 
-@media (max-width:992px){
-
-.instagram-grid{
-grid-template-columns:repeat(2,1fr);
-}
+@media(max-width:1200px){
 
 .instagram-heading h2{
-font-size:34px;
+    font-size:46px;
 }
 
 .instagram-card img{
-height:280px;
+    height:240px;
 }
 
 }
 
-@media (max-width:768px){
+@media(max-width:992px){
+
+.instagram-heading h2{
+    font-size:40px;
+}
+
+.instagram-card img{
+    height:220px;
+}
+
+.swiper{
+    padding:10px 30px 55px;
+}
+
+}
+
+@media(max-width:768px){
 
 .instagram-section{
-padding:70px 20px;
-}
-
-.instagram-grid{
-grid-template-columns:1fr;
-gap:20px;
+    padding:70px 5%;
 }
 
 .instagram-heading h2{
-font-size:30px;
+    font-size:34px;
 }
 
 .instagram-heading p{
-font-size:15px;
+    font-size:15px;
 }
 
 .instagram-card img{
-height:320px;
+    height:210px;
 }
 
-.instagram-button button{
-width:100%;
-justify-content:center;
+.swiper{
+    padding:0 20px 45px;
+}
+
+.follow-btn{
+    width:100%;
+    justify-content:center;
+}
+
+}
+
+@media(max-width:576px){
+
+.instagram-heading h2{
+    font-size:28px;
+}
+
+.instagram-card img{
+    height:190px;
+}
+
+.swiper-button-prev,
+.swiper-button-next{
+    display:none;
 }
 
 }
