@@ -1,41 +1,59 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Newsletter.css";
+import { HiOutlineMail } from "react-icons/hi";
+
+import banner from "../../assets/newsletter-bg.png";
 
 const Newsletter = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email) {
-      setMessage("Thank you for subscribing!");
-      setEmail(""); // Clear the input field
-    } else {
-      setMessage("Please enter a valid email.");
-    }
-  };
-
   return (
-    <div className="newsletter-container">
-      <h2 className="newsletter-heading">Subscribe to our Newsletter</h2>
-      <p className="newsletter-paragraph">
-        Stay updated with our latest news and exclusive offers!
-      </p>
-      <form className="newsletter-form" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          className="newsletter-input"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button type="submit" className="newsletter-button">
-          Subscribe
-        </button>
-      </form>
-      {message && <p className="newsletter-message">{message}</p>}
-    </div>
+    <section className="newsletter">
+
+      <img
+        src={banner}
+        alt="Newsletter Banner"
+        className="newsletter-bg"
+      />
+
+      <div className="newsletter-overlay">
+
+        <span className="newsletter-tag">
+          BE THE FIRST TO KNOW
+        </span>
+
+        <h2>
+          Stay Connected
+          <br />
+          <span>With Fashion Oasis</span>
+        </h2>
+
+        <p>
+          Subscribe to receive exclusive jewellery launches,
+          special offers and timeless style inspiration
+          directly to your inbox.
+        </p>
+
+        <div className="newsletter-form">
+
+          <div className="newsletter-input">
+
+            <HiOutlineMail className="mail-icon" />
+
+            <input
+              type="email"
+              placeholder="Enter your email address"
+            />
+
+          </div>
+
+          <button>
+            Subscribe
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
   );
 };
 
