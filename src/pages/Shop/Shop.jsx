@@ -100,10 +100,11 @@ export default function Shop() {
           />
           <ProductGrid products={filteredProducts} />
           <Pagination/>
-          <Footer/>
+         
           
         </div>
       </div>
+       <Footer/>
     </div>
   );
 }
