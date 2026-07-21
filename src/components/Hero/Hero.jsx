@@ -78,7 +78,7 @@ const Hero = () => {
                         <div className="line"></div>
                         <FaHeart />
                       </div>
-                      <h1>
+                      <h1 color="#ef6f8f">
                         Crafted
                         <span>With Love</span>
                       </h1>

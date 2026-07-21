@@ -1,40 +1,53 @@
+import React from "react";
 import "./Newsletter.css";
-import { FaPaperPlane } from "react-icons/fa";
+import { HiOutlineMail } from "react-icons/hi";
+
+import banner from "../../assets/newsletter-bg.png";
 
 const Newsletter = () => {
   return (
     <section className="newsletter">
 
-      <div className="container">
+      <img
+        src={banner}
+        alt="Newsletter Banner"
+        className="newsletter-bg"
+      />
 
-        <div className="newsletter-card">
+      <div className="newsletter-overlay">
 
-          <div className="newsletter-content">
+        <span className="newsletter-tag">
+          BE THE FIRST TO KNOW
+        </span>
 
-            <span>NEWSLETTER</span>
+        <h2>
+          Stay Connected
+          <br />
+          <span>With Fashion Oasis</span>
+        </h2>
 
-            <h2>Stay Inspired With Fashion Oasis</h2>
+        <p>
+          Subscribe to receive exclusive jewellery launches,
+          special offers and timeless style inspiration
+          directly to your inbox.
+        </p>
 
-            <p>
-              Subscribe to receive exclusive jewellery launches,
-              special discounts, styling inspiration and premium offers.
-            </p>
+        <div className="newsletter-form">
 
-          </div>
+          <div className="newsletter-input">
 
-          <form className="newsletter-form">
+            <HiOutlineMail className="mail-icon" />
 
             <input
               type="email"
               placeholder="Enter your email address"
             />
 
-            <button type="submit">
-              Subscribe
-              <FaPaperPlane />
-            </button>
+          </div>
 
-          </form>
+          <button>
+            Subscribe
+          </button>
 
         </div>
 

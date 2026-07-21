@@ -1,98 +1,123 @@
-import React from "react";
 import "./Footer.css";
 import logo from "../../assets/logo.png";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 
-const Footer = () => {
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaPinterestP,
+  FaYoutube,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaEnvelope,
+} from "react-icons/fa";
+
+export default function Footer() {
   return (
     <footer className="footer">
 
       <div className="footer-container">
 
-        <div className="footer-top">
+        {/* Logo */}
 
-          {/* Logo */}
+        <div className="footer-col">
 
-          <div className="footer-column">
-            <img src={logo} alt="Fashion Oasis" className="footer-logo" />
+          <img src={logo} alt="Fashion Oasis" className="footer-logo" />
 
-            <p className="footer-description">
-              Handmade jewellery and gifts crafted with love to make every
-              moment memorable.
-            </p>
+          <p>
+            Handmade jewellery and gifts crafted with love to make every
+            moment memorable.
+          </p>
 
-            <div className="social-icons">
-              <a href="#"><FaFacebookF /></a>
-              <a href="#"><FaInstagram /></a>
-              <a href="#"><FaTwitter /></a>
-            </div>
+          <div className="social-icons">
 
-          </div>
+            <a href="#"><FaFacebookF /></a>
 
-          {/* Quick Links */}
+            <a href="#"><FaInstagram /></a>
 
-          <div className="footer-column">
+            <a href="#"><FaPinterestP /></a>
 
-            <h3 className="footer-heading">
-              Quick Links
-            </h3>
-
-            <ul className="footer-links">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Jewellery</a></li>
-              <li><a href="#">Accessories</a></li>
-              <li><a href="#">Gift Items</a></li>
-            </ul>
-
-          </div>
-
-          {/* Customer */}
-
-          <div className="footer-column">
-
-            <h3 className="footer-heading">
-              Customer Care
-            </h3>
-
-            <ul className="footer-links">
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Support</a></li>
-              <li><a href="#">Shipping</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-            </ul>
-
-          </div>
-
-          {/* Newsletter */}
-
-          <div className="footer-column">
-
-            <h3 className="footer-heading">
-              Stay Connected
-            </h3>
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="newsletter-input"
-            />
-
-            <button className="newsletter-button">
-              Subscribe
-            </button>
+            <a href="#"><FaYoutube /></a>
 
           </div>
 
         </div>
 
-        <div className="footer-bottom">
-          © 2026 Fashion Oasis. All Rights Reserved.
+        {/* Shop */}
+
+        <div className="footer-col">
+
+          <h3>Shop</h3>
+
+          <ul>
+
+            <li><a href="#">Necklaces</a></li>
+
+            <li><a href="#">Earrings</a></li>
+
+            <li><a href="#">Bracelets</a></li>
+
+            <li><a href="#">Rings</a></li>
+
+            <li><a href="#">Gift Collection</a></li>
+
+          </ul>
+
+        </div>
+
+        {/* Customer */}
+
+        <div className="footer-col">
+
+          <h3>Customer Care</h3>
+
+          <ul>
+
+            <li><a href="#">Contact Us</a></li>
+
+            <li><a href="#">FAQs</a></li>
+
+            <li><a href="#">Shipping</a></li>
+
+            <li><a href="#">Returns</a></li>
+
+            <li><a href="#">Track Order</a></li>
+
+          </ul>
+
+        </div>
+
+        {/* Contact */}
+
+        <div className="footer-col">
+
+          <h3>Contact</h3>
+
+          <p><FaMapMarkerAlt /> Nagpur, Maharashtra</p>
+
+          <p><FaPhoneAlt /> +91 98765 43210</p>
+
+          <p><FaEnvelope /> support@fashionoasis.com</p>
+
+        </div>
+
+      </div>
+
+      <hr />
+
+      <div className="footer-bottom">
+
+        <p>© 2026 Fashion Oasis. All Rights Reserved.</p>
+
+        <div className="footer-links">
+
+          <a href="#">Privacy Policy</a>
+
+          <a href="#">Terms & Conditions</a>
+
         </div>
 
       </div>
 
     </footer>
   );
-};
-
-export default Footer;
+}

@@ -1,0 +1,406 @@
+/* ==========================
+   ABOUT PAGE
+========================== */
+
+.about {
+  background: #fffaf8;
+  overflow: hidden;
+}
+
+/* ==========================
+   HERO SECTION
+========================== */
+
+.about-hero {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  min-height: 650px;
+}
+
+.about-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-overlay {
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  transform: translateY(-50%);
+  max-width: 560px;
+  color: #2f2f2f;
+}
+
+.about-overlay span {
+  display: inline-block;
+  color: #c89b5c;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.about-overlay h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 64px;
+  line-height: 1.1;
+  color: #2b2b2b;
+  margin-bottom: 25px;
+}
+
+.about-overlay p {
+  font-size: 18px;
+  line-height: 1.9;
+  color: #555;
+  margin-bottom: 35px;
+}
+
+.about-overlay button {
+  padding: 15px 34px;
+  border: none;
+  border-radius: 40px;
+  background: #c89b5c;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: .35s;
+}
+
+.about-overlay button:hover {
+  background: #b88445;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(200,155,92,.35);
+}
+
+/* ==========================
+   STORY SECTION
+========================== */
+
+.about-story {
+  width: 90%;
+  max-width: 1300px;
+  margin: 100px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.story-image img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+}
+
+.story-content span {
+  color: #c89b5c;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.story-content h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 48px;
+  color: #2f2f2f;
+  margin: 18px 0 25px;
+  line-height: 1.2;
+}
+
+.story-content p {
+  color: #666;
+  line-height: 1.9;
+  font-size: 17px;
+  margin-bottom: 35px;
+}
+
+.story-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.story-list div {
+  background: white;
+  padding: 18px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #444;
+  box-shadow: 0 8px 20px rgba(0,0,0,.05);
+  transition: .3s;
+}
+
+.story-list div:hover {
+  transform: translateX(8px);
+  box-shadow: 0 12px 25px rgba(0,0,0,.08);
+}
+/* ==========================
+   BRAND PROMISE
+========================== */
+
+.brand-promise {
+  width: 90%;
+  max-width: 1300px;
+  margin: 100px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 70px;
+  align-items: center;
+}
+
+.promise-left {
+  position: relative;
+}
+
+.promise-left img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+}
+
+.promise-right span {
+  display: inline-block;
+  color: #c89b5c;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.promise-right h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 46px;
+  color: #2d2d2d;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+.promise-right ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.promise-right ul li {
+  background: #fff;
+  margin-bottom: 18px;
+  padding: 18px 24px;
+  border-radius: 14px;
+  font-size: 17px;
+  color: #444;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: 0.35s ease;
+}
+
+.promise-right ul li:hover {
+  transform: translateX(10px);
+  box-shadow: 0 14px 30px rgba(200, 155, 92, 0.15);
+}
+
+/* ==========================
+   COMMON SECTION SPACING
+========================== */
+
+.about section {
+  position: relative;
+}
+
+.about section:not(:first-child) {
+  padding-top: 20px;
+}
+
+/* ==========================
+   LIGHT DECORATIVE BACKGROUND
+========================== */
+
+.about::before {
+  content: "";
+  position: absolute;
+  top: 18%;
+  left: -180px;
+  width: 380px;
+  height: 380px;
+  background: rgba(253, 233, 239, 0.5);
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+}
+
+.about::after {
+  content: "";
+  position: absolute;
+  right: -150px;
+  bottom: 10%;
+  width: 350px;
+  height: 350px;
+  background: rgba(255, 242, 229, 0.55);
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: -1;
+}
+/* ==========================
+   RESPONSIVE DESIGN
+========================== */
+
+@media (max-width: 1200px) {
+
+  .about-overlay h1 {
+    font-size: 54px;
+  }
+
+  .story-content h2,
+  .promise-right h2 {
+    font-size: 40px;
+  }
+
+  .about-story,
+  .brand-promise {
+    gap: 50px;
+  }
+
+}
+
+@media (max-width: 992px) {
+
+  .about-hero {
+    height: 75vh;
+    min-height: 550px;
+  }
+
+  .about-overlay {
+    max-width: 480px;
+    left: 6%;
+  }
+
+  .about-overlay h1 {
+    font-size: 46px;
+  }
+
+  .about-overlay p {
+    font-size: 16px;
+  }
+
+  .about-story,
+  .brand-promise {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .promise-left {
+    order: 1;
+  }
+
+  .promise-right {
+    order: 2;
+  }
+
+  .story-content,
+  .promise-right {
+    text-align: center;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .about-hero {
+    height: 70vh;
+    min-height: 500px;
+  }
+
+  .about-overlay {
+    left: 5%;
+    right: 5%;
+    max-width: 100%;
+  }
+
+  .about-overlay span {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .about-overlay h1 {
+    font-size: 36px;
+    line-height: 1.2;
+  }
+
+  .about-overlay p {
+    font-size: 15px;
+    margin-bottom: 25px;
+  }
+
+  .about-overlay button {
+    padding: 13px 28px;
+    font-size: 15px;
+  }
+
+  .about-story,
+  .brand-promise {
+    width: 92%;
+    margin: 70px auto;
+  }
+
+  .story-content h2,
+  .promise-right h2 {
+    font-size: 34px;
+  }
+
+  .story-content p {
+    font-size: 15px;
+  }
+
+  .story-list div,
+  .promise-right ul li {
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+
+}
+
+@media (max-width: 576px) {
+
+  .about-hero {
+    height: 600px;
+  }
+
+  .about-overlay {
+    text-align: center;
+    top: 55%;
+    transform: translateY(-50%);
+  }
+
+  .about-overlay h1 {
+    font-size: 30px;
+  }
+
+  .about-overlay p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .story-content h2,
+  .promise-right h2 {
+    font-size: 28px;
+  }
+
+  .story-content p {
+    font-size: 14px;
+  }
+
+  .story-list div,
+  .promise-right ul li {
+    font-size: 14px;
+  }
+
+  .about::before,
+  .about::after {
+    display: none;
+  }
+
+}
