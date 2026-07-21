@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import About from "./pages/About/About";
 import Collections from "./pages/Collections";
 import ProductDetails from "./pages/ProductDetails";
+import Shop from "./pages/Shop/Shop";
+import ScrollToTop from "./components/ScrollToTop";
+
 import Wishlist from "./pages/Wishlist/Wishlist";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
@@ -16,6 +19,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+
 function App() {
 
   useEffect(() => {
@@ -25,6 +29,18 @@ function App() {
     });
   }, []);
   return (
+    <>
+
+    <Router>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/collections" element={<Collections />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+      </Routes>
+    </Router>
+
     <ShopProvider>
       <Router>
         <Routes>
@@ -42,6 +58,7 @@ function App() {
         </Routes>
       </Router>
     </ShopProvider>
+</>
   );
 }
 
