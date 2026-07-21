@@ -1,5 +1,6 @@
 import "./DashboardLayout.css";
 import { Link } from "react-router-dom";
+import sidebarbg from "../../assets/sidebarbg.png"
 
 import {
   FaHome,
@@ -19,7 +20,12 @@ function DashboardLayout({ children }) {
 
       {/* Sidebar */}
 
-      <aside className="sidebar">
+     <aside
+  className="sidebar"
+  style={{
+    backgroundImage: `url(${sidebarbg})`,
+  }}
+>
 
         <div className="logo-section">
 
@@ -67,7 +73,7 @@ function DashboardLayout({ children }) {
           </li>
 
           <li>
-            <Link to="/settings">
+            <Link to="/accountsetting">
               <FaCog />
               Account Settings
             </Link>

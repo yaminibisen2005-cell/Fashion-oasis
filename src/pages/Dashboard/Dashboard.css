@@ -1,383 +1,923 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* =========================
-   Dashboard
-========================= */
+/* ===========================
+   GLOBAL
+=========================== */
 
-.dashboard-page{
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
     background:#FFF8F8;
+    font-family:'Poppins',sans-serif;
 }
 
-.dashboard-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:35px;
-}
-
-.dashboard-top h2{
-    font-family:"Cormorant Garamond",serif;
-    font-size:42px;
-    color:#4B2E2E;
-    margin-bottom:12px;
-}
-
-.dashboard-top p{
-    color:#7a6d6d;
-    font-family:Poppins,sans-serif;
-    font-size:15px;
-}
-
-.top-profile{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.top-profile span{
-    font-family:Poppins;
-    color:#7b6d6d;
-    font-weight:500;
-}
-
-.top-profile img{
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    object-fit:cover;
-    border:3px solid #fff;
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
-}
-
-/* =========================
- Banner
-========================= */
-
-.dashboard-banner{
+.dashboard-content{
     width:100%;
-    height:200px;
-    border-radius:20px;
-    background-size:cover;
-    background-position:center;
-    margin-bottom:35px;
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
-    min-height: 180px;
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin-top: 30px 0;
 }
 
-/* =========================
- Cards
-========================= */
+/* ===========================
+   HERO SECTION
+=========================== */
+
+.dashboard-hero{
+
+    position:relative;
+
+    width:100%;
+
+    height:390px;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    background-size:cover;
+
+    background-position:center;
+
+    margin-bottom:30px;
+
+    display:flex;
+
+    align-items:center;
+    
+}
+
+.dashboard-hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+    90deg,
+    rgba(40,18,22,.72),
+    rgba(40,18,22,.38),
+    rgba(40,18,22,.10)
+    );
+
+}
+
+/* ===========================
+   HERO CONTENT
+=========================== */
+
+.hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+    padding-left:65px;
+
+    max-width:700px;
+
+    color:#fff;
+}
+
+.hero-content h1{
+
+    font-family:'Cormorant Garamond',serif;
+
+    font-size:54px;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+
+    line-height:1.15;
+}
+
+.hero-content h1 span{
+
+    color:#FFD75E;
+}
+
+.hero-content p{
+
+    font-size:17px;
+
+    font-weight:500;
+
+    color:#FFE2E8;
+
+    letter-spacing:2px;
+
+    line-height:1.8;
+
+    text-transform:uppercase;
+}
+
+/* ===========================
+   USER CARD
+=========================== */
+
+.hero-user{
+
+    position:absolute;
+
+    top:22px;
+
+    right:22px;
+
+    z-index:5;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    background:transparent;
+    
+
+    border-radius:20px;
+
+    padding:10px 18px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+
+.hero-profile{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid #fff;
+}
+
+.hero-user-info span{
+
+    display:block;
+
+    font-size:13px;
+
+    color:#080707;
+
+    margin-bottom:3px;
+}
+
+.hero-user-info h4{
+
+    font-size:12px;
+
+    color:#2B2B2B;
+
+    font-weight:300;
+}
+
+/* ===========================
+   STATS
+=========================== */
 
 .dashboard-cards{
+
     display:grid;
+
     grid-template-columns:repeat(4,1fr);
-    gap:25px;
-    margin-bottom:40px;
+
+    gap:22px;
+
+    margin-bottom:35px;
 }
 
 .card-box{
+
     background:#fff;
+
     border-radius:20px;
-    padding:25px;
+
+    padding:28px 20px;
+
     text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.06);
-    transition:.3s;
-    border:1px solid #F7E8EA;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+
+    transition:.35s ease;
+
+    border:1px solid #F7E6EA;
 }
 
 .card-box:hover{
-    transform:translateY(-5px);
+
+    transform:translateY(-6px);
+
+    box-shadow:0 16px 35px rgba(239,111,143,.18);
 }
 
-.icon{
-    width:65px;
-    height:65px;
+.card-box .icon{
+
+    width:72px;
+
+    height:72px;
+
     margin:auto;
-    margin-bottom:18px;
+
     border-radius:50%;
-    background:#FFECEF;
+
+    background:#FFE8EE;
+
+    color:#EF6F8F;
+
     display:flex;
-    justify-content:center;
+
     align-items:center;
-    color:#EB879D;
-    font-size:24px;
+
+    justify-content:center;
+
+    font-size:30px;
+
+    margin-bottom:18px;
+
+    transition:.3s;
+}
+
+.card-box:hover .icon{
+
+    transform:scale(1.08) rotate(8deg);
 }
 
 .card-box h5{
-    font-family:Poppins;
-    color:#6a6161;
-    font-size:15px;
+
+    font-size:16px;
+
+    color:#666;
+
+    font-weight:500;
+
     margin-bottom:10px;
 }
 
 .card-box h2{
-    color:#EB879D;
-    font-size:34px;
-    font-family:"Cormorant Garamond";
+
+    font-family:'Cormorant Garamond',serif;
+
+    font-size:42px;
+
+    color:#352525;
+
     font-weight:700;
 }
 
-/* =========================
- Orders
-========================= */
+/* ===========================
+   SECTION SPACING
+=========================== */
 
 .orders-card{
 
     background:#fff;
 
-    border-radius:25px;
+    border-radius:22px;
 
     padding:30px;
 
-    box-shadow:0 10px 35px rgba(0,0,0,.06);
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
 
+    border:1px solid #F5E8EB;
 }
+/*=====================================
+        RECENT ORDERS
+======================================*/
 
 .orders-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:25px;
-
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
 }
 
 .orders-header h3{
-
-font-family:"Cormorant Garamond";
-
-font-size:34px;
-
-color:#4B2E2E;
-
+    font-family:'Cormorant Garamond',serif;
+    font-size:34px;
+    color:#352525;
+    font-weight:700;
+    margin-bottom:4px;
 }
 
-.orders-header span{
-
-color:#EB879D;
-
-font-weight:600;
-
-cursor:pointer;
-
-font-family:Poppins;
-
+.orders-header p{
+    font-size:14px;
+    color:#888;
 }
 
-.orders-card table{
+.view-all-btn{
 
-width:100%;
+    background:#EF6F8F;
 
-border-collapse:collapse;
+    color:#fff;
 
+    border:none;
+
+    outline:none;
+
+    padding:12px 24px;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.3s;
 }
 
-.orders-card th{
+.view-all-btn:hover{
 
-padding:18px;
+    background:#E55E80;
 
-text-align:left;
+    transform:translateY(-2px);
 
-background:#FFF6F7;
-
-font-family:Poppins;
-
-color:#555;
-
-font-weight:600;
-
+    box-shadow:0 10px 20px rgba(239,111,143,.25);
 }
 
-.orders-card td{
+/*=====================================
+        TABLE
+======================================*/
 
-padding:18px;
-
-border-bottom:1px solid #F5E9EB;
-
-font-family:Poppins;
-
-}
-
-.product{
-
-display:flex;
-
-align-items:center;
-
-gap:15px;
-
-}
-
-.product img{
-
-width:55px;
-
-height:55px;
-
-border-radius:12px;
-
-object-fit:cover;
-
-}
-
-/* =========================
- Status
-========================= */
-
-.status{
-
-padding:8px 18px;
-
-border-radius:20px;
-
-font-size:13px;
-
-font-weight:600;
-
-display:inline-block;
-
-}
-
-.delivered{
-
-background:#E8F8EA;
-
-color:#2F9E44;
-
-}
-
-.shipped{
-
-background:#FFF2DB;
-
-color:#E67E22;
-
-}
-
-.confirmed{
-
-background:#EFE7FF;
-
-color:#7C4DFF;
-
-}
-
-.cancelled{
-
-background:#FFE6E6;
-
-color:#E74C3C;
-
-}
-
-/* =========================
- Responsive
-========================= */
-
-@media(max-width:1200px){
-
-.dashboard-cards{
-
-grid-template-columns:repeat(2,1fr);
-
-}
-
-}
-
-@media(max-width:992px){
-
-.dashboard-top{
-
-flex-direction:column;
-
-align-items:flex-start;
-
-gap:20px;
-
-}
-
-.dashboard-banner{
-
-height:180px;
-
-}
-
-.orders-card{
-
-overflow-x:auto;
-
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
 }
 
 table{
 
-min-width:750px;
+    width:100%;
 
+    border-collapse:collapse;
+
+    min-width:850px;
 }
 
+thead{
+
+    background:#FFF4F7;
 }
 
-@media(max-width:768px){
+thead th{
+
+    padding:18px 20px;
+
+    text-align:left;
+
+    font-size:14px;
+
+    color:#666;
+
+    font-weight:600;
+
+    border-bottom:1px solid #F2E6E9;
+}
+
+tbody tr{
+
+    transition:.3s;
+}
+
+tbody tr:hover{
+
+    background:#FFF9FA;
+}
+
+tbody td{
+
+    padding:20px;
+
+    border-bottom:1px solid #F3ECEE;
+
+    font-size:14px;
+
+    color:#444;
+
+    vertical-align:middle;
+}
+
+/*=====================================
+        ORDER ID
+======================================*/
+
+.order-id{
+
+    font-weight:600;
+
+    color:#352525;
+}
+
+/*=====================================
+        PRODUCT
+======================================*/
+
+.product{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.product img{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:14px;
+
+    object-fit:cover;
+
+    border:1px solid #F1E6E8;
+}
+
+.product-details h6{
+
+    font-size:15px;
+
+    color:#352525;
+
+    font-weight:600;
+
+    margin-bottom:5px;
+}
+
+.product-details span{
+
+    font-size:13px;
+
+    color:#999;
+}
+
+/*=====================================
+        AMOUNT
+======================================*/
+
+.amount{
+
+    font-weight:600;
+
+    color:#352525;
+}
+
+/*=====================================
+        STATUS
+======================================*/
+
+.status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:110px;
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+}
+
+/* Delivered */
+
+.status.delivered{
+
+    background:#EAF8EF;
+
+    color:#1B9C52;
+}
+
+/* Shipped */
+
+.status.shipped{
+
+    background:#EAF2FF;
+
+    color:#2563EB;
+}
+
+/* Confirmed */
+
+.status.confirmed{
+
+    background:#FFF7DF;
+
+    color:#B7791F;
+}
+
+/* Cancelled */
+
+.status.cancelled{
+
+    background:#FFE9EC;
+
+    color:#D62839;
+}
+
+/*=====================================
+        SCROLLBAR
+======================================*/
+
+.table-responsive::-webkit-scrollbar{
+
+    height:7px;
+}
+
+.table-responsive::-webkit-scrollbar-track{
+
+    background:#F8F2F4;
+
+    border-radius:20px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb{
+
+    background:#EF6F8F;
+
+    border-radius:20px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover{
+
+    background:#E45E80;
+}
+
+/*=====================================
+        ROW ANIMATION
+======================================*/
+
+tbody td{
+
+    transition:.25s;
+}
+
+tbody tr:hover td{
+
+    color:#222;
+}
+/*=====================================
+        LARGE LAPTOP
+======================================*/
+
+@media (max-width:1200px){
+
+.dashboard-hero{
+    height:340px;
+}
+
+.hero-content{
+    padding-left:45px;
+}
+
+.hero-content h1{
+    font-size:46px;
+}
+
+.hero-content p{
+    font-size:15px;
+    letter-spacing:1.5px;
+}
 
 .dashboard-cards{
-
-grid-template-columns:1fr;
-
-}
-
-.dashboard-top h2{
-
-font-size:34px;
-
-}
-
-.orders-header{
-
-flex-direction:column;
-
-align-items:flex-start;
-
-gap:10px;
-
-}
-
-}
-
-@media(max-width:576px){
-
-.dashboard-banner{
-
-height:140px;
-
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
 }
 
 .card-box{
-
-padding:20px;
-
-}
-
-.icon{
-
-width:55px;
-
-height:55px;
-
-font-size:20px;
-
+    padding:24px;
 }
 
 .card-box h2{
+    font-size:38px;
+}
 
-font-size:28px;
+.orders-card{
+    padding:25px;
+}
 
 }
 
+
+/*=====================================
+        TABLET
+======================================*/
+
+@media (max-width:992px){
+
+.dashboard-content{
+    padding:20px;
+}
+
+.dashboard-hero{
+    height:300px;
+    border-radius:20px;
+}
+
+.hero-content{
+    padding-left:30px;
+    max-width:500px;
+}
+
+.hero-content h1{
+    font-size:38px;
+}
+
+.hero-content p{
+    font-size:14px;
+    line-height:1.6;
+}
+
+.hero-user{
+    top:18px;
+    right:18px;
+    padding:8px 14px;
+}
+
+.hero-profile{
+    width:46px;
+    height:46px;
+}
+
+.hero-user-info h4{
+    font-size:16px;
+}
+
+.dashboard-cards{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.orders-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+}
+
+.view-all-btn{
+    align-self:flex-end;
+}
+
+}
+
+
+/*=====================================
+        MOBILE
+======================================*/
+
+@media (max-width:768px){
+
+.dashboard-content{
+    padding:15px;
+}
+
+.dashboard-hero{
+    height:250px;
+    border-radius:18px;
+}
+
+.hero-content{
+    padding:20px;
+}
+
+.hero-content h1{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.hero-content p{
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+.hero-user{
+    top:12px;
+    right:12px;
+    padding:6px 12px;
+    gap:8px;
+}
+
+.hero-profile{
+    width:40px;
+    height:40px;
+}
+
+.hero-user-info span{
+    font-size:11px;
+}
+
+.hero-user-info h4{
+    font-size:15px;
+}
+
+.dashboard-cards{
+    grid-template-columns:1fr;
+    gap:18px;
+}
+
+.card-box{
+    padding:22px;
+}
+
+.card-box .icon{
+    width:60px;
+    height:60px;
+    font-size:24px;
+}
+
+.card-box h5{
+    font-size:15px;
+}
+
+.card-box h2{
+    font-size:34px;
+}
+
+.orders-card{
+    padding:18px;
+}
+
+.orders-header h3{
+    font-size:28px;
+}
+
+.orders-header p{
+    font-size:13px;
+}
+
+.view-all-btn{
+    width:100%;
+}
+
+.product img{
+    width:55px;
+    height:55px;
+}
+
+.product-details h6{
+    font-size:14px;
+}
+
+.product-details span{
+    font-size:12px;
+}
+
+thead th,
+tbody td{
+    padding:14px;
+    font-size:13px;
+}
+
+.status{
+    min-width:90px;
+    font-size:12px;
+    padding:7px 12px;
+}
+
+}
+
+
+/*=====================================
+        SMALL MOBILE
+======================================*/
+
+@media (max-width:480px){
+
+.dashboard-content{
+    padding:12px;
+}
+
+.dashboard-hero{
+    height:220px;
+    border-radius:16px;
+}
+
+.hero-content{
+    padding:18px;
+}
+
+.hero-content h1{
+    font-size:24px;
+}
+
+.hero-content p{
+    font-size:11px;
+}
+
+.hero-user{
+    border-radius:30px;
+}
+
+.hero-profile{
+    width:34px;
+    height:34px;
+}
+
+.hero-user-info span{
+    display:none;
+}
+
+.hero-user-info h4{
+    font-size:14px;
+}
+
+.card-box{
+    border-radius:16px;
+}
+
+.orders-card{
+    border-radius:16px;
+    padding:15px;
+}
+
+.orders-header h3{
+    font-size:24px;
+}
+
+.view-all-btn{
+    padding:10px;
+    font-size:13px;
+}
+
+.status{
+    min-width:80px;
+    font-size:11px;
+}
+
+}
+
+
+/*=====================================
+        SMOOTH ANIMATION
+======================================*/
+
+.dashboard-hero,
+.card-box,
+.orders-card,
+.view-all-btn,
+.status{
+    transition:all .3s ease;
+}
+
+
+/*=====================================
+        IMAGE HOVER
+======================================*/
+
+.product img{
+    transition:.3s;
+}
+
+.product img:hover{
+    transform:scale(1.08);
+}
+
+
+/*=====================================
+        CARD ICON HOVER
+======================================*/
+
+.card-box:hover .icon{
+    transform:rotate(8deg) scale(1.08);
+}
+
+
+/*=====================================
+        REMOVE LINK UNDERLINE
+======================================*/
+
+a{
+    text-decoration:none;
+}
+
+
+/*=====================================
+        BUTTON ACTIVE
+======================================*/
+
+button:active{
+    transform:scale(.98);
+}
+
+
+/*=====================================
+        INPUT DEFAULT
+======================================*/
+
+input,
+button{
+    font-family:'Poppins',sans-serif;
 }

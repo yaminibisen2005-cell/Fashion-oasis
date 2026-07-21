@@ -2,240 +2,251 @@ import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
 
 import {
-FaShoppingBag,
-FaHeart,
-FaStar,
-FaGift
+  FaShoppingBag,
+  FaHeart,
+  FaStar,
+  FaGift,
 } from "react-icons/fa";
 
 import dashboardbanner from "../../assets/dashboardbanner.png";
-// import avatar from "../../assets/dashboard/avatar.jpg";
-import product4 from "../../assets/product4.jpg";
+
 import product1 from "../../assets/product1.jpg";
 import product2 from "../../assets/product2.jpg";
 import product3 from "../../assets/product3.jpg";
+import product4 from "../../assets/product4.jpg";
 
 function Dashboard() {
 
-const orders=[
-{
-id:"#FO1001",
-image:product1,
-name:"Earings",
-date:"18 Jul 2026",
-amount:"₹2,499",
-status:"Delivered"
-},
-{
-id:"#FO1002",
-image:product2,
-name:"Necklace",
-date:"16 Jul 2026",
-amount:"₹3,999",
-status:"Shipped"
-},
-{
-id:"#FO1003",
-image:product3,
-name:"Bracelete",
-date:"12 Jul 2026",
-amount:"₹1,899",
-status:"Confirmed"
-},
-{
-id:"#FO1004",
-image:product4,
-name:"Key-chain",
-date:"10 Jul 2026",
-amount:"₹5,299",
-status:"Cancelled"
-}
-];
+  const stats = [
+    {
+      icon: <FaShoppingBag />,
+      title: "Total Orders",
+      value: "24",
+    },
+    {
+      icon: <FaHeart />,
+      title: "Wishlist",
+      value: "12",
+    },
+    {
+      icon: <FaStar />,
+      title: "Reviews",
+      value: "8",
+    },
+    {
+      icon: <FaGift />,
+      title: "Reward Points",
+      value: "350",
+    },
+  ];
+
+  const orders = [
+    {
+      id: "#FO1001",
+      image: product1,
+      product: "Elegant Earrings",
+      date: "18 Jul 2026",
+      amount: "₹2,499",
+      status: "Delivered",
+    },
+    {
+      id: "#FO1002",
+      image: product2,
+      product: "Royal Necklace",
+      date: "16 Jul 2026",
+      amount: "₹3,999",
+      status: "Shipped",
+    },
+    {
+      id: "#FO1003",
+      image: product3,
+      product: "Diamond Bracelet",
+      date: "12 Jul 2026",
+      amount: "₹1,899",
+      status: "Confirmed",
+    },
+    {
+      id: "#FO1004",
+      image: product4,
+      product: "Luxury Keychain",
+      date: "10 Jul 2026",
+      amount: "₹5,299",
+      status: "Cancelled",
+    },
+  ];
+
+  return (
+    <DashboardLayout>
+
+      {/* HERO */}
+
+      <section
+        className="dashboard-hero"
+        style={{
+          backgroundImage: `linear-gradient(
+              rgba(35,25,28,.45),
+              rgba(35,25,28,.45)
+            ),
+            url(${dashboardbanner})`,
+        }}
+      >
+
+        <div className="hero-user">
+
+          <img
+            src="https://i.pravatar.cc/100?img=12"
+            alt="Profile"
+            className="hero-profile"
+          />
+
+          <div className="hero-user-info">
+            <span>Welcome</span>
+            <h4>User</h4>
+          </div>
+
+        </div>
 
-return(
+        <div className="hero-content">
 
-<DashboardLayout>
+          <h1>
+            Welcome to Fashion Oasis
+            
+          </h1>
 
-<div className="dashboard-top">
+          <p>
+            HERE'S WHAT'S HAPPENING WITH YOUR
+            <br />
+            FASHION OASIS ACCOUNT.
+          </p>
 
-<div>
+        </div>
 
-<h2>
-Welcome Back, User! ✨
-</h2>
+      </section>
 
-<p>
-Here's what's happening with your Fashion Oasis account.
-</p>
+      {/* STATISTICS */}
 
-</div>
+      <section className="dashboard-cards">
 
-<div className="top-profile">
+        {stats.map((item, index) => (
 
-<span>
-Welcome, User
-</span>
+          <div
+            className="card-box"
+            key={index}
+          >
 
-{/* <img src={avatar} alt="" /> */}
+            <div className="icon">
+              {item.icon}
+            </div>
 
-</div>
+            <h5>{item.title}</h5>
 
-</div>
+            <h2>{item.value}</h2>
 
-<div
-className="dashboard-banner"
-style={{
-backgroundImage:`url(${dashboardbanner})`
-}}
->
+          </div>
 
-</div>
+        ))}
 
-<div className="dashboard-cards">
+      </section>
+            {/* RECENT ORDERS */}
 
-<div className="card-box">
+      <section className="orders-card">
 
-<div className="icon">
-<FaShoppingBag/>
-</div>
+        <div className="orders-header">
 
-<h5>Total Orders</h5>
+          <div>
+            <h3>Recent Orders</h3>
+            <p>Your latest purchases</p>
+          </div>
 
-<h2>24</h2>
+          <button className="view-all-btn">
+            View All →
+          </button>
 
-</div>
+        </div>
 
-<div className="card-box">
+        <div className="table-responsive">
 
-<div className="icon">
-<FaHeart/>
-</div>
+          <table>
 
-<h5>Wishlist</h5>
+            <thead>
 
-<h2>12</h2>
+              <tr>
 
-</div>
+                <th>Order ID</th>
 
-<div className="card-box">
+                <th>Product</th>
 
-<div className="icon">
-<FaStar/>
-</div>
+                <th>Date</th>
 
-<h5>Reviews</h5>
+                <th>Amount</th>
 
-<h2>8</h2>
+                <th>Status</th>
 
-</div>
+              </tr>
 
-<div className="card-box">
+            </thead>
 
-<div className="icon">
-<FaGift/>
-</div>
+            <tbody>
 
-<h5>Reward Points</h5>
+              {orders.map((item) => (
 
-<h2>350</h2>
+                <tr key={item.id}>
 
-</div>
+                  <td className="order-id">
+                    {item.id}
+                  </td>
 
-</div>
+                  <td>
 
-<div className="orders-card">
+                    <div className="product">
 
-<div className="orders-header">
+                      <img
+                        src={item.image}
+                        alt={item.product}
+                      />
 
-<h3>
-Recent Orders
-</h3>
+                      <div className="product-details">
 
-<span>
-View All →
-</span>
+                        <h6>{item.product}</h6>
 
-</div>
+                        <span>Fashion Oasis</span>
 
-<table>
+                      </div>
 
-<thead>
+                    </div>
 
-<tr>
+                  </td>
 
-<th>Order ID</th>
+                  <td>{item.date}</td>
 
-<th>Product</th>
+                  <td className="amount">
+                    {item.amount}
+                  </td>
 
-<th>Date</th>
+                  <td>
 
-<th>Amount</th>
+                    <span
+                      className={`status ${item.status.toLowerCase()}`}
+                    >
+                      {item.status}
+                    </span>
 
-<th>Status</th>
+                  </td>
 
-</tr>
+                </tr>
 
-</thead>
+              ))}
 
-<tbody>
+            </tbody>
 
-{
-orders.map((item,index)=>(
+          </table>
 
-<tr key={index}>
+        </div>
 
-<td>{item.id}</td>
+      </section>
 
-<td>
-
-<div className="product">
-
-<img
-src={item.image}
-alt=""
-/>
-
-<span>
-
-{item.name}
-
-</span>
-
-</div>
-
-</td>
-
-<td>{item.date}</td>
-
-<td>{item.amount}</td>
-
-<td>
-
-<span
-className={`status ${item.status.toLowerCase()}`}
->
-
-{item.status}
-
-</span>
-
-</td>
-
-</tr>
-
-))
-}
-
-</tbody>
-
-</table>
-
-</div>
-
-</DashboardLayout>
-
-);
-
+    </DashboardLayout>
+  );
 }
 
 export default Dashboard;

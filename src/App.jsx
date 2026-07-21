@@ -14,6 +14,7 @@ import Profile from "./pages/Dashboard/Profile";
 import Orders from "./pages/Dashboard/Orders";
 import Wishlist from "./pages/Dashboard/Wishlist";
 import Reviews from "./pages/Dashboard/Reviews";
+import AccountSetting from "./pages/Dashboard/AccountSetting";
 function Home(){
   return(
    
@@ -51,7 +52,7 @@ function App(){
      {/* <Route path="/ShopNow" element={<ShopNow />} /> */}
      <Route path="/wishlist" element={<Wishlist />}/>
      <Route path="/reviews" element={<Reviews />} />
-    
+     <Route path="/accountsetting" element={<AccountSetting />} />
   </Routes>
 </BrowserRouter>
      

@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import sidebarbg from "../../assets/sidebarbg.png";
 import {
   FaTachometerAlt,
   FaUser,
@@ -12,7 +13,8 @@ import "./Sidebar.css";
 
 function Sidebar() {
   return (
-    <div className="sidebar">
+    <div className="sidebar"
+    style={{backgroundImage: `url(${sidebarbg})`,}}>
 
       <div className="sidebar-logo">
         

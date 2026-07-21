@@ -1,7 +1,7 @@
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Profile.css";
 
-// import avatar from "../../assets/dashboard/avatar.jpg";
+// import avatar from "../../assets/avatar.jpg";
 
 function Profile() {
   return (
@@ -12,9 +12,17 @@ function Profile() {
 
           <div className="profile-header">
 
-            {/* <img src={avatar} alt="Profile" /> */}
+            {/* Local Image */}
+            {/* <img src={avatar} alt="Profile" className="profile-avatar" /> */}
 
-            <div>
+            {/* Temporary Avatar */}
+            <img
+              src="https://i.pravatar.cc/150?img=12"
+              alt="Profile"
+              className="profile-avatar"
+            />
+
+            <div className="profile-user">
 
               <h2>Shwet Samrat</h2>
 
@@ -58,18 +66,15 @@ function Profile() {
                 <option>Female</option>
                 <option>Other</option>
               </select>
-
             </div>
 
             <div className="info-box full">
-
               <label>Address</label>
 
               <textarea
                 rows="4"
                 defaultValue="Purnia, Bihar, India"
               />
-
             </div>
 
           </div>

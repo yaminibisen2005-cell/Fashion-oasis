@@ -34,7 +34,10 @@ Sidebar
     position:sticky;
     top:0;
 
-    background:#d76e88;
+    background-image:url("../../assets/sidebar-bg.png");
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-position:center;
 
     border-right:1px solid #F5E3E6;
 
@@ -45,25 +48,12 @@ Sidebar
     padding:35px 22px;
 
     box-shadow:0 10px 35px rgba(0,0,0,.05);
-
-    overflow-y:auto;
+    overflow:hidden;
 
     z-index:1000;
-
 }
 
-.sidebar::-webkit-scrollbar{
-    width:6px;
-}
-
-.sidebar::-webkit-scrollbar-thumb{
-    background:#EB879D;
-    border-radius:10px;
-}
-
-/*==========================
-Logo
-==========================*/
+/*Logo*/
 
 .logo-section{
     text-align:center;
@@ -174,15 +164,10 @@ Content
 ==========================*/
 
 .dashboard-content{
-
     flex:1;
-
-    min-width:0;
-
-    padding:40px;
-
-    overflow:hidden;
-
+    
+    padding:30px;
+    background:#FFF8F8;
 }
 
 .dashboard-content::-webkit-scrollbar{
