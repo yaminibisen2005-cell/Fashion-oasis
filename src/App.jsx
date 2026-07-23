@@ -10,7 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import About from "./pages/About/About";
 import Shop from "./pages/Shop/Shop";
-import Contact from "./pages/Contact/contact";
+import Contact from "./pages/Contact/Contact";
 import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import Cart from "./pages/Cart/Cart";
