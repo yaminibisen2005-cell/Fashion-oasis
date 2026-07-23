@@ -1,10 +1,10 @@
-import Navbar from "../../Components/Navbar/Navbar";
-import Footer from "../../Components/Footer/Footer";
-import Newsletter from "../../Components/Newsletter/Newsletter";
-import Testimonials from "../../Components/Testimonials/Testimonials";
-import WhyChooseUs from "../../Components/WhyChooseUs/WhyChooseUs";
+import Navbar from "../../components/Navbar/Navbar";
+import Footer from "../../components/Footer/Footer";
+import Newsletter from "../../components/Newsletter/Newsletter";
+import Testimonials from "../../components/Testimonials/Testimonials";
+import WhyChooseUs from "../../components/WhyChooseUs/WhyChooseUs";
 
-import InstagramGallery from "../../Components/InstagramGallery/InstagramGallery";
+import InstagramGallery from "../../components/InstagramGallery/InstagramGallery";
 
 import aboutHero from "../../assets/about-banner.png";
 import story from "../../assets/about-story.png";
