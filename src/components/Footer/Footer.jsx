@@ -9,42 +9,83 @@ import {
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaEnvelope,
+  FaGem,
+  FaShieldAlt,
+  FaTruck,
+  FaUndoAlt,
 } from "react-icons/fa";
 
-export default function Footer() {
+import { BsCreditCard2FrontFill } from "react-icons/bs";
+import { SiGooglepay, SiPhonepe } from "react-icons/si";
+
+const Footer = () => {
   return (
     <footer className="footer">
 
       <div className="footer-container">
 
-        {/* Logo */}
+        {/* ================= Brand ================= */}
 
-        <div className="footer-col">
+        <div className="footer-brand">
 
-          <img src={logo} alt="Fashion Oasis" className="footer-logo" />
+          <img
+            src={logo}
+            alt="Fashion Oasis"
+            className="footer-logo"
+          />
 
-          <p>
-            Handmade jewellery and gifts crafted with love to make every
-            moment memorable.
+          <p className="brand-description">
+            Discover timeless handcrafted jewellery designed to celebrate
+            life's beautiful moments with elegance, craftsmanship and love.
           </p>
 
           <div className="social-icons">
 
-            <a href="#"><FaFacebookF /></a>
+            <a href="#">
+              <FaFacebookF />
+            </a>
 
-            <a href="#"><FaInstagram /></a>
+            <a href="#">
+              <FaInstagram />
+            </a>
 
-            <a href="#"><FaPinterestP /></a>
+            <a href="#">
+              <FaPinterestP />
+            </a>
 
-            <a href="#"><FaYoutube /></a>
+            <a href="#">
+              <FaYoutube />
+            </a>
 
           </div>
 
         </div>
 
-        {/* Shop */}
+        {/* ================= Quick Links ================= */}
 
-        <div className="footer-col">
+        <div className="footer-column">
+
+          <h3>Quick Links</h3>
+
+          <ul>
+
+            <li><a href="/">Home</a></li>
+
+            <li><a href="/about">About Us</a></li>
+
+            <li><a href="/shop">Shop</a></li>
+
+            <li><a href="/collections">Collections</a></li>
+
+            <li><a href="/contact">Contact</a></li>
+
+          </ul>
+
+        </div>
+
+        {/* ================= Shop ================= */}
+
+        <div className="footer-column">
 
           <h3>Shop</h3>
 
@@ -64,55 +105,113 @@ export default function Footer() {
 
         </div>
 
-        {/* Customer */}
+        {/* ================= Contact ================= */}
 
-        <div className="footer-col">
+        <div className="footer-column">
 
-          <h3>Customer Care</h3>
+          <h3>Get In Touch</h3>
 
-          <ul>
+          <div className="contact-item">
+            <FaMapMarkerAlt />
+            <span>Nagpur, Maharashtra</span>
+          </div>
 
-            <li><a href="#">Contact Us</a></li>
+          <div className="contact-item">
+            <FaPhoneAlt />
+            <span>+91 98765 43210</span>
+          </div>
 
-            <li><a href="#">FAQs</a></li>
+          <div className="contact-item">
+            <FaEnvelope />
+            <span>support@fashionoasis.com</span>
+          </div>
 
-            <li><a href="#">Shipping</a></li>
+          {/* Promise */}
 
-            <li><a href="#">Returns</a></li>
+          <div className="footer-promise">
 
-            <li><a href="#">Track Order</a></li>
+            <h4>Our Promise</h4>
 
-          </ul>
+            <ul className="promise-list">
 
-        </div>
+              <li>
+                <FaGem />
+                <span>Handmade Craftsmanship</span>
+              </li>
 
-        {/* Contact */}
+              <li>
+                <FaGem />
+                <span>Premium Materials</span>
+              </li>
 
-        <div className="footer-col">
+              <li>
+                <FaShieldAlt />
+                <span>Secure Payments</span>
+              </li>
 
-          <h3>Contact</h3>
+              <li>
+                <FaTruck />
+                <span>Fast Delivery</span>
+              </li>
 
-          <p><FaMapMarkerAlt /> Nagpur, Maharashtra</p>
+              <li>
+                <FaUndoAlt />
+                <span>Easy Returns</span>
+              </li>
 
-          <p><FaPhoneAlt /> +91 98765 43210</p>
+            </ul>
 
-          <p><FaEnvelope /> support@fashionoasis.com</p>
+          </div>
 
         </div>
 
       </div>
 
-      <hr />
+      {/* ================= Divider ================= */}
+
+      <div className="footer-divider"></div>
+
+      {/* ================= Payment Methods ================= */}
+
+      <div className="payment-section">
+
+        <p>Secure Payments</p>
+
+        <div className="payment-icons">
+
+          <BsCreditCard2FrontFill />
+
+          <SiGooglepay />
+
+          <SiPhonepe />
+
+        </div>
+
+      </div>
+
+      <div className="footer-divider"></div>
+
+      {/* ================= Bottom ================= */}
 
       <div className="footer-bottom">
 
-        <p>© 2026 Fashion Oasis. All Rights Reserved.</p>
+        <p className="copyright">
+          © 2026 Fashion Oasis. All Rights Reserved.
+        </p>
 
-        <div className="footer-links">
+        <p className="developed-by">
+          Crafted with ❤️ by <span>Athenura</span>
+        </p>
+
+        <div className="footer-bottom-links">
+
+          <a href="#">Terms & Conditions</a>
 
           <a href="#">Privacy Policy</a>
 
-          <a href="#">Terms & Conditions</a>
+          <a href="#">Return Policy</a>
+
+          <a href="#">FAQs</a>
 
         </div>
 
@@ -120,4 +219,6 @@ export default function Footer() {
 
     </footer>
   );
-}
+};
+
+export default Footer;
