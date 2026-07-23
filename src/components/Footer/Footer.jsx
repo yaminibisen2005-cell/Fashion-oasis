@@ -128,7 +128,7 @@ const Footer = () => {
 
           {/* Promise */}
 
-          <div className="footer-promise">
+          {/* <div className="footer-promise">
 
             <h4>Our Promise</h4>
 
@@ -161,7 +161,7 @@ const Footer = () => {
 
             </ul>
 
-          </div>
+          </div> */}
 
         </div>
 
