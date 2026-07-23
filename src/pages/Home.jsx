@@ -1,13 +1,13 @@
 import React from "react";
 
-import Navbar from "../Components/Navbar/Navbar";
-import Hero from "../Components/Hero/Hero";
-import Categories from "../Components/Categories/Categories";
-import FeaturedProducts from "../Components/FeaturedProducts/FeaturedProducts";
-import WhyChooseUs from "../Components/WhyChooseUs/WhyChooseUs";
-import SpecialOffer from "../Components/SpecialOffer/SpecialOffer";
-import Testimonials from "../Components/Testimonials/Testimonials";
-import Footer from "../Components/Footer/Footer";
+import Navbar from "../components/Navbar/Navbar";
+import Hero from "../components/Hero/Hero";
+import Categories from "../components/Categories/Categories";
+import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
+import WhyChooseUs from "../components/WhyChooseUs/WhyChooseUs";
+import SpecialOffer from "../components/SpecialOffer/SpecialOffer";
+import Testimonials from "../components/Testimonials/Testimonials";
+import Footer from "../components/Footer/Footer";
 import Newsletter from "../components/Newsletter/Newsletter";
 
 const Home = () => {
