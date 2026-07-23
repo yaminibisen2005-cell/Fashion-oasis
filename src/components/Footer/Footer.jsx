@@ -167,28 +167,8 @@ const Footer = () => {
 
       </div>
 
-      {/* ================= Divider ================= */}
-
-      <div className="footer-divider"></div>
-
-      {/* ================= Payment Methods ================= */}
-
-      <div className="payment-section">
-
-        <p>Secure Payments</p>
-
-        <div className="payment-icons">
-
-          <BsCreditCard2FrontFill />
-
-          <SiGooglepay />
-
-          <SiPhonepe />
-
-        </div>
-
-      </div>
-
+      
+    
       <div className="footer-divider"></div>
 
       {/* ================= Bottom ================= */}
@@ -200,7 +180,7 @@ const Footer = () => {
         </p>
 
         <p className="developed-by">
-          Crafted with ❤️ by <span>Athenura</span>
+          Developed and Designed by <span>Athenura</span>
         </p>
 
         <div className="footer-bottom-links">
