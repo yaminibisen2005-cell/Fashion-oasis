@@ -9,8 +9,8 @@ import ProductGrid from "../../components/Shop/ProductGrid/ProductGrid";
 import Pagination from "../../components/Shop/Pagination/Pagination";
 
 import { products } from "../../data/products";
-import Navbar from "../../Components/Navbar/Navbar";
-import Footer from "../../Components/Footer/Footer";
+import Navbar from "../../components/Navbar/Navbar";
+import Footer from "../../components/Footer/Footer";
 
 export default function Shop() {
 
