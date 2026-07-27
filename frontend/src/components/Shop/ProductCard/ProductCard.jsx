@@ -1,6 +1,5 @@
 import "./ProductCard.css";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
-import { FiShoppingBag } from "react-icons/fi";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -17,19 +16,22 @@ const ProductCard = ({ product }) => {
       )}
 
       <button
-        className="wishlist-btn"
+        className={`wishlist-btn ${liked ? "liked" : ""}`}
         onClick={() => setLiked(!liked)}
+        aria-label="Add to wishlist"
       >
-        {liked ? <FaHeart /> : <FaRegHeart />}
+        {liked ? (
+          <FaHeart size={16} className="heart-icon active" />
+        ) : (
+          <FaRegHeart size={16} className="heart-icon" />
+        )}
       </button>
 
       <div className="product-image">
-
         <img
           src={product.image}
           alt={product.name}
         />
-
         <div className="image-overlay">
           <Link to={`/product/${product.id}`}>
             <button className="quick-view-btn">
@@ -37,11 +39,9 @@ const ProductCard = ({ product }) => {
             </button>
           </Link>
         </div>
-
       </div>
 
       <div className="product-info">
-
         <h4>{product.name}</h4>
 
         <div className="rating">
@@ -51,15 +51,12 @@ const ProductCard = ({ product }) => {
         </div>
 
         <div className="price-row">
-
           <span className="price">
             ₹{product.price}
           </span>
-
           <span className="old-price">
             ₹{product.oldPrice}
           </span>
-
         </div>
 
         <Link
@@ -68,7 +65,6 @@ const ProductCard = ({ product }) => {
         >
           View Details
         </Link>
-
       </div>
 
     </div>

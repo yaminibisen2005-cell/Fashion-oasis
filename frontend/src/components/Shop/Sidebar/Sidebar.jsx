@@ -137,29 +137,7 @@ export default function Sidebar({
 
       </div>
 
-      {/* Occasion */}
-
-      <div className="filter-card">
-
-        <h4>Occasion</h4>
-
-        {occasions.map((item) => (
-
-          <label className="check-item" key={item}>
-
-            <input
-              type="checkbox"
-              checked={selectedOccasions.includes(item)}
-              onChange={() => handleOccasionToggle(item)}
-            />
-
-            <span>{item}</span>
-
-          </label>
-
-        ))}
-
-      </div>
+      
 
       {/* Clear Filters */}
       <button className="clear-filters-btn" onClick={onClearFilters}>
