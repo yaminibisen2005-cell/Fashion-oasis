@@ -1,78 +1,112 @@
-import "./Login.css";
+ import "./Login.css";
 import loginBg from "../../assets/login-bg.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:5000/api/v1/customer/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid email or password");
+      }
+
+      alert("Login Successful!");
+      console.log("LoggedIn user data:", data);
+
+      // Redirect user to homepage or dashboard after successful login
+      navigate("/"); // Change to your target path if needed
+
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
- <div
-  className="login-page"
-  style={{ backgroundImage: `url(${loginBg})` }}
->
-  <div className="login-overlay">
-    <div className="login-box">
+    <div
+      className="login-page"
+      style={{ backgroundImage: `url(${loginBg})` }}
+    >
+      <div className="login-overlay">
+        <div className="login-box">
+          <h1>
+            Welcome Back ✨
+          </h1>
+          <p className="subtitle">
+            Handcrafted Jewellery • Timeless Elegance
+          </p>
 
-        <h1>
-        Welcome Back ✨
-        </h1>
-        <p className="subtitle">
-   Handcrafted Jewellery • Timeless Elegance
-</p>
+          <form onSubmit={handleLogin}>
+            <div className="input-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-       
+            <div className="input-group">
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
 
-        <form>
+              <Link to="/forgot-password" className="forgot-link">
+                Forgot Password?
+              </Link>
+            </div>
 
-          <div className="input-group">
+            <button type="submit">
+              Login
+            </button>
+          </form>
 
-            <label>Email Address</label>
+          <p className="register">
+            Don't have an account?{" "}
+            <Link to="/register">
+              Register
+            </Link>
+          </p>
 
-            <input
-              type="email"
-              placeholder="Enter your email"
-            />
-
+          <div className="divider">
+            <span>OR</span>
           </div>
 
-<div className="input-group">
-
-  <label>Password</label>
-
-  <input
-    type="password"
-    placeholder="Enter your password"
-  />
-
-  <Link to="/forgot-password" className="forgot-link">
-  Forgot Password?
-</Link>
-
-</div>
-
-          <button>
-            Login
+          <button className="google-btn">
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="Google"
+            />
+            Continue with Google
           </button>
-
-        </form>
-
-        <p className="register">
-          Don't have an account?{" "}
-          <Link to="/register">
-   Register
-</Link>
-        </p>
-        <div className="divider">
-  <span>OR</span>
-</div>
-
-<button className="google-btn">
-  <img
-    src="https://www.svgrepo.com/show/475656/google-color.svg"
-    alt="Google"
-  />
-  Continue with Google
-</button>
-
+        </div>
       </div>
-    </div>
     </div>
   );
 };

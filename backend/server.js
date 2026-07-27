@@ -4,7 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import errorHandler from './middlewares/error.middleware.js';
 import AppError from './utils/AppError.js';
-
+import customerAuthRoutes from './routes/customerAuth.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminDashboardRoutes from './routes/adminDashboard.routes.js';
 
@@ -22,7 +22,7 @@ app.use(express.json({ limit: '10kb' }));
 // Base API Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/admin/dashboard', adminDashboardRoutes);
-
+app.use('/api/v1/customer/auth', customerAuthRoutes);
 app.get('/', (req, res) => {
   res.status(200).json({ success: true, message: 'Fashion Oasis API is running cleanly' });
 });
