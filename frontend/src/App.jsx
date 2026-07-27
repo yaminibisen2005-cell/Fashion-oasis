@@ -20,6 +20,12 @@ import ThankYou from "./pages/ThankYou/ThankYou";
 import TrackOrder from "./pages/TrackOrder/TrackOrder";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import DashboardProfile from "./pages/Dashboard/Profile";
+import DashboardOrders from "./pages/Dashboard/Orders";
+import DashboardWishlist from "./pages/Dashboard/Wishlist";
+import DashboardReviews from "./pages/Dashboard/Reviews";
+import DashboardSettings from "./pages/Dashboard/AccountSetting";
 // import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 function App() {
@@ -55,6 +61,12 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/profile" element={<DashboardProfile />} />
+          <Route path="/dashboard/orders" element={<DashboardOrders />} />
+          <Route path="/dashboard/wishlist" element={<DashboardWishlist />} />
+          <Route path="/dashboard/reviews" element={<DashboardReviews />} />
+          <Route path="/dashboard/settings" element={<DashboardSettings />} />
         </Routes>
 
       </Router>
