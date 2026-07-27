@@ -90,11 +90,27 @@ const AdminLayout = () => {
     contactNumber: "+91 98765 43210",
   });
 
-  const [profile, setProfile] = useState({
-    name: "Admin",
-    email: "admin@fashionoasis.com",
-    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80",
+  const [profile, setProfile] = useState(() => {
+    const saved = localStorage.getItem("adminUser");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return { name: parsed.name || "Admin", email: parsed.email || "admin@fashionoasis.com", img: parsed.avatar || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80" };
+      } catch (e) {}
+    }
+    return {
+      name: "Admin",
+      email: "admin@fashionoasis.com",
+      img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80",
+    };
   });
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+    navigate("/admin/login");
+  };
 
   // --- Handlers ---
   const addProduct = (newP) => setProducts([newP, ...products]);
@@ -231,10 +247,10 @@ const AdminLayout = () => {
           </ul>
 
           <div className="sidebar-footer">
-            <Link to="/" className="sidebar-link logout-btn">
+            <button onClick={handleLogout} className="sidebar-link logout-btn" style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', textAlign: 'left' }}>
               <FaSignOutAlt />
               <span>Logout</span>
-            </Link>
+            </button>
           </div>
         </aside>
 

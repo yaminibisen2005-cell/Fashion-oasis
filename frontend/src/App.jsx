@@ -27,7 +27,8 @@ import DashboardWishlist from "./pages/Dashboard/Wishlist";
 import DashboardReviews from "./pages/Dashboard/Reviews";
 import DashboardSettings from "./pages/Dashboard/AccountSetting";
 import AdminLayout from "./pages/Admin/AdminLayout";
-// import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import AdminLogin from "./pages/AdminAuth/AdminLogin";
+import AdminRegister from "./pages/AdminAuth/AdminRegister";
 
 function App() {
   useEffect(() => {
@@ -46,15 +47,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-      {/* <Route
-        path="/forgot-password"
-        element={<ForgotPassword />} */}
-      {/* /> */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/shop" element={<Shop />} />
-        
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
@@ -68,6 +63,9 @@ function App() {
           <Route path="/dashboard/wishlist" element={<DashboardWishlist />} />
           <Route path="/dashboard/reviews" element={<DashboardReviews />} />
           <Route path="/dashboard/settings" element={<DashboardSettings />} />
+          
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/*" element={<AdminLayout />} />
         </Routes>
 
