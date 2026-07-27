@@ -221,11 +221,11 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/profile"
-              className="icon-wrapper"
-            >
-              <FaRegUser />
-            </Link>
+  to="/dashboard"
+  className="icon-wrapper"
+>
+  <FaRegUser />
+</Link>
 
           </div>
 
@@ -394,13 +394,13 @@ const Navbar = () => {
 
             </Link>
 
-            <Link
-              to="/profile"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
-              <FaRegUser />
-            </Link>
+           <Link
+  to="/dashboard"
+  className="icon-wrapper"
+  onClick={() => setMenuOpen(false)}
+>
+  <FaRegUser />
+</Link>
 
           </div>
 

@@ -26,6 +26,7 @@ import DashboardOrders from "./pages/Dashboard/Orders";
 import DashboardWishlist from "./pages/Dashboard/Wishlist";
 import DashboardReviews from "./pages/Dashboard/Reviews";
 import DashboardSettings from "./pages/Dashboard/AccountSetting";
+import AdminLayout from "./pages/Admin/AdminLayout";
 // import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
           <Route path="/dashboard/wishlist" element={<DashboardWishlist />} />
           <Route path="/dashboard/reviews" element={<DashboardReviews />} />
           <Route path="/dashboard/settings" element={<DashboardSettings />} />
+          <Route path="/admin/*" element={<AdminLayout />} />
         </Routes>
 
       </Router>
