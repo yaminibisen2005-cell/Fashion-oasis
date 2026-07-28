@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const customerSchema = new mongoose.Schema({
@@ -24,13 +24,27 @@ const customerSchema = new mongoose.Schema({
     required: [true, 'Please provide a password'],
     minlength: 6,
     select: false
+  },
+  phone: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other', ''],
+    default: ''
+  },
+  address: {
+    type: String,
+    trim: true,
+    default: ''
   }
 }, {
   timestamps: true
 });
 
 // Hash password before saving to database
- // Hash password before saving to database
 customerSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
   const salt = await bcrypt.genSalt(10);

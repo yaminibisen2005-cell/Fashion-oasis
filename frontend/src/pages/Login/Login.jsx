@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/customer/auth/login", {
+      const response = await fetch("http://localhost:5000/api/v1/customer/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
