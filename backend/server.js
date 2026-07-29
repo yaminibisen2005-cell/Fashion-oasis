@@ -7,6 +7,7 @@ import AppError from './utils/AppError.js';
 import customerAuthRoutes from './routes/customerAuth.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminDashboardRoutes from './routes/adminDashboard.routes.js';
+import productRoutes from './routes/product.routes.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json({ limit: '10kb' }));
 // Base API Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/admin/dashboard', adminDashboardRoutes);
+app.use('/api/v1/admin/products', productRoutes);
 app.use('/api/v1/customer', customerAuthRoutes);
 app.get('/', (req, res) => {
   res.status(200).json({ success: true, message: 'Fashion Oasis API is running cleanly' });

@@ -1,4 +1,4 @@
-import Customer from '../models/Customer.js';
+import Customer from '../models/customer.js';
 import AppError from '../utils/AppError.js';
 
 // @desc    Register new customer
@@ -73,12 +73,12 @@ export const loginCustomer = async (req, res, next) => {
     next(error);
   }
 };
- // @desc    Get current customer profile by email query
+// @desc    Get current customer profile by email query
 export const getProfile = async (req, res, next) => {
   try {
     const email = req.query.email;
-    const customer = email 
-      ? await Customer.findOne({ email }) 
+    const customer = email
+      ? await Customer.findOne({ email })
       : await Customer.findOne();
 
     if (!customer) {
@@ -110,7 +110,7 @@ export const updateProfile = async (req, res, next) => {
     // Find customer by original email reference or fallback to current email body
     const lookupEmail = originalEmail || email;
     const customer = await Customer.findOne({ email: lookupEmail });
-    
+
     if (!customer) {
       return next(new AppError('Customer not found', 404));
     }
