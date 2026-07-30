@@ -39,7 +39,9 @@ const customerSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: ''
-  }
+  },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date
 }, {
   timestamps: true
 });
