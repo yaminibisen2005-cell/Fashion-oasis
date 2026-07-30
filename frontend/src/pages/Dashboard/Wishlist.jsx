@@ -17,36 +17,42 @@ const wishlistItems = [
     name: "Flower",
     image: product7,
     price: "₹1,999",
+    material: "Rose Gold",
   },
   {
     id: 2,
     name: "Key-Chain",
     image: product8,
     price: "₹3,499",
+    material: "Silver",
   },
   {
     id: 3,
     name: "Necklace",
     image: product5,
     price: "₹5,999",
+    material: "Kundan",
   },
   {
     id: 4,
     name: "Rings",
     image: product6,
     price: "₹2,799",
+    material: "Diamond",
   },
   {
     id: 5,
     name: "Necklace",
     image: product2,
     price: "₹2,499",
+    material: "Pearl",
   },
   {
     id: 6,
     name: "Ear-rings",
     image: product1,
     price: "₹3,299",
+    material: "Gold Plated",
   },
 ];
 
@@ -73,6 +79,7 @@ function Wishlist() {
               </div>
 
               <div className="wishlist-content">
+                <span className="wishlist-material">{item.material}</span>
                 <h4>{item.name}</h4>
                 <h3>{item.price}</h3>
 

@@ -33,7 +33,7 @@ import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
 
 import "./AdminLayout.css";
-
+import logo from "../../assets/logo.png";
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,10 +41,10 @@ const AdminLayout = () => {
 
   // --- central states to enable dynamic flow ---
   const [products, setProducts] = useState([
-    { id: 1, name: "Floral Diamond Necklace", category: "Necklace", price: 240000, stock: 25, status: "Active", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200&q=80" },
-    { id: 2, name: "Gold Plated Earrings", category: "Earrings", price: 135000, stock: 40, status: "Active", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=200&q=80" },
-    { id: 3, name: "Pearl Drop Earrings", category: "Earrings", price: 127500, stock: 35, status: "Active", image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=200&q=80" },
-    { id: 4, name: "Classic Gold Ring", category: "Rings", price: 86000, stock: 20, status: "Inactive", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80" },
+    { id: 1, name: "Floral Diamond Necklace", category: "Necklace", material: "Diamond", price: 240000, stock: 25, status: "Active", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200&q=80" },
+    { id: 2, name: "Gold Plated Earrings", category: "Earrings", material: "Gold Plated", price: 135000, stock: 40, status: "Active", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=200&q=80" },
+    { id: 3, name: "Pearl Drop Earrings", category: "Earrings", material: "Pearl", price: 127500, stock: 35, status: "Active", image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=200&q=80" },
+    { id: 4, name: "Classic Gold Ring", category: "Rings", material: "Gold Plated", price: 86000, stock: 20, status: "Inactive", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80" },
   ]);
 
   const [categories, setCategories] = useState([
@@ -196,11 +196,7 @@ const AdminLayout = () => {
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
           <div className="header-logo-group">
-            <span className="logo-initial">{settings.storeLogo || "FO"}</span>
-            <div>
-              <h3>{settings.storeName || "FASHION OASIS"}</h3>
-              <p>Timeless Elegance</p>
-            </div>
+            <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
           </div>
         </div>
 

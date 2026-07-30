@@ -144,3 +144,10 @@
     height: auto;
   }
 }
+
+.order-material {
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  color: #EF6F8F !important;
+  font-weight: 600;
+}
