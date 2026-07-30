@@ -30,11 +30,16 @@ const Login = () => {
         throw new Error(data.message || "Invalid email or password");
       }
 
+      // Save the currently logged-in user's email to localStorage
+      if (data.success && data.data && data.data.email) {
+        localStorage.setItem("customerEmail", data.data.email);
+      }
+
       alert("Login Successful!");
       console.log("LoggedIn user data:", data);
 
-      // Redirect user to homepage or dashboard after successful login
-      navigate("/"); // Change to your target path if needed
+      // Redirect user to profile page after successful login
+      navigate("/dashboard/profile");
 
     } catch (error) {
       alert(error.message);

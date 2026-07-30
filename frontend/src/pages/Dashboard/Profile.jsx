@@ -26,8 +26,14 @@ function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // FIXED: Corrected localStorage call
-        const userEmail = localStorage.getItem('customerEmail') || 'aliza@gmail.com';
+        // Removed hardcoded fallback to prevent bleeding old user data
+        const userEmail = localStorage.getItem('customerEmail');
+        
+        if (!userEmail) {
+          setLoading(false);
+          return;
+        }
+
         const response = await fetch(`http://localhost:5000/api/v1/customer/profile?email=${userEmail}`, {
           method: 'GET',
           headers: {
