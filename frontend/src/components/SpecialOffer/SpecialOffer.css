@@ -1,0 +1,490 @@
+.special-offer{
+    width:100%;
+    padding:30px 0;
+    background:#fff;
+}
+
+.special-offer .container{
+    width:98%;
+    max-width:1700px;
+    margin:auto;
+}
+
+.offer-banner::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            to right,
+            rgba(255,250,250,.92) 0%,
+            rgba(255,248,248,.82) 25%,
+            rgba(255,245,245,.45) 50%,
+            rgba(255,255,255,.10) 100%
+        );
+    z-index: 2;
+}
+
+.offer-content,
+.offer-badge{
+    position: relative;
+    z-index: 5;
+}
+.offer-banner{
+    position:relative;
+    width:100%;
+    height:690px;
+    overflow:hidden;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.offer-image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    z-index:1;
+}
+
+/* Left Gradient */
+
+.offer-banner::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:48%;
+    height:100%;
+    background:linear-gradient(
+        to right,
+        rgba(255,248,250,.97),
+        rgba(255,248,250,.88),
+        rgba(255,248,250,.55),
+        rgba(255,248,250,0)
+    );
+    z-index:2;
+}
+
+/* Content */
+
+.offer-content{
+
+    position:relative;
+    z-index:5;
+
+    width:36%;
+    max-width:480px;
+
+    margin-left:70px;
+
+}
+
+.offer-label{
+
+    display:inline-block;
+
+    padding:10px 22px;
+
+    background:#fff;
+
+    border-radius:40px;
+
+    color:#ef4b82;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    margin-bottom:28px;
+
+}
+
+.offer-content h2{
+
+    font-size:56px;
+
+    line-height:1.05;
+
+    font-family:"Playfair Display",serif;
+
+    color:#222;
+
+    font-weight:600;
+
+    margin-bottom:25px;
+
+}
+
+.offer-content h2 span{
+
+    color:#ef4b82;
+
+}
+
+.discount-box{
+
+    margin-bottom:35px;
+
+}
+
+
+.discount-box p{
+
+    color:#777;
+
+    font-size:18px;
+
+    letter-spacing:4px;
+
+    margin-bottom:8px;
+
+    font-weight:500;
+
+}
+
+.discount-box h1{
+
+    font-size:66px;
+
+    line-height:1;
+
+    color:#ef4b82;
+
+    font-family:"Playfair Display",serif;
+
+}
+
+/* Badge */
+
+.offer-badge{
+
+    position:absolute;
+
+    top:45px;
+
+    right:25px;
+
+    width:145px;
+
+    height:145px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    z-index:10;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.12);
+
+}
+
+.offer-badge span{
+
+    font-size:15px;
+
+    color:#888;
+
+    letter-spacing:2px;
+
+}
+
+.offer-badge h2{
+
+    font-size:48px;
+
+    color:#ef4b82;
+
+    margin:5px 0;
+
+    line-height:1;
+
+    font-family:"Playfair Display",serif;
+
+}
+
+.offer-badge p{
+
+    font-size:18px;
+
+    color:#222;
+
+    font-weight:600;
+
+    letter-spacing:2px;
+
+}
+/* ===========================
+   COUNTDOWN TIMER
+=========================== */
+
+.offer-timer{
+    margin:40px 0;
+}
+
+.timer-heading{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+    color:#444;
+    font-size:18px;
+    font-weight:600;
+}
+
+.timer-heading svg{
+    color:#ef4b82;
+    font-size:18px;
+}
+
+.timer{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+.time-box{
+    width:85px;
+    height:95px;
+    background:#fff;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.time-box:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(239,75,130,.18);
+}
+
+.time-box h3{
+    font-size:34px;
+    color:#ef4b82;
+    margin:0;
+    font-family:"Playfair Display",serif;
+    line-height:1;
+}
+
+.time-box p{
+    margin-top:10px;
+    font-size:12px;
+    color:#777;
+    letter-spacing:2px;
+    font-weight:600;
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.shop-btn{
+    margin-top:20px;
+    width:220px;
+    height:56px;
+    border:none;
+    outline:none;
+    border-radius:50px;
+    background:#ef4b82;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.35s;
+}
+
+.shop-btn svg{
+    transition:.35s;
+}
+
+.shop-btn:hover{
+    background:#db3f73;
+    transform:translateY(-4px);
+    box-shadow:0 18px 35px rgba(239,75,130,.35);
+}
+
+.shop-btn:hover svg{
+    transform:translateX(6px);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width:1200px){
+
+    .offer-banner{
+        height:680px;
+    }
+
+    .offer-content{
+        width:50%;
+        margin-left:50px;
+    }
+
+    .offer-content h2{
+        font-size:58px;
+    }
+
+    .discount-box h1{
+        font-size:72px;
+    }
+
+    .offer-badge{
+        width:150px;
+        height:150px;
+        right:30px;
+        top:30px;
+    }
+
+    .offer-badge h2{
+        font-size:50px;
+    }
+
+}
+
+@media (max-width:992px){
+
+    .offer-banner{
+        height:auto;
+        min-height:850px;
+    }
+
+    .offer-banner::before{
+        width:100%;
+        background:linear-gradient(
+            to bottom,
+            rgba(255,248,250,.96),
+            rgba(255,248,250,.82),
+            rgba(255,248,250,.45),
+            rgba(255,248,250,.15)
+        );
+    }
+
+    .offer-content{
+        width:90%;
+        max-width:none;
+        margin:70px auto;
+        text-align:center;
+    }
+
+    .offer-label{
+        margin:auto auto 25px;
+    }
+
+    .offer-content h2{
+        font-size:48px;
+    }
+
+    .discount-box h1{
+        font-size:64px;
+    }
+
+    .timer{
+        justify-content:center;
+    }
+
+    .shop-btn{
+        margin:30px auto 0;
+    }
+
+    .offer-badge{
+        width:130px;
+        height:130px;
+        right:20px;
+        top:20px;
+    }
+
+    .offer-badge h2{
+        font-size:42px;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .special-offer{
+        padding:60px 0;
+    }
+
+    .offer-banner{
+        border-radius:20px;
+    }
+
+    .offer-content{
+        width:90%;
+        margin:50px auto;
+    }
+
+    .offer-content h2{
+        font-size:38px;
+        line-height:1.2;
+    }
+
+    .discount-box h1{
+        font-size:50px;
+    }
+
+    .discount-box p{
+        font-size:18px;
+    }
+
+    .timer{
+        gap:12px;
+    }
+
+    .time-box{
+        width:70px;
+        height:80px;
+    }
+
+    .time-box h3{
+        font-size:26px;
+    }
+
+    .shop-btn{
+        width:100%;
+        max-width:260px;
+    }
+
+    .offer-badge{
+        width:110px;
+        height:110px;
+    }
+
+    .offer-badge h2{
+        font-size:34px;
+    }
+
+    .offer-badge span{
+        font-size:11px;
+    }
+
+    .offer-badge p{
+        font-size:16px;
+    }
+
+}

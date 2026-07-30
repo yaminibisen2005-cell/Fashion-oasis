@@ -1,0 +1,685 @@
+/*==========================================
+              FOOTER
+==========================================*/
+
+.footer{
+  background: linear-gradient(
+    90deg,
+    #FFF9F8 0%,
+    #FDEEEB 25%,
+    #F9DDD7 60%,
+    #F6CEC7 100%
+);
+    border-top:2px solid #F0D5DE;
+    padding:20px 0 0;
+    
+}
+
+/*==========================================
+        FOOTER CONTAINER
+==========================================*/
+
+.footer-container{
+    width:90%;
+    max-width:1400px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:1.2fr 2.2fr;
+    gap:90px;
+    align-items:start;
+}
+
+/*==========================================
+            BRAND SECTION
+==========================================*/
+
+.footer-brand{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+.footer-logo{
+    width:180px;
+    margin-bottom:28px;
+    transition:.35s;
+}
+
+.footer-logo:hover{
+    transform:scale(1.04);
+}
+
+.brand-description{
+    font-size:17px;
+    line-height:1.9;
+    color:#5B5B5B;
+    max-width:340px;
+    margin-bottom:38px;
+}
+
+/*==========================================
+            SOCIAL ICONS
+==========================================*/
+
+.social-icons{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.social-icons a{
+
+    width:55px;
+    height:55px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    text-decoration:none;
+
+    background:#fff;
+
+    color:#D46A92;
+
+    border:1px solid #F1D7DF;
+
+    font-size:20px;
+
+    transition:.35s;
+}
+
+.social-icons a:hover{
+
+    background:#D46A92;
+
+    color:#fff;
+
+    transform:translateY(-6px);
+
+    box-shadow:0 12px 25px rgba(212,106,146,.25);
+
+}
+
+/*==========================================
+            RIGHT SECTION
+==========================================*/
+
+.footer-right{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:60px;
+
+    align-items:start;
+
+    /* Image jaisa niche lane ke liye */
+    margin-top:45px;
+
+}
+
+/*==========================================
+            COLUMNS
+==========================================*/
+
+.footer-column h3{
+
+    font-size:23px;
+
+    color:#222;
+
+    margin-bottom:32px;
+
+    position:relative;
+
+}
+
+.footer-column h3::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-10px;
+
+    width:65px;
+
+    height:3px;
+
+    background:#D4A017;
+
+    border-radius:20px;
+
+}
+
+.footer-column ul{
+
+    list-style:none;
+
+    padding:0;
+
+    margin:0;
+
+}
+
+.footer-column ul li{
+
+    margin-bottom:18px;
+
+    transition:.3s;
+
+}
+
+.footer-column ul li:hover{
+
+    transform:translateX(6px);
+
+}
+
+.footer-column ul li a{
+
+    text-decoration:none;
+
+    color:#555;
+
+    font-size:17px;
+
+    transition:.3s;
+
+}
+
+.footer-column ul li a:hover{
+
+    color:#D46A92;
+
+    padding-left:8px;
+
+}
+
+/*==========================================
+            CONTACT
+==========================================*/
+
+.contact-item{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:15px;
+
+    margin-bottom:24px;
+
+    color:#555;
+
+    transition:.3s;
+
+}
+
+.contact-item:hover{
+
+    transform:translateX(5px);
+
+}
+
+.contact-item svg{
+
+    color:#D4A017;
+
+    font-size:18px;
+
+    margin-top:4px;
+
+}
+
+.contact-item span{
+
+    line-height:1.7;
+
+    font-size:16px;
+
+}
+
+/*==========================================
+            PROMISE
+==========================================*/
+
+.footer-promise{
+
+    margin-top:35px;
+
+}
+
+.footer-promise h4{
+
+    color:#D4A017;
+
+    margin-bottom:20px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.promise-list{
+
+    list-style:none;
+
+    padding:0;
+
+    margin:0;
+
+}
+
+.promise-list li{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:18px;
+
+    color:#444;
+
+    transition:.3s;
+
+}
+
+.promise-list li:hover{
+
+    transform:translateX(5px);
+
+    color:#D46A92;
+
+}
+
+.promise-list svg{
+
+    color:#D4A017;
+
+    font-size:16px;
+
+}
+/*==========================================
+            FOOTER DIVIDER
+==========================================*/
+
+.footer-divider{
+
+    width:90%;
+
+    max-width:1400px;
+
+    margin:60px auto 35px;
+
+    border-top:1px solid #EFDADF;
+
+}
+
+/*==========================================
+            PAYMENT SECTION
+==========================================*/
+
+.payment-section{
+
+    width:90%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:25px;
+
+}
+
+.payment-section p{
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#333;
+
+}
+
+.payment-icons{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.payment-icons svg{
+
+    font-size:34px;
+
+    color:#D4A017;
+
+    transition:.35s;
+
+    cursor:pointer;
+
+}
+
+.payment-icons svg:hover{
+
+    color:#D46A92;
+
+    transform:translateY(-5px);
+
+}
+
+/*==========================================
+            FOOTER BOTTOM
+==========================================*/
+
+.footer-bottom{
+
+    width:90%;
+
+    max-width:1400px;
+
+    margin:40px auto 0;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+    padding-bottom:35px;
+
+}
+
+.copyright{
+
+    color:#666;
+
+    font-size:15px;
+
+}
+
+.developed-by{
+
+    color:#555;
+
+    font-size:15px;
+
+}
+
+.developed-by span{
+
+    color:#D4A017;
+
+    font-weight:700;
+
+}
+
+.footer-bottom-links{
+
+    display:flex;
+
+    gap:28px;
+
+    flex-wrap:wrap;
+
+}
+
+.footer-bottom-links a{
+
+    position:relative;
+
+    text-decoration:none;
+
+    color:#555;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.footer-bottom-links a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-4px;
+
+    width:0;
+
+    height:2px;
+
+    background:#D46A92;
+
+    transition:.35s;
+
+}
+
+.footer-bottom-links a:hover{
+
+    color:#D46A92;
+
+}
+
+.footer-bottom-links a:hover::after{
+
+    width:100%;
+
+}
+
+/*==========================================
+            TABLET
+==========================================*/
+
+@media(max-width:1200px){
+
+.footer{
+
+    padding-top:70px;
+
+}
+
+.footer-container{
+
+    grid-template-columns:1fr;
+
+    gap:60px;
+
+}
+
+.footer-brand{
+
+    align-items:center;
+
+    text-align:center;
+
+}
+
+.brand-description{
+
+    max-width:650px;
+
+}
+
+.social-icons{
+
+    justify-content:center;
+
+}
+
+.footer-right{
+
+    grid-template-columns:repeat(2,1fr);
+
+    margin-top:10px;
+
+    gap:50px;
+
+}
+
+}
+
+/*==========================================
+            MOBILE
+==========================================*/
+
+@media(max-width:768px){
+
+.footer{
+
+    padding-top:55px;
+
+}
+
+.footer-container{
+
+    grid-template-columns:1fr;
+
+}
+
+.footer-brand{
+
+    text-align:center;
+
+    align-items:center;
+
+}
+
+.footer-right{
+
+    grid-template-columns:1fr;
+
+    gap:45px;
+
+    margin-top:0;
+
+    text-align:center;
+
+}
+
+.footer-column h3::after{
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+}
+
+.contact-item{
+
+    justify-content:center;
+
+}
+
+.payment-section{
+
+    flex-direction:column;
+
+    text-align:center;
+
+}
+
+.payment-icons{
+
+    justify-content:center;
+
+}
+
+.footer-bottom{
+
+    flex-direction:column;
+
+    text-align:center;
+
+}
+
+.footer-bottom-links{
+
+    justify-content:center;
+
+}
+
+}
+
+/*==========================================
+            SMALL MOBILE
+==========================================*/
+
+@media(max-width:480px){
+
+.footer-logo{
+
+    width:140px;
+
+}
+
+.brand-description{
+
+    font-size:15px;
+
+}
+
+.footer-column h3{
+
+    font-size:20px;
+
+}
+
+.footer-column ul li a{
+
+    font-size:16px;
+
+}
+
+.social-icons a{
+
+    width:48px;
+
+    height:48px;
+
+    font-size:18px;
+
+}
+
+.payment-icons svg{
+
+    font-size:28px;
+
+}
+
+.footer-bottom-links{
+
+    gap:16px;
+
+}
+
+}

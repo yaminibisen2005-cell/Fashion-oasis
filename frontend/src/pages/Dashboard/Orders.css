@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap");
+
+.orders-page {
+  width: 100%;
+}
+
+.orders-title {
+  margin-bottom: 30px;
+}
+
+.orders-title h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 42px;
+  color: #4b2e2e;
+}
+
+.orders-title p {
+  font-family: Poppins, sans-serif;
+  color: #777;
+  margin-top: 8px;
+}
+
+.order-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f8dfe4;
+  transition: 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+}
+
+.order-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.order-left img {
+  width: 95px;
+  height: 95px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.order-info h4 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 28px;
+  color: #4b2e2e;
+  margin-bottom: 8px;
+}
+
+.order-info p {
+  font-family: Poppins, sans-serif;
+  color: #777;
+  font-size: 14px;
+  margin: 3px 0;
+}
+
+.order-info h3 {
+  margin-top: 10px;
+  color: #eb879d;
+  font-family: Poppins, sans-serif;
+  font-size: 22px;
+}
+
+.order-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.status {
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 13px;
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+}
+
+.delivered {
+  background: #e8f8ea;
+  color: #2f9e44;
+}
+
+.shipped {
+  background: #fff4d6;
+  color: #e67e22;
+}
+
+.confirmed {
+  background: #efe7ff;
+  color: #7c4dff;
+}
+
+.cancelled {
+  background: #ffe6e6;
+  color: #e74c3c;
+}
+
+.order-right button {
+  background: #eb879d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-family: Poppins, sans-serif;
+  transition: 0.3s;
+}
+
+.order-right button:hover {
+  background: #d96d86;
+}
+
+@media (max-width: 768px) {
+  .order-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .order-right {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .order-left {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-left img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
+}
+
+.order-material {
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  color: #EF6F8F !important;
+  font-weight: 600;
+}

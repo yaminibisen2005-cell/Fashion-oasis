@@ -1,0 +1,234 @@
+.shop-sidebar{
+
+display:flex;
+
+flex-direction:column;
+
+gap:25px;
+
+position:sticky;
+
+top:110px;
+
+}
+
+.filter-card{
+
+background:#fff;
+
+border-radius:20px;
+
+padding:25px;
+
+border:1px solid #f3e7e7;
+
+box-shadow:0 8px 24px rgba(0,0,0,.04);
+
+}
+
+.filter-card h4{
+
+font-size:18px;
+
+font-weight:700;
+
+margin-bottom:22px;
+
+color:#2f2a2a;
+
+}
+
+.category-list{
+
+list-style:none;
+
+padding:0;
+
+margin:0;
+
+}
+
+.category-list li{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:13px 16px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+transition:.3s;
+
+margin-bottom:8px;
+
+}
+
+.category-list li:hover{
+
+background:#fff4f5;
+
+}
+
+.category-list li.active{
+
+background:#fdecef;
+
+color:#ef6f8f;
+
+font-weight:600;
+
+}
+
+.count{
+
+background:#f6f6f6;
+
+padding:4px 10px;
+
+border-radius:20px;
+
+font-size:13px;
+
+}
+
+.check-item{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+margin-bottom:16px;
+
+cursor:pointer;
+
+font-size:15px;
+
+}
+
+.check-item input{
+
+width:18px;
+
+height:18px;
+
+accent-color:#d95f72;
+
+}
+
+.clear-filters-btn{
+  width: 100%;
+  padding: 12px 20px;
+  border: 1px solid #ef6f8f;
+  background: #fff;
+  color: #ef6f8f;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s;
+  margin-top: 16px;
+}
+
+.clear-filters-btn:hover{
+  background: #ef6f8f;
+  color: #fff;
+}
+
+input[type="range"]{
+
+width:100%;
+
+accent-color:#ef6f8f;
+
+margin:20px 0;
+
+}
+
+.price-values{
+
+display:flex;
+
+justify-content:space-between;
+
+color:#777;
+
+font-size:14px;
+
+}
+
+@media(max-width:991px){
+  .shop-sidebar{
+    position: static;
+  }
+}
+
+@media(max-width:768px){
+  .shop-sidebar{
+    gap: 20px;
+  }
+
+  .filter-card{
+    padding: 20px;
+  }
+
+  .filter-card h4{
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .category-list li{
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .check-item{
+    font-size: 14px;
+  }
+}
+
+@media(max-width:576px){
+  .filter-card{
+    padding: 16px;
+  }
+
+  .filter-card h4{
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+
+  .category-list li{
+    padding: 10px 12px;
+  }
+}
+
+@media(max-width:390px){
+  .shop-sidebar{
+    gap: 16px;
+  }
+
+  .filter-card{
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .filter-card h4{
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .category-list li{
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .check-item{
+    font-size: 13px;
+  }
+}

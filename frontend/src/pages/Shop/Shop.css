@@ -1,0 +1,26 @@
+.shop-page{
+padding-bottom:80px;
+}
+
+.shop-layout{
+max-width:1400px;
+margin:auto;
+padding:40px 20px;
+display:grid;
+grid-template-columns:300px 1fr;
+gap:32px;
+align-items:start;
+}
+
+.shop-content{
+display:flex;
+flex-direction:column;
+gap:30px;
+}
+
+@media(max-width:991px){
+.shop-layout{
+grid-template-columns:1fr;
+}
+
+}
