@@ -39,7 +39,7 @@ const Login = () => {
       console.log("LoggedIn user data:", data);
 
       // Redirect user to profile page after successful login
-      navigate("/dashboard/profile");
+      navigate("/");
 
     } catch (error) {
       alert(error.message);
