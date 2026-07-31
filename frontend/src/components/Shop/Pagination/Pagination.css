@@ -27,7 +27,7 @@ background:white;
 
 cursor:pointer;
 
-transition:.3s;
+transition: all 0.3s ease;
 
 font-weight:600;
 
@@ -54,4 +54,13 @@ background:#FBECEC;
 
 color:#ef6f8f;
 
+}
+
+.page-btn:disabled{
+opacity:0.5;
+cursor:not-allowed;
+}
+
+.page-btn:disabled:hover{
+background:white;
 }
