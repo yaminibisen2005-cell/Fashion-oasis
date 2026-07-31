@@ -155,7 +155,7 @@ const faqs = [
 <div className="breadcrumb-wrapper">
   <div className="breadcrumb-container">
   
-    <span className="divider">/</span>
+    <span className="fo-divider">/</span>
     <span className="active">Contact</span>
   </div>
 </div> */}
@@ -274,7 +274,7 @@ const faqs = [
    <form className="contact-form" onSubmit={handleSubmit}>
 
       <div className="input-row">
-        <div className="input-group">
+        <div className="fo-input-group">
           <label>Full Name *</label>
           <input
   type="text"
@@ -291,7 +291,7 @@ const faqs = [
 )}
         </div>
 
-        <div className="input-group">
+        <div className="fo-input-group">
           <label>Email Address *</label>
           <input
   type="email"
@@ -310,7 +310,7 @@ const faqs = [
       </div>
 
       <div className="input-row">
-        <div className="input-group">
+        <div className="fo-input-group">
           <label>Phone Number *</label>
          <input
   type="tel"
@@ -327,7 +327,7 @@ const faqs = [
 )}
         </div>
 
-        <div className="input-group">
+        <div className="fo-input-group">
           <label>Subject *</label>
          <input
   type="text"
@@ -345,7 +345,7 @@ const faqs = [
         </div>
       </div>
 
-      <div className="input-group">
+      <div className="fo-input-group">
         <label>Message *</label>
 
        <textarea

@@ -35,7 +35,7 @@ const RelatedProducts = ({ currentProduct, products }) => {
 
         <div className="section-title">
           <h2>You May Also Like</h2>
-          <div className="divider"></div>
+          <div className="fo-divider"></div>
           <p>Handpicked jewellery specially for you.</p>
         </div>
 
