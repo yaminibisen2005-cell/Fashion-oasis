@@ -18,9 +18,9 @@ const ProductInfo = ({ product }) => {
           <FaStar />
         </div>
 
-        <span>({product.reviews} Reviews)</span>
+        <span>({product.reviews || 0} Reviews)</span>
 
-        <span className="stock">In Stock</span>
+        <span className="stock">{product.stock > 0 ? "In Stock" : "Out of Stock"}</span>
 
       </div>
 
@@ -30,20 +30,26 @@ const ProductInfo = ({ product }) => {
           ₹{product.price}
         </span>
 
-        <span className="old-price">
-          ₹{product.oldPrice}
-        </span>
+        {product.oldPrice && (
+          <span className="old-price">
+            ₹{product.oldPrice}
+          </span>
+        )}
 
-        <span className="discount-badge">
-          {product.discount}% OFF
-        </span>
+        {product.discount && (
+          <span className="discount-badge">
+            {product.discount}% OFF
+          </span>
+        )}
 
       </div>
 
       <p className="description">
-        Elegant handcrafted jewellery designed for everyday wear
-        and special occasions. Made with premium materials and
-        attention to detail.
+        {product.description || 
+          `Elegant handcrafted jewellery designed for everyday wear
+          and special occasions. Made with premium materials and
+          attention to detail.`
+        }
       </p>
 
       <div className="product-specs">

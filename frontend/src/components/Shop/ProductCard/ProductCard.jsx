@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
           alt={product.name}
         />
         <div className="image-overlay">
-          <Link to={`/product/${product.id}`}>
+          <Link to={`/product/${product._id || product.id}`}>
             <button className="quick-view-btn">
               Quick View
             </button>
@@ -46,21 +46,23 @@ const ProductCard = ({ product }) => {
 
         <div className="rating">
           <FaStar className="star-icon" />
-          <span>{product.rating}</span>
-          <small>({product.reviews})</small>
+          <span>{product.rating || 5}</span>
+          <small>({product.reviews || 0})</small>
         </div>
 
         <div className="price-row">
           <span className="price">
             ₹{product.price}
           </span>
-          <span className="old-price">
-            ₹{product.oldPrice}
-          </span>
+          {product.oldPrice && (
+            <span className="old-price">
+              ₹{product.oldPrice}
+            </span>
+          )}
         </div>
 
         <Link
-          to={`/product/${product.id}`}
+          to={`/product/${product._id || product.id}`}
           className="view-btn"
         >
           View Details

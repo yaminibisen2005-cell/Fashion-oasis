@@ -1,14 +1,6 @@
 import "./Sidebar.css";
 
-const categories = [
-  { name: "All Products", count: 12 },
-  { name: "Necklace", count: 3 },
-  { name: "Earrings", count: 3 },
-  { name: "Rings", count: 2 },
-  { name: "Bracelets", count: 2 },
-  { name: "Mangalsutra", count: 1 },
-  { name: "Wedding", count: 1 },
-];
+// Dynamic categories calculation based on products
 
 const materials = [
   "Gold Plated",
@@ -28,6 +20,7 @@ const occasions = [
 ];
 
 export default function Sidebar({
+  products = [],
   selectedCategory,
   setSelectedCategory,
   priceRange,
@@ -38,6 +31,20 @@ export default function Sidebar({
   setSelectedOccasions,
   onClearFilters,
 }) {
+  // Calculate dynamic category counts
+  const categoryCounts = products.reduce((acc, product) => {
+    acc[product.category] = (acc[product.category] || 0) + 1;
+    return acc;
+  }, {});
+
+  const dynamicCategories = [
+    { name: "All Products", count: products.length },
+    ...Object.keys(categoryCounts).map(cat => ({
+      name: cat,
+      count: categoryCounts[cat]
+    }))
+  ];
+
   const handleMaterialToggle = (material) => {
     setSelectedMaterials(prev =>
       prev.includes(material)
@@ -56,7 +63,7 @@ export default function Sidebar({
 
   const handlePriceChange = (e) => {
     const value = parseInt(e.target.value);
-    setPriceRange([499, value]);
+    setPriceRange([0, value]);
   };
 
   return (
@@ -69,7 +76,7 @@ export default function Sidebar({
 
         <ul className="category-list">
 
-          {categories.map((item) => (
+          {dynamicCategories.map((item) => (
             <li
   key={item.name}
   className={
@@ -97,8 +104,8 @@ export default function Sidebar({
 
         <input
           type="range"
-          min="499"
-          max="5000"
+          min="0"
+          max="200000"
           value={priceRange[1]}
           onChange={handlePriceChange}
         />

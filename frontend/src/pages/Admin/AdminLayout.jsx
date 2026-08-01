@@ -139,7 +139,7 @@ const AdminLayout = () => {
       const res = await axios.post("http://localhost:5000/api/v1/admin/products", newP, config);
       if (res.data.success) {
         // Simple optimistic update, but refreshing is safer for paginated data
-        fetchProducts(pagination.currentPage);
+        await fetchProducts(1); // Fetch the first page to show newly added if sorted by newest
         return true;
       }
     } catch (err) {

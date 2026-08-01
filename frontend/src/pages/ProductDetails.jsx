@@ -1,7 +1,8 @@
 import RelatedProducts from "../components/ProductDetails/RelatedProducts/RelatedProducts";
 import "./ProductDetails.css";
-import { Link } from "react-router-dom";
-import { products } from "../data/products";
+import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 
 import ProductGallery from "../components/ProductDetails/ProductGallery/ProductGallery";
@@ -12,9 +13,39 @@ import RecentlyViewed from "../components/ProductDetails/RecentlyViewed/Recently
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 
-const product = products[0];
-
 const ProductDetails = () => {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Fetch single product
+        const productRes = await axios.get(`http://localhost:5000/api/v1/products/${id}`);
+        if (productRes.data.success) {
+          setProduct(productRes.data.data);
+        }
+        
+        // Fetch products for related/recently viewed
+        const allRes = await axios.get(`http://localhost:5000/api/v1/products?limit=10`);
+        if (allRes.data.success) {
+          setAllProducts(allRes.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found.</div>;
+
   return (
     <>
    <Navbar/>
@@ -38,11 +69,11 @@ const ProductDetails = () => {
 
       <RelatedProducts
         currentProduct={product}
-        products={products}
+        products={allProducts}
       />
 
  <RecentlyViewed
-          products={products}
+          products={allProducts}
       />
       
       

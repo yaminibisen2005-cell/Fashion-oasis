@@ -1,7 +1,6 @@
 import "./FeaturedProducts.css";
-import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { ShopContext } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,54 +15,44 @@ import thumb2 from "../../assets/thumb2.png";
 import thumb3 from "../../assets/thumb3.png";
 import thumb4 from "../../assets/thumb4.png";
 
-const products = [
-  {
-    id: 1,
-    image: thumb1,
-    title: "Pearl Necklace",
-    price: "₹999",
-    oldPrice: "₹1299",
-  },
-  {
-    id: 2,
-    image: thumb2,
-    title: "Rose Bracelet",
-    price: "₹699",
-    oldPrice: "₹899",
-  },
-  {
-    id: 3,
-    image: thumb3,
-    title: "Luxury Ring",
-    price: "₹899",
-    oldPrice: "₹1199",
-  },
-  {
-    id: 4,
-    image: thumb4,
-    title: "Pearl Earrings",
-    price: "₹799",
-    oldPrice: "₹999",
-  },
-];
+// Removed hardcoded products
 
 const FeaturedProducts = () => {
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const navigate = useNavigate();
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("http://localhost:5000/api/v1/products/featured?limit=4");
+        if (res.data.success) {
+          setFeaturedProducts(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
+  const navigate = useNavigate();
   const {
-  wishlist,
-  addToWishlist,
-  removeFromWishlist,
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
     addToCart,
-} = useContext(ShopContext);
+  } = useContext(ShopContext);
 
 const handleBuyNow = (product) => {
   addToCart(
     {
-      id: product.id,
-      name: product.title,
-      price: Number(product.price.replace("₹", "")),
-      oldPrice: Number(product.oldPrice.replace("₹", "")),
+      id: product._id || product.id,
+      name: product.name || product.title,
+      price: Number(product.price),
+      oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
       image: product.image,
     },
     1
@@ -89,30 +78,33 @@ const handleBuyNow = (product) => {
         </div>
 
         <div className="products-grid">
+          {loading ? (
+            <div>Loading featured products...</div>
+          ) : (
+            featuredProducts.map((item) => (
 
-          {products.map((item) => (
-
-            <div className="product-card" key={item.id}>
+            <div className="product-card" key={item._id || item.id}>
 
               <button
                 className="card-heart"
                 onClick={() => {
-  const exists = wishlist.some((p) => p.id === item.id);
+                  const itemId = item._id || item.id;
+                  const exists = wishlist.some((p) => p.id === itemId);
 
-  if (exists) {
-    removeFromWishlist(item.id);
-  } else {
-    addToWishlist({
-      id: item.id,
-      name: item.title,
-      price: Number(item.price.replace("₹", "")),
-      oldPrice: Number(item.oldPrice.replace("₹", "")),
-      image: item.image,
-    });
-  }
-}}
+                  if (exists) {
+                    removeFromWishlist(itemId);
+                  } else {
+                    addToWishlist({
+                      id: itemId,
+                      name: item.name || item.title,
+                      price: Number(item.price),
+                      oldPrice: item.oldPrice ? Number(item.oldPrice) : null,
+                      image: item.image,
+                    });
+                  }
+                }}
               >
-                {wishlist.some((p) => p.id === item.id)? (
+                {wishlist.some((p) => p.id === (item._id || item.id))? (
                   <FaHeart className="heart-active" />
                 ) : (
                   <FaRegHeart />
@@ -120,12 +112,12 @@ const handleBuyNow = (product) => {
               </button>
 
               <div className="product-image">
-                <img src={item.image} alt={item.title} />
+                <img src={item.image} alt={item.name || item.title} />
               </div>
 
               <div className="product-content">
 
-                <h3>{item.title}</h3>
+                <h3>{item.name || item.title}</h3>
 
                 <div className="card-rating">
                   <FaStar />
@@ -140,12 +132,14 @@ const handleBuyNow = (product) => {
   <div className="card-price">
 
     <span className="new-price">
-      {item.price}
+      ₹{item.price}
     </span>
 
-    <del className="old-price">
-      {item.oldPrice}
-    </del>
+    {item.oldPrice && (
+      <del className="old-price">
+        ₹{item.oldPrice}
+      </del>
+    )}
 
   </div>
 
@@ -166,9 +160,8 @@ const handleBuyNow = (product) => {
               </div>
 
             </div>
-
-          ))}
-
+          ))
+          )}
         </div>
 
         <div className="view-all">

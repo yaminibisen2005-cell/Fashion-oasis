@@ -18,7 +18,7 @@ const AddProductSection = ({ addProduct, categories }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.category || !formData.price || !formData.stock) {
       alert("Please fill in all required fields.");
@@ -26,7 +26,6 @@ const AddProductSection = ({ addProduct, categories }) => {
     }
 
     const newProduct = {
-      id: Date.now(),
       name: formData.name,
       category: formData.category,
       price: parseFloat(formData.price),
@@ -36,8 +35,12 @@ const AddProductSection = ({ addProduct, categories }) => {
       status: "Active",
     };
 
-    addProduct(newProduct);
-    navigate("/admin/products");
+    const success = await addProduct(newProduct);
+    if (success) {
+      navigate("/admin/products");
+    } else {
+      alert("Failed to add product. Please check the inputs.");
+    }
   };
 
   return (

@@ -9,21 +9,28 @@ export const protectAdmin = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  if (!token) {
+  if (!token || token === 'null' || token === 'undefined') {
     throw new AppError('You are not logged in. Please log in to get access.', 401);
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fashion_oasis_super_secret_jwt_key_2026');
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fashion_oasis_super_secret_jwt_key_2026');
 
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    throw new AppError('The user belonging to this token no longer exists.', 401);
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      throw new AppError('The user belonging to this token no longer exists.', 401);
+    }
+
+    if (currentUser.role !== 'admin' && currentUser.role !== 'super-admin') {
+      throw new AppError('You do not have permission to access admin resources.', 403);
+    }
+
+    req.user = currentUser;
+    next();
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return next(new AppError('Invalid or expired token. Please log in again.', 401));
+    }
+    next(error);
   }
-
-  if (currentUser.role !== 'admin' && currentUser.role !== 'super-admin') {
-    throw new AppError('You do not have permission to access admin resources.', 403);
-  }
-
-  req.user = currentUser;
-  next();
 });
