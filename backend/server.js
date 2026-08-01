@@ -8,7 +8,8 @@ import customerAuthRoutes from './routes/customerAuth.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminDashboardRoutes from './routes/adminDashboard.routes.js';
 import productRoutes from './routes/product.routes.js';
-import orderRoutes from './routes/order.routes.js'
+import orderRoutes from './routes/order.routes.js';
+import wishlistRoutes from './routes/wishlist.routes.js';
 dotenv.config();
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/admin/dashboard', adminDashboardRoutes);
 app.use('/api/v1/admin/products', productRoutes);
 app.use('/api/v1/customer', customerAuthRoutes);
+app.use('/api/v1/wishlist', wishlistRoutes);
 app.get('/', (req, res) => {
   res.status(200).json({ success: true, message: 'Fashion Oasis API is running cleanly' });
 });
