@@ -30,6 +30,8 @@ import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import SellerDashboard from "./pages/Seller/SellerDashboard";
+
 function App() {
   useEffect(() => {
     AOS.init({
@@ -68,6 +70,7 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/*" element={<AdminLayout />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/seller" element={<SellerDashboard />} />
         </Routes>
 
       </Router>
