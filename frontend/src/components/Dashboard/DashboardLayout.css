@@ -72,14 +72,15 @@ Sidebar
     text-align:center;
 }
 
-/*Logo*/
+
 
 .logo-section{
     text-align:center;
 }
 
 .logo-section img{
-    width:70px;
+   max-width:100%;
+    height:auto;
     margin-bottom:15px;
 }
 
@@ -87,6 +88,35 @@ Sidebar
     font-family:"Cormorant Garamond",serif;
     font-size:36px;
     color:#4B2E2E;
+}
+.profile-wrapper {
+  position: relative;
+  width: 95px;
+  height: 95px;
+  margin: 0 auto;
+}
+
+.edit-profile-btn {
+  position: absolute;
+  bottom: 12px;
+  right: -1px;
+  width: 25px;
+  height: 25px;
+  border: none;
+  border-radius: 45%;
+  background: #ef6f8f;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+  transform: scale(1.1);
+  background: #d84b73;
 }
 
 /*==========================
@@ -184,7 +214,7 @@ Content
 
 .dashboard-content{
     flex:1;
-    
+    min-width: 0;
     padding:30px;
     background:#FFF8F8;
 }
@@ -249,7 +279,7 @@ font-size:14px;
 
 .dashboard-content{
     width: 100%;
-
+ 
 padding:30px;
 
 }
@@ -341,12 +371,15 @@ padding:25px;
 Mobile
 ==========================*/
 
-@media(max-width:768px){
+@media(max-width:576px){
+    .sidebar-profile{
+        width:70px;
+    }
 
-.logo-section img{
-
-width:60px;
-
+    .profile-wrapper{
+        width:75px;
+        height:75px;
+    }
 }
 
 .logo-section h3{
@@ -369,7 +402,7 @@ padding:10px 16px;
 
 }
 
-}
+
 
 /*==========================
 Small Mobile

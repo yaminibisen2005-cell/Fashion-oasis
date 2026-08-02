@@ -45,6 +45,9 @@
     border-radius:18px;
     background:#FFFDFD;
     transition:.3s;
+    margin-left: 20px;
+    margin-right: 20px;
+    
 }
 
 .setting-section:hover{
@@ -335,6 +338,8 @@
 @media(max-width:768px){
 
 .account-settings-page{
+    width: min(100%, 1180px);
+    margin: 0 auto;
     padding:20px;
 }
 

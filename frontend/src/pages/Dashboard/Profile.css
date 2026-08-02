@@ -25,14 +25,14 @@
     border-bottom:1px solid #f1f1f1;
 }
 
-.profile-avatar{
+/* .profile-avatar{
     width:100px;
     height:100px;
     border-radius:50%;
     object-fit:cover;
     border:4px solid #EF6F8F;
     box-shadow:0 10px 25px rgba(239,111,143,.25);
-}
+} */
 
 .profile-information h2{
     font-family:'Cormorant Garamond',serif;
@@ -59,6 +59,7 @@
     display:flex;
 
     flex-direction:column;
+    
 
 }
 

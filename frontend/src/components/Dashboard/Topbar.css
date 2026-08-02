@@ -1,13 +1,48 @@
-.topbar{
-    height:70px;
-    background:#EF6F8F;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 30px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+.topbar {
+  min-height: 70px;
+  background: #ef6f8f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.user{
-    font-weight:600;
+.user {
+  min-width: 0;
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .topbar {
+    min-height: 62px;
+    padding: 0 20px;
+  }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  .topbar {
+    min-height: auto;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .user {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .topbar button,
+  .topbar a {
+    min-height: 38px;
+    font-size: 13px;
+  }
 }
