@@ -9,6 +9,39 @@ const ProductCard = ({ product, showAddToCart = false, hideName = false, hideRat
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useContext(ShopContext);
 
+  const customerEmail = localStorage.getItem("customerEmail");
+
+  const handleWishlistToggle = async () => {
+    if (!customerEmail) {
+      alert("Please log in to manage your wishlist.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/v1/wishlist/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerEmail,
+          product: {
+            id: product.id || product._id,
+            name: product.name,
+            image: product.image,
+            price: product.price,
+            oldPrice: product.oldPrice,
+          },
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setLiked(!liked);
+      }
+    } catch (err) {
+      console.error("Failed to update wishlist", err);
+    }
+  };
+
   return (
     <div className={`product-card ${showAddToCart ? 'has-add-to-cart' : ''}`}>
       <div className="product-image">
@@ -22,7 +55,7 @@ const ProductCard = ({ product, showAddToCart = false, hideName = false, hideRat
         {/* Wishlist Button */}
         <button
           className={`wishlist-btn ${liked ? "liked" : ""}`}
-          onClick={() => setLiked(!liked)}
+          onClick={handleWishlistToggle}
           aria-label="Add to wishlist"
         >
           {liked ? (
