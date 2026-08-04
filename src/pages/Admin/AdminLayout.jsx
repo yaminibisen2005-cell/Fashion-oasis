@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   FaChartPie,
   FaBox,
@@ -34,37 +33,19 @@ import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
 
 import "./AdminLayout.css";
-import logo from "../../assets/logo.png";
+
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // --- central states to enable dynamic flow ---
-  const [products, setProducts] = useState([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, total: 0 });
-
-  useEffect(() => {
-    fetchProducts(pagination.currentPage);
-  }, [pagination.currentPage]);
-
-  const fetchProducts = async (page = 1, limit = 10) => {
-    try {
-      setLoadingProducts(true);
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get(`http://localhost:5000/api/v1/admin/products?page=${page}&limit=${limit}`, config);
-      if (res.data.success) {
-        setProducts(res.data.data);
-        if (res.data.pagination) setPagination(res.data.pagination);
-      }
-    } catch (err) {
-      console.error("Error fetching products:", err);
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
+  const [products, setProducts] = useState([
+    { id: 1, name: "Floral Diamond Necklace", category: "Necklace", price: 240000, stock: 25, status: "Active", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200&q=80" },
+    { id: 2, name: "Gold Plated Earrings", category: "Earrings", price: 135000, stock: 40, status: "Active", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=200&q=80" },
+    { id: 3, name: "Pearl Drop Earrings", category: "Earrings", price: 127500, stock: 35, status: "Active", image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=200&q=80" },
+    { id: 4, name: "Classic Gold Ring", category: "Rings", price: 86000, stock: 20, status: "Inactive", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80" },
+  ]);
 
   const [categories, setCategories] = useState([
     { name: "Necklace", productsCount: 68, status: "Active" },
@@ -109,74 +90,21 @@ const AdminLayout = () => {
     contactNumber: "+91 98765 43210",
   });
 
-  const [profile, setProfile] = useState(() => {
-    const saved = localStorage.getItem("adminUser");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return { name: parsed.name || "Admin", email: parsed.email || "admin@fashionoasis.com", img: parsed.avatar || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80" };
-      } catch (e) {}
-    }
-    return {
-      name: "Admin",
-      email: "admin@fashionoasis.com",
-      img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80",
-    };
+  const [profile, setProfile] = useState({
+    name: "Admin",
+    email: "admin@fashionoasis.com",
+    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80",
   });
 
-  const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminUser");
-    navigate("/admin/login");
-  };
-
   // --- Handlers ---
-  const addProduct = async (newP) => {
-    try {
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.post("http://localhost:5000/api/v1/admin/products", newP, config);
-      if (res.data.success) {
-        // Simple optimistic update, but refreshing is safer for paginated data
-        fetchProducts(pagination.currentPage);
-        return true;
-      }
-    } catch (err) {
-      console.error("Error adding product:", err);
-      return false;
-    }
-  };
-
-  const deleteProduct = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this product?");
-    if (!isConfirmed) return;
-
-    try {
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.delete(`http://localhost:5000/api/v1/admin/products/${id}`, config);
-      if (res.data.success) setProducts(products.filter((p) => p._id !== id));
-    } catch (err) {
-      console.error("Error deleting product:", err);
-    }
-  };
-
-  const toggleProductStatus = async (id) => {
-    try {
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.patch(`http://localhost:5000/api/v1/admin/products/${id}/status`, {}, config);
-      if (res.data.success) {
-        setProducts(
-          products.map((p) =>
-            p._id === id ? { ...p, status: res.data.data.status } : p
-          )
-        );
-      }
-    } catch (err) {
-      console.error("Error toggling status:", err);
-    }
+  const addProduct = (newP) => setProducts([newP, ...products]);
+  const deleteProduct = (id) => setProducts(products.filter((p) => p.id !== id));
+  const toggleProductStatus = (id) => {
+    setProducts(
+      products.map((p) =>
+        p.id === id ? { ...p, status: p.status === "Active" ? "Inactive" : "Active" } : p
+      )
+    );
   };
 
   const addCategory = (newC) => setCategories([newC, ...categories]);
@@ -252,7 +180,11 @@ const AdminLayout = () => {
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
           <div className="header-logo-group">
-            <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
+            <span className="logo-initial">{settings.storeLogo || "FO"}</span>
+            <div>
+              <h3>{settings.storeName || "FASHION OASIS"}</h3>
+              <p>Timeless Elegance</p>
+            </div>
           </div>
         </div>
 
@@ -299,10 +231,10 @@ const AdminLayout = () => {
           </ul>
 
           <div className="sidebar-footer">
-            <button onClick={handleLogout} className="sidebar-link logout-btn" style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', textAlign: 'left' }}>
+            <Link to="/" className="sidebar-link logout-btn">
               <FaSignOutAlt />
               <span>Logout</span>
-            </button>
+            </Link>
           </div>
         </aside>
 
@@ -328,8 +260,6 @@ const AdminLayout = () => {
                   products={products}
                   deleteProduct={deleteProduct}
                   toggleProductStatus={toggleProductStatus}
-                  pagination={pagination}
-                  setPage={(page) => setPagination(prev => ({ ...prev, currentPage: page }))}
                 />
               }
             />

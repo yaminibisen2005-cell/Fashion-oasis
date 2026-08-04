@@ -703,3 +703,14 @@ tbody tr:hover td {
     grid-template-columns: 1fr;
   }
 }
+
+.recommendation-material {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #EF6F8F;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  margin-bottom: 4px;
+}

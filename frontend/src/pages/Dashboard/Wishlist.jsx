@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Wishlist.css";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
@@ -6,6 +6,7 @@ import { FaHeart, FaShoppingCart } from "react-icons/fa";
 function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const customerEmail = localStorage.getItem("customerEmail");
 
   useEffect(() => {
@@ -16,8 +17,12 @@ function Wishlist() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/wishlist/${customerEmail}`);
+        const response = await fetch(
+          `http://localhost:5000/api/v1/wishlist/${customerEmail}`
+        );
+
         const data = await response.json();
+
         if (response.ok && data.wishlist) {
           setWishlistItems(data.wishlist);
         }
@@ -33,18 +38,26 @@ function Wishlist() {
 
   const handleRemoveFromWishlist = async (productId) => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/wishlist/toggle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerEmail,
-          product: { id: productId },
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/wishlist/toggle",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customerEmail,
+            product: {
+              id: productId,
+            },
+          }),
+        }
+      );
 
-      const data = await response.json();
       if (response.ok) {
-        setWishlistItems((prev) => prev.filter((item) => (item.id || item._id) !== productId));
+        setWishlistItems((prev) =>
+          prev.filter((item) => (item.id || item._id) !== productId)
+        );
       }
     } catch (err) {
       console.error("Failed to remove item", err);
@@ -60,21 +73,26 @@ function Wishlist() {
         </div>
 
         {loading ? (
-          <p style={{ textAlign: "center", padding: "40px" }}>Loading wishlist...</p>
+          <p style={{ textAlign: "center", padding: "40px" }}>
+            Loading wishlist...
+          </p>
         ) : wishlistItems.length === 0 ? (
-          <p style={{ textAlign: "center", padding: "40px" }}>Your wishlist is empty.</p>
+          <p style={{ textAlign: "center", padding: "40px" }}>
+            Your wishlist is empty.
+          </p>
         ) : (
           <div className="wishlist-grid">
             {wishlistItems.map((item) => {
               const itemId = item.id || item._id;
+
               return (
                 <div className="wishlist-card" key={itemId}>
                   <div className="wishlist-image">
                     <img src={item.image} alt={item.name} />
+
                     <button
                       className="heart-btn"
                       onClick={() => handleRemoveFromWishlist(itemId)}
-                      aria-label="Remove from wishlist"
                     >
                       <FaHeart color="#e91e63" />
                     </button>
@@ -82,7 +100,12 @@ function Wishlist() {
 
                   <div className="wishlist-content">
                     <h4>{item.name}</h4>
-                    <h3>{typeof item.price === "number" ? `₹${item.price.toLocaleString()}` : item.price}</h3>
+
+                    <h3>
+                      {typeof item.price === "number"
+                        ? `₹${item.price.toLocaleString()}`
+                        : item.price}
+                    </h3>
 
                     <button className="cart-btn">
                       <FaShoppingCart />
