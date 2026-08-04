@@ -1,19 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap");
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
 
-:root{
-    --primary:#F26B93;
-    --primary-dark:#E85582;
-    --heading:#2F2328;
-    --text:#6E6E6E;
-    --bg:#FFF8FA;
-    --white:#fff;
-}
 
 /*==========================================
         FEATURED PRODUCTS SECTION
@@ -148,7 +135,7 @@
             WISHLIST BUTTON
 ==========================================*/
 
-.card-heart{
+.product-card .card-heart{
 
     position:absolute;
 
@@ -182,7 +169,7 @@
 
 }
 
-.card-heart:hover{
+.product-card .card-heart:hover{
 
      background:#D46A92;
 
@@ -191,7 +178,7 @@
 
 }
 
-.card-heart svg{
+.product-card .card-heart svg{
 
     font-size:18px;
 
@@ -199,7 +186,7 @@
 
 }
 
-.heart-active{
+.product-card .heart-active{
 
     color:#EF6F8F !important;
 
@@ -264,7 +251,7 @@
             PRODUCT RATING
 ==========================================*/
 
-.card-rating{
+.product-card .card-rating{
 
     display:flex;
 
@@ -276,7 +263,7 @@
 
 }
 
-.card-rating svg{
+.product-card .card-rating svg{
 
     font-size:15px;
 
@@ -292,7 +279,7 @@
             CARD FOOTER
 ==========================================*/
 
-.card-footer{
+.product-card .card-footer{
 
     display:flex;
 
@@ -306,7 +293,7 @@
 
 }
 
-.price-box{
+.product-card .price-box{
 
     display:flex;
 
@@ -314,7 +301,7 @@
 
 }
 
-.price-box span{
+.product-card .price-box span{
 
     font-size:24px;
 
@@ -326,7 +313,7 @@
 
 }
 
-.price-box del{
+.product-card .price-box del{
 
     margin-top:6px;
 
@@ -336,7 +323,7 @@
 
 }
 
-.buy-btn{
+.product-card .buy-btn{
 
     padding:12px 26px;
 
@@ -360,7 +347,7 @@
     transition:.35s;
 }
 
-.buy-btn:hover{
+.product-card .buy-btn:hover{
 
     transform:translateY(-4px);
 
@@ -368,22 +355,22 @@
 
 }
 
-.card-price{
+.product-card .card-price{
     display:flex;
     flex-direction:column;
 }
-.new-price{
+.product-card .new-price{
     font-size:24px;
     font-weight:700;
     color:#EF6F8F;
 }
 
-.old-price{
+.product-card .old-price{
     font-size:16px;
     color:#999;
     margin-top:4px;
 }
-.buy-btn:hover{
+.product-card .buy-btn:hover{
 
     transform:translateY(-3px);
 
@@ -521,7 +508,7 @@
     margin-bottom:12px;
 }
 
-    .card-price span{
+    .product-card .card-price span{
 
         font-size:22px;
 
@@ -579,7 +566,7 @@
 
     }
 
-    .card-heart{
+    .product-card .card-heart{
 
         width:40px;
 
@@ -591,13 +578,13 @@
 
     }
 
-    .card-heart svg{
+    .product-card .card-heart svg{
 
         font-size:16px;
 
     }
 
-    .card-price{
+    .product-card .card-price{
 
         flex-direction:column;
 

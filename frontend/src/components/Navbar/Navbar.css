@@ -4,23 +4,13 @@
         GLOBAL
 =========================== */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-a{
+.navbar-wrapper a{
     text-decoration:none;
     color:inherit;
 }
 
-ul{
+.navbar-wrapper ul{
     list-style:none;
-}
-
-body{
-    font-family:"Poppins",sans-serif;
 }
 
 /* ===========================
@@ -35,7 +25,7 @@ body{
     z-index:999;
 }
 
-.navbar{
+.navbar-wrapper .fo-navbar{
 
     width:100%;
     height:80px;
@@ -51,8 +41,8 @@ body{
 
 }
 
-.navbar.scrolled,
-.navbar.solid{
+.navbar-wrapper .fo-navbar.scrolled,
+.navbar-wrapper .fo-navbar.solid{
 
     background:rgba(255,255,255,.95);
 
@@ -90,7 +80,7 @@ body{
           LOGO
 =========================== */
 
-.logo{
+.navbar-wrapper .logo{
 
     display:flex;
 
@@ -102,7 +92,7 @@ body{
 
 }
 
-.logo img{
+.navbar-wrapper .logo img{
 
     width:72px;
 
@@ -114,7 +104,7 @@ body{
 
 }
 
-.logo:hover img{
+.navbar-wrapper .logo:hover img{
 
     transform:scale(1.08);
 
@@ -160,7 +150,7 @@ body{
 
 }
 
-.logo:hover h1{
+.navbar-wrapper .logo:hover h1{
 
     color:#EF6F8F;
 
@@ -250,7 +240,7 @@ body{
 
 }
 
-.dropdown-menu{
+.fo-dropdown-menu{
 
     position:absolute;
 
@@ -282,7 +272,7 @@ body{
 
 }
 
-.dropdown-menu.show{
+.fo-dropdown-menu.show{
 
     opacity:1;
 
@@ -292,7 +282,7 @@ body{
 
 }
 
-.dropdown-item{
+.fo-dropdown-item{
 
     display:block;
 
@@ -306,7 +296,7 @@ body{
 
 }
 
-.dropdown-item:hover{
+.fo-dropdown-item:hover{
 
     background:#FFF6F8;
 
@@ -637,13 +627,13 @@ body{
 
     }
 
-    .logo{
+    .navbar-wrapper .logo{
 
         min-width:auto;
 
     }
 
-    .logo img{
+    .navbar-wrapper .logo img{
 
         width:58px;
 
@@ -679,7 +669,7 @@ body{
 
 @media(max-width:576px){
 
-    .navbar{
+    .navbar-wrapper .fo-navbar{
 
         height:74px;
 
@@ -693,13 +683,13 @@ body{
 
     }
 
-    .logo{
+    .navbar-wrapper .logo{
 
         gap:10px;
 
     }
 
-    .logo img{
+    .navbar-wrapper .logo img{
 
         width:52px;
 
@@ -735,7 +725,7 @@ body{
       SMOOTH ANIMATION
 =========================== */
 
-.dropdown-menu,
+.fo-dropdown-menu,
 .mobile-menu,
 .icon-wrapper,
 .menu-btn,

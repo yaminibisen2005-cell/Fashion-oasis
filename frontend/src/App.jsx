@@ -6,7 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import ScrollToTop from "./components/ScrollToTop";
-
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Home from "./pages/Home";
 import About from "./pages/About/About";
 import Shop from "./pages/Shop/Shop";
@@ -29,7 +29,7 @@ import DashboardSettings from "./pages/Dashboard/AccountSetting";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
-
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 function App() {
   useEffect(() => {
     AOS.init({
@@ -63,10 +63,11 @@ function App() {
           <Route path="/dashboard/wishlist" element={<DashboardWishlist />} />
           <Route path="/dashboard/reviews" element={<DashboardReviews />} />
           <Route path="/dashboard/settings" element={<DashboardSettings />} />
-          
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/*" element={<AdminLayout />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
 
       </Router>

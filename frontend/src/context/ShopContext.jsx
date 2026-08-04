@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+ import React, { createContext, useState, useEffect } from "react";
 import thumb1 from "../assets/thumb1.png";
 import thumb2 from "../assets/thumb2.png";
 import thumb3 from "../assets/thumb3.png";
@@ -46,15 +46,11 @@ const initialProducts = [
 ];
 
 export const ShopProvider = ({ children }) => {
-  // Wishlist starts with all 4 items
+  // Wishlist starts empty
   const [wishlist, setWishlist] = useState([]);
 
-  // Cart starts with 3 items (Rose Quartz Necklace x1, Pearl Drop Earrings x2, Floral Diamond Ring x1)
-  const [cart, setCart] = useState([
-    { product: initialProducts[0], quantity: 1 },
-    { product: initialProducts[1], quantity: 2 },
-    { product: initialProducts[2], quantity: 1 },
-  ]);
+  // Cart starts completely empty
+  const [cart, setCart] = useState([]);
 
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -62,23 +58,23 @@ export const ShopProvider = ({ children }) => {
   const [couponSuccess, setCouponSuccess] = useState("");
 
   const [shippingAddress, setShippingAddress] = useState({
-    fullName: "Neha Sharma",
-    phone: "+91 98760 42725",
-    address: "123 MG Road, Bandra West",
-    address2: "101-B Jasmine Heights",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400050",
+    fullName: "",
+    phone: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
 
   const [billingAddress, setBillingAddress] = useState({
-    fullName: "Neha Sharma",
-    phone: "+91 98760 42725",
-    address: "123 MG Road, Bandra West",
-    address2: "101-B Jasmine Heights",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400050",
+    fullName: "",
+    phone: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
 
   const [sameAsShipping, setSameAsShipping] = useState(true);

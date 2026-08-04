@@ -106,7 +106,7 @@
 
 }
 
-.save-btn{
+.profile-page .fo-save-btn{
 
     margin-top:35px;
 
@@ -130,7 +130,7 @@
 
 }
 
-.save-btn:hover{
+.profile-page .fo-save-btn:hover{
 
     background:#d96b82;
 
@@ -159,12 +159,12 @@ grid-column:auto;
 }
 
 }
-.input-group{
+.profile-page .fo-input-group{
     position:relative;
     width:100%;
 }
 
-.input-icon{
+.profile-page .input-icon{
     position:absolute;
     left:20px;
     top:50%;
@@ -176,9 +176,9 @@ grid-column:auto;
     pointer-events:none;
 }
 
-.input-group input,
-.input-group select,
-.input-group textarea{
+.profile-page .fo-input-group input,
+.profile-page .fo-input-group select,
+.profile-page .fo-input-group textarea{
     width:100%;
     height:54px;
     padding:0 18px 0 58px;   /* More left space */
@@ -190,24 +190,24 @@ grid-column:auto;
     padding-left:60px !important;
 }
 
-.input-group textarea{
+.profile-page .fo-input-group textarea{
     min-height:120px;
     padding:16px 18px 16px 58px;
     resize:none;
 }
 
-.textarea-icon{
+.profile-page .textarea-icon{
     top:22px;
     transform:none;
 }
-input::placeholder,
-textarea::placeholder{
+.profile-page input::placeholder,
+.profile-page textarea::placeholder{
     color:#B7A9AC;
     font-size:15px;
     font-family:'Poppins',sans-serif;
     
 }
 
-select{
+.profile-page select{
     color:#666;
 }

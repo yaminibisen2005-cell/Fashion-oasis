@@ -48,11 +48,11 @@
    Swiper
 =========================== */
 
-.swiper {
+.instagram-section .swiper {
   padding: 20px 45px 60px;
 }
 
-.swiper-slide {
+.instagram-section .swiper-slide {
   display: flex;
 }
 
@@ -175,14 +175,14 @@
    Navigation
 =========================== */
 
-.swiper-button-next,
-.swiper-button-prev {
+.instagram-section .swiper-button-next,
+.instagram-section .swiper-button-prev {
   color: #c89b5c;
   transition: .3s;
 }
 
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
+.instagram-section .swiper-button-next:hover,
+.instagram-section .swiper-button-prev:hover {
   color: #d96b8c;
 }
 
@@ -190,19 +190,19 @@
    Pagination
 =========================== */
 
-.swiper-pagination {
+.instagram-section .swiper-pagination {
   position: relative;
   margin-top: 30px;
 }
 
-.swiper-pagination-bullet {
+.instagram-section .swiper-pagination-bullet {
   width: 10px;
   height: 10px;
   background: #c89b5c;
   opacity: .4;
 }
 
-.swiper-pagination-bullet-active {
+.instagram-section .swiper-pagination-bullet-active {
   opacity: 1;
   background: #d96b8c;
 }
@@ -252,7 +252,7 @@
     height:210px;
 }
 
-.swiper{
+.instagram-section .swiper{
     padding:10px 25px 50px;
 }
 
@@ -327,11 +327,11 @@
    Swiper
 ======================================== */
 
-.swiper {
+.instagram-section .swiper {
   padding: 10px 45px 60px;
 }
 
-.swiper-slide {
+.instagram-section .swiper-slide {
   display: flex;
   justify-content: center;
 }
@@ -407,44 +407,55 @@
    Navigation
 ======================================== */
 
-.swiper-button-prev,
-.swiper-button-next {
-  color: #c89b5c;
-  width: 42px;
-  height: 42px;
+.instagram-section .swiper-button-prev,
+.instagram-section .swiper-button-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
   background: white;
   border-radius: 50%;
-  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  color: #c89b5c;
+  z-index: 10;
+  transition: .3s ease;
 }
 
-.swiper-button-prev::after,
-.swiper-button-next::after {
-  font-size: 18px;
+.instagram-section .swiper-button-prev::after,
+.instagram-section .swiper-button-next::after {
+  font-size: 16px;
   font-weight: bold;
 }
 
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
-  color: #d96b8c;
+.instagram-section .swiper-button-prev:hover,
+.instagram-section .swiper-button-next:hover {
+  background: #d96b8c;
+  color: white;
+  transform: translateY(-50%) scale(1.05);
 }
 
 /* ========================================
    Pagination
 ======================================== */
 
-.swiper-pagination {
-  position: relative;
-  margin-top: 35px;
+.instagram-section .swiper-pagination {
+  bottom: 10px !important;
 }
 
-.swiper-pagination-bullet {
+.instagram-section .swiper-pagination-bullet {
   width: 10px;
   height: 10px;
   background: #c89b5c;
-  opacity: .4;
+  opacity: .3;
+  margin: 0 6px !important;
+  transition: .3s ease;
 }
 
-.swiper-pagination-bullet-active {
+.instagram-section .swiper-pagination-bullet-active {
   background: #d96b8c;
   opacity: 1;
 }
@@ -519,7 +530,7 @@
     height:220px;
 }
 
-.swiper{
+.instagram-section .swiper{
     padding:10px 30px 55px;
 }
 
@@ -543,7 +554,7 @@
     height:210px;
 }
 
-.swiper{
+.instagram-section .swiper{
     padding:0 20px 45px;
 }
 
@@ -564,8 +575,8 @@
     height:190px;
 }
 
-.swiper-button-prev,
-.swiper-button-next{
+.instagram-section .swiper-button-prev,
+.instagram-section .swiper-button-next{
     display:none;
 }
 

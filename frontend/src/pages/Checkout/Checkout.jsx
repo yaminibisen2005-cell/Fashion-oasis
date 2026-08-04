@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
@@ -11,8 +11,6 @@ const Checkout = () => {
     totals,
     shippingAddress,
     setShippingAddress,
-    billingAddress,
-    setBillingAddress,
     sameAsShipping,
     setSameAsShipping,
     placeOrder,
@@ -20,33 +18,115 @@ const Checkout = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Local shipping input state
+  // Independent local state for billing address to prevent any context bleeding
+  const [localBillingAddress, setLocalBillingAddress] = useState({
+    fullName: "",
+    phone: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  // Automatically load logged-in user name into shipping address if available
+  useEffect(() => {
+    const loggedInName = localStorage.getItem("customerName") || localStorage.getItem("userName") || "";
+    if (loggedInName && !shippingAddress.fullName) {
+      setShippingAddress((prev) => ({ ...prev, fullName: loggedInName }));
+    }
+  }, [setShippingAddress, shippingAddress.fullName]);
+
+  // Shipping input state handler
   const handleShippingChange = (e) => {
     const { name, value } = e.target;
     setShippingAddress((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Local billing input state
+  // Local billing input state handler
   const handleBillingChange = (e) => {
     const { name, value } = e.target;
-    setBillingAddress((prev) => ({ ...prev, [name]: value }));
+    setLocalBillingAddress((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePlaceOrderSubmit = (e) => {
+  const handlePlaceOrderSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage("");
 
-    // Simulate placing order details and proceeding to payment page
-    setTimeout(() => {
+    try {
+      const customerEmail = localStorage.getItem("customerEmail");
+
+      const formattedItems = displayItems.map((item) => ({
+        productName: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price,
+      }));
+
+      // Determine final billing payload based on checkbox
+      const finalBillingAddress = sameAsShipping 
+        ? {
+            fullName: shippingAddress.fullName,
+            phoneNumber: shippingAddress.phone,
+            address: shippingAddress.address,
+            addressLine2: shippingAddress.address2 || "",
+            city: shippingAddress.city,
+            state: shippingAddress.state,
+            pincode: shippingAddress.pincode,
+          }
+        : {
+            fullName: localBillingAddress.fullName,
+            phoneNumber: localBillingAddress.phone,
+            address: localBillingAddress.address,
+            addressLine2: localBillingAddress.address2 || "",
+            city: localBillingAddress.city,
+            state: localBillingAddress.state,
+            pincode: localBillingAddress.pincode,
+          };
+
+      const orderPayload = {
+        customerEmail,
+        shippingAddress: {
+          fullName: shippingAddress.fullName,
+          phoneNumber: shippingAddress.phone,
+          address: shippingAddress.address,
+          addressLine2: shippingAddress.address2 || "",
+          city: shippingAddress.city,
+          state: shippingAddress.state,
+          pincode: shippingAddress.pincode,
+        },
+        billingAddress: finalBillingAddress,
+        paymentMethod,
+        items: formattedItems,
+        totalAmount: totals.total,
+      };
+
+      const response = await fetch("http://localhost:5000/api/v1/orders/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderPayload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to place order");
+      }
+
       placeOrder();
-      setLoading(false);
       navigate("/payment");
-    }, 1200); // 1.2s loader to look extremely professional
+      
+    } catch (err) {
+      setLoading(false);
+      setErrorMessage(err.message || "Something went wrong during checkout.");
+    }
   };
 
-  // If cart is empty, redirect back to cart (unless we already placed order, but context keeps active cart)
-  // To allow checking out the pre-populated cart items, we'll render even if cart size is 0 (fallback dataset)
+  // Fallback dataset if cart is empty
   const displayItems = cart.length > 0 ? cart : [
     { product: { name: "Rose Quartz Necklace", price: 1299, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100&q=80" }, quantity: 1 }
   ];
@@ -56,6 +136,8 @@ const Checkout = () => {
       <Navbar />
       <div className="checkout-page">
         <div className="container">
+          {errorMessage && <div className="checkout-error-banner" style={{ color: "red", marginBottom: "15px", textAlign: "center" }}>{errorMessage}</div>}
+          
           <form onSubmit={handlePlaceOrderSubmit} className="checkout-form-wrapper">
             
             {/* Left Column: Form Fields */}
@@ -70,10 +152,10 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="fullName"
-                      value={shippingAddress.fullName}
+                      value={shippingAddress.fullName || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="e.g. Neha Sharma"
+                      placeholder="Enter your full name"
                     />
                   </div>
 
@@ -82,10 +164,10 @@ const Checkout = () => {
                     <input
                       type="tel"
                       name="phone"
-                      value={shippingAddress.phone}
+                      value={shippingAddress.phone || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="e.g. +91 98760 42725"
+                      placeholder="Enter your phone number"
                     />
                   </div>
 
@@ -94,10 +176,10 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="address"
-                      value={shippingAddress.address}
+                      value={shippingAddress.address || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="Street address, P.O. Box"
+                      placeholder="Enter street address, P.O. Box"
                     />
                   </div>
 
@@ -106,7 +188,7 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="address2"
-                      value={shippingAddress.address2}
+                      value={shippingAddress.address2 || ""}
                       onChange={handleShippingChange}
                       placeholder="Apartment, suite, unit, building"
                     />
@@ -117,10 +199,10 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="city"
-                      value={shippingAddress.city}
+                      value={shippingAddress.city || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="e.g. Mumbai"
+                      placeholder="Enter city"
                     />
                   </div>
 
@@ -129,10 +211,10 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="state"
-                      value={shippingAddress.state}
+                      value={shippingAddress.state || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="e.g. Maharashtra"
+                      placeholder="Enter state"
                     />
                   </div>
 
@@ -141,10 +223,10 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="pincode"
-                      value={shippingAddress.pincode}
+                      value={shippingAddress.pincode || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="6 digit pincode"
+                      placeholder="Enter 6 digit pincode"
                     />
                   </div>
                 </div>
@@ -172,10 +254,10 @@ const Checkout = () => {
                       <input
                         type="text"
                         name="fullName"
-                        value={billingAddress.fullName}
+                        value={localBillingAddress.fullName}
                         onChange={handleBillingChange}
                         required
-                        placeholder="e.g. Neha Sharma"
+                        placeholder="Enter billing full name"
                       />
                     </div>
 
@@ -184,10 +266,10 @@ const Checkout = () => {
                       <input
                         type="tel"
                         name="phone"
-                        value={billingAddress.phone}
+                        value={localBillingAddress.phone}
                         onChange={handleBillingChange}
                         required
-                        placeholder="e.g. +91 98760 42725"
+                        placeholder="Enter billing phone number"
                       />
                     </div>
 
@@ -196,10 +278,10 @@ const Checkout = () => {
                       <input
                         type="text"
                         name="address"
-                        value={billingAddress.address}
+                        value={localBillingAddress.address}
                         onChange={handleBillingChange}
                         required
-                        placeholder="Street address, P.O. Box"
+                        placeholder="Enter billing street address"
                       />
                     </div>
 
@@ -208,7 +290,7 @@ const Checkout = () => {
                       <input
                         type="text"
                         name="address2"
-                        value={billingAddress.address2}
+                        value={localBillingAddress.address2}
                         onChange={handleBillingChange}
                         placeholder="Apartment, suite, unit, building"
                       />
@@ -219,10 +301,10 @@ const Checkout = () => {
                       <input
                         type="text"
                         name="city"
-                        value={billingAddress.city}
+                        value={localBillingAddress.city}
                         onChange={handleBillingChange}
                         required
-                        placeholder="e.g. Mumbai"
+                        placeholder="Enter billing city"
                       />
                     </div>
 
@@ -231,10 +313,10 @@ const Checkout = () => {
                       <input
                         type="text"
                         name="state"
-                        value={billingAddress.state}
+                        value={localBillingAddress.state}
                         onChange={handleBillingChange}
                         required
-                        placeholder="e.g. Maharashtra"
+                        placeholder="Enter billing state"
                       />
                     </div>
 
@@ -243,10 +325,10 @@ const Checkout = () => {
                       <input
                         type="text"
                         name="pincode"
-                        value={billingAddress.pincode}
+                        value={localBillingAddress.pincode}
                         onChange={handleBillingChange}
                         required
-                        placeholder="6 digit pincode"
+                        placeholder="Enter billing pincode"
                       />
                     </div>
                   </div>

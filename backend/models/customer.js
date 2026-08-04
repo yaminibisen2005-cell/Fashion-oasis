@@ -39,7 +39,18 @@ const customerSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: ''
-  }
+  },
+  wishlist: [
+    {
+      id: { type: String },
+      name: { type: String },
+      image: { type: String },
+      price: { type: mongoose.Schema.Types.Mixed },
+      oldPrice: { type: mongoose.Schema.Types.Mixed }
+    }
+  ],
+  resetPasswordToken: String,
+  resetPasswordExpire: Date
 }, {
   timestamps: true
 });
