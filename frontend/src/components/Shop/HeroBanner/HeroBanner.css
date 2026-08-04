@@ -50,7 +50,7 @@
   max-width: 600px;
 }
 
-.breadcrumb {
+.fo-breadcrumb {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -59,17 +59,17 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.breadcrumb a {
+.fo-breadcrumb a {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.9);
   transition: .3s;
 }
 
-.breadcrumb a:hover {
+.fo-breadcrumb a:hover {
   color: #ef6f8f;
 }
 
-.breadcrumb span {
+.fo-breadcrumb span {
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -129,7 +129,7 @@
     padding: 0 16px;
   }
 
-  .breadcrumb {
+  .fo-breadcrumb {
     font-size: 14px;
     margin-bottom: 20px;
   }
@@ -160,7 +160,7 @@
     line-height: 1.6;
   }
 
-  .breadcrumb {
+  .fo-breadcrumb {
     font-size: 13px;
   }
 }

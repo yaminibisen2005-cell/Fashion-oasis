@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaPlus, FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 
-const ProductsSection = ({ products, deleteProduct, toggleProductStatus }) => {
+const ProductsSection = ({ products, deleteProduct, toggleProductStatus, pagination, setPage }) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
@@ -58,7 +58,7 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus }) => {
               </tr>
             ) : (
               filteredProducts.map((prod) => (
-                <tr key={prod.id}>
+                <tr key={prod._id}>
                   <td>
                     <div className="tbl-product-cell">
                       <img src={prod.image} alt={prod.name} />
@@ -73,7 +73,7 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus }) => {
                       className={`status-badge-inline ${
                         prod.status === "Active" ? "active" : "inactive"
                       }`}
-                      onClick={() => toggleProductStatus(prod.id)}
+                      onClick={() => toggleProductStatus(prod._id)}
                       title="Click to toggle status"
                       style={{ cursor: "pointer" }}
                     >
@@ -83,7 +83,7 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus }) => {
                   <td>
                     <button
                       className="tbl-action-btn delete"
-                      onClick={() => deleteProduct(prod.id)}
+                      onClick={() => deleteProduct(prod._id)}
                       title="Delete Product"
                     >
                       <FaTrash />
@@ -95,6 +95,30 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus }) => {
           </tbody>
         </table>
       </div>
+
+      {pagination && pagination.totalPages > 1 && (
+        <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', gap: '10px' }}>
+          <button 
+            className="admin-btn-secondary" 
+            disabled={pagination.currentPage === 1}
+            onClick={() => setPage(pagination.currentPage - 1)}
+            style={{ padding: '8px 16px', borderRadius: '4px', cursor: pagination.currentPage === 1 ? 'not-allowed' : 'pointer' }}
+          >
+            Previous
+          </button>
+          <span style={{ padding: '8px 16px' }}>
+            Page {pagination.currentPage} of {pagination.totalPages}
+          </span>
+          <button 
+            className="admin-btn-secondary" 
+            disabled={pagination.currentPage === pagination.totalPages}
+            onClick={() => setPage(pagination.currentPage + 1)}
+            style={{ padding: '8px 16px', borderRadius: '4px', cursor: pagination.currentPage === pagination.totalPages ? 'not-allowed' : 'pointer' }}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
