@@ -39,8 +39,9 @@ const Login = () => {
 
       alert("Login Successful!");
       console.log("LoggedIn user data:", data);
-
       navigate("/");
+
+
     } catch (error) {
       alert(error.message);
     }
