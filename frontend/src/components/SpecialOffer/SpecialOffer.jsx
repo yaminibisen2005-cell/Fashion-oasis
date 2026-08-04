@@ -83,39 +83,7 @@ useEffect(() => {
               <h1>30% OFF</h1>
             </div>
 
-            {/* Countdown */}
-            <div className="offer-timer">
-
-              <div className="timer-heading">
-                <FaClock />
-                <span>Offer Ends In</span>
-              </div>
-
-              <div className="timer">
-
-  <div className="time-box">
-    <h3>{timeLeft.days}</h3>
-    <p>DAYS</p>
-  </div>
-
-  <div className="time-box">
-    <h3>{timeLeft.hours}</h3>
-    <p>HOURS</p>
-  </div>
-
-  <div className="time-box">
-    <h3>{timeLeft.minutes}</h3>
-    <p>MINS</p>
-  </div>
-
-  <div className="time-box">
-    <h3>{timeLeft.seconds}</h3>
-    <p>SECS</p>
-  </div>
-
-</div>
-
-            </div>
+            
 
             {/* Shop Button */}
            <button

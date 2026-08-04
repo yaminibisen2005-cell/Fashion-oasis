@@ -14,21 +14,21 @@
    Main Card
 =========================== */
 
-.settings-card{
+.account-settings-page .settings-card{
     background:#fff;
     border-radius:22px;
     padding:40px;
     box-shadow:0 12px 35px rgba(0,0,0,.08);
 }
 
-.settings-card h2{
+.account-settings-page .settings-card h2{
     font-family:'Cormorant Garamond',serif;
     font-size:42px;
     color:#352525;
     margin-bottom:8px;
 }
 
-.settings-subtitle{
+.account-settings-page .settings-subtitle{
     color:#777;
     font-size:15px;
     margin-bottom:35px;
@@ -38,7 +38,7 @@
    Sections
 =========================== */
 
-.setting-section{
+.account-settings-page .setting-section{
     margin-top:35px;
     padding:28px;
     border:1px solid #F6DCE2;
@@ -47,11 +47,11 @@
     transition:.3s;
 }
 
-.setting-section:hover{
+.account-settings-page .setting-section:hover{
     box-shadow:0 8px 25px rgba(239,111,143,.08);
 }
 
-.setting-section h3{
+.account-settings-page .setting-section h3{
     font-family:'Cormorant Garamond',serif;
     font-size:30px;
     color:#352525;
@@ -62,13 +62,13 @@
    Profile
 =========================== */
 
-.account-profile{
+.account-settings-page .account-profile{
     display:flex;
     align-items:center;
     gap:22px;
 }
 
-.setting-avatar{
+.account-settings-page .setting-avatar{
     width:90px;
     height:90px;
     border-radius:50%;
@@ -77,19 +77,19 @@
     box-shadow:0 10px 25px rgba(239,111,143,.18);
 }
 
-.account-profile h4{
+.account-settings-page .account-profile h4{
     font-size:28px;
     color:#352525;
     margin-bottom:6px;
     font-family:'Cormorant Garamond',serif;
 }
 
-.account-profile p{
+.account-settings-page .account-profile p{
     color:#777;
     margin-bottom:12px;
 }
 
-.change-photo-btn{
+.account-settings-page .change-photo-btn{
     border:none;
     background:#EF6F8F;
     color:#fff;
@@ -100,7 +100,7 @@
     transition:.3s;
 }
 
-.change-photo-btn:hover{
+.account-settings-page .change-photo-btn:hover{
     background:#e15d81;
 }
 
@@ -108,19 +108,19 @@
    Inputs
 =========================== */
 
-.input-group{
+.account-settings-page .fo-input-group{
     display:flex;
     flex-direction:column;
     margin-bottom:22px;
 }
 
-.input-group label{
+.account-settings-page .fo-input-group label{
     margin-bottom:8px;
     font-weight:500;
     color:#444;
 }
 
-.input-group input{
+.account-settings-page .fo-input-group input{
     height:55px;
     border:1px solid #ECD8DD;
     border-radius:14px;
@@ -130,7 +130,7 @@
     transition:.3s;
 }
 
-.input-group input:focus{
+.account-settings-page .fo-input-group input:focus{
     border-color:#EF6F8F;
     box-shadow:0 0 0 4px rgba(239,111,143,.12);
 }
@@ -139,8 +139,8 @@
    Buttons
 =========================== */
 
-.update-btn,
-.save-btn{
+.account-settings-page .update-btn,
+.account-settings-page .fo-save-btn{
 
     margin-top:15px;
 
@@ -161,8 +161,8 @@
     transition:.3s;
 }
 
-.update-btn:hover,
-.save-btn:hover{
+.account-settings-page .update-btn:hover,
+.account-settings-page .fo-save-btn:hover{
 
     background:#e35d80;
     transform:translateY(-2px);
@@ -173,7 +173,7 @@
    Checkbox
 =========================== */
 
-.checkbox{
+.account-settings-page .checkbox{
     display:flex;
     align-items:center;
     gap:12px;
@@ -181,13 +181,13 @@
     cursor:pointer;
 }
 
-.checkbox input{
+.account-settings-page .checkbox input{
     width:18px;
     height:18px;
     accent-color:#EF6F8F;
 }
 
-.checkbox span{
+.account-settings-page .checkbox span{
     color:#555;
     font-size:15px;
 }
@@ -196,19 +196,19 @@
    Setting Row
 =========================== */
 
-.setting-row{
+.account-settings-page .setting-row{
     display:flex;
     justify-content:space-between;
     align-items:center;
 }
 
-.setting-row h4{
+.account-settings-page .setting-row h4{
     color:#352525;
     margin-bottom:4px;
     font-size:18px;
 }
 
-.setting-row p{
+.account-settings-page .setting-row p{
     color:#777;
     font-size:14px;
 }
@@ -217,17 +217,17 @@
    Toggle Switch
 =========================== */
 
-.switch{
+.account-settings-page .switch{
     position:relative;
     width:58px;
     height:30px;
 }
 
-.switch input{
+.account-settings-page .switch input{
     display:none;
 }
 
-.slider{
+.account-settings-page .slider{
     position:absolute;
     inset:0;
     background:#ddd;
@@ -236,7 +236,7 @@
     transition:.3s;
 }
 
-.slider::before{
+.account-settings-page .slider::before{
     content:"";
     position:absolute;
     width:24px;
@@ -248,11 +248,11 @@
     transition:.3s;
 }
 
-.switch input:checked + .slider{
+.account-settings-page .switch input:checked + .slider{
     background:#EF6F8F;
 }
 
-.switch input:checked + .slider::before{
+.account-settings-page .switch input:checked + .slider::before{
     transform:translateX(28px);
 }
 
@@ -260,7 +260,7 @@
    Select
 =========================== */
 
-.setting-select{
+.account-settings-page .setting-select{
     width:250px;
     height:50px;
     border:1px solid #ECD8DD;
@@ -271,7 +271,7 @@
     background:#fff;
 }
 
-.setting-select:focus{
+.account-settings-page .setting-select:focus{
     border-color:#EF6F8F;
 }
 
@@ -279,18 +279,18 @@
    Danger Zone
 =========================== */
 
-.danger-zone{
+.account-settings-page .danger-zone{
     border:1px solid #FFD8D8;
     background:#FFF6F6;
 }
 
-.danger-zone p{
+.account-settings-page .danger-zone p{
     color:#666;
     line-height:1.6;
     margin-bottom:18px;
 }
 
-.delete-btn{
+.account-settings-page .delete-btn{
     background:#ff5a5a;
     color:#fff;
     border:none;
@@ -301,7 +301,7 @@
     font-weight:600;
 }
 
-.delete-btn:hover{
+.account-settings-page .delete-btn:hover{
     background:#e14444;
 }
 
@@ -311,22 +311,22 @@
 
 @media(max-width:992px){
 
-.settings-card{
+.account-settings-page .settings-card{
     padding:30px;
 }
 
-.setting-row{
+.account-settings-page .setting-row{
     flex-direction:column;
     align-items:flex-start;
     gap:18px;
 }
 
-.account-profile{
+.account-settings-page .account-profile{
     flex-direction:column;
     text-align:center;
 }
 
-.setting-select{
+.account-settings-page .setting-select{
     width:100%;
 }
 
@@ -338,18 +338,18 @@
     padding:20px;
 }
 
-.settings-card h2{
+.account-settings-page .settings-card h2{
     font-size:34px;
 }
 
-.setting-section{
+.account-settings-page .setting-section{
     padding:22px;
 }
 
-.update-btn,
-.save-btn,
-.delete-btn,
-.change-photo-btn{
+.account-settings-page .update-btn,
+.account-settings-page .fo-save-btn,
+.account-settings-page .delete-btn,
+.account-settings-page .change-photo-btn{
     width:100%;
 }
 
@@ -357,31 +357,31 @@
 
 @media(max-width:576px){
 
-.settings-card{
+.account-settings-page .settings-card{
     padding:18px;
 }
 
-.setting-section{
+.account-settings-page .setting-section{
     padding:18px;
 }
 
-.setting-avatar{
+.account-settings-page .setting-avatar{
     width:75px;
     height:75px;
 }
 
-.account-profile h4{
+.account-settings-page .account-profile h4{
     font-size:24px;
 }
 
-.setting-section h3{
+.account-settings-page .setting-section h3{
     font-size:26px;
 }
 
 }
 /* Section Heading */
 
-.setting-section h3{
+.account-settings-page .setting-section h3{
     display:flex;
     align-items:center;
     gap:12px;
@@ -393,20 +393,20 @@
 
 /* Pink Section Icons */
 
-.section-icon{
+.account-settings-page .section-icon{
     color:#EF6F8F;
     font-size:24px;
 }
 
 /* Red Danger Icon */
 
-.danger-icon{
+.account-settings-page .danger-icon{
     color:#ff4d6d;
 }
 
 /* Label Icons */
 
-.input-group label{
+.account-settings-page .fo-input-group label{
     display:flex;
     align-items:center;
     gap:8px;
@@ -415,17 +415,17 @@
     color:#555;
 }
 
-.label-icon{
+.account-settings-page .label-icon{
     color:#EF6F8F;
     font-size:14px;
 }
 
 /* Button Icons */
 
-.change-photo-btn,
-.update-btn,
-.save-btn,
-.delete-btn{
+.account-settings-page .change-photo-btn,
+.account-settings-page .update-btn,
+.account-settings-page .fo-save-btn,
+.account-settings-page .delete-btn{
     display:inline-flex;
     align-items:center;
     justify-content:center;
@@ -435,19 +435,19 @@
    Personal Information
 =========================== */
 
-.personal-grid{
+.account-settings-page .personal-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:24px;
     margin-top:25px;
 }
 
-.personal-input{
+.account-settings-page .personal-input{
     display:flex;
     flex-direction:column;
 }
 
-.personal-input label{
+.account-settings-page .personal-input label{
     display:flex;
     align-items:center;
     gap:10px;
@@ -457,9 +457,9 @@
     color:#444;
 }
 
-.personal-input input,
-.personal-input select,
-.personal-input textarea{
+.account-settings-page .personal-input input,
+.account-settings-page .personal-input select,
+.account-settings-page .personal-input textarea{
     width:100%;
     border:1px solid #ECD8DD;
     border-radius:14px;
@@ -471,28 +471,28 @@
     background:#fff;
 }
 
-.personal-input textarea{
+.account-settings-page .personal-input textarea{
     resize:none;
     min-height:120px;
 }
 
-.personal-input input:focus,
-.personal-input select:focus,
-.personal-input textarea:focus{
+.account-settings-page .personal-input input:focus,
+.account-settings-page .personal-input select:focus,
+.account-settings-page .personal-input textarea:focus{
     border-color:#EF6F8F;
     box-shadow:0 0 0 4px rgba(239,111,143,.12);
 }
 
-.full-width{
+.account-settings-page .full-width{
     grid-column:1 / -1;
 }
 
-.label-icon{
+.account-settings-page .label-icon{
     color:#EF6F8F;
     font-size:15px;
 }
 
-.save-btn{
+.account-settings-page .fo-save-btn{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -501,11 +501,11 @@
 
 @media(max-width:768px){
 
-.personal-grid{
+.account-settings-page .personal-grid{
     grid-template-columns:1fr;
 }
 
-.full-width{
+.account-settings-page .full-width{
     grid-column:auto;
 }
 
