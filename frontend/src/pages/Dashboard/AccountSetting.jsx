@@ -57,7 +57,6 @@ function AccountSetting() {
 
   const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState("English");
-  const [twoFactor, setTwoFactor] = useState(false);
 
   // Fetch full customer profile on mount
   useEffect(() => {
@@ -66,15 +65,14 @@ function AccountSetting() {
       try {
         const { data } = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${userEmail}`);
         if (data.success && data.data) {
-          const fullNameParts = (data.data.firstName || "").split(" ");
           setFormData({
             firstName: data.data.firstName || storedUser.firstName || "",
             lastName: data.data.lastName || storedUser.lastName || "",
             email: data.data.email || userEmail,
-            phone: data.data.phone || "+91 9876543210",
+            phone: data.data.phone || "",
             gender: data.data.gender || "Male",
-            dob: data.data.dob || "2000-05-25",
-            address: data.data.address || "Purnia, Bihar, India",
+            dob: data.data.dob || "",
+            address: data.data.address || "",
           });
         }
       } catch (err) {
@@ -99,7 +97,6 @@ function AccountSetting() {
     setError("");
 
     try {
-      // Split full name if needed or map fields to backend expectations
       const nameParts = formData.firstName.trim().split(" ");
       const fName = nameParts[0] || formData.firstName;
       const lName = nameParts.slice(1).join(" ") || formData.lastName;
@@ -129,6 +126,14 @@ function AccountSetting() {
     setMessage("");
     setError("");
 
+    const activeUser = JSON.parse(localStorage.getItem("customerInfo")) || {};
+    const currentEmail = formData.email || activeUser.email;
+
+    if (!currentEmail) {
+      setError("User session not found. Please log in again.");
+      return;
+    }
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       setError("New passwords do not match!");
       return;
@@ -136,7 +141,7 @@ function AccountSetting() {
 
     try {
       const { data } = await axios.put("http://localhost:5000/api/v1/customer/password", {
-        email: userEmail,
+        email: currentEmail,
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });
@@ -146,7 +151,7 @@ function AccountSetting() {
         setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update password.");
+      setError(err.response?.data?.message || "Failed to update password. Check your current password.");
     }
   };
 
@@ -180,17 +185,12 @@ function AccountSetting() {
           {message && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md">{message}</div>}
           {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">{error}</div>}
 
-<<<<<<< Updated upstream
-          <div className="setting-section">
-          
-=======
           {/* ================= Personal Information ================= */}
           <form onSubmit={handleSaveProfile} className="setting-section">
             <h3>
               <FaUserCircle className="section-icon" />
               Personal Information
             </h3>
->>>>>>> Stashed changes
 
             <div className="personal-grid">
               <div className="personal-input">
@@ -281,78 +281,11 @@ function AccountSetting() {
               </div>
             </div>
 
-<<<<<<< Updated upstream
-    <div className="personal-input">
-      <label>
-        <FaPhone className="label-icon" />
-        Phone Number
-      </label>
-
-      <input
-        type="tel"
-        placeholder="+91 9876543210"
-        defaultValue="+91 9876543210"
-      />
-    </div>
-
-    <div className="personal-input">
-      <label>
-        <FaVenusMars className="label-icon" />
-        Gender
-      </label>
-
-      <select defaultValue="Male">
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
-    </div>
-
-    <div className="personal-input">
-      <label>
-        <FaBirthdayCake className="label-icon" />
-        Date of Birth
-      </label>
-
-      <input
-        type="date"
-        defaultValue="2000-05-25"
-      />
-    </div>
-
-    <div className="personal-input full-width">
-      <label>
-        <FaMapMarkerAlt className="label-icon" />
-        Address
-      </label>
-
-      <textarea
-        rows="4"
-        defaultValue="Purnia, Bihar, India"
-        placeholder="Enter your address"
-      ></textarea>
-    </div>
-
-  </div>
-
-  <button className="fo-save-btn">
-    <FaSave />
-    Save Personal Information
-  </button>
-
-
-            
-  
-            
-
-          </div>
-=======
             <button type="submit" className="fo-save-btn">
               <FaSave />
               Save Personal Information
             </button>
           </form>
->>>>>>> Stashed changes
 
           {/* ================= Password ================= */}
           <form onSubmit={handleUpdatePassword} className="setting-section">
@@ -463,13 +396,6 @@ function AccountSetting() {
             </button>
           </div>
 
-<<<<<<< Updated upstream
-              
-
-            
-
-          
-=======
           {/* ================= Appearance ================= */}
           <div className="setting-section">
             <h3>
@@ -493,7 +419,6 @@ function AccountSetting() {
               </label>
             </div>
           </div>
->>>>>>> Stashed changes
 
           {/* ================= Language ================= */}
           <div className="setting-section">
@@ -509,30 +434,6 @@ function AccountSetting() {
               <option value="English">English</option>
               <option value="Hindi">Hindi</option>
             </select>
-          </div>
-
-          {/* ================= Security ================= */}
-          <div className="setting-section">
-            <h3>
-              <FaShieldAlt className="section-icon" />
-              Security
-            </h3>
-
-            <div className="setting-row">
-              <div>
-                <h4>Two-Factor Authentication</h4>
-                <p>Add an extra layer of protection to your account.</p>
-              </div>
-
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={twoFactor}
-                  onChange={(e) => setTwoFactor(e.target.checked)}
-                />
-                <span className="slider"></span>
-              </label>
-            </div>
           </div>
 
           {/* ================= Danger Zone ================= */}
@@ -551,14 +452,9 @@ function AccountSetting() {
               Delete Account
             </button>
           </div>
-<<<<<<< Updated upstream
-          </div>
-          </div>
-=======
 
         </div>
       </div>
->>>>>>> Stashed changes
     </DashboardLayout>
   );
 }

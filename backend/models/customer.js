@@ -40,6 +40,11 @@ const customerSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
+  // ADD THIS FIELD FOR 2FA
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
   wishlist: [
     {
       id: { type: String },
