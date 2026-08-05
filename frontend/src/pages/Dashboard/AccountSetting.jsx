@@ -1,7 +1,7 @@
  import "./AccountSetting.css";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+import { getProfile, updateProfile, updatePassword, deleteAccount } from "../../api/customer";
 import {
   FaUserCircle,
   FaLock,
@@ -63,7 +63,7 @@ function AccountSetting() {
     const fetchProfile = async () => {
       if (!userEmail) return;
       try {
-        const { data } = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${userEmail}`);
+        const data = await getProfile(userEmail);
         if (data.success && data.data) {
           setFormData({
             firstName: data.data.firstName || storedUser.firstName || "",
@@ -101,7 +101,7 @@ function AccountSetting() {
       const fName = nameParts[0] || formData.firstName;
       const lName = nameParts.slice(1).join(" ") || formData.lastName;
 
-      const { data } = await axios.put("http://localhost:5000/api/v1/customer/profile", {
+      const data = await updateProfile({
         originalEmail: userEmail,
         firstName: fName,
         lastName: lName,
@@ -140,7 +140,7 @@ function AccountSetting() {
     }
 
     try {
-      const { data } = await axios.put("http://localhost:5000/api/v1/customer/password", {
+      const data = await updatePassword({
         email: currentEmail,
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
@@ -159,9 +159,7 @@ function AccountSetting() {
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
       try {
-        const { data } = await axios.delete("http://localhost:5000/api/v1/customer/account", {
-          data: { email: userEmail },
-        });
+        const data = await deleteAccount(userEmail);
 
         if (data.success) {
           localStorage.removeItem("customerInfo");

@@ -2,6 +2,7 @@ import "../Login/Login.css";
 import loginBg from "../../assets/login-bg.png";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { resetPassword } from "../../api/customer";
 
 const ResetPassword = () => {
   const { token } = useParams(); // Grabs the token from the URL route
@@ -19,26 +20,14 @@ const ResetPassword = () => {
     setError("");
 
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/customer/reset-password/${token}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Token is invalid or has expired");
-      }
+      await resetPassword(token, { password });
 
       setMessage("Password updated successfully! Redirecting to login...");
       setTimeout(() => {
         navigate("/login");
       }, 2500);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || "Token is invalid or has expired");
     } finally {
       setLoading(false);
     }

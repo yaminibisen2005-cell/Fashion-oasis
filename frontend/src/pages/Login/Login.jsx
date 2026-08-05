@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
+import { customerLogin } from "../../api/customer";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,25 +17,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/customer/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Invalid email or password");
-      }
+      const data = await customerLogin({ email, password });
 
       if (data.success && data.data && data.data.email) {
         localStorage.setItem("customerEmail", data.data.email);
@@ -45,7 +28,7 @@ const Login = () => {
       navigate("/");
 
     } catch (error) {
-      alert(error.message);
+      alert(error.response?.data?.message || "Invalid email or password");
     }
   };
 

@@ -8,6 +8,7 @@ import {
   FaVenusMars,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { getProfile, updateProfile } from "../../api/customer";
 
 function Profile() {
   const [formData, setFormData] = useState({
@@ -32,11 +33,7 @@ function Profile() {
           return;
         }
 
-        const response = await fetch(
-          `http://localhost:5000/api/v1/customer/profile?email=${userEmail}`
-        );
-
-        const result = await response.json();
+        const result = await getProfile(userEmail);
 
         if (result.success) {
           setFormData(result.data);
@@ -62,26 +59,15 @@ function Profile() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/customer/profile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            originalEmail: localStorage.getItem("customerEmail"),
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            phone: formData.phone,
-            gender: formData.gender,
-            address: formData.address,
-          }),
-        }
-      );
-
-      const result = await response.json();
+      const result = await updateProfile({
+        originalEmail: localStorage.getItem("customerEmail"),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        gender: formData.gender,
+        address: formData.address,
+      });
 
       if (result.success) {
         setMessage("Profile updated successfully!");

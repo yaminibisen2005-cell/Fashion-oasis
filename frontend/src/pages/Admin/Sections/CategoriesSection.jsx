@@ -5,19 +5,19 @@ const CategoriesSection = ({ categories, addCategory, deleteCategory, toggleCate
   const [showModal, setShowModal] = useState(false);
   const [newCatName, setNewCatName] = useState("");
 
-  const handleAddSubmit = (e) => {
+  const handleAddSubmit = async (e) => {
     e.preventDefault();
     if (!newCatName.trim()) return;
 
     const newCategory = {
       name: newCatName.trim(),
-      productsCount: 0,
-      status: "Active",
     };
 
-    addCategory(newCategory);
-    setNewCatName("");
-    setShowModal(false);
+    const success = await addCategory(newCategory);
+    if (success) {
+      setNewCatName("");
+      setShowModal(false);
+    }
   };
 
   return (
@@ -52,7 +52,7 @@ const CategoriesSection = ({ categories, addCategory, deleteCategory, toggleCate
                     className={`status-badge-inline ${
                       cat.status === "Active" ? "active" : "inactive"
                     }`}
-                    onClick={() => toggleCategoryStatus(cat.name)}
+                    onClick={() => toggleCategoryStatus(cat._id)}
                     style={{ cursor: "pointer" }}
                     title="Click to toggle status"
                   >
@@ -62,7 +62,7 @@ const CategoriesSection = ({ categories, addCategory, deleteCategory, toggleCate
                 <td>
                   <button
                     className="tbl-action-btn delete"
-                    onClick={() => deleteCategory(cat.name)}
+                    onClick={() => deleteCategory(cat._id)}
                     title="Delete Category"
                   >
                     <FaTrash />

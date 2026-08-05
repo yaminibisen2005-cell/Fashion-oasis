@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
+import { customerRegister } from "../../api/customer";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -32,33 +33,12 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/customer/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            password,
-            confirmPassword,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
+      await customerRegister({ firstName, lastName, email, password, confirmPassword });
 
       alert("Registration Successful!");
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      alert(error.response?.data?.message || "Something went wrong");
     }
   };
 

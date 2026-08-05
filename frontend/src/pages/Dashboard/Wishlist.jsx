@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Wishlist.css";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
+import { getWishlist, toggleWishlist } from "../../api/customer";
 
 function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -17,13 +18,8 @@ function Wishlist() {
       }
 
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/v1/wishlist/${customerEmail}`
-        );
-
-        const data = await response.json();
-
-        if (response.ok && data.wishlist) {
+        const data = await getWishlist(customerEmail);
+        if (data.wishlist) {
           setWishlistItems(data.wishlist);
         }
       } catch (err) {
@@ -38,27 +34,10 @@ function Wishlist() {
 
   const handleRemoveFromWishlist = async (productId) => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/wishlist/toggle",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            customerEmail,
-            product: {
-              id: productId,
-            },
-          }),
-        }
+      await toggleWishlist({ customerEmail, product: { id: productId } });
+      setWishlistItems((prev) =>
+        prev.filter((item) => (item.id || item._id) !== productId)
       );
-
-      if (response.ok) {
-        setWishlistItems((prev) =>
-          prev.filter((item) => (item.id || item._id) !== productId)
-        );
-      }
     } catch (err) {
       console.error("Failed to remove item", err);
     }

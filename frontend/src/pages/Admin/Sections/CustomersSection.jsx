@@ -22,8 +22,8 @@ const CustomersSection = ({ customers, toggleCustomerStatus }) => {
             </tr>
           </thead>
           <tbody>
-            {customers.map((cust, idx) => (
-              <tr key={idx}>
+            {customers.map((cust) => (
+              <tr key={cust.id}>
                 <td>
                   <div className="tbl-product-cell">
                     <img src={cust.img} alt={cust.name} className="avatar" />
@@ -38,7 +38,7 @@ const CustomersSection = ({ customers, toggleCustomerStatus }) => {
                     className={`status-badge-inline ${
                       cust.status === "Active" ? "active" : "inactive"
                     }`}
-                    onClick={() => toggleCustomerStatus(cust.name)}
+                    onClick={() => toggleCustomerStatus(cust.id)}
                     style={{ cursor: "pointer" }}
                     title="Click to toggle status"
                   >

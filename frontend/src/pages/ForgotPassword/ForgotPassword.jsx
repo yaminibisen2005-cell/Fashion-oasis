@@ -2,6 +2,7 @@ import "../Login/Login.css"; // You can reuse your Login styles or make a dedica
 import loginBg from "../../assets/login-bg.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { forgotPassword } from "../../api/customer";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -16,23 +17,11 @@ const ForgotPassword = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/customer/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
+      await forgotPassword({ email });
 
       setMessage("Password reset link sent to your email! Check your inbox.");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

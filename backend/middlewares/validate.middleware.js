@@ -5,6 +5,10 @@ export const validate = (schema) => (req, res, next) => {
     schema.parse({ body: req.body, query: req.query, params: req.params });
     next();
   } catch (err) {
-    next(new AppError(err.errors[0].message, 400));
+    const errors = err.issues.map((issue) => ({
+      field: issue.path.join('.'),
+      message: issue.message,
+    }));
+    next(new AppError('Validation failed', 400, errors));
   }
 };
