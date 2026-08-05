@@ -73,16 +73,6 @@ const ProductCard = ({
 
       <div className="product-image">
         <img src={product.image} alt={product.name} />
-
-        {!showAddToCart && (
-          <div className="image-overlay">
-            <Link to={`/product/${product.id || product._id}`}>
-              <button className="quick-view-btn">
-                Quick View
-              </button>
-            </Link>
-          </div>
-        )}
       </div>
 
       <div className="product-info">

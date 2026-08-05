@@ -1,15 +1,10 @@
 import "./FeaturedProducts.css";
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
-import {
-  FaHeart,
-  FaRegHeart,
-  FaStar,
-  FaArrowRight,
-} from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import ProductCard from "../Shop/ProductCard/ProductCard";
 
 import thumb1 from "../../assets/thumb1.png";
 import thumb2 from "../../assets/thumb2.png";
@@ -19,171 +14,73 @@ import thumb4 from "../../assets/thumb4.png";
 const products = [
   {
     id: 1,
+    name: "Pearl Necklace",
     image: thumb1,
-    title: "Pearl Necklace",
-    price: "₹999",
-    oldPrice: "₹1299",
+    price: 999,
+    oldPrice: 1299,
+    discount: 23,
+    rating: 4.8,
+    reviews: 124,
   },
   {
     id: 2,
+    name: "Rose Bracelet",
     image: thumb2,
-    title: "Rose Bracelet",
-    price: "₹699",
-    oldPrice: "₹899",
+    price: 699,
+    oldPrice: 899,
+    discount: 22,
+    rating: 4.6,
+    reviews: 89,
   },
   {
     id: 3,
+    name: "Luxury Ring",
     image: thumb3,
-    title: "Luxury Ring",
-    price: "₹899",
-    oldPrice: "₹1199",
+    price: 899,
+    oldPrice: 1199,
+    discount: 25,
+    rating: 4.9,
+    reviews: 156,
   },
   {
     id: 4,
+    name: "Pearl Earrings",
     image: thumb4,
-    title: "Pearl Earrings",
-    price: "₹799",
-    oldPrice: "₹999",
+    price: 799,
+    oldPrice: 999,
+    discount: 20,
+    rating: 4.7,
+    reviews: 98,
   },
 ];
 
 const FeaturedProducts = () => {
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
-  const {
-  wishlist,
-  addToWishlist,
-  removeFromWishlist,
-    addToCart,
-} = useContext(ShopContext);
-
-const handleBuyNow = (product) => {
-  addToCart(
-    {
-      id: product.id,
-      name: product.title,
-      price: Number(product.price.replace("₹", "")),
-      oldPrice: Number(product.oldPrice.replace("₹", "")),
-      image: product.image,
-    },
-    1
-  );
-
-  navigate("/cart");
-};
   return (
     <section className="featured-section">
-
       <div className="container">
-
         <div className="featured-heading">
-
           <span>FEATURED COLLECTION</span>
-
           <h2>Handpicked For You</h2>
-
           <p>
             Timeless handcrafted jewellery curated for every occasion.
           </p>
-
         </div>
 
         <div className="products-grid">
-
           {products.map((item) => (
-
-            <div className="product-card" key={item.id}>
-
-              <button
-                className="card-heart"
-                onClick={() => {
-  const exists = wishlist.some((p) => p.id === item.id);
-
-  if (exists) {
-    removeFromWishlist(item.id);
-  } else {
-    addToWishlist({
-      id: item.id,
-      name: item.title,
-      price: Number(item.price.replace("₹", "")),
-      oldPrice: Number(item.oldPrice.replace("₹", "")),
-      image: item.image,
-    });
-  }
-}}
-              >
-                {wishlist.some((p) => p.id === item.id)? (
-                  <FaHeart className="heart-active" />
-                ) : (
-                  <FaRegHeart />
-                )}
-              </button>
-
-              <div className="product-image">
-                <img src={item.image} alt={item.title} />
-              </div>
-
-              <div className="product-content">
-
-                <h3>{item.title}</h3>
-
-                <div className="card-rating">
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                </div>
-
-<div className="product-bottom">
-
-  <div className="card-price">
-
-    <span className="new-price">
-      {item.price}
-    </span>
-
-    <del className="old-price">
-      {item.oldPrice}
-    </del>
-
-  </div>
-
- <button
-  className="buy-btn"
-  onClick={() => handleBuyNow(item)}
->
-  
-  Shop Now
-</button>
-
-</div>
-
-
-
-               
-
-              </div>
-
-            </div>
-
+            <ProductCard key={item.id} product={item} />
           ))}
-
         </div>
 
         <div className="view-all">
-
-          <button
-    onClick={() => navigate("/shop")}
->
-    View All Products
-    <FaArrowRight />
-</button>
-
+          <button onClick={() => navigate("/shop")}>
+            View All Products
+            <FaArrowRight />
+          </button>
         </div>
-
       </div>
-
     </section>
   );
 };
