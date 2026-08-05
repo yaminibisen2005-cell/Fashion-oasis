@@ -1220,7 +1220,6 @@ const SellerDashboard = () => {
     { name: "Inventory", key: "inventory", icon: <FaBoxes /> },
     { name: "Orders", key: "orders", icon: <FaShoppingCart /> },
     { name: "Earnings", key: "earnings", icon: <FaRupeeSign /> },
-    { name: "Reports", key: "reports", icon: <FaChartLine /> },
     { name: "Reviews", key: "reviews", icon: <FaStar /> },
     { name: "Profile", key: "profile", icon: <FaUserCircle /> },
     { name: "Settings", key: "settings", icon: <FaCog /> },
@@ -1250,7 +1249,6 @@ const SellerDashboard = () => {
       case "orders":
         return <OrdersSection orders={orders} />;
       case "earnings":
-      case "reports":
         return <EarningsSection />;
       case "reviews":
         return <ReviewsSection reviews={reviews} deleteReview={deleteReview} />;
@@ -1279,7 +1277,6 @@ const SellerDashboard = () => {
           <div className="header-logo-group">
             <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
             <div>
-              <h3>{settings.storeName}</h3>
               <p>Seller Central</p>
             </div>
           </div>
