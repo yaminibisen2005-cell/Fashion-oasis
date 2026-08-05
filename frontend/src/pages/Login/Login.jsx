@@ -19,8 +19,16 @@ const Login = () => {
     try {
       const data = await customerLogin({ email, password });
 
-      if (data.success && data.data && data.data.email) {
-        localStorage.setItem("customerEmail", data.data.email);
+      if (data.success && data.data) {
+        // Save the full user data object so the dashboard can read the name and token
+        localStorage.setItem("customerInfo", JSON.stringify(data.data));
+        
+        if (data.data.email) {
+          localStorage.setItem("customerEmail", data.data.email);
+        }
+        if (data.data.token) {
+          localStorage.setItem("token", data.data.token);
+        }
       }
 
       alert("Login Successful!");

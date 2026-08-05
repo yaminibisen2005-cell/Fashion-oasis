@@ -1,4 +1,4 @@
- import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+  import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -28,58 +28,35 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Check all potential storage structures (token, customerInfo, userInfo, or direct token string)
-    const storedCustomerInfo = localStorage.getItem("customerInfo");
-    const storedUserInfo = localStorage.getItem("userInfo");
-    
-    let token = localStorage.getItem("token") || localStorage.getItem("authToken");
-    let storedUser = null;
+    // 1. Check all potential storage keys for token and user data
+    const token = 
+      localStorage.getItem("token") || 
+      localStorage.getItem("authToken") || 
+      JSON.parse(localStorage.getItem("customerInfo"))?.token;
 
-    if (storedCustomerInfo) {
-      try {
-        const parsed = JSON.parse(storedCustomerInfo);
-        if (typeof parsed === "string") {
-          token = token || parsed;
-        } else if (parsed && typeof parsed === "object") {
-          token = token || parsed.token || parsed.accessToken;
-          storedUser = parsed;
-        }
-      } catch (e) {
-        token = token || storedCustomerInfo;
-      }
-    }
-
-    if (!storedUser && storedUserInfo) {
-      try {
-        const parsed = JSON.parse(storedUserInfo);
-        if (parsed && typeof parsed === "object") {
-          token = token || parsed.token || parsed.accessToken;
-          storedUser = parsed;
-        }
-      } catch (e) {
-        // ignore JSON parse error
-      }
-    }
-
-    console.log("Resolved Token:", token);
-    console.log("Resolved User Object:", storedUser);
-
-    // TEMPORARY BYPASS FOR DEBUGGING: 
-    // If you want to stop it from forcing a redirect to /login while you check your storage keys, 
-    // comment out the `if (!token)` block below.
     // if (!token) {
     //   window.location.href = "/login";
     //   return;
     // }
 
-    // Set user name from profile info if available
+    // 2. Extract user details robustly from any matching storage key
+  const storedUser = 
+      JSON.parse(localStorage.getItem("user")) ||
+      JSON.parse(localStorage.getItem("customerInfo")) || 
+      JSON.parse(localStorage.getItem("userInfo"));
     if (storedUser) {
-      const fullName = `${storedUser.firstName || storedUser.name || ""} ${storedUser.lastName || ""}`.trim();
-      if (fullName) {
-        setUserName(fullName);
+      const resolvedName = 
+        storedUser.fullName || 
+        storedUser.name || 
+        storedUser.username || 
+        `${storedUser.firstName || ""} ${storedUser.lastName || ""}`.trim();
+
+      if (resolvedName) {
+        setUserName(resolvedName);
       }
     }
 
+    // 3. Fetch dashboard data from backend
     const fetchDashboardData = async () => {
       try {
         const config = {
@@ -110,10 +87,7 @@ function Dashboard() {
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
         if (err.response?.status === 401) {
-          localStorage.removeItem("customerInfo");
-          localStorage.removeItem("userInfo");
-          localStorage.removeItem("token");
-          localStorage.removeItem("authToken");
+          localStorage.clear();
           window.location.href = "/login";
         }
       } finally {
