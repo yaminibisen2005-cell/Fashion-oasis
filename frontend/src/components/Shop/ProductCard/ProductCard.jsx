@@ -86,43 +86,57 @@ const ProductCard = ({
       </div>
 
       <div className="product-info">
-        {!hideName && <h4>{product.name}</h4>}
-
-        {!hideRating && product.rating && (
-          <div className="rating">
-            <FaStar className="star-icon" />
-            <span>{product.rating}</span>
-            {product.reviews && <small>({product.reviews})</small>}
-          </div>
-        )}
-
-        <div className="price-row">
-          <span className="price">₹{product.price}</span>
-          {product.oldPrice && (
-            <span className="old-price">
-              ₹{product.oldPrice}
-            </span>
-          )}
-        </div>
-
         {showAddToCart ? (
-          <button
-            className="view-btn add-to-cart-btn"
-            onClick={() => {
-              addToCart(product, 1);
-              setAddedToCart(true);
-              setTimeout(() => setAddedToCart(false), 2000);
-            }}
-          >
-            {addedToCart ? "Added!" : "Add to Cart"}
-          </button>
+          <>
+            <div className="price-row">
+              <span className="price">₹{product.price}</span>
+              {product.oldPrice && (
+                <span className="old-price">
+                  ₹{product.oldPrice}
+                </span>
+              )}
+            </div>
+            <button
+              className="view-btn add-to-cart-btn"
+              onClick={() => {
+                addToCart(product, 1);
+                setAddedToCart(true);
+                setTimeout(() => setAddedToCart(false), 2000);
+              }}
+            >
+              {addedToCart ? "Added!" : "Add to Cart"}
+            </button>
+          </>
         ) : (
-          <Link
-            to={`/product/${product.id || product._id}`}
-            className="view-btn"
-          >
-            View Details
-          </Link>
+          <>
+            <div className="info-left-content">
+              {!hideName && <h4>{product.name}</h4>}
+
+              {!hideRating && product.rating && (
+                <div className="rating">
+                  <FaStar className="star-icon" />
+                  <span>{product.rating}</span>
+                  {product.reviews && <small>({product.reviews})</small>}
+                </div>
+              )}
+
+              <div className="price-row">
+                <span className="price">₹{product.price}</span>
+                {product.oldPrice && (
+                  <span className="old-price">
+                    ₹{product.oldPrice}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <Link
+              to={`/product/${product.id || product._id}`}
+              className="view-btn"
+            >
+              View Details
+            </Link>
+          </>
         )}
       </div>
     </div>

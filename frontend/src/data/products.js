@@ -13,11 +13,11 @@ import product10 from "../assets/shop/product10.jpg";
 import product11 from "../assets/shop/product11.jpg";
 import product12 from "../assets/shop/product12.jpg";
 
-import product11Gallery from "../assets/viewproducts/product1.1.png";
-import product12Gallery from "../assets/viewproducts/product1.2.png";
-import product13Gallery from "../assets/viewproducts/product1.3.png";
-import product14Gallery from "../assets/viewproducts/product1.4.png";
-import product15Gallery from "../assets/viewproducts/product1.5.png";
+import product11Gallery from "../assets/viewproducts/product1.1.jpeg";
+import product12Gallery from "../assets/viewproducts/product1.2.jpeg";
+import product13Gallery from "../assets/viewproducts/product1.3.jpeg";
+import product14Gallery from "../assets/viewproducts/product1.4.jpeg";
+import product15Gallery from "../assets/viewproducts/product1.5.jpeg";
 
 export const products = [
   {
