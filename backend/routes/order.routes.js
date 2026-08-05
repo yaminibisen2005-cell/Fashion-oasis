@@ -1,8 +1,6 @@
-import express from 'express';
+import { validate } from '../middlewares/validate.middleware.js';
+import { orderCreateSchema } from '../schemas/validation.schemas.js';
 import { createOrder } from '../controllers/order.controller.js';
 
-const router = express.Router();
 
-router.post('/checkout', createOrder);
-
-export default router;
+router.post('/checkout', validate(orderCreateSchema), createOrder);

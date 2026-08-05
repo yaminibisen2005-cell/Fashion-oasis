@@ -15,8 +15,12 @@ export const protectAdmin = catchAsync(async (req, res, next) => {
 
   let decoded;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET || 'fashion_oasis_super_secret_jwt_key_2026');
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
+    if (err.message === 'JWT_SECRET is not configured') throw err;
     throw new AppError(
       err.name === 'TokenExpiredError'
         ? 'Your session has expired. Please log in again.'
