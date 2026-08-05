@@ -5,6 +5,6 @@ export const validate = (schema) => (req, res, next) => {
     schema.parse({ body: req.body, query: req.query, params: req.params });
     next();
   } catch (err) {
-    next(new AppError(err.errors[0].message, 400));
+    next(new AppError(err.issues[0].message, 400));
   }
 };

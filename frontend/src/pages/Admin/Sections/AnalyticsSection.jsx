@@ -1,7 +1,84 @@
-import React from "react";
-import { FaArrowUp, FaArrowDown, FaCalendarAlt } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaArrowUp, FaArrowDown, FaCalendarAlt, FaSpinner } from "react-icons/fa";
+import { fetchAnalytics } from "../../../api/admin";
 
 const AnalyticsSection = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchAnalytics(7)
+      .then((res) => {
+        setData(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load analytics");
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="admin-analytics-view flex-center" style={{ minHeight: "60vh" }}>
+        <div style={{ textAlign: "center", color: "#EF6F8F" }}>
+          <FaSpinner className="spinner icon-large" />
+          <p style={{ marginTop: "10px" }}>Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="admin-analytics-view flex-center">
+        <p className="text-danger">{error}</p>
+      </div>
+    );
+  }
+
+  const { metrics, salesSeries, topCategories } = data;
+
+  // Render Trend Metric Helper
+  const Trend = ({ value }) => {
+    const isUp = value >= 0;
+    return (
+      <p className={isUp ? "text-success" : "text-danger"}>
+        {isUp ? <FaArrowUp /> : <FaArrowDown />} {isUp ? "+" : ""}{value}% from last period
+      </p>
+    );
+  };
+
+  // SVG Chart points
+  const points = salesSeries || [];
+  const maxSales = Math.max(...points.map(p => p.sales), 100);
+  const minSales = 0;
+  
+  // y between 35 (max) and 170 (min)
+  const mapY = (val) => 170 - ((val - minSales) / maxSales) * (170 - 35);
+  
+  // 7 points x = 50, 120, 190, 260, 330, 400, 470
+  const startX = 50;
+  const stepX = 70;
+  
+  let dPath = "";
+  let dFill = "";
+  if (points.length > 0) {
+    dPath = `M ${startX} ${mapY(points[0].sales)}`;
+    points.forEach((p, i) => {
+      if (i > 0) {
+        dPath += ` L ${startX + i * stepX} ${mapY(p.sales)}`;
+      }
+    });
+    dFill = `${dPath} L ${startX + (points.length - 1) * stepX} 210 L ${startX} 210 Z`;
+  }
+
+  // Top Categories (Colors: Pink1, Pink2, Gold, Brown)
+  const catColors = ["#EF6F8F", "#D94C7A", "#D4AF37", "#8E7A6B"];
+  const catCssColors = ["color-pink1", "color-pink2", "color-gold", "color-brown"];
+  let dashOffset = 25; // starting offset
+
   return (
     <div className="admin-analytics-view">
       <div className="section-title-row">
@@ -11,7 +88,7 @@ const AnalyticsSection = () => {
         </div>
         <div className="date-picker-box">
           <FaCalendarAlt />
-          <span>Last 30 Days</span>
+          <span>Last 7 Days</span>
         </div>
       </div>
 
@@ -19,23 +96,23 @@ const AnalyticsSection = () => {
       <div className="analytics-metrics-grid">
         <div className="analytics-metric-card">
           <span>Total Revenue</span>
-          <h3>₹8,95,000</h3>
-          <p className="text-success"><FaArrowUp /> +15.7% from last month</p>
+          <h3>₹{metrics.totalRevenue.toLocaleString()}</h3>
+          <Trend value={metrics.revenueTrend} />
         </div>
         <div className="analytics-metric-card">
           <span>Total Orders</span>
-          <h3>890</h3>
-          <p className="text-success"><FaArrowUp /> +8.2% from last month</p>
+          <h3>{metrics.totalOrders}</h3>
+          <Trend value={metrics.ordersTrend} />
         </div>
         <div className="analytics-metric-card">
           <span>Total Customers</span>
-          <h3>1,200</h3>
-          <p className="text-success"><FaArrowUp /> +10.2% from last month</p>
+          <h3>{metrics.totalCustomers}</h3>
+          <Trend value={metrics.customersTrend} />
         </div>
         <div className="analytics-metric-card">
           <span>Conversion Rate</span>
-          <h3>2.8%</h3>
-          <p className="text-success"><FaArrowUp /> +1.54% from last month</p>
+          <h3>{metrics.conversionRate}%</h3>
+          <Trend value={metrics.conversionTrend} />
         </div>
       </div>
 
@@ -53,49 +130,32 @@ const AnalyticsSection = () => {
                 </linearGradient>
               </defs>
               
-              {/* Horizontal lines */}
-              <line x1="40" y1="30" x2="480" y2="30" stroke="#F5ECEF" strokeWidth="1" />
-              <line x1="40" y1="75" x2="480" y2="75" stroke="#F5ECEF" strokeWidth="1" />
-              <line x1="40" y1="120" x2="480" y2="120" stroke="#F5ECEF" strokeWidth="1" />
-              <line x1="40" y1="165" x2="480" y2="165" stroke="#F5ECEF" strokeWidth="1" />
+              <line x1="40" y1="35" x2="480" y2="35" stroke="#F5ECEF" strokeWidth="1" />
+              <line x1="40" y1="80" x2="480" y2="80" stroke="#F5ECEF" strokeWidth="1" />
+              <line x1="40" y1="125" x2="480" y2="125" stroke="#F5ECEF" strokeWidth="1" />
+              <line x1="40" y1="170" x2="480" y2="170" stroke="#F5ECEF" strokeWidth="1" />
 
               {/* Y Axis Labels */}
-              <text x="30" y="35" textAnchor="end" fill="#8E7A6B" fontSize="10">2,00,000</text>
-              <text x="30" y="80" textAnchor="end" fill="#8E7A6B" fontSize="10">1,50,000</text>
-              <text x="30" y="125" textAnchor="end" fill="#8E7A6B" fontSize="10">1,00,000</text>
-              <text x="30" y="170" textAnchor="end" fill="#8E7A6B" fontSize="10">50,000</text>
-              <text x="30" y="210" textAnchor="end" fill="#8E7A6B" fontSize="10">0</text>
+              <text x="30" y="40" textAnchor="end" fill="#8E7A6B" fontSize="10">{Math.round(maxSales)}</text>
+              <text x="30" y="85" textAnchor="end" fill="#8E7A6B" fontSize="10">{Math.round(maxSales * 0.66)}</text>
+              <text x="30" y="130" textAnchor="end" fill="#8E7A6B" fontSize="10">{Math.round(maxSales * 0.33)}</text>
+              <text x="30" y="175" textAnchor="end" fill="#8E7A6B" fontSize="10">0</text>
 
               {/* Line Graph */}
-              <path
-                d="M 50 170 Q 110 135 120 125 T 190 145 T 260 95 T 330 115 T 400 65 T 470 45"
-                fill="none"
-                stroke="#EF6F8F"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 50 170 Q 110 135 120 125 T 190 145 T 260 95 T 330 115 T 400 65 T 470 45 L 470 210 L 50 210 Z"
-                fill="url(#analyticsGrad)"
-              />
+              {dPath && (
+                <>
+                  <path d={dPath} fill="none" stroke="#EF6F8F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d={dFill} fill="url(#analyticsGrad)" />
+                </>
+              )}
 
-              {/* Data circles */}
-              <circle cx="50" cy="170" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-              <circle cx="120" cy="125" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-              <circle cx="190" cy="145" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-              <circle cx="260" cy="95" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-              <circle cx="330" cy="115" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-              <circle cx="400" cy="65" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-              <circle cx="470" cy="45" r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
-
-              {/* X Axis Labels */}
-              <text x="50" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 12</text>
-              <text x="120" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 13</text>
-              <text x="190" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 14</text>
-              <text x="260" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 15</text>
-              <text x="330" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 16</text>
-              <text x="400" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 17</text>
-              <text x="470" y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">May 18</text>
+              {/* Data circles and Labels */}
+              {points.map((p, i) => (
+                <g key={i}>
+                  <circle cx={startX + i * stepX} cy={mapY(p.sales)} r="5" fill="#EF6F8F" stroke="#fff" strokeWidth="2" />
+                  <text x={startX + i * stepX} y="210" textAnchor="middle" fill="#8E7A6B" fontSize="9">{p.date}</text>
+                </g>
+              ))}
             </svg>
           </div>
         </div>
@@ -103,85 +163,54 @@ const AnalyticsSection = () => {
         {/* Top Categories Pie/Donut Chart */}
         <div className="analytics-chart-card category-breakdown-card">
           <h3>Top Categories</h3>
-          <div className="donut-chart-wrapper">
-            <div className="donut-svg-container">
-              <svg viewBox="0 0 100 100" width="150" height="150">
-                {/* Necklace: 40% (stroke-dasharray="40 60" stroke-dashoffset="25") */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="30"
-                  fill="transparent"
-                  stroke="#EF6F8F"
-                  strokeWidth="14"
-                  strokeDasharray="40 60"
-                  strokeDashoffset="25"
-                />
-                {/* Earrings: 30% (stroke-dasharray="30 70" stroke-dashoffset="85") */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="30"
-                  fill="transparent"
-                  stroke="#D94C7A"
-                  strokeWidth="14"
-                  strokeDasharray="30 70"
-                  strokeDashoffset="85"
-                />
-                {/* Rings: 20% (stroke-dasharray="20 80" stroke-dashoffset="55") */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="30"
-                  fill="transparent"
-                  stroke="#D4AF37"
-                  strokeWidth="14"
-                  strokeDasharray="20 80"
-                  strokeDashoffset="115"
-                />
-                {/* Others: 10% (stroke-dasharray="10 90" stroke-dashoffset="35") */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="30"
-                  fill="transparent"
-                  stroke="#8E7A6B"
-                  strokeWidth="14"
-                  strokeDasharray="10 90"
-                  strokeDashoffset="135"
-                />
-                {/* Center Hole for Donut */}
-                <circle cx="50" cy="50" r="23" fill="#fff" />
-              </svg>
-              <div className="donut-center-lbl">
-                <h5>100%</h5>
-                <span>Sales</span>
+          {topCategories && topCategories.length > 0 ? (
+            <div className="donut-chart-wrapper">
+              <div className="donut-svg-container">
+                <svg viewBox="0 0 100 100" width="150" height="150">
+                  {topCategories.map((cat, i) => {
+                    const pct = cat.percentage || 0;
+                    const strokeDasharray = `${pct} ${100 - pct}`;
+                    const offset = dashOffset;
+                    dashOffset -= pct; // subtract because offset goes backwards
+                    return (
+                      <circle
+                        key={i}
+                        cx="50"
+                        cy="50"
+                        r="30"
+                        fill="transparent"
+                        stroke={catColors[i % catColors.length]}
+                        strokeWidth="14"
+                        strokeDasharray={strokeDasharray}
+                        strokeDashoffset={offset}
+                        pathLength="100"
+                        style={{ transition: "all 0.5s ease" }}
+                      />
+                    );
+                  })}
+                  <circle cx="50" cy="50" r="23" fill="#fff" />
+                </svg>
+                <div className="donut-center-lbl">
+                  <h5>100%</h5>
+                  <span>Sales</span>
+                </div>
               </div>
-            </div>
 
-            <div className="donut-legend">
-              <div className="legend-item">
-                <span className="legend-dot color-pink1"></span>
-                <span>Necklace</span>
-                <strong>40%</strong>
-              </div>
-              <div className="legend-item">
-                <span className="legend-dot color-pink2"></span>
-                <span>Earrings</span>
-                <strong>30%</strong>
-              </div>
-              <div className="legend-item">
-                <span className="legend-dot color-gold"></span>
-                <span>Rings</span>
-                <strong>20%</strong>
-              </div>
-              <div className="legend-item">
-                <span className="legend-dot color-brown"></span>
-                <span>Others</span>
-                <strong>10%</strong>
+              <div className="donut-legend">
+                {topCategories.map((cat, i) => (
+                  <div className="legend-item" key={i}>
+                    <span className={`legend-dot ${catCssColors[i % catCssColors.length]}`}></span>
+                    <span>{cat.name}</span>
+                    <strong>{cat.percentage}%</strong>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex-center" style={{height: '100%'}}>
+              <p>No category data available</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

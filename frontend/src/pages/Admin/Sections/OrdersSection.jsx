@@ -60,7 +60,7 @@ const OrdersSection = ({ orders, updateOrderStatus }) => {
             ) : (
               filteredOrders.map((order) => (
                 <tr key={order.id}>
-                  <td><strong>#{order.id}</strong></td>
+                  <td><strong>#{order.orderId || order.id}</strong></td>
                   <td>{order.customer}</td>
                   <td>{order.date}</td>
                   <td><strong>₹{order.amount.toLocaleString()}</strong></td>

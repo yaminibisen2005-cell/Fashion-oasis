@@ -13,7 +13,17 @@ export const protectAdmin = catchAsync(async (req, res, next) => {
     throw new AppError('You are not logged in. Please log in to get access.', 401);
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fashion_oasis_super_secret_jwt_key_2026');
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET || 'fashion_oasis_super_secret_jwt_key_2026');
+  } catch (err) {
+    throw new AppError(
+      err.name === 'TokenExpiredError'
+        ? 'Your session has expired. Please log in again.'
+        : 'Invalid token. Please log in again.',
+      401
+    );
+  }
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
