@@ -39,7 +39,7 @@ export const adminCouponCreateSchema = z.object({
     code: z.string().min(1),
     discount: z.number().positive(),
     expiryDate: z.string().refine((d) => !isNaN(Date.parse(d)) && new Date(d) > new Date(), { message: 'Expiry must be future date' }),
-    minOrder: z.number().optional().positive(),
+    minOrder: z.number().positive().optional(),
     status: z.enum(['active', 'inactive', 'expired']).optional(),
   })
 });
