@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { fetchSellerDashboardData } from "../../api/seller";
 import {
   FaChartPie,
   FaBox,
@@ -43,79 +44,15 @@ import {
   FaShareAlt,
   FaFileContract,
   FaSave,
+  FaBoxOpen,
+  FaUsers,
 } from "react-icons/fa";
 
 import "../Admin/AdminLayout.css";
 import "./SellerLayout.css";
 import logo from "../../assets/logo.png";
 
-const INITIAL_PRODUCTS = [
-  { id: 1, name: "Handmade Pearl Necklace", sku: "FO-001", category: "Necklace", price: 899, stock: 25, sold: 180, views: 1200, rating: 4.9, status: "Active", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&q=80" },
-  { id: 2, name: "Silver Charm Bracelet", sku: "FO-042", category: "Bracelets", price: 549, stock: 2, sold: 340, views: 3800, rating: 4.7, status: "Active", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300&q=80" },
-  { id: 3, name: "Premium Gift Box", sku: "FO-115", category: "Accessories", price: 120, stock: 1, sold: 50, views: 620, rating: 4.2, status: "Active", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&q=80" },
-  { id: 4, name: "Gold Plated Earrings", sku: "FO-060", category: "Earrings", price: 649, stock: 40, sold: 260, views: 4100, rating: 4.8, status: "Active", image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=300&q=80" },
-  { id: 5, name: "Classic Gold Ring", sku: "FO-088", category: "Rings", price: 860, stock: 0, sold: 95, views: 1900, rating: 4.5, status: "Inactive", image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&q=80" },
-  { id: 6, name: "Pearl Drop Earrings", sku: "FO-121", category: "Earrings", price: 1275, stock: 18, sold: 120, views: 2400, rating: 4.6, status: "Active", image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=300&q=80" },
-];
 
-const INITIAL_ORDERS = [
-  { id: "FO1021", customer: "Priya Sharma", initials: "PS", product: "Silk Saree Collection", date: "Oct 24, 2023", amount: 4500, status: "Pending" },
-  { id: "FO1022", customer: "Neha Gupta", initials: "NG", product: "Designer Lehenga", date: "Oct 23, 2023", amount: 12000, status: "Delivered" },
-  { id: "FO1023", customer: "Riya Singh", initials: "RS", product: "Cotton Kurti Set", date: "Oct 22, 2023", amount: 1850, status: "Shipped" },
-  { id: "FO1024", customer: "Anjali Verma", initials: "AV", product: "Festive Dupatta", date: "Oct 21, 2023", amount: 950, status: "Processing" },
-  { id: "FO1025", customer: "Amit Rao", initials: "AR", product: "Handmade Pearl Necklace", date: "Oct 20, 2023", amount: 899, status: "Shipped" },
-  { id: "FO1026", customer: "Neha Kapoor", initials: "NK", product: "Gold Plated Earrings", date: "Oct 19, 2023", amount: 1298, status: "Delivered" },
-  { id: "FO1027", customer: "Ritika Singh", initials: "RS", product: "Silver Charm Bracelet", date: "Oct 18, 2023", amount: 549, status: "Cancelled" },
-  { id: "FO1028", customer: "Sneha Patel", initials: "SP", product: "Pearl Drop Earrings", date: "Oct 17, 2023", amount: 1275, status: "Pending" },
-];
-
-const ORDER_COUNTS = { Pending: 18, Processing: 12, Shipped: 25, Delivered: 420, Cancelled: 8 };
-
-const INITIAL_REVIEWS = [
-  { id: 1, customer: "Sarah Jenkins", initial: "S", rating: 5, date: "Oct 24, 2023", product: "Emerald Bracelet", review: "Absolutely love the quality of this bracelet! This is incredibly soft and the color is exactly as pictured, maybe even more vibrant in person.", status: "Approved", verified: true },
-  { id: 3, customer: "Amanda R.", initial: "A", rating: 5, date: "Oct 20, 2023", product: "Tan Leather Crossbody", review: "Beautiful bag! The leather is gorgeous and it holds surprisingly more than it looks like it would. Perfect for everyday use.", status: "Approved", verified: true },
-  { id: 4, customer: "Priya Sharma", initial: "P", rating: 5, date: "Oct 19, 2023", product: "Handmade Pearl Necklace", review: "Absolutely love the quality and design. Fast shipping too!", status: "Pending", verified: true },
-  { id: 5, customer: "Riya Kapoor", initial: "R", rating: 4, date: "Oct 18, 2023", product: "Pearl Drop Earrings", review: "Nice earrings, slightly smaller than expected but elegant.", status: "Approved", verified: false },
-  { id: 6, customer: "Neha Verma", initial: "N", rating: 5, date: "Oct 17, 2023", product: "Premium Gift Box", review: "Perfect packaging. Made for a wonderful anniversary present.", status: "Approved", verified: true },
-  { id: 7, customer: "Sarah Jenkins", initial: "S", rating: 5, date: "Oct 16, 2023", product: "Silver Charm Bracelet", review: "The silver bracelet is so delicate and elegant! It goes with everything and the charm detail is just beautiful.", status: "Approved", verified: true },
-  { id: 8, customer: "Michael T.", initial: "M", rating: 4, date: "Oct 15, 2023", product: "Gold Plated Earrings", review: "Great everyday earrings. The gold tone is warm and they are lightweight enough to wear all day.", status: "Approved", verified: false },
-  { id: 9, customer: "Amanda R.", initial: "A", rating: 5, date: "Oct 14, 2023", product: "Classic Gold Ring", review: "Timeless design and the fit is perfect. It looks far more expensive than the price. Highly recommend!", status: "Approved", verified: true },
-  { id: 10, customer: "Priya Sharma", initial: "P", rating: 5, date: "Oct 13, 2023", product: "Premium Gift Box", review: "The gift box is gorgeous and the quality is top notch. It made the perfect present!", status: "Pending", verified: true },
-  { id: 11, customer: "Riya Kapoor", initial: "R", rating: 4, date: "Oct 12, 2023", product: "Gold Plated Earrings", review: "Elegant and classy, exactly what I wanted for a family wedding. Slightly lighter than expected but very pretty.", status: "Approved", verified: false },
-  { id: 12, customer: "Neha Verma", initial: "N", rating: 5, date: "Oct 11, 2023", product: "Gold Plated Earrings", review: "Second pair I have bought from this store. Great quality and the colour hasn't faded at all.", status: "Approved", verified: true },
-  { id: 13, customer: "Michael T.", initial: "M", rating: 5, date: "Oct 10, 2023", product: "Classic Gold Ring", review: "Bought this as a gift and my wife loved it. The finishing is really premium.", status: "Approved", verified: true },
-  { id: 14, customer: "Amanda R.", initial: "A", rating: 4, date: "Oct 9, 2023", product: "Silver Charm Bracelet", review: "Cute bracelet, well made. A bit small for my wrist but the design is lovely.", status: "Approved", verified: false },
-];
-
-const RATING_BREAKDOWN = [
-  { stars: 5, count: 318, width: 75 },
-  { stars: 4, count: 64, width: 15 },
-  { stars: 3, count: 21, width: 5 },
-  { stars: 2, count: 12, width: 3 },
-  { stars: 1, count: 10, width: 2 },
-];
-
-const SALES_DATA = [
-  { day: "Mon", sales: 32 },
-  { day: "Tue", sales: 45 },
-  { day: "Wed", sales: 38 },
-  { day: "Thu", sales: 72 },
-  { day: "Fri", sales: 55 },
-  { day: "Sat", sales: 66 },
-  { day: "Sun", sales: 41 },
-];
-
-const REVENUE_DATA = [
-  { m: "Jan", v: 30 }, { m: "Feb", v: 45 }, { m: "Mar", v: 60 },
-  { m: "Apr", v: 40 }, { m: "May", v: 85 }, { m: "Jun", v: 70 }, { m: "Jul", v: 55 },
-];
-
-const TOP_SELLING = [
-  { name: "Handmade Pearl Necklace", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=80&q=80", sold: 180, revenue: 161820 },
-  { name: "Gold Plated Earrings", image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=80&q=80", sold: 260, revenue: 168740 },
-  { name: "Silver Charm Bracelet", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=80&q=80", sold: 340, revenue: 186660 },
-  { name: "Pearl Drop Earrings", image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=80&q=80", sold: 120, revenue: 153000 },
-];
 
 const Stars = ({ count }) => (
   <div className="reviews-stars-row">
@@ -127,15 +64,39 @@ const Stars = ({ count }) => (
 
 const badgeClass = (status) => status.toLowerCase().replace(/\s+/g, "-");
 
-const OverviewSection = ({ products, orders, onAddProduct }) => {
-  const totalRevenue = orders.reduce((s, o) => s + o.amount, 0);
+const OverviewSection = ({ onAddProduct }) => {
+  const [stats, setStats] = useState(null);
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [topSelling, setTopSelling] = useState([]);
+  const [salesData, setSalesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSellerDashboardData()
+      .then(({ stats, recentOrders, topProducts, salesAnalytics }) => {
+        if (stats.success) setStats(stats.data);
+        if (recentOrders.success) setRecentOrders(recentOrders.data);
+        if (topProducts.success) setTopSelling(topProducts.data);
+        if (salesAnalytics.success) setSalesData(salesAnalytics.data.series || []);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="admin-dashboard-view" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 300 }}>
+        <p style={{ color: "#8E7A6B", fontSize: 16 }}>Loading overview data...</p>
+      </div>
+    );
+  }
+
   const chartH = 130;
-  const barMax = Math.max(...SALES_DATA.map((d) => d.sales), 1);
-  const spacing = 240 / SALES_DATA.length;
+  const barMax = salesData.length > 0 ? Math.max(...salesData.map((d) => d.sales), 1) : 1;
+  const spacing = salesData.length > 0 ? 240 / salesData.length : 30;
   const barW = Math.min(spacing * 0.5, 16);
 
-  const maxRev = Math.max(...REVENUE_DATA.map((d) => d.v), 1);
-  const revSpacing = 250 / REVENUE_DATA.length;
+  const totalRevenue = stats?.totalRevenue || 0;
 
   return (
     <div className="admin-dashboard-view fade-in">
@@ -155,44 +116,44 @@ const OverviewSection = ({ products, orders, onAddProduct }) => {
           <div className="card-top">
             <div>
               <span>Total Revenue</span>
-              <h3>₹1,28,500</h3>
+              <h3>₹{Number(totalRevenue).toLocaleString()}</h3>
             </div>
             <div className="card-icon-circle"><FaWallet /></div>
           </div>
-          <div className="card-trend upward"><FaArrowUp /> 12.5% <span className="trend-lbl">vs last month</span></div>
+          <div className="card-trend upward"><FaArrowUp /> {stats?.revenueTrend || 0}% <span className="trend-lbl">vs last month</span></div>
         </div>
 
         <div className="summary-card">
           <div className="card-top">
             <div>
-              <span>Today's Sales</span>
-              <h3>₹8,450</h3>
+              <span>Total Orders</span>
+              <h3>{stats?.totalOrders || 0}</h3>
             </div>
-            <div className="card-icon-circle"><FaRupeeSign /></div>
+            <div className="card-icon-circle"><FaShoppingBag /></div>
           </div>
-          <div className="card-trend upward"><FaArrowUp /> 4.2% <span className="trend-lbl">today</span></div>
+          <div className="card-trend upward"><FaArrowUp /> {stats?.ordersTrend || 0}% <span className="trend-lbl">today</span></div>
         </div>
 
         <div className="summary-card">
           <div className="card-top">
             <div>
               <span>Active Listings</span>
-              <h3>{products.filter((p) => p.status === "Active").length} <span className="trend-lbl" style={{ fontSize: 13 }}>/ {products.length} Total</span></h3>
+              <h3>{stats?.totalProducts || 0}</h3>
             </div>
-            <div className="card-icon-circle"><FaShoppingBag /></div>
+            <div className="card-icon-circle"><FaBoxOpen /></div>
           </div>
-          <div className="card-trend" style={{ color: "#F5222D" }}><FaExclamationTriangle /> 3 Low Stock Items</div>
+          <div className="card-trend upward"><FaArrowUp /> {stats?.productsTrend || 0}% <span className="trend-lbl">new</span></div>
         </div>
 
         <div className="summary-card">
           <div className="card-top">
             <div>
-              <span>Store Rating</span>
-              <h3>4.8</h3>
+              <span>Total Customers</span>
+              <h3>{stats?.totalCustomers || 0}</h3>
             </div>
-            <div className="card-icon-circle"><FaStar /></div>
+            <div className="card-icon-circle"><FaUsers /></div>
           </div>
-          <div className="card-trend"><span className="trend-lbl">Based on 425 orders</span></div>
+          <div className="card-trend upward"><FaArrowUp /> {stats?.customersTrend || 0}% <span className="trend-lbl">growth</span></div>
         </div>
       </div>
 
@@ -204,17 +165,18 @@ const OverviewSection = ({ products, orders, onAddProduct }) => {
           </div>
           <div className="svg-chart-container">
             <svg viewBox="0 0 260 150" width="100%" height="100%">
-              {SALES_DATA.map((d, i) => {
+              {salesData.length > 0 ? salesData.map((d, i) => {
                 const barH = Math.max((d.sales / barMax) * chartH, 3);
                 const x = 12 + i * spacing + (spacing - barW) / 2;
                 const y = 130 - barH;
+                const dayLabel = d.date.replace(/[a-z]/g, "").trim().slice(0, 3);
                 return (
-                  <g key={d.day}>
+                  <g key={i}>
                     <rect x={x} y={y} width={barW} height={barH} fill={d.sales === barMax ? "#D94C7A" : "#EF6F8F"} rx="3" />
-                    <text x={x + barW / 2} y="145" textAnchor="middle" fill="#8E7A6B" fontSize="7">{d.day}</text>
+                    <text x={x + barW / 2} y="145" textAnchor="middle" fill="#8E7A6B" fontSize="7">{dayLabel}</text>
                   </g>
                 );
-              })}
+              }) : <text x="130" y="75" textAnchor="middle" fill="#8E7A6B" fontSize="10">No data</text>}
               <line x1="8" y1="130" x2="252" y2="130" stroke="#F5ECEF" strokeWidth="1" />
             </svg>
           </div>
@@ -222,27 +184,22 @@ const OverviewSection = ({ products, orders, onAddProduct }) => {
 
         <div className="chart-card">
           <div className="chart-header">
-            <h3>Order Status</h3>
+            <h3>Recent Orders</h3>
             <span className="view-all-link" style={{ cursor: "pointer" }}>View All</span>
           </div>
           <div className="recent-orders-list">
-            {[
-              ["Pending", 18, "#D4AF37"],
-              ["Processing", 12, "#1890FF"],
-              ["Shipped", 25, "#52C41A"],
-              ["Delivered", 420, "#13C2C2"],
-              ["Cancelled", 8, "#F5222D"],
-            ].map(([label, n, color]) => (
-              <div className="recent-order-item" key={label}>
+            {recentOrders.length > 0 ? recentOrders.map((o) => (
+              <div className="recent-order-item" key={o._id}>
                 <div className="order-item-prod">
-                  <div className="order-prod-thumb"><span style={{ color }}>●</span></div>
+                  <div className="order-prod-thumb"><span style={{ color: "#1890FF" }}>●</span></div>
                   <div>
-                    <h4>{label}</h4>
+                    <h4>#{o.orderId}</h4>
                   </div>
                 </div>
-                <span className="order-amt">{n}</span>
+                <span className={`status-badge-inline ${o.status.toLowerCase()}`}>{o.status}</span>
+                <span className="order-amt">₹{Number(o.totalAmount).toLocaleString()}</span>
               </div>
-            ))}
+            )) : <p style={{ fontSize: 13, color: '#8E7A6B', textAlign: 'center', marginTop: 20 }}>No orders yet.</p>}
           </div>
         </div>
       </div>
@@ -254,18 +211,18 @@ const OverviewSection = ({ products, orders, onAddProduct }) => {
             <span className="view-all-link" style={{ cursor: "pointer" }}>View All</span>
           </div>
           <div className="dashboard-list">
-            {TOP_SELLING.map((prod, idx) => (
-              <div className="list-item" key={idx}>
+            {topSelling.length > 0 ? topSelling.map((prod, idx) => (
+              <div className="list-item" key={prod._id || idx}>
                 <div className="item-left">
                   <img src={prod.image} alt={prod.name} />
                   <div>
                     <h4>{prod.name}</h4>
-                    <p>{prod.sold} sold</p>
+                    <p>{prod.totalSold} sold</p>
                   </div>
                 </div>
-                <strong className="item-price">₹{prod.revenue.toLocaleString()}</strong>
+                <strong className="item-price">₹{Number(prod.totalRevenue).toLocaleString()}</strong>
               </div>
-            ))}
+            )) : <p style={{ fontSize: 13, color: '#8E7A6B', textAlign: 'center', padding: '20px 0' }}>No products yet.</p>}
           </div>
         </div>
 
@@ -275,18 +232,7 @@ const OverviewSection = ({ products, orders, onAddProduct }) => {
             <span className="view-all-link" style={{ cursor: "pointer" }}>View All</span>
           </div>
           <div className="dashboard-list">
-            {INITIAL_REVIEWS.slice(0, 4).map((rev, idx) => (
-              <div className="list-item" key={idx}>
-                <div className="item-left">
-                  <div className="order-prod-thumb"><span>⭐</span></div>
-                  <div>
-                    <h4>{rev.customer}</h4>
-                    <p>{rev.product}</p>
-                  </div>
-                </div>
-                <Stars count={rev.rating} />
-              </div>
-            ))}
+             <p style={{ fontSize: 13, color: '#8E7A6B', textAlign: 'center', padding: '20px 0' }}>No reviews yet.</p>
           </div>
         </div>
 
@@ -296,22 +242,23 @@ const OverviewSection = ({ products, orders, onAddProduct }) => {
             <span className="chart-range">Last 7 Days ▾</span>
           </div>
           <div className="revenue-summary">
-            <h4>₹{totalRevenue.toLocaleString()}</h4>
-            <span className="text-pink"><FaArrowUp /> 15.2% from last 7 days</span>
+            <h4>₹{Number(totalRevenue).toLocaleString()}</h4>
+            <span className="text-pink"><FaArrowUp /> {stats?.revenueTrend || 0}% from last 7 days</span>
           </div>
           <div className="svg-chart-container bars-chart">
             <svg viewBox="0 0 250 120" width="100%" height="100%">
-              {REVENUE_DATA.map((d, i) => {
-                const barH = Math.max((d.v / maxRev) * 90, 3);
-                const x = 14 + i * revSpacing + (revSpacing - barW) / 2;
+              {salesData.length > 0 ? salesData.map((d, i) => {
+                const barH = Math.max((d.sales / barMax) * 90, 3);
+                const x = 14 + i * spacing + (spacing - barW) / 2;
                 const y = 100 - barH;
+                const dayLabel = d.date.replace(/[a-z]/g, "").trim().slice(0, 3);
                 return (
-                  <g key={d.m}>
+                  <g key={i}>
                     <rect x={x} y={y} width={barW} height={barH} fill="#EF6F8F" rx="3" />
-                    <text x={x + barW / 2} y="115" textAnchor="middle" fill="#8E7A6B" fontSize="6">{d.m}</text>
+                    <text x={x + barW / 2} y="115" textAnchor="middle" fill="#8E7A6B" fontSize="6">{dayLabel}</text>
                   </g>
                 );
-              })}
+              }) : <text x="125" y="60" textAnchor="middle" fill="#8E7A6B" fontSize="10">No data</text>}
               <line x1="10" y1="100" x2="240" y2="100" stroke="#F5ECEF" strokeWidth="1" />
             </svg>
           </div>
@@ -744,7 +691,7 @@ const OrdersSection = ({ orders }) => {
               onClick={() => setTab(t.name)}
             >
               {t.name}
-              {t.key !== "All" && <span style={{ marginLeft: 5, fontSize: 10 }}>{ORDER_COUNTS[t.key]}</span>}
+              {t.key !== "All" && <span style={{ marginLeft: 5, fontSize: 10 }}>{orders.filter(o => o.status === t.key).length}</span>}
             </button>
           ))}
         </div>
@@ -837,18 +784,7 @@ const EarningsSection = () => (
         <h3>Monthly Revenue</h3>
         <div className="svg-chart-container-large">
           <svg viewBox="0 0 500 220" width="100%" height="100%">
-            {REVENUE_DATA.map((d, i) => {
-              const barH = (d.v / 100) * 150;
-              const spacing = 480 / REVENUE_DATA.length;
-              const x = 20 + i * spacing + spacing * 0.25;
-              const y = 190 - barH;
-              return (
-                <g key={d.m}>
-                  <rect x={x} y={y} width={spacing * 0.5} height={barH} fill={d.v === 85 ? "#D94C7A" : "#EF6F8F"} rx="4" />
-                  <text x={x + spacing * 0.25} y="210" textAnchor="middle" fill="#8E7A6B" fontSize="10">{d.m}</text>
-                </g>
-              );
-            })}
+            {[]}
             <line x1="15" y1="190" x2="490" y2="190" stroke="#F5ECEF" strokeWidth="1" />
           </svg>
         </div>
@@ -923,16 +859,7 @@ const ReviewsSection = ({ reviews, deleteReview }) => {
             <p className="subtitle" style={{ marginTop: 6 }}>Based on 425 orders</p>
           </div>
           <div style={{ flex: 1, minWidth: 260 }}>
-            {RATING_BREAKDOWN.map((r) => (
-              <div key={r.stars} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                <span style={{ width: 16, fontSize: 12 }}>{r.stars}</span>
-                <FaStar className="star-active" style={{ fontSize: 12 }} />
-                <div style={{ flex: 1, height: 8, borderRadius: 99, backgroundColor: "#F5ECEF", overflow: "hidden" }}>
-                  <div style={{ height: "100%", backgroundColor: "var(--primary-color)", borderRadius: 99, width: `${r.width}%` }} />
-                </div>
-                <span style={{ width: 32, textAlign: "right", fontSize: 12, color: "var(--text-muted)" }}>{r.count}</span>
-              </div>
-            ))}
+            {[]}
           </div>
         </div>
       </div>
@@ -1196,9 +1123,9 @@ const SellerDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 992);
   const [activeSection, setActiveSection] = useState("dashboard");
 
-  const [products, setProducts] = useState(INITIAL_PRODUCTS);
-  const [orders, setOrders] = useState(INITIAL_ORDERS);
-  const [reviews, setReviews] = useState(INITIAL_REVIEWS);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [settings, setSettings] = useState({
     storeName: "Fashion Oasis",
     storeLogo: "FO",
@@ -1258,11 +1185,7 @@ const SellerDashboard = () => {
         return <SettingsSection settings={settings} updateSettings={setSettings} />;
       default:
         return (
-          <OverviewSection
-            products={products}
-            orders={orders}
-            onAddProduct={() => setActiveSection("add-product")}
-          />
+          <OverviewSection onAddProduct={() => setActiveSection("add-product")} />
         );
     }
   };

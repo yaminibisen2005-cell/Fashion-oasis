@@ -18,6 +18,7 @@ import adminCustomerRoutes from "./routes/adminCustomer.routes.js";
 import adminReviewRoutes from "./routes/adminReview.routes.js";
 import adminCouponRoutes from "./routes/adminCoupon.routes.js";
 import adminAnalyticsRoutes from "./routes/adminAnalytics.routes.js";
+import sellerDashboardRoutes from "./routes/sellerDashboard.routes.js";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const app = express();
 connectDB();
 
 // Global Middlewares
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
@@ -40,6 +41,7 @@ app.use("/api/v1/admin/orders", adminOrderRoutes);
 app.use("/api/v1/admin/customers", adminCustomerRoutes);
 app.use("/api/v1/admin/reviews", adminReviewRoutes);
 app.use("/api/v1/admin/coupons", adminCouponRoutes);
+app.use("/api/v1/seller/dashboard", sellerDashboardRoutes);
 app.use("/api/v1/customer", customerAuthRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/wishlist", wishlistRoutes);
@@ -63,8 +65,7 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(
-    `Server running in ${
-      process.env.NODE_ENV || "development"
+    `Server running in ${process.env.NODE_ENV || "development"
     } mode on port ${PORT}`
   );
 });

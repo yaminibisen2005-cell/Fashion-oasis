@@ -12,7 +12,7 @@ export const registerAdminService = async ({ name, email, password, adminKey }) 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     throw new AppError('Please provide a valid email address.', 400);
 
-  if (!password || password.length < 8)
+  if (!password || password.length < 6)
     throw new AppError('Password must be at least 8 characters.', 400);
 
   if (!adminKey)

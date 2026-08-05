@@ -34,8 +34,8 @@ export const protectAdmin = catchAsync(async (req, res, next) => {
     throw new AppError('The user belonging to this token no longer exists.', 401);
   }
 
-  if (currentUser.role !== 'admin' && currentUser.role !== 'super-admin') {
-    throw new AppError('You do not have permission to access admin resources.', 403);
+  if (currentUser.role !== 'admin' && currentUser.role !== 'super-admin' && currentUser.role !== 'seller') {
+    throw new AppError('You do not have permission to access these resources.', 403);
   }
 
   req.user = currentUser;
