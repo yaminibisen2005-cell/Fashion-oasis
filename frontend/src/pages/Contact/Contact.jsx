@@ -167,7 +167,7 @@ const faqs = [
   {/* Address */}
 
   <a
-    href="https://maps.google.com/?q=Nagpur,Maharashtra"
+    href="https://maps.google.com/?q=Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India"
     target="_blank"
     rel="noreferrer"
     className="info-card"
@@ -181,7 +181,7 @@ const faqs = [
     <p>
       Fashion Oasis
       <br />
-      Nagpur, Maharashtra
+      Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India
     </p>
 
     <span>Get Directions →</span>
@@ -190,7 +190,7 @@ const faqs = [
   {/* Phone */}
 
   <a
-    href="tel:+919876543210"
+    href="tel:+917739479666"
     className="info-card"
   >
     <div className="icon-box">
@@ -200,7 +200,7 @@ const faqs = [
     <h3>Call Us</h3>
 
     <p>
-      +91 98765 43210
+      +91 7739479666
       <br />
       Mon – Sat
     </p>
@@ -211,7 +211,7 @@ const faqs = [
   {/* Email */}
 
   <a
-    href="mailto:support@fashionoasis.com"
+    href="mailto:fashionoasis082@gmail.com"
     className="info-card"
   >
     <div className="icon-box">
@@ -221,7 +221,7 @@ const faqs = [
     <h3>Email Us</h3>
 
     <p>
-      support@fashionoasis.com
+      fashionoasis082@gmail.com
       <br />
       We'll reply within 24 hours
     </p>
@@ -397,7 +397,7 @@ const faqs = [
       <div className="map-container">
         <iframe
           title="Fashion Oasis Location"
-          src="https://www.google.com/maps?q=Nagpur,Maharashtra&output=embed"
+          src="https://www.google.com/maps?q=Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India&output=embed"
           loading="lazy"
           allowFullScreen=""
           referrerPolicy="no-referrer-when-downgrade"
@@ -414,20 +414,20 @@ const faqs = [
 
       <div className="business-item">
         <strong>Address</strong>
-        <span>Nagpur, Maharashtra, India</span>
+        <span>Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India</span>
       </div>
 
       <div className="business-item">
         <strong>Email</strong>
-        <a href="mailto:support@fashionoasis.com">
-          support@fashionoasis.com
+        <a href="mailto:fashionoasis082@gmail.com">
+          fashionoasis082@gmail.com
         </a>
       </div>
 
       <div className="business-item">
         <strong>Phone</strong>
-        <a href="tel:+919876543210">
-          +91 98765 43210
+        <a href="tel:+917739479666">
+          +91 7739479666
         </a>
       </div>
 

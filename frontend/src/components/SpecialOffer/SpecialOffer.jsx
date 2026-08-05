@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaArrowRight, FaClock } from "react-icons/fa";
 
-
-
 function SpecialOffer() {
 
     const navigate = useNavigate();
@@ -82,8 +80,6 @@ useEffect(() => {
               <p>FLAT</p>
               <h1>30% OFF</h1>
             </div>
-
-            
 
             {/* Shop Button */}
            <button

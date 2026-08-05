@@ -12,7 +12,6 @@ const ProductCard = ({
 }) => {
   const [liked, setLiked] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
-
   const { addToCart } = useContext(ShopContext);
 
   const customerEmail = localStorage.getItem("customerEmail");

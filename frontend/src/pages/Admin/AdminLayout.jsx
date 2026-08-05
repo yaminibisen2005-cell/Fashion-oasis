@@ -105,8 +105,8 @@ const AdminLayout = () => {
   const [settings, setSettings] = useState({
     storeName: "Fashion Oasis",
     storeLogo: "FO",
-    storeEmail: "info@fashionoasis.com",
-    contactNumber: "+91 98765 43210",
+    storeEmail: "fashionoasis082@gmail.com",
+    contactNumber: "+91 7739479666",
   });
 
   const [profile, setProfile] = useState(() => {
