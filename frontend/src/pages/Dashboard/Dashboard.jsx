@@ -1,6 +1,7 @@
  import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   FaShoppingBag,
@@ -14,50 +15,138 @@ import {
 
 import dashboardbanner from "../../assets/shop/hero-banner1.png";
 
-// Import actual product images from your assets folder
-import product1 from "../../assets/product1.jpg";
-import product2 from "../../assets/product2.jpg";
-import product3 from "../../assets/product3.jpg";
-import product4 from "../../assets/product4.jpg";
-
 function Dashboard() {
   const [userName, setUserName] = useState("User");
+  const [stats, setStats] = useState({
+    totalOrders: "0",
+    wishlistCount: "0",
+    reviewsCount: "0",
+    rewardPoints: "0",
+  });
+  const [orders, setOrders] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch logged-in user details from local storage
-    const storedUser = JSON.parse(localStorage.getItem("customerInfo"));
+    // 1. Check all potential storage structures (token, customerInfo, userInfo, or direct token string)
+    const storedCustomerInfo = localStorage.getItem("customerInfo");
+    const storedUserInfo = localStorage.getItem("userInfo");
+    
+    let token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    let storedUser = null;
+
+    if (storedCustomerInfo) {
+      try {
+        const parsed = JSON.parse(storedCustomerInfo);
+        if (typeof parsed === "string") {
+          token = token || parsed;
+        } else if (parsed && typeof parsed === "object") {
+          token = token || parsed.token || parsed.accessToken;
+          storedUser = parsed;
+        }
+      } catch (e) {
+        token = token || storedCustomerInfo;
+      }
+    }
+
+    if (!storedUser && storedUserInfo) {
+      try {
+        const parsed = JSON.parse(storedUserInfo);
+        if (parsed && typeof parsed === "object") {
+          token = token || parsed.token || parsed.accessToken;
+          storedUser = parsed;
+        }
+      } catch (e) {
+        // ignore JSON parse error
+      }
+    }
+
+    console.log("Resolved Token:", token);
+    console.log("Resolved User Object:", storedUser);
+
+    // TEMPORARY BYPASS FOR DEBUGGING: 
+    // If you want to stop it from forcing a redirect to /login while you check your storage keys, 
+    // comment out the `if (!token)` block below.
+    // if (!token) {
+    //   window.location.href = "/login";
+    //   return;
+    // }
+
+    // Set user name from profile info if available
     if (storedUser) {
-      const fullName = `${storedUser.firstName || ""} ${storedUser.lastName || ""}`.trim();
+      const fullName = `${storedUser.firstName || storedUser.name || ""} ${storedUser.lastName || ""}`.trim();
       if (fullName) {
         setUserName(fullName);
       }
     }
+
+    const fetchDashboardData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const email = storedUser?.email;
+        if (email) {
+          const profileRes = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${email}`, config);
+          if (profileRes.data.success && profileRes.data.data) {
+            const data = profileRes.data.data;
+            setStats({
+              totalOrders: data.totalOrders?.toString() || "0",
+              wishlistCount: data.wishlist?.length?.toString() || "0",
+              reviewsCount: data.reviewsCount?.toString() || "0",
+              rewardPoints: data.rewardPoints?.toString() || "0",
+            });
+            setOrders(data.recentOrders || []);
+          }
+        }
+
+        const prodRes = await axios.get("http://localhost:5000/api/v1/products/recommended", config);
+        if (prodRes.data.success) {
+          setRecommendations(prodRes.data.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        if (err.response?.status === 401) {
+          localStorage.removeItem("customerInfo");
+          localStorage.removeItem("userInfo");
+          localStorage.removeItem("token");
+          localStorage.removeItem("authToken");
+          window.location.href = "/login";
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
-  const stats = [
+  const statCardsData = [
     {
       icon: <FaShoppingBag />,
       title: "Total Orders",
-      value: "24",
-      subtitle: "↑ 3 this month",
-      subtitleClass: "growth",
+      value: stats.totalOrders,
+      subtitle: "Active orders",
     },
     {
       icon: <FaHeart />,
       title: "Wishlist",
-      value: "12",
+      value: stats.wishlistCount,
       subtitle: "Items",
     },
     {
       icon: <FaStar />,
       title: "Reviews",
-      value: "8",
+      value: stats.reviewsCount,
       subtitle: "Reviews",
     },
     {
       icon: <FaGift />,
       title: "Reward Points",
-      value: "350",
+      value: stats.rewardPoints,
       subtitle: "Points",
     },
   ];
@@ -67,76 +156,6 @@ function Dashboard() {
     { icon: <FaHeart />, label: "Wishlist" },
     { icon: <FaTruck />, label: "Track Order" },
     { icon: <FaGift />, label: "Rewards" },
-  ];
-
-  const orders = [
-    {
-      id: "Order #FO12345",
-      image: product1,
-      product: "Rose Quartz Necklace",
-      date: "18 July 2025",
-      amount: "₹1,299",
-      status: "Delivered",
-    },
-    {
-      id: "Order #FO12344",
-      image: product2,
-      product: "Floral Diamond Ring",
-      date: "14 July 2025",
-      amount: "₹1,799",
-      status: "Shipped",
-    },
-    {
-      id: "Order #FO12343",
-      image: product3,
-      product: "Pearl Drop Earrings",
-      date: "10 July 2025",
-      amount: "₹999",
-      status: "Processing",
-    },
-  ];
-
-  const recommendations = [
-    {
-      id: 1,
-      name: "Kundan Flower Earrings",
-      rating: "★★★★★",
-      reviewsCount: 128,
-      price: "₹1,199",
-      originalPrice: "₹1,599",
-      image: product1,
-      material: "Kundan",
-    },
-    {
-      id: 2,
-      name: "Dainty Pearl Necklace",
-      rating: "★★★★★",
-      reviewsCount: 96,
-      price: "₹1,499",
-      originalPrice: "₹1,999",
-      image: product2,
-      material: "Pearl",
-    },
-    {
-      id: 3,
-      name: "Gold Plated Bracelet",
-      rating: "★★★★★",
-      reviewsCount: 78,
-      price: "₹999",
-      originalPrice: "₹1,299",
-      image: product3,
-      material: "Gold Plated",
-    },
-    {
-      id: 4,
-      name: "Floral Stud Earrings",
-      rating: "★★★★★",
-      reviewsCount: 64,
-      price: "₹749",
-      originalPrice: "₹999",
-      image: product4,
-      material: "Diamond",
-    },
   ];
 
   return (
@@ -156,7 +175,7 @@ function Dashboard() {
             <p>Here's what's happening with your Fashion Oasis account today.</p>
 
             <div className="hero-actions">
-              <button className="btn-primary">
+              <button className="btn-primary" onClick={() => window.location.href = "/shop"}>
                 <FaShoppingBag />
                 Continue Shopping
               </button>
@@ -167,12 +186,12 @@ function Dashboard() {
         {/* STATS & QUICK ACTIONS SECTION */}
         <section className="dashboard-metrics">
           <div className="dashboard-cards">
-            {stats.map((item, index) => (
+            {statCardsData.map((item, index) => (
               <div className="card-box" key={index}>
                 <div className="icon">{item.icon}</div>
                 <h5>{item.title}</h5>
                 <h2>{item.value}</h2>
-                <span className={`subtitle ${item.subtitleClass || ""}`}>
+                <span className="subtitle">
                   {item.subtitle}
                 </span>
               </div>
@@ -205,44 +224,50 @@ function Dashboard() {
           </div>
 
           <div className="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Amount</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div className="product">
-                        <img src={item.image} alt={item.product} />
-                        <div className="product-details">
-                          <h6>{item.product}</h6>
-                          <span className="order-id">{item.id}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{item.date}</td>
-                    <td>
-                      <span
-                        className={`status ${item.status.toLowerCase()}`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="amount">{item.amount}</td>
-                    <td>
-                      <button className="view-details-btn">View Details</button>
-                    </td>
+            {orders.length === 0 ? (
+              <p style={{ padding: "30px", textAlign: "center", color: "#888" }}>
+                {loading ? "Loading orders..." : "No recent orders found."}
+              </p>
+            ) : (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {orders.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="product">
+                          <img src={item.image} alt={item.product} />
+                          <div className="product-details">
+                            <h6>{item.product}</h6>
+                            <span className="order-id">{item.id}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>{item.date}</td>
+                      <td>
+                        <span
+                          className={`status ${item.status?.toLowerCase()}`}
+                        >
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="amount">{item.amount}</td>
+                      <td>
+                        <button className="view-details-btn">View Details</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </section>
 
@@ -256,31 +281,39 @@ function Dashboard() {
           </div>
 
           <div className="recommendations-grid">
-            {recommendations.map((prod) => (
-              <div className="recommendation-card" key={prod.id}>
-                <button className="wishlist-btn">
-                  <FaRegHeart />
-                </button>
-                <div className="img-wrapper">
-                  <img src={prod.image} alt={prod.name} />
-                </div>
-                <div className="recommendation-details">
-                  <span className="recommendation-material">{prod.material}</span>
-                  <h6>{prod.name}</h6>
-                  <div className="rating">
-                    <span className="stars">{prod.rating}</span>
-                    <span className="reviews-count">({prod.reviewsCount})</span>
-                  </div>
-                  <div className="pricing">
-                    <span className="price">{prod.price}</span>
-                    <span className="original-price">{prod.originalPrice}</span>
-                  </div>
-                  <button className="add-to-cart-btn">
-                    <FaShoppingBag /> Add to Cart
+            {recommendations.length === 0 ? (
+              <p style={{ padding: "30px", textAlign: "center", color: "#888", gridColumn: "1 / -1" }}>
+                {loading ? "Loading recommendations..." : "No recommendations available right now."}
+              </p>
+            ) : (
+              recommendations.map((prod) => (
+                <div className="recommendation-card" key={prod.id || prod._id}>
+                  <button className="wishlist-btn">
+                    <FaRegHeart />
                   </button>
+                  <div className="img-wrapper">
+                    <img src={prod.image} alt={prod.name} />
+                  </div>
+                  <div className="recommendation-details">
+                    <span className="recommendation-material">{prod.material}</span>
+                    <h6>{prod.name}</h6>
+                    <div className="rating">
+                      <span className="stars">★★★★★</span>
+                      <span className="reviews-count">({prod.reviewsCount || 0})</span>
+                    </div>
+                    <div className="pricing">
+                      <span className="price">₹{prod.price}</span>
+                      {prod.originalPrice && (
+                        <span className="original-price">₹{prod.originalPrice}</span>
+                      )}
+                    </div>
+                    <button className="add-to-cart-btn">
+                      <FaShoppingBag /> Add to Cart
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </section>
       </DashboardLayout>
