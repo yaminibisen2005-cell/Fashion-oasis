@@ -98,6 +98,16 @@ cursor:pointer;
   --transition-fast: 0.2s ease;
   --transition-normal: 0.35s ease;
   --transition-slow: 0.5s ease;
+
+  /* Admin / Seller Dashboard Theme (used by AdminLayout.css & SellerLayout.css) */
+  --primary-color: #EF6F8F;
+  --secondary-color: #D94C7A;
+  --accent-color: #D4AF37;
+  --text-dark: #2D2324;
+  --text-muted: #8E7A6B;
+  --background-color: #FAF6F5;
+  --card-shadow: 0 4px 15px rgba(239, 111, 143, 0.08);
+  --transition: all 0.3s ease;
 }
 
 * {
