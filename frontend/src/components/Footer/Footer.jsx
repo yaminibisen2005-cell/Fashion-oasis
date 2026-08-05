@@ -18,7 +18,7 @@ const Footer = () => {
 
       <div className="footer-container">
 
-        {/* ================= Left Brand ================= */}
+        {/* ================= Brand Column ================= */}
 
         <div className="footer-brand">
 
@@ -47,75 +47,69 @@ const Footer = () => {
 
         </div>
 
-        {/* ================= Right Section ================= */}
+        {/* ================= Quick Links Column ================= */}
 
-        <div className="footer-right">
+        <div className="footer-column">
 
-          {/* Quick Links */}
+          <h3>Quick Links</h3>
 
-          <div className="footer-column">
+          <ul>
 
-            <h3>Quick Links</h3>
+            <li><Link to="/">Home</Link></li>
 
-            <ul>
+            <li><Link to="/about">About Us</Link></li>
 
-              <li><Link to="/">Home</Link></li>
+            <li><Link to="/shop">Shop</Link></li>
 
-              <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/shop">Collections</Link></li>
 
-              <li><Link to="/shop">Shop</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
 
-              <li><Link to="/shop">Collections</Link></li>
+          </ul>
 
-              <li><Link to="/contact">Contact</Link></li>
+        </div>
 
-            </ul>
+        {/* ================= Shop Column ================= */}
 
+        <div className="footer-column">
+
+          <h3>Shop</h3>
+
+          <ul>
+
+            <li><Link to="/shop?category=necklace">Necklaces</Link></li>
+
+            <li><Link to="/shop?category=earrings">Earrings</Link></li>
+
+            <li><Link to="/shop?category=bracelets">Bracelets</Link></li>
+
+            <li><Link to="/shop?category=rings">Rings</Link></li>
+
+            <li><Link to="/shop?category=gifts">Gift Collection</Link></li>
+
+          </ul>
+
+        </div>
+
+        {/* ================= Contact Column ================= */}
+
+        <div className="footer-column">
+
+          <h3>Get In Touch</h3>
+
+          <div className="contact-item">
+            <FaMapMarkerAlt />
+            <span>Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India</span>
           </div>
 
-          {/* Shop */}
-
-          <div className="footer-column">
-
-            <h3>Shop</h3>
-
-            <ul>
-
-              <li><Link to="/shop?category=necklace">Necklaces</Link></li>
-
-              <li><Link to="/shop?category=earrings">Earrings</Link></li>
-
-              <li><Link to="/shop?category=bracelets">Bracelets</Link></li>
-
-              <li><Link to="/shop?category=rings">Rings</Link></li>
-
-              <li><Link to="/shop?category=gifts">Gift Collection</Link></li>
-
-            </ul>
-
+          <div className="contact-item">
+            <FaPhoneAlt />
+            <span>+91 7739479666</span>
           </div>
 
-          {/* Contact */}
-
-          <div className="footer-column">
-
-            <h3>Get In Touch</h3>
-
-            <div className="contact-item">
-              <FaMapMarkerAlt />
-              <span>Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India</span>
-            </div>
-
-            <div className="contact-item">
-              <FaPhoneAlt />
-              <span>+91 7739479666</span>
-            </div>
-
-            <div className="contact-item">
-              <FaEnvelope />
-              <span>fashionoasis082@gmail.com</span>
-            </div>
-
+          <div className="contact-item">
+            <FaEnvelope />
+            <span>fashionoasis082@gmail.com</span>
           </div>
 
         </div>
@@ -138,13 +132,11 @@ const Footer = () => {
 
         <div className="footer-bottom-links">
 
-          <Link to="/terms">Terms & Conditions</Link>
+          <Link to="/terms-and-conditions">Terms & Conditions</Link>
 
           <Link to="/privacy-policy">Privacy Policy</Link>
 
-          <Link to="/return-policy">Return Policy</Link>
-
-          <Link to="/faq">FAQs</Link>
+          <Link to="/contact#faq-section">FAQs</Link>
 
         </div>
 

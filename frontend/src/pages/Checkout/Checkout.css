@@ -246,6 +246,67 @@
   top: 100px;
 }
 
+.summary-card {
+  background-color: var(--card-background);
+  border-radius: var(--radius-card);
+  padding: 30px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.summary-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.summary-card h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--primary-pink);
+  border-radius: 2px;
+}
+
+.summary-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 20px 0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--body-font);
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.summary-row.total {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.summary-row.discount {
+  color: #6BD48A;
+}
+
+.free-shipping {
+  color: #6BD48A;
+  font-weight: 600;
+}
+
 .checkout-items-summary {
   display: flex;
   flex-direction: column;

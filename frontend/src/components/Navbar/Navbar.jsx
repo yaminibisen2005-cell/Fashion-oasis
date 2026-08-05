@@ -40,6 +40,8 @@ const Navbar = () => {
 
   const [isHomePage, setIsHomePage] = useState(true);
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const cartCount = cart.reduce(
     (sum, item) => sum + item.quantity,
     0
@@ -58,15 +60,23 @@ const Navbar = () => {
       );
     };
 
+    const checkAuth = () => {
+      const customerEmail = localStorage.getItem("customerEmail");
+      setIsAuthenticated(!!customerEmail);
+    };
+
     handleScroll();
     checkHomePage();
+    checkAuth();
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("popstate", checkHomePage);
+    window.addEventListener("storage", checkAuth);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("popstate", checkHomePage);
+      window.removeEventListener("storage", checkAuth);
     };
 
   }, []);
@@ -173,57 +183,65 @@ const Navbar = () => {
 
           <div className="nav-icons">
 
-            <Link
-              to="/search"
-              className="icon-wrapper"
-            >
-              <FaSearch />
-            </Link>
+            {!isAuthenticated ? (
+              <Link to="/login" className="login-btn">
+                Login
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/search"
+                  className="icon-wrapper"
+                >
+                  <FaSearch />
+                </Link>
 
-            <Link
-              to="/wishlist"
-              className="icon-wrapper"
-            >
+                <Link
+                  to="/wishlist"
+                  className="icon-wrapper"
+                >
 
-              <FaRegHeart />
+                  <FaRegHeart />
 
-              {wishlist.length > 0 && (
+                  {wishlist.length > 0 && (
 
-                <span className="nav-badge">
+                    <span className="nav-badge">
 
-                  {wishlist.length}
+                      {wishlist.length}
 
-                </span>
+                    </span>
 
-              )}
+                  )}
 
-            </Link>
+                </Link>
 
-            <Link
-              to="/cart"
-              className="icon-wrapper"
-            >
+                <Link
+                  to="/cart"
+                  className="icon-wrapper"
+                >
 
-              <FaShoppingBag />
+                  <FaShoppingBag />
 
-              {cartCount > 0 && (
+                  {cartCount > 0 && (
 
-                <span className="nav-badge">
+                    <span className="nav-badge">
 
-                  {cartCount}
+                      {cartCount}
 
-                </span>
+                    </span>
 
-              )}
+                  )}
 
-            </Link>
+                </Link>
 
-            <Link
-  to="/dashboard"
-  className="icon-wrapper"
->
-  <FaRegUser />
-</Link>
+                <Link
+                  to="/dashboard"
+                  className="icon-wrapper"
+                >
+                  <FaRegUser />
+                </Link>
+              </>
+            )}
 
           </div>
 
@@ -357,53 +375,65 @@ const Navbar = () => {
 
           <div className="mobile-nav-icons">
 
-            <Link
-              to="/search"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
-              <FaSearch />
-            </Link>
+            {!isAuthenticated ? (
+              <Link
+                to="/login"
+                className="login-btn"
+                onClick={() => setMenuOpen(false)}
+              >
+                Login
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/search"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaSearch />
+                </Link>
 
-            <Link
-              to="/wishlist"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
+                <Link
+                  to="/wishlist"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
 
-              <FaRegHeart />
+                  <FaRegHeart />
 
-              {wishlist.length > 0 && (
-                <span className="nav-badge">
-                  {wishlist.length}
-                </span>
-              )}
+                  {wishlist.length > 0 && (
+                    <span className="nav-badge">
+                      {wishlist.length}
+                    </span>
+                  )}
 
-            </Link>
+                </Link>
 
-            <Link
-              to="/cart"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
+                <Link
+                  to="/cart"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
 
-              <FaShoppingBag />
+                  <FaShoppingBag />
 
-              {cartCount > 0 && (
-                <span className="nav-badge">
-                  {cartCount}
-                </span>
-              )}
+                  {cartCount > 0 && (
+                    <span className="nav-badge">
+                      {cartCount}
+                    </span>
+                  )}
 
-            </Link>
+                </Link>
 
-           <Link
-  to="/dashboard"
-  className="icon-wrapper"
-  onClick={() => setMenuOpen(false)}
->
-  <FaRegUser />
-</Link>
+                <Link
+                  to="/dashboard"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaRegUser />
+                </Link>
+              </>
+            )}
 
           </div>
 

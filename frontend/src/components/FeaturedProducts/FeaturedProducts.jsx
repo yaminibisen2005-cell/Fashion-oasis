@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { ShopContext } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
-import ProductCard from "../Shop/ProductCard/ProductCard";
+import FeaturedProductCard from "./FeaturedProductCard";
 
 import thumb1 from "../../assets/thumb1.png";
 import thumb2 from "../../assets/thumb2.png";
@@ -62,7 +62,10 @@ const FeaturedProducts = () => {
       <div className="container">
         <div className="featured-heading">
           <span>FEATURED COLLECTION</span>
-          <h2>Handpicked For You</h2>
+          <h2>Featured Products</h2>
+          <div className="gold-divider">
+            <div className="gold-divider-circles"></div>
+          </div>
           <p>
             Timeless handcrafted jewellery curated for every occasion.
           </p>
@@ -70,7 +73,7 @@ const FeaturedProducts = () => {
 
         <div className="products-grid">
           {products.map((item) => (
-            <ProductCard key={item.id} product={item} />
+            <FeaturedProductCard key={item.id} product={item} />
           ))}
         </div>
 

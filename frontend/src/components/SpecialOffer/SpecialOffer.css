@@ -1,28 +1,36 @@
 .special-offer{
     width:100%;
-    padding:30px 0;
+    padding:80px 0 60px 0;
     background:#fff;
 }
 
 .special-offer .container{
-    width:98%;
+    width:100%;
     max-width:1700px;
     margin:auto;
+    padding:0 60px;
+    box-sizing:border-box;
 }
 
 .offer-banner::after{
+    display: none !important;
+}
+
+.offer-banner::before{
     content: "";
     position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(
-            to right,
-            rgba(255,250,250,.92) 0%,
-            rgba(255,248,248,.82) 25%,
-            rgba(255,245,245,.45) 50%,
-            rgba(255,255,255,.10) 100%
-        );
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        #FFF8FA 0%,
+        rgba(255, 248, 250, 0.9) 30%,
+        rgba(255, 248, 250, 0) 100%
+    );
     z-index: 2;
+    pointer-events: none;
 }
 
 .offer-content,
@@ -30,15 +38,17 @@
     position: relative;
     z-index: 5;
 }
+
 .offer-banner{
     position:relative;
     width:100%;
-    height:690px;
+    height:480px;
     overflow:hidden;
     border-radius:15px;
     display:flex;
     align-items:center;
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    background:#FFF8FA;
+    box-shadow:0 8px 30px rgba(78, 54, 50, 0.04);
 }
 
 .offer-image{
@@ -47,72 +57,53 @@
     width:100%;
     height:100%;
     object-fit:cover;
-    object-position:center;
+    object-position:center right;
     z-index:1;
+    transform:scale(0.92);
+    transition:transform 300ms ease;
 }
 
-/* Left Gradient */
-
-.offer-banner::before{
-    content:"";
-    position:absolute;
-    left:0;
-    top:0;
-    width:48%;
-    height:100%;
-    background:linear-gradient(
-        to right,
-        rgba(255,248,250,.97),
-        rgba(255,248,250,.88),
-        rgba(255,248,250,.55),
-        rgba(255,248,250,0)
-    );
-    z-index:2;
+.offer-banner:hover .offer-image{
+    transform:scale(0.96);
 }
 
 /* Content */
 
 .offer-content{
-
     position:relative;
     z-index:5;
-
-    width:36%;
-    max-width:480px;
-
+    width:40%;
     margin-left:70px;
-
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    box-sizing:border-box;
 }
 
-.offer-label{
-
-    display:inline-block;
-
-    padding:10px 22px;
-
-    background:#fff;
-
-    border-radius:40px;
-
-    color:#ef4b82;
-
-    font-size:15px;
-
-    font-weight:600;
-
-    letter-spacing:1px;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-    margin-bottom:28px;
-
+.offer-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    width: fit-content;
+    padding: 0 18px;
+    background: #fff;
+    border-radius: 999px;
+    color: #ef4b82;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    box-shadow: 0 8px 24px rgba(233, 103, 146, 0.12);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    box-sizing: border-box;
 }
 
 .offer-content h2{
 
-    font-size:56px;
+    font-size:42px;
 
-    line-height:1.05;
+    line-height:1.1;
 
     font-family:"Playfair Display",serif;
 
@@ -120,7 +111,7 @@
 
     font-weight:600;
 
-    margin-bottom:25px;
+    margin-bottom:18px;
 
 }
 
@@ -132,7 +123,7 @@
 
 .discount-box{
 
-    margin-bottom:35px;
+    margin-bottom:24px;
 
 }
 
@@ -141,11 +132,11 @@
 
     color:#777;
 
-    font-size:18px;
+    font-size:14px;
 
-    letter-spacing:4px;
+    letter-spacing:3px;
 
-    margin-bottom:8px;
+    margin-bottom:6px;
 
     font-weight:500;
 
@@ -153,7 +144,7 @@
 
 .discount-box h1{
 
-    font-size:66px;
+    font-size:65px;
 
     line-height:1;
 
@@ -166,69 +157,57 @@
 /* Badge */
 
 .offer-badge{
-
     position:absolute;
-
-    top:45px;
-
-    right:25px;
-
-    width:145px;
-
-    height:145px;
-
+    top:18px;
+    right:18px;
+    width:110px;
+    height:110px;
     border-radius:50%;
-
-    background:#fff;
-
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(212,175,55,0.18);
     z-index:10;
-
     display:flex;
-
     flex-direction:column;
-
     justify-content:center;
-
     align-items:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:transform 300ms ease;
+    box-sizing:border-box;
+}
 
-    box-shadow:0 20px 40px rgba(0,0,0,.12);
-
+.offer-badge:hover {
+    transform:translateY(-4px) scale(1.04);
 }
 
 .offer-badge span{
-
-    font-size:15px;
-
-    color:#888;
-
-    letter-spacing:2px;
-
+    font-size:11px;
+    color:#8E8E93;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    line-height:1;
+    margin-bottom:2px;
+    margin-right:-.25em;
 }
 
 .offer-badge h2{
-
-    font-size:48px;
-
-    color:#ef4b82;
-
-    margin:5px 0;
-
+    font-family:'Cormorant Garamond',serif !important;
+    font-size:42px !important;
+    font-weight:600 !important;
+    color:#C9A227 !important;
     line-height:1;
-
-    font-family:"Playfair Display",serif;
-
+    margin:0 !important;
 }
 
 .offer-badge p{
-
-    font-size:18px;
-
-    color:#222;
-
-    font-weight:600;
-
-    letter-spacing:2px;
-
+    font-family:'Poppins',sans-serif !important;
+    font-size:18px !important;
+    font-weight:600 !important;
+    color:#4A3532 !important;
+    line-height:1;
+    margin:2px 0 0 0 !important;
+    letter-spacing:0.05em;
 }
 /* ===========================
    COUNTDOWN TIMER
@@ -299,8 +278,9 @@
 
 .shop-btn{
     margin-top:20px;
-    width:220px;
-    height:56px;
+    width:fit-content;
+    height:48px;
+    padding:0 34px;
     border:none;
     outline:none;
     border-radius:50px;
@@ -310,7 +290,7 @@
     justify-content:center;
     align-items:center;
     gap:12px;
-    font-size:16px;
+    font-size:15px;
     font-weight:600;
     cursor:pointer;
     transition:.35s;
@@ -337,70 +317,91 @@
 @media (max-width:1200px){
 
     .offer-banner{
-        height:680px;
+        height: 440px;
+        display: flex;
+        align-items: center;
+    }
+
+    .offer-banner::before{
+        left: 0;
+        width: 55%;
     }
 
     .offer-content{
-        width:50%;
-        margin-left:50px;
+        width: 45%;
+        margin-left: 50px;
+    }
+
+    .offer-image{
+        position: absolute;
+        inset: 0;
     }
 
     .offer-content h2{
-        font-size:58px;
+        font-size:38px;
     }
 
     .discount-box h1{
-        font-size:72px;
+        font-size:58px;
     }
 
     .offer-badge{
-        width:150px;
-        height:150px;
-        right:30px;
-        top:30px;
+        width:95px;
+        height:95px;
+        right:25px;
+        top:25px;
     }
 
     .offer-badge h2{
-        font-size:50px;
+        font-size:30px;
     }
 
 }
 
 @media (max-width:992px){
 
+    .special-offer{
+        padding:70px 0;
+    }
+
     .offer-banner{
-        height:auto;
-        min-height:850px;
+        height: 420px;
+        display: flex;
+        align-items: center;
     }
 
     .offer-banner::before{
-        width:100%;
-        background:linear-gradient(
-            to bottom,
-            rgba(255,248,250,.96),
-            rgba(255,248,250,.82),
-            rgba(255,248,250,.45),
-            rgba(255,248,250,.15)
-        );
+        left: 0;
+        width: 60%;
     }
 
     .offer-content{
-        width:90%;
-        max-width:none;
-        margin:70px auto;
-        text-align:center;
+        width: 50%;
+        margin-left: 40px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .offer-label{
-        margin:auto auto 25px;
+    .offer-image{
+        position: absolute;
+        inset: 0;
+    }
+
+    .offer-label {
+        margin: 0 0 16px 0;
+        height: 36px;
+        padding: 0 16px;
+        font-size: 11px;
     }
 
     .offer-content h2{
-        font-size:48px;
+        font-size:36px;
     }
 
     .discount-box h1{
-        font-size:64px;
+        font-size:55px;
     }
 
     .timer{
@@ -408,18 +409,30 @@
     }
 
     .shop-btn{
-        margin:30px auto 0;
+        margin:24px 0 0 0;
     }
 
     .offer-badge{
-        width:130px;
-        height:130px;
-        right:20px;
-        top:20px;
+        width:90px;
+        height:90px;
+        right:18px;
+        top:18px;
+    }
+
+    .offer-badge span{
+        font-size:9px;
     }
 
     .offer-badge h2{
-        font-size:42px;
+        font-size:32px !important;
+    }
+
+    .offer-badge p{
+        font-size:14px !important;
+    }
+
+    .testimonial-section{
+        padding:50px 0 60px;
     }
 
 }
@@ -427,29 +440,47 @@
 @media (max-width:768px){
 
     .special-offer{
-        padding:60px 0;
+        padding:50px 0;
+    }
+
+    .special-offer .container{
+        padding:0 24px;
     }
 
     .offer-banner{
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        align-items: stretch;
         border-radius:20px;
     }
 
-    .offer-content{
-        width:90%;
-        margin:50px auto;
+    .offer-banner::before{
+        display: none !important;
     }
 
+    .offer-content{
+        width:100%;
+        margin:0;
+        padding: 40px 24px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+     }
+
     .offer-content h2{
-        font-size:38px;
+        font-size:32px;
         line-height:1.2;
     }
 
     .discount-box h1{
-        font-size:50px;
+        font-size:48px;
     }
 
     .discount-box p{
-        font-size:18px;
+        font-size:13px;
     }
 
     .timer{
@@ -468,23 +499,36 @@
     .shop-btn{
         width:100%;
         max-width:260px;
+        margin: 24px auto 0;
+    }
+
+    .offer-image {
+        position: static;
+        height: 320px;
+        width: 100%;
+        object-fit: cover;
+        transform: none !important;
     }
 
     .offer-badge{
-        width:110px;
-        height:110px;
-    }
-
-    .offer-badge h2{
-        font-size:34px;
+        width:75px;
+        height:75px;
+        top:18px;
+        right:18px;
     }
 
     .offer-badge span{
-        font-size:11px;
+        font-size:8px;
+        letter-spacing:0.18em;
+        margin-right:-0.18em;
+    }
+
+    .offer-badge h2{
+        font-size:26px !important;
     }
 
     .offer-badge p{
-        font-size:16px;
+        font-size:12px !important;
     }
 
 }
