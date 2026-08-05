@@ -4,8 +4,7 @@ import catchAsync from '../utils/catchAsync.js';
 
 // Get user wishlist
 export const getWishlist = catchAsync(async (req, res, next) => {
-  const { email } = req.params;
-  const customer = await Customer.findOne({ email });
+  const customer = req.customer;
   
   if (!customer) {
     return next(new AppError('Customer not found', 404));
@@ -19,13 +18,9 @@ export const getWishlist = catchAsync(async (req, res, next) => {
 
 // Toggle wishlist item (Add if not present, remove if already present)
 export const toggleWishlist = catchAsync(async (req, res, next) => {
-  const { customerEmail, product } = req.body;
+  const { product } = req.body;
 
-  if (!customerEmail || !product || !product.id) {
-    return next(new AppError('Customer email and product details are required', 400));
-  }
-
-  const customer = await Customer.findOne({ email: customerEmail });
+  const customer = req.customer;
   if (!customer) {
     return next(new AppError('Customer not found', 404));
   }
@@ -37,8 +32,15 @@ export const toggleWishlist = catchAsync(async (req, res, next) => {
     // Remove item if it exists
     customer.wishlist.splice(itemIndex, 1);
   } else {
-    // Add item if it doesn't exist
-    customer.wishlist.push(product);
+    // Add item if it doesn't exist. Validate fields implicitly by schema, explicit sanitization:
+    const sanitizedProduct = {
+      id: product.id,
+      name: product.name,
+      image: product.image || '',
+      price: product.price || 0,
+      oldPrice: product.oldPrice || 0
+    };
+    customer.wishlist.push(sanitizedProduct);
   }
 
   await customer.save();

@@ -5,6 +5,7 @@ const orderSchema = new mongoose.Schema(
     orderId: { type: String, required: true, unique: true },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' }, // Made optional if using email
     customerEmail: { type: String, required: true }, // Added to match frontend payload
+    seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     shippingAddress: {
       fullName: { type: String, required: true },
       phoneNumber: { type: String, required: true },

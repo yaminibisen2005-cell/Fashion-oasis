@@ -4,6 +4,10 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
 // Helper function to send email via Brevo SMTP
+import jwt from 'jsonwebtoken';
+
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -49,9 +53,12 @@ export const registerCustomer = async (req, res, next) => {
       password
     });
 
+    const token = signToken(customer._id);
+
     res.status(201).json({
       success: true,
       message: 'Registration successful',
+      token,
       data: {
         id: customer._id,
         firstName: customer.firstName,
@@ -82,9 +89,12 @@ export const loginCustomer = async (req, res, next) => {
       return next(new AppError('Incorrect email or password', 401));
     }
 
+    const token = signToken(customer._id);
+
     res.status(200).json({
       success: true,
       message: 'Login successful',
+      token,
       data: {
         id: customer._id,
         firstName: customer.firstName,
@@ -105,7 +115,10 @@ export const forgotPassword = async (req, res, next) => {
     const customer = await Customer.findOne({ email });
 
     if (!customer) {
-      return next(new AppError('There is no user with that email address.', 404));
+      return res.status(200).json({
+        success: true,
+        message: 'If an account with that email exists, a password reset link has been sent.',
+      });
     }
 
     // Generate random reset token
@@ -134,7 +147,7 @@ export const forgotPassword = async (req, res, next) => {
 
       res.status(200).json({
         success: true,
-        message: 'Token sent to email!',
+        message: 'If an account with that email exists, a password reset link has been sent.',
       });
     } catch (err) {
       customer.resetPasswordToken = undefined;
@@ -186,10 +199,7 @@ export const resetPassword = async (req, res, next) => {
  // Inside getProfile, update the response object to include twoFactorEnabled:
 export const getProfile = async (req, res, next) => {
   try {
-    const email = req.query.email;
-    const customer = email
-      ? await Customer.findOne({ email })
-      : await Customer.findOne();
+    const customer = req.customer;
 
     if (!customer) {
       return next(new AppError('Customer not found', 404));
@@ -216,18 +226,17 @@ export const getProfile = async (req, res, next) => {
 // @desc    Update customer profile supporting originalEmail reference
 export const updateProfile = async (req, res, next) => {
   try {
-    const { originalEmail, firstName, lastName, email, phone, gender, address } = req.body;
+    const { firstName, lastName, email, phone, gender, address } = req.body;
 
-    const lookupEmail = originalEmail || email;
-    const customer = await Customer.findOne({ email: lookupEmail });
+    const customer = req.customer;
 
     if (!customer) {
       return next(new AppError('Customer not found', 404));
     }
 
-    if (firstName) customer.firstName = firstName;
-    if (lastName) customer.lastName = lastName;
-    if (email) customer.email = email;
+    if (firstName !== undefined) customer.firstName = firstName;
+    if (lastName !== undefined) customer.lastName = lastName;
+    if (email !== undefined) customer.email = email;
     if (phone !== undefined) customer.phone = phone;
     if (gender !== undefined) customer.gender = gender;
     if (address !== undefined) customer.address = address;
@@ -255,13 +264,13 @@ export const updateProfile = async (req, res, next) => {
 // @desc    Update customer password
 export const updatePassword = async (req, res, next) => {
   try {
-    const { email, currentPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-    if (!email || !currentPassword || !newPassword) {
-      return next(new AppError('Please provide email, current password, and new password', 400));
+    if (currentPassword === newPassword) {
+      return next(new AppError('New password cannot be the same as the current password', 400));
     }
 
-    const customer = await Customer.findOne({ email }).select('+password');
+    const customer = await Customer.findById(req.customer._id).select('+password');
 
     if (!customer || !(await customer.comparePassword(currentPassword))) {
       return next(new AppError('Your current password is incorrect', 401));
@@ -282,17 +291,15 @@ export const updatePassword = async (req, res, next) => {
 // @desc    Delete customer account
 export const deleteAccount = async (req, res, next) => {
   try {
-    const email = req.body.email || req.query.email;
+    const { password } = req.body;
 
-    if (!email) {
-      return next(new AppError('Email is required to delete account', 400));
+    const customer = await Customer.findById(req.customer._id).select('+password');
+
+    if (!customer || !(await customer.comparePassword(password))) {
+      return next(new AppError('Incorrect password', 401));
     }
 
-    const customer = await Customer.findOneAndDelete({ email });
-
-    if (!customer) {
-      return next(new AppError('Customer not found', 404));
-    }
+    await Customer.findByIdAndDelete(req.customer._id);
 
     res.status(200).json({
       success: true,
@@ -307,13 +314,9 @@ export const deleteAccount = async (req, res, next) => {
 // @route   PUT /api/v1/customer/two-factor
 export const updateTwoFactor = async (req, res, next) => {
   try {
-    const { email, twoFactorEnabled } = req.body;
+    const { twoFactorEnabled } = req.body;
 
-    if (!email) {
-      return next(new AppError('Email is required', 400));
-    }
-
-    const customer = await Customer.findOne({ email });
+    const customer = req.customer;
     if (!customer) {
       return next(new AppError('Customer not found', 404));
     }
