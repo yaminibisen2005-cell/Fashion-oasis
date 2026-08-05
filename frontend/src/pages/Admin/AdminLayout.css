@@ -1547,3 +1547,39 @@
     width: 90%;
   }
 }
+
+/* Custom Card Typography Classes requested by user */
+.card-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #5f4b4b;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.card-value {
+  font-family: "Inter", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: #3b2a2a;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.card-growth {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #16a34a;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.card-growth-stable {
+  color: #5f4b4b;
+}
+

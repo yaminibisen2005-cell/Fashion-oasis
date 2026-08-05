@@ -1005,76 +1005,91 @@ const ProfileSection = ({ profile, updateProfile }) => {
         </div>
       </div>
 
-      <div className="analytics-metrics-grid">
-        <div className="analytics-metric-card">
-          <span>Conversion Rate</span>
-          <h3>4.8%</h3>
-          <p className="text-pink"><FaArrowUp /> +1.2% this month</p>
-        </div>
-        <div className="analytics-metric-card">
-          <span>Store Rating</span>
-          <h3>4.9 <span style={{ color: "#D4AF37", fontSize: 16 }}>★</span></h3>
-          <p className="text-pink"><FaArrowUp /> +0.1 this month</p>
-        </div>
-        <div className="analytics-metric-card">
-          <span>Repeat Customers</span>
-          <h3>34%</h3>
-          <p>Stable this month</p>
-        </div>
-        <div className="analytics-metric-card">
-          <span>Products Sold</span>
-          <h3>1,250</h3>
-          <p className="text-pink"><FaArrowUp /> +124 this month</p>
-        </div>
-      </div>
-
-      <div className="form-card profile-settings-card">
-        <form className="profile-form" onSubmit={handleSave}>
-          <div className="avatar-upload-box">
-            <img src={form.img} alt={form.name} className="avatar-large" />
-            <div className="avatar-info-box">
-              <h4>{form.storeName}</h4>
-              <p>Update your profile photo via URL</p>
-              <input type="text" className="url-input" placeholder="Image URL" value={form.img} onChange={(e) => setForm({ ...form, img: e.target.value })} />
-            </div>
+      <div className="profile-dashboard-layout">
+        <div className="profile-stats-column">
+          <div className="profile-stat-card">
+            <span className="card-title">Conversion Rate</span>
+            <div className="card-value">4.8%</div>
+            <div className="card-growth"><FaArrowUp /> +1.2% this month</div>
           </div>
 
-          <div className="profile-form-grid">
-            <div>
-              <label style={{ fontFamily: "var(--body-font)", fontSize: 13, fontWeight: 500, color: "var(--text-dark)", marginBottom: 8, display: "block" }}>Full Name</label>
-              <div className="input-with-icon">
-                <FaUserAlt className="input-icon" />
-                <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-              </div>
+          <div className="profile-stat-card">
+            <span className="card-title">Store Rating</span>
+            <div className="card-value">
+              4.9 <span className="star-icon">★</span>
             </div>
-            <div>
-              <label style={{ fontFamily: "var(--body-font)", fontSize: 13, fontWeight: 500, color: "var(--text-dark)", marginBottom: 8, display: "block" }}>Email Address</label>
-              <div className="input-with-icon">
-                <FaEnvelope className="input-icon" />
-                <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              </div>
-            </div>
-            <div>
-              <label style={{ fontFamily: "var(--body-font)", fontSize: 13, fontWeight: 500, color: "var(--text-dark)", marginBottom: 8, display: "block" }}>Store Name</label>
-              <div className="input-with-icon">
-                <FaStore className="input-icon" />
-                <input type="text" value={form.storeName} onChange={(e) => setForm({ ...form, storeName: e.target.value })} />
-              </div>
-            </div>
-            <div>
-              <label style={{ fontFamily: "var(--body-font)", fontSize: 13, fontWeight: 500, color: "var(--text-dark)", marginBottom: 8, display: "block" }}>Contact Number</label>
-              <div className="input-with-icon">
-                <FaUserAlt className="input-icon" />
-                <input type="text" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-              </div>
-            </div>
+            <div className="card-growth"><FaArrowUp /> +0.1 this month</div>
           </div>
 
-          <div className="profile-action-row">
-            {saved && <span className="save-success-msg">Profile updated successfully!</span>}
-            <button type="submit" className="admin-btn-primary">Save Changes</button>
+          <div className="profile-stat-card">
+            <span className="card-title">Repeat Customers</span>
+            <div className="card-value">34%</div>
+            <div className="card-growth card-growth-stable">Stable this month</div>
           </div>
-        </form>
+
+          <div className="profile-stat-card">
+            <span className="card-title">Products Sold</span>
+            <div className="card-value">1,250</div>
+            <div className="card-growth"><FaArrowUp /> +124 this month</div>
+          </div>
+        </div>
+
+        <div className="form-card profile-settings-card">
+          <form className="profile-form" onSubmit={handleSave}>
+            <div className="avatar-upload-box">
+              <img src={form.img} alt={form.name} className="avatar-large" />
+              <div className="avatar-info-box">
+                <h4>{form.storeName}</h4>
+                <p>Update your profile photo via URL</p>
+                <input
+                  type="text"
+                  className="url-input"
+                  placeholder="Image URL"
+                  value={form.img}
+                  onChange={(e) => setForm({ ...form, img: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <hr className="profile-divider" />
+
+            <div className="profile-form-grid">
+              <div>
+                <label className="profile-form-label">Full Name</label>
+                <div className="input-with-icon">
+                  <FaUserAlt className="input-icon" />
+                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                </div>
+              </div>
+              <div>
+                <label className="profile-form-label">Email Address</label>
+                <div className="input-with-icon">
+                  <FaEnvelope className="input-icon" />
+                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                </div>
+              </div>
+              <div>
+                <label className="profile-form-label">Store Name</label>
+                <div className="input-with-icon">
+                  <FaStore className="input-icon" />
+                  <input type="text" value={form.storeName} onChange={(e) => setForm({ ...form, storeName: e.target.value })} />
+                </div>
+              </div>
+              <div>
+                <label className="profile-form-label">Contact Number</label>
+                <div className="input-with-icon">
+                  <FaUserAlt className="input-icon" />
+                  <input type="text" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <div className="profile-action-row">
+              {saved && <span className="save-success-msg">Profile updated successfully!</span>}
+              <button type="submit" className="admin-btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
