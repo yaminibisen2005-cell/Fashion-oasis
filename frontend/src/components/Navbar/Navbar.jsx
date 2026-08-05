@@ -79,7 +79,7 @@ const Navbar = () => {
     <header className="navbar-wrapper">
 
       <nav
-        className={`navbar ${scrolled ? "scrolled" : ""} ${
+        className={`fo-navbar ${scrolled ? "scrolled" : ""} ${
           !isHomePage ? "solid" : ""
         }`}
       >
@@ -96,13 +96,7 @@ const Navbar = () => {
               alt="Fashion Oasis"
             />
 
-            <div className="brand-text">
-
-              <h1>FASHION OASIS</h1>
-
-              <p>PREMIUM JEWELLERY</p>
-
-            </div>
+          
 
           </Link>
                     {/* ==========================
@@ -134,7 +128,7 @@ const Navbar = () => {
               <FaChevronDown />
 
               <div
-                className={`dropdown-menu ${
+                className={`fo-dropdown-menu ${
                   serviceOpen ? "show" : ""
                 }`}
               >
@@ -143,7 +137,7 @@ const Navbar = () => {
 
                   <Link
                     key={index}
-                    className="dropdown-item"
+                    className="fo-dropdown-item"
                     to={`/collections?category=${encodeURIComponent(item)}`}
                   >
                     {item}

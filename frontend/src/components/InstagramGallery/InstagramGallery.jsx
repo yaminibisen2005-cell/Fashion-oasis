@@ -86,7 +86,7 @@ const InstagramGallery = () => {
                 <div className="instagram-overlay">
                   <FaInstagram />
 
-                  <h4>@fashionoasis</h4>
+                  <h4>@fashionoasisstore</h4>
                 </div>
               </div>
             </SwiperSlide>
@@ -103,7 +103,7 @@ const InstagramGallery = () => {
             className="follow-btn"
           >
             <FaInstagram />
-            Follow @fashionoasis
+            Follow @fashionoasisstore
           </a>
         </div>
 
