@@ -1,5 +1,6 @@
 import "./Footer.css";
 import logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
 
 import {
   FaFacebookF,
@@ -58,15 +59,15 @@ const Footer = () => {
 
             <ul>
 
-              <li><a href="/">Home</a></li>
+              <li><Link to="/">Home</Link></li>
 
-              <li><a href="/about">About Us</a></li>
+              <li><Link to="/about">About Us</Link></li>
 
-              <li><a href="/shop">Shop</a></li>
+              <li><Link to="/shop">Shop</Link></li>
 
-              <li><a href="/collections">Collections</a></li>
+              <li><Link to="/shop">Collections</Link></li>
 
-              <li><a href="/contact">Contact</a></li>
+              <li><Link to="/contact">Contact</Link></li>
 
             </ul>
 
@@ -80,15 +81,15 @@ const Footer = () => {
 
             <ul>
 
-              <li><a href="#">Necklaces</a></li>
+              <li><Link to="/shop?category=necklace">Necklaces</Link></li>
 
-              <li><a href="#">Earrings</a></li>
+              <li><Link to="/shop?category=earrings">Earrings</Link></li>
 
-              <li><a href="#">Bracelets</a></li>
+              <li><Link to="/shop?category=bracelets">Bracelets</Link></li>
 
-              <li><a href="#">Rings</a></li>
+              <li><Link to="/shop?category=rings">Rings</Link></li>
 
-              <li><a href="#">Gift Collection</a></li>
+              <li><Link to="/shop?category=gifts">Gift Collection</Link></li>
 
             </ul>
 
@@ -137,13 +138,13 @@ const Footer = () => {
 
         <div className="footer-bottom-links">
 
-          <a href="#">Terms & Conditions</a>
+          <Link to="/terms">Terms & Conditions</Link>
 
-          <a href="#">Privacy Policy</a>
+          <Link to="/privacy-policy">Privacy Policy</Link>
 
-          <a href="#">Return Policy</a>
+          <Link to="/return-policy">Return Policy</Link>
 
-          <a href="#">FAQs</a>
+          <Link to="/faq">FAQs</Link>
 
         </div>
 

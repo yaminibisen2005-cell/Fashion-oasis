@@ -1,20 +1,7 @@
 /* ==========================================
-   COLOR SYSTEM & VARIABLES
+   AUTH-SPECIFIC VARIABLES
    ========================================== */
 :root {
-  --luxury-beige-light: #FDFBF9;
-  --luxury-beige-dark: #F5EFEB;
-  --luxury-blush-light: #FFF0F2;
-  --luxury-blush-dark: #F8D7DA;
-  --luxury-gold: #D4AF37;
-  --luxury-gold-hover: #C29E2A;
-  --luxury-charcoal: #2D221E;
-  --luxury-muted: #7E6C68;
-  --luxury-border: #EADCD9;
-  --luxury-white: #FFFFFF;
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Poppins', sans-serif;
-  
   /* Authentication UI UX Refinements */
   --auth-input-gap: 16px;
   --auth-title-margin-top: 0px;
@@ -46,7 +33,7 @@
   justify-content: center;
   padding: 0;
   margin: 0;
-  background: linear-gradient(135deg, var(--luxury-beige-light) 0%, var(--luxury-blush-light) 50%, var(--luxury-beige-dark) 100%);
+  background: linear-gradient(135deg, var(--light-background) 0%, var(--light-background) 50%, var(--light-background) 100%);
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
@@ -92,7 +79,7 @@
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 28px;
+  border-radius: var(--radius-card);
   border: 1px solid rgba(234, 220, 217, 0.6);
   box-shadow: 0 30px 80px rgba(45, 34, 30, 0.12);
   display: grid;
@@ -182,8 +169,8 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: #D4AF37;
-  box-shadow: 0 0 8px #FFE082, 0 0 16px #D4AF37;
+  background-color: var(--gold-accent);
+  box-shadow: 0 0 8px var(--gold-accent), 0 0 16px var(--gold-accent);
   opacity: 0;
   filter: blur(0.5px);
 }
@@ -208,14 +195,14 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 0 16px;
   box-sizing: border-box;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--transition-fast);
 }
 
 .glass-card-col {
@@ -224,8 +211,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #FFFFFF;
-  font-family: var(--font-body);
+  color: var(--card-background);
+  font-family: var(--body-font);
   font-size: 13.5px;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -233,12 +220,12 @@
 }
 
 .glass-card-icon {
-  color: #D4AF37;
+  color: var(--gold-accent);
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 350ms ease;
+  transition: transform var(--transition-fast);
 }
 
 .glass-card-col:hover .glass-card-icon {
@@ -286,10 +273,10 @@
 }
 
 .login-box h1 {
-  font-family: var(--font-heading);
+  font-family: var(--heading-font);
   font-size: clamp(32px, 3.2vw, 44px);
   font-weight: 600;
-  color: var(--luxury-charcoal);
+  color: var(--heading-color);
   margin-top: var(--auth-title-margin-top, 0px);
   margin-bottom: var(--auth-title-margin-bottom, 8px);
   line-height: 1.15;
@@ -297,9 +284,9 @@
 }
 
 .subtitle {
-  font-family: var(--font-body);
+  font-family: var(--body-font);
   font-size: clamp(13.5px, 1vw, 15px);
-  color: var(--luxury-muted);
+  color: var(--body-text);
   width: 85%;
   margin: 0 auto var(--auth-subtitle-margin-bottom, 24px) auto;
   text-align: center;
@@ -348,10 +335,10 @@
 }
 
 .input-group label {
-  font-family: var(--font-body);
+  font-family: var(--body-font);
   font-size: 13px;
   font-weight: 500;
-  color: var(--luxury-charcoal);
+  color: var(--heading-color);
   margin-bottom: 6px;
   text-align: left;
 }
@@ -366,40 +353,40 @@
 .input-icon {
   position: absolute;
   left: 18px;
-  color: var(--luxury-muted);
+  color: var(--body-text);
   font-size: 16px;
   pointer-events: none;
   z-index: 3;
-  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform var(--transition-normal);
 }
 
 .input-wrapper:focus-within .input-icon {
-  color: var(--luxury-gold);
+  color: var(--gold-accent);
   transform: scale(1.06);
 }
 
 .input-wrapper input {
   width: 100%;
   height: 56px;
-  border-radius: 12px;
+  border-radius: var(--radius-input);
   border: 1.5px solid #E8D8D1;
-  background-color: var(--luxury-white);
+  background: var(--card-background);
   padding: 0 20px 0 48px;
-  font-family: var(--font-body);
+  font-family: var(--body-font);
   font-size: 14.5px;
-  color: var(--luxury-charcoal);
+  color: var(--heading-color);
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .input-wrapper input:hover {
-  border-color: var(--luxury-gold);
+  border-color: var(--gold-accent);
 }
 
 .input-wrapper input:focus {
-  border-color: var(--luxury-gold);
-  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.14), 0 4px 12px rgba(212, 175, 55, 0.05);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 0 4px rgba(212, 167, 58, 0.14), 0 4px 12px rgba(212, 167, 58, 0.05);
   background-color: #FFFDFB;
 }
 
@@ -415,17 +402,17 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: var(--luxury-muted);
+  color: var(--body-text);
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 3;
-  transition: color 0.3s ease, transform 0.2s ease;
+  transition: color 0.3s ease, transform var(--transition-fast);
 }
 
 .input-wrapper .password-toggle-btn:hover {
-  color: var(--luxury-gold);
+  color: var(--gold-accent);
   transform: scale(1.08);
 }
 
@@ -452,10 +439,10 @@
   height: 58px;
   margin-top: 10px;
   border: none;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #EC6E93 0%, #F48FB1 100%) !important;
-  color: var(--luxury-white);
-  font-family: var(--font-body);
+  border-radius: var(--radius-btn);
+  background: var(--primary-pink) !important;
+  color: var(--card-background);
+  font-family: var(--body-font);
   font-size: 15.5px;
   font-weight: 600;
   cursor: pointer;
@@ -468,7 +455,7 @@
   position: relative;
   overflow: hidden;
   z-index: 1;
-  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .login-box form button[type="submit"]::before {
@@ -478,7 +465,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #E4577C 0%, #EC6E93 100%);
+  background: var(--hover-pink);
   opacity: 0;
   z-index: -1;
   transition: opacity 350ms ease;
@@ -499,7 +486,7 @@
 }
 
 .login-box form button[type="submit"] .arrow-icon {
-  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--transition-fast);
   display: inline-block;
 }
 
@@ -524,18 +511,18 @@
 .auth-divider span {
   flex: 1;
   height: 1px;
-  background: #F3D8DE;
+  background: var(--border-color);
 }
 
 .auth-divider p {
   margin: 0;
   background: transparent;
   padding: 0;
-  font-family: var(--font-body);
+  font-family: var(--body-font);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 2px;
-  color: #8A6B67;
+  color: var(--body-text);
   text-transform: uppercase;
 }
 
@@ -557,16 +544,16 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background-color: var(--luxury-white);
-  border: 1px solid var(--luxury-border);
-  border-radius: 12px;
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-input);
   cursor: pointer;
-  color: var(--luxury-charcoal);
-  font-family: var(--font-body);
+  color: var(--heading-color);
+  font-family: var(--body-font);
   font-size: 15px;
   font-weight: 500;
   box-sizing: border-box;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background-color 0.3s ease;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
   box-shadow: 0 4px 10px rgba(45, 34, 30, 0.02);
 }
 
@@ -574,7 +561,7 @@
   width: 18px;
   height: 18px;
   object-fit: contain;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--transition-fast);
 }
 
 .google-btn:hover img {
@@ -584,8 +571,8 @@
 .google-btn:hover {
   transform: translateY(-2px);
   background-color: #FFFDFD;
-  border-color: var(--luxury-gold);
-  color: var(--luxury-gold-hover);
+  border-color: var(--gold-accent);
+  color: var(--hover-pink);
   box-shadow: 0 8px 20px rgba(212, 175, 55, 0.12);
 }
 
@@ -597,19 +584,19 @@
 .register {
   margin: var(--auth-register-margin-top, 14px) 0 0 0;
   text-align: center;
-  font-family: var(--font-body);
+  font-family: var(--body-font);
   font-size: 13.5px;
-  color: var(--luxury-muted);
+  color: var(--body-text);
 }
 
 .register a {
   position: relative;
-  color: var(--luxury-gold);
+  color: var(--gold-accent);
   font-weight: 600;
   text-decoration: none;
   margin-left: 4px;
   display: inline-block;
-  transition: color 0.3s ease;
+  transition: color var(--transition-fast);
 }
 
 .register a::after {
@@ -619,12 +606,12 @@
   left: 0;
   width: 0;
   height: 1.5px;
-  background-color: var(--luxury-gold-hover);
+  background-color: var(--hover-pink);
   transition: width 0.3s ease;
 }
 
 .register a:hover {
-  color: var(--luxury-gold-hover);
+  color: var(--hover-pink);
   text-decoration: none;
 }
 
@@ -651,7 +638,7 @@
     left: 20px;
     right: 20px;
     height: 64px;
-    border-radius: 16px;
+    border-radius: var(--radius-btn);
   }
 
   .login-box {
@@ -711,7 +698,7 @@
     height: auto;
     min-height: auto;
     max-height: 90vh;
-    border-radius: 24px;
+    border-radius: var(--radius-card);
     box-shadow: 0 15px 40px rgba(45, 34, 30, 0.08);
   }
 

@@ -12,7 +12,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    background: #fff8f6;
+    background: var(--light-background);
 }
 
 /* ==========================================

@@ -10,9 +10,9 @@
 
     background:linear-gradient(
         180deg,
-        #fffdfd 0%,
-        #fff8f8 40%,
-        #fffdfd 100%
+        var(--light-background) 0%,
+        var(--light-background) 40%,
+        var(--light-background) 100%
     );
 
     overflow:hidden;

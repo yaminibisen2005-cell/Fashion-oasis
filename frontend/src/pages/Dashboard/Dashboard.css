@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* ===========================
    GLOBAL
@@ -12,8 +11,8 @@
 }
 
 .dashboard-content {
-  background: #FFF8F8;
-  font-family: 'Poppins', sans-serif;
+  background: var(--light-background);
+  font-family: var(--body-font);
 }
 
 .dashboard-content {
@@ -26,7 +25,7 @@
 
 .dashboard-content input,
 .dashboard-content button {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--body-font);
 }
 
 .dashboard-content button:active {
@@ -42,7 +41,7 @@
   min-height: 320px;
   width: 100%;
   height: 340px;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   overflow: hidden;
   background-size: cover;
   background-position: center;
@@ -51,11 +50,11 @@
   align-items: center;
   overflow: hidden;
   padding: 42px 48px;
-  border: 1px solid #f4d7df;
-  border-radius: 26px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
   background-size: cover;
   background-position: center right;
-  box-shadow: 0 18px 45px rgba(171, 83, 110, 0.16);
+  box-shadow: var(--shadow-lg);
   margin-top: 20px;
   margin-left: 10px;
   margin-right: 10px;
@@ -81,28 +80,28 @@
   max-width: 485px;
 }
 
-.hero-eyebrow {
+.dashboard-content .hero-eyebrow {
   display: inline-flex;
   margin-bottom: 14px;
   padding: 7px 12px;
-  border: 1px solid #f5cbd7;
-  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-badge);
   background: rgba(255,255,255,.7);
-  color: #d95f81;
+  color: var(--primary-pink);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.2px;
 }
 
-.hero-content h1{
-  font-family:'Cormorant Garamond',serif;
+.dashboard-content .hero-content h1{
+  font-family: var(--heading-font);
   font-size:46px;
   font-weight:700;
   color:#3f282c;
   line-height:1;
 }
 
-.hero-content h2 {
+.dashboard-content .hero-content h2 {
   margin: 0 0 12px;
   color: #3f282c;
   font-family: "Cormorant Garamond", serif;
@@ -110,7 +109,7 @@
   line-height: 0.95;
 }
 
-.hero-content p {
+.dashboard-content .hero-content p {
   max-width: 405px;
   margin: 0 0 25px;
   color: #72575d;
@@ -124,22 +123,22 @@
   gap: 12px;
 }
 
-.btn-primary,
-.btn-secondary {
+.dashboard-content .btn-primary,
+.dashboard-content .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   min-height: 46px;
   padding: 0 19px;
-  border-radius: 999px;
+  border-radius: var(--radius-badge);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-primary{
+.dashboard-content .btn-primary{
   border:1px solid #ee6c90;
   background:#ee6c90;
   color:#fff;
@@ -147,24 +146,24 @@
   transition:.3s;
 }
 
-.btn-primary:hover{
+.dashboard-content .btn-primary:hover{
   background:#E55E80;
   transform:translateY(-2px);
 }
 
-.btn-secondary{
+.dashboard-content .btn-secondary{
   border:1px solid #f0cbd5;
   background:rgba(255,255,255,.84);
   color:#50353b;
   transition:.3s;
 }
 
-.btn-secondary:hover{
+.dashboard-content .btn-secondary:hover{
   background:rgba(255,255,255,.95);
   transform:translateY(-2px);
 }
 
-.hero-reward {
+.dashboard-content .hero-reward {
   position: absolute;
   right: 30px;
   bottom: 26px;
@@ -180,11 +179,11 @@
   font-size: 12px;
 }
 
-.hero-reward svg {
+.dashboard-content .hero-reward svg {
   color: #ffd166;
 }
 
-.hero-reward strong {
+.dashboard-content .hero-reward strong {
   font-size: 15px;
 }
 
@@ -222,7 +221,7 @@
 
 .dashboard-content .card-box {
   background: #fff;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   padding: 22px 16px;
   text-align: center;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
@@ -290,7 +289,7 @@
 
 .dashboard-content .quick-actions-card {
   background: #fff;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   padding: 22px;
   box-shadow: 0 8px 25px rgba(0,0,0,.05);
   border: 1px solid #F7E6EA;
@@ -362,7 +361,7 @@
   margin-bottom: 24px;
 }
 
-.orders-header h3 {
+.dashboard-content .orders-header h3 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 30px;
   color: #352525;
@@ -395,19 +394,19 @@
   overflow-x: auto;
 }
 
-table {
+.dashboard-content table {
   width: 100%;
   border-collapse: collapse;
   min-width: 750px;
 }
 
-thead {
+.dashboard-content thead {
   background: #FFF4F7;
   
   
 }
 
-thead th {
+.dashboard-content thead th {
   padding: 16px 20px;
   text-align: left;
   font-size: 13px;
@@ -416,16 +415,16 @@ thead th {
   border-bottom: 1px solid #F2E6E9;
 }
 
-tbody tr {
+.dashboard-content tbody tr {
   transition: .3s;
   
 }
 
-tbody tr:hover {
+.dashboard-content tbody tr:hover {
   background: #FFF9FA;
 }
 
-tbody td {
+.dashboard-content tbody td {
   padding: 16px 20px;
   border-bottom: 1px solid #F3ECEE;
   font-size: 14px;
@@ -434,18 +433,18 @@ tbody td {
   transition: .25s;
 }
 
-tbody tr:hover td {
+.dashboard-content tbody tr:hover td {
   color: #222;
   
 }
 
-.product {
+.dashboard-content .product {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.product img {
+.dashboard-content .product img {
   width: 55px;
   height: 55px;
   border-radius: 12px;
@@ -455,40 +454,40 @@ tbody tr:hover td {
   
 }
 
-.product img:hover {
+.dashboard-content .product img:hover {
   transform: scale(1.08);
 }
 
-.product-details h6 {
+.dashboard-content .product-details h6 {
   font-size: 14px;
   color: #352525;
   font-weight: 600;
   margin-bottom: 2px;
 }
 
-.order-id {
+.dashboard-content .order-id {
   font-size: 12px;
   color: #888;
 }
 
-.amount {
+.dashboard-content .amount {
   font-weight: 600;
   color: #352525;
 }
 
-.view-details-btn {
+.dashboard-content .view-details-btn {
   background: #FFF4F7;
   color: #EF6F8F;
   border: 1px solid #F8D3DC;
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.view-details-btn:hover {
+.dashboard-content .view-details-btn:hover {
   background: #EF6F8F;
   color: #fff;
   border-color: #EF6F8F;
@@ -496,7 +495,7 @@ tbody tr:hover td {
 
 /* STATUS TAGS */
 
-.status {
+.dashboard-content .status {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -507,23 +506,23 @@ tbody tr:hover td {
   font-weight: 600;
 }
 
-.status.delivered {
+.dashboard-content .status.delivered {
   background: #EAF8EF;
   color: #1B9C52;
 }
 
-.status.shipped {
+.dashboard-content .status.shipped {
   background: #EAF2FF;
   color: #2563EB;
 }
 
-.status.processing,
-.status.confirmed {
+.dashboard-content .status.processing,
+.dashboard-content .status.confirmed {
   background: #FFF7DF;
   color: #B7791F;
 }
 
-.status.cancelled {
+.dashboard-content .status.cancelled {
   background: #FFE9EC;
   color: #D62839;
 }
@@ -548,7 +547,7 @@ tbody tr:hover td {
   margin-bottom: 24px;
 }
 
-.section-header h3 {
+.dashboard-content .section-header h3 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 30px;
   color: #352525;
@@ -578,7 +577,7 @@ tbody tr:hover td {
   border-color: #F8D3DC;
 }
 
-.wishlist-btn {
+.dashboard-content .wishlist-btn {
   position: absolute;
   top: 22px;
   right: 22px;
@@ -597,7 +596,7 @@ tbody tr:hover td {
   transition: 0.3s;
 }
 
-.wishlist-btn:hover {
+.dashboard-content .wishlist-btn:hover {
   color: #EF6F8F;
   transform: scale(1.1);
 }
@@ -610,18 +609,18 @@ tbody tr:hover td {
   margin-bottom: 12px;
 }
 
-.recommendation-card img {
+.dashboard-content .recommendation-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: 0.3s;
 }
 
-.recommendation-card:hover img {
+.dashboard-content .recommendation-card:hover img {
   transform: scale(1.05);
 }
 
-.recommendation-details h6 {
+.dashboard-content .recommendation-details h6 {
   font-size: 14px;
   color: #352525;
   font-weight: 600;
@@ -631,43 +630,43 @@ tbody tr:hover td {
   text-overflow: ellipsis;
 }
 
-.rating {
+.dashboard-content .rating {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 8px;
 }
 
-.rating .stars {
+.dashboard-content .rating .stars {
   color: #FFC107;
   font-size: 12px;
 }
 
-.rating .reviews-count {
+.dashboard-content .rating .reviews-count {
   font-size: 11px;
   color: #888;
 }
 
-.pricing {
+.dashboard-content .pricing {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
 }
 
-.pricing .price {
+.dashboard-content .pricing .price {
   font-size: 15px;
   font-weight: 700;
   color: #352525;
 }
 
-.pricing .original-price {
+.dashboard-content .pricing .original-price {
   font-size: 12px;
   color: #aaa;
   text-decoration: line-through;
 }
 
-.add-to-cart-btn {
+.dashboard-content .add-to-cart-btn {
   width: 100%;
   background: #EF6F8F;
   color: #fff;
@@ -684,7 +683,7 @@ tbody tr:hover td {
   transition: 0.3s;
 }
 
-.add-to-cart-btn:hover {
+.dashboard-content .add-to-cart-btn:hover {
   background: #E55E80;
   box-shadow: 0 6px 15px rgba(239, 111, 143, 0.25);
 }
@@ -699,12 +698,12 @@ tbody tr:hover td {
 
 .table-responsive::-webkit-scrollbar-track {
   background: #F8F2F4;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
   background: #EF6F8F;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
 }
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
@@ -731,17 +730,17 @@ tbody tr:hover td {
 
 @media (max-width: 992px) {
   .dashboard-hero {
-.dashboard-hero{
-    padding:30px;
-}
+    padding: 30px;
+  }
 
-.hero-content h1{
-    font-size:36px;
-}
+  .hero-content h1 {
+    font-size: 36px;
+  }
+
   .dashboard-cards {
     grid-template-columns: repeat(2, 1fr);
   }
-}}
+}
 
 @media (max-width: 768px) {
   .dashboard-hero {
@@ -749,21 +748,7 @@ tbody tr:hover td {
     padding: 28px 20px;
   }
 
-.dashboard-hero{
-    min-height:auto;
-    padding:28px 20px;
-}
-
-.hero-content h1{
-    font-size:28px;
-}
-
-.dashboard-hero .hero-actions{
-    flex-direction:column;
-    align-items:stretch;
-}
-
-  .dashboard-hero .hero-content h1 {
+  .dashboard-content .hero-content h1 {
     font-size: 28px;
   }
 
@@ -772,8 +757,8 @@ tbody tr:hover td {
     align-items: stretch;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .dashboard-content .btn-primary,
+  .dashboard-content .btn-secondary {
     justify-content: center;
   }
 
@@ -797,7 +782,7 @@ tbody tr:hover td {
 }
 
 .recommendation-material {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--body-font);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
