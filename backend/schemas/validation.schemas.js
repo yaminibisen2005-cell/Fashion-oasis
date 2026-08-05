@@ -5,19 +5,19 @@ export const orderCreateSchema = z.object({
     customerEmail: z.string().email(),
     shippingAddress: z.object({
       fullName: z.string().min(1),
-      phoneNumber: z.string().min(10),
+      phoneNumber: z.string().min(10).regex(/^\d+$/, 'Must be digits'),
       address: z.string().min(1),
       city: z.string().min(1),
       state: z.string().min(1),
-      pincode: z.string().min(5),
+      pincode: z.string().min(5).regex(/^\d+$/, 'Must be digits'),
     }),
     billingAddress: z.object({
       fullName: z.string().min(1),
-      phoneNumber: z.string().min(10),
+      phoneNumber: z.string().min(10).regex(/^\d+$/, 'Must be digits'),
       address: z.string().min(1),
       city: z.string().min(1),
       state: z.string().min(1),
-      pincode: z.string().min(5),
+      pincode: z.string().min(5).regex(/^\d+$/, 'Must be digits'),
     }),
     paymentMethod: z.enum(['credit_card', 'debit_card', 'upi', 'cod']),
     items: z.array(
@@ -40,7 +40,7 @@ export const adminCouponCreateSchema = z.object({
     discount: z.number().positive(),
     expiryDate: z.string().refine((d) => !isNaN(Date.parse(d)) && new Date(d) > new Date(), { message: 'Expiry must be future date' }),
     minOrder: z.number().positive().optional(),
-    status: z.enum(['active', 'inactive', 'expired']).optional(),
+    status: z.enum(['Active', 'Inactive', 'Expired']).optional(),
   })
 });
 
@@ -58,8 +58,13 @@ export const adminToggleStatusSchema = z.object({
 
 export const wishlistToggleSchema = z.object({
   body: z.object({
-    customerEmail: z.string().email(),
-    productId: z.string().min(1)
+    product: z.object({
+      id: z.string().min(1),
+      name: z.string().min(1),
+      image: z.string().url().optional(),
+      price: z.number().positive().optional(),
+      oldPrice: z.number().positive().optional()
+    })
   })
 });
 
@@ -81,7 +86,7 @@ export const updateProfileSchema = z.object({
     lastName: z.string().min(1),
     email: z.string().email(),
     phone: z.string().min(10),
-    gender: z.enum(['male', 'female', 'other']).optional(),
+    gender: z.enum(['Male', 'Female', 'Other']).optional(),
     address: z.string().optional()
   })
 });

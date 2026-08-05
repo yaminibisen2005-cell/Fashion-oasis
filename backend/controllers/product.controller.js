@@ -35,3 +35,8 @@ export const toggleProductStatus = catchAsync(async (req, res) => {
   const product = await productService.toggleProductStatus(req.params.id, req.user);
   res.status(200).json({ success: true, data: product });
 });
+
+export const updateProductStock = catchAsync(async (req, res) => {
+  const product = await productService.updateProductStock(req.params.id, req.body.stock, req.user);
+  res.status(200).json({ success: true, data: product });
+});

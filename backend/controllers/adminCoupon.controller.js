@@ -11,9 +11,7 @@ export const getCoupons = catchAsync(async (req, res) => {
 
 export const createCoupon = catchAsync(async (req, res) => {
   const { code, discount, minOrder, expiryDate, status } = req.body;
-  if (!code || !discount) {
-    return res.status(400).json({ success: false, message: 'Code and discount are required' });
-  }
+
 
   // Check if coupon code already exists
   const existingCoupon = await Coupon.findOne({ code: code.toUpperCase() });
@@ -49,6 +47,10 @@ export const toggleCouponStatus = catchAsync(async (req, res) => {
 
   if (!coupon) {
     return res.status(404).json({ success: false, message: 'Coupon not found' });
+  }
+
+  if (coupon.status === 'Expired') {
+    return res.status(400).json({ success: false, message: 'Cannot toggle expired coupon' });
   }
 
   coupon.status = coupon.status === 'Active' ? 'Inactive' : 'Active';

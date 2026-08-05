@@ -109,6 +109,89 @@ export const getTopProducts = async (sellerId, limit = 4) => {
     .lean();
 };
 
+export const getEarnings = async (sellerId) => {
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const yearStart = new Date(now.getFullYear(), 0, 1);
+
+  const matchSeller = { seller: sellerId, status: { $ne: 'Cancelled' } };
+
+  const [todayRev, monthRev, prevMonthRev, lifetimeRev, totalOrders, monthlySeries, categoryBreakdown] = await Promise.all([
+    Order.aggregate([
+      { $match: { ...matchSeller, createdAt: { $gte: todayStart } } },
+      { $group: { _id: null, total: { $sum: '$totalAmount' }, count: { $sum: 1 } } }
+    ]),
+    Order.aggregate([
+      { $match: { ...matchSeller, createdAt: { $gte: monthStart } } },
+      { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+    ]),
+    Order.aggregate([
+      { $match: { ...matchSeller, createdAt: { $gte: prevMonthStart, $lt: monthStart } } },
+      { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+    ]),
+    Order.aggregate([
+      { $match: matchSeller },
+      { $group: { _id: null, total: { $sum: '$totalAmount' }, count: { $sum: 1 }, avgOrder: { $avg: '$totalAmount' } } }
+    ]),
+    Order.countDocuments({ seller: sellerId }),
+    Order.aggregate([
+      { $match: { ...matchSeller, createdAt: { $gte: yearStart } } },
+      { $group: { _id: { $month: '$createdAt' }, revenue: { $sum: '$totalAmount' }, orders: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]),
+    Order.aggregate([
+      { $match: { seller: sellerId, status: 'Pending' } },
+      { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+    ]),
+  ]);
+
+  const calcTrend = (curr, prev) => {
+    if (!prev) return curr > 0 ? 100 : 0;
+    return Number((((curr - prev) / prev) * 100).toFixed(1));
+  };
+
+  const monthRevVal = monthRev[0]?.total || 0;
+  const prevMonthRevVal = prevMonthRev[0]?.total || 0;
+  const lifetimeRevVal = lifetimeRev[0]?.total || 0;
+  const avgOrderValue = lifetimeRev[0]?.avgOrder || 0;
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthlyData = months.map((label, i) => {
+    const found = monthlySeries.find(s => s._id === i + 1);
+    return { month: label, revenue: found?.revenue || 0, orders: found?.orders || 0 };
+  });
+
+  const topProductsByRevenue = await Product.find({ seller: sellerId, status: 'Active' })
+    .sort({ totalRevenue: -1 })
+    .limit(5)
+    .select('name category totalRevenue totalSold')
+    .lean();
+
+  const totalTopRevenue = topProductsByRevenue.reduce((s, p) => s + (p.totalRevenue || 0), 1);
+  const categoryData = topProductsByRevenue.map(p => ({
+    name: p.name,
+    category: p.category,
+    revenue: p.totalRevenue || 0,
+    sold: p.totalSold || 0,
+    percentage: Number(((p.totalRevenue || 0) / totalTopRevenue * 100).toFixed(1))
+  }));
+
+  return {
+    todayEarnings: todayRev[0]?.total || 0,
+    todayOrders: todayRev[0]?.count || 0,
+    monthEarnings: monthRevVal,
+    monthTrend: calcTrend(monthRevVal, prevMonthRevVal),
+    lifetimeEarnings: lifetimeRevVal,
+    pendingPayout: categoryBreakdown[0]?.total || 0,
+    totalOrders,
+    avgOrderValue: Number(avgOrderValue.toFixed(2)),
+    monthlyData,
+    topProducts: categoryData,
+  };
+};
+
 export const getTopCustomers = async (sellerId, limit = 4) => {
   const matchObj = { seller: sellerId };
   return await Order.aggregate([

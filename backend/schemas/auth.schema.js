@@ -15,3 +15,14 @@ export const adminLoginSchema = z.object({
     password: z.string().min(1, 'Password is required')
   })
 });
+
+export const sellerProfileUpdateSchema = z.object({
+  body: z.object({
+    name: z.string().min(1, 'Name is required').trim().optional(),
+    storeName: z.string().trim().optional(),
+    phone: z.string().trim().optional(),
+    storeEmail: z.string().email('Invalid store email').optional(),
+    storeLogo: z.string().trim().max(3, 'Logo initials max 3 characters').optional(),
+    img: z.string().url('Invalid image URL').optional()
+  })
+});

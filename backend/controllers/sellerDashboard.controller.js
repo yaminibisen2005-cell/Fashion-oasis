@@ -25,3 +25,8 @@ export const getTopCustomers = catchAsync(async (req, res) => {
   const customers = await sellerDashboardService.getTopCustomers(req.user._id, Number(req.query.limit) || 4);
   res.status(200).json({ success: true, data: customers });
 });
+
+export const getEarnings = catchAsync(async (req, res) => {
+  const earnings = await sellerDashboardService.getEarnings(req.user._id);
+  res.status(200).json({ success: true, data: earnings });
+});

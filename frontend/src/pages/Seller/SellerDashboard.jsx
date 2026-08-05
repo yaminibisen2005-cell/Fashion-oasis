@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { fetchSellerDashboardData } from "../../api/seller";
+import { fetchSellerDashboardData, fetchSellerProducts, createSellerProduct, deleteSellerProduct, toggleSellerProductStatus, updateSellerProductStock, fetchSellerOrders, updateSellerOrderStatus, fetchSellerEarnings, loginSeller, fetchSellerReviews, deleteSellerReview, toggleSellerReviewStatus, getSellerProfile, updateSellerProfile } from "../../api/seller.js";
 import {
   FaChartPie,
   FaBox,
@@ -64,7 +64,7 @@ const Stars = ({ count }) => (
 
 const badgeClass = (status) => status.toLowerCase().replace(/\s+/g, "-");
 
-const OverviewSection = ({ onAddProduct }) => {
+const OverviewSection = ({ onAddProduct, reviews = [] }) => {
   const [stats, setStats] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
   const [topSelling, setTopSelling] = useState([]);
@@ -232,7 +232,24 @@ const OverviewSection = ({ onAddProduct }) => {
             <span className="view-all-link" style={{ cursor: "pointer" }}>View All</span>
           </div>
           <div className="dashboard-list">
-             <p style={{ fontSize: 13, color: '#8E7A6B', textAlign: 'center', padding: '20px 0' }}>No reviews yet.</p>
+            {reviews && reviews.length > 0 ? (
+              reviews.slice(0, 3).map((r) => (
+                <div className="list-item" key={r._id || r.id}>
+                  <div className="item-left">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=48&q=80" alt={r.customer} className="avatar" />
+                    <div>
+                      <h4>{r.customer}</h4>
+                      <p>{r.product}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <Stars count={r.rating} />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p style={{ fontSize: 13, color: '#8E7A6B', textAlign: 'center', padding: '20px 0' }}>No reviews yet.</p>
+            )}
           </div>
         </div>
 
@@ -543,7 +560,7 @@ const AddProductSection = ({ addProduct, onBack }) => {
   );
 };
 
-const InventorySection = ({ products }) => {
+const InventorySection = ({ products, updateStock, onAddProduct }) => {
   const [search, setSearch] = useState("");
   const totalStock = products.reduce((s, p) => s + p.stock, 0);
   const lowStock = products.filter((p) => p.stock > 0 && p.stock <= 4).length;
@@ -563,6 +580,19 @@ const InventorySection = ({ products }) => {
     return `${p.stock} (In Stock)`;
   };
 
+  const handleExport = () => {
+    const headers = ["ID,Name,SKU,Category,Price,Stock,Status"];
+    const rows = products.map(p => `${p.id},"${p.name}",${p.sku},${p.category},${p.price},${p.stock},${p.status}`);
+    const csvContent = "data:text/csv;charset=utf-8," + headers.concat(rows).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "inventory_export.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="admin-products-view fade-in">
       <div className="section-title-row">
@@ -571,8 +601,8 @@ const InventorySection = ({ products }) => {
           <p className="subtitle">Manage your product stock levels and updates.</p>
         </div>
         <div style={{ display: "flex", gap: 12 }}>
-          <button className="admin-btn-secondary"><FaDownload /> Export</button>
-          <button className="admin-btn-primary"><FaPlus /> Add Item</button>
+          <button className="admin-btn-secondary" onClick={handleExport}><FaDownload /> Export</button>
+          <button className="admin-btn-primary" onClick={onAddProduct}><FaPlus /> Add Item</button>
         </div>
       </div>
 
@@ -644,7 +674,12 @@ const InventorySection = ({ products }) => {
                   <td><span className={`status-badge-inline ${stockClass(p)}`}>{stockLabel(p)}</span></td>
                   <td>₹{p.price.toLocaleString()}</td>
                   <td>
-                    <button className="tbl-action-btn check" title="Update Stock"><FaSyncAlt /></button>
+                    <button className="tbl-action-btn check" title="Update Stock" onClick={() => {
+                      const newStock = prompt(`Enter new stock level for ${p.name}:`, p.stock);
+                      if (newStock !== null && !isNaN(newStock) && newStock.trim() !== '') {
+                        updateStock(p.id, Number(newStock));
+                      }
+                    }}><FaSyncAlt /></button>
                     <button className="tbl-action-btn delete" title="More"><FaAngleDown /></button>
                   </td>
                 </tr>
@@ -657,7 +692,7 @@ const InventorySection = ({ products }) => {
   );
 };
 
-const OrdersSection = ({ orders }) => {
+const OrdersSection = ({ orders, updateOrderStatus }) => {
   const [tab, setTab] = useState("All Orders");
   const tabs = [
     { name: "All Orders", key: "All" },
@@ -731,9 +766,14 @@ const OrdersSection = ({ orders }) => {
                   <td>{o.product}</td>
                   <td>{o.date}</td>
                   <td><strong>₹{o.amount.toLocaleString()}</strong></td>
-                  <td><span className={`status-badge-inline ${badgeClass(o.status)}`}>{o.status}</span></td>
+                  <td><span className={`status-badge-inline ${o.status.toLowerCase()}`}>{o.status}</span></td>
                   <td>
-                    <button className="tbl-action-btn check" title="View Details"><FaEye /></button>
+                    <button className="tbl-action-btn check" title="Update Status" onClick={() => {
+                      const newStatus = prompt("Enter new status (Pending, Processing, Shipped, Delivered, Cancelled):", o.status);
+                      if (newStatus && ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].includes(newStatus)) {
+                        updateOrderStatus(o.id, newStatus);
+                      }
+                    }}><FaSyncAlt /></button>
                     <button className="tbl-action-btn delete" title="Print Invoice"><FaDownload /></button>
                   </td>
                 </tr>
@@ -746,94 +786,175 @@ const OrdersSection = ({ orders }) => {
   );
 };
 
-const EarningsSection = () => (
-  <div className="admin-analytics-view fade-in">
-    <div className="section-title-row">
-      <div>
-        <h2>Earnings Overview</h2>
-        <p className="subtitle">Track your earnings, payouts and sales performance.</p>
-      </div>
-      <div className="date-picker-box"><FaCalendarAlt /><span>This Year</span></div>
-    </div>
+const EarningsSection = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    <div className="analytics-metrics-grid">
-      <div className="analytics-metric-card">
-        <span>Today's Earnings</span>
-        <h3>₹8,450</h3>
-        <p className="text-pink"><FaArrowUp /> +12% today</p>
-      </div>
-      <div className="analytics-metric-card">
-        <span>This Month</span>
-        <h3>₹78,200</h3>
-        <p className="text-pink"><FaArrowUp /> +5% from last month</p>
-      </div>
-      <div className="analytics-metric-card">
-        <span>Total Earnings</span>
-        <h3>₹3,48,950</h3>
-        <p className="text-pink"><FaWallet /> Lifetime</p>
-      </div>
-      <div className="analytics-metric-card" style={{ borderLeft: "4px solid #D4AF37" }}>
-        <span>Pending Payout</span>
-        <h3>₹12,800</h3>
-        <p><FaClock /> Settles in 3 days</p>
-      </div>
-    </div>
+  useEffect(() => {
+    fetchSellerEarnings()
+      .then(res => {
+        if (res.data?.success) setData(res.data.data);
+        else setError('Failed to load earnings data.');
+      })
+      .catch(() => setError('Unable to reach server. Please try again.'))
+      .finally(() => setLoading(false));
+  }, []);
 
-    <div className="analytics-charts-grid">
-      <div className="analytics-chart-card">
-        <h3>Monthly Revenue</h3>
-        <div className="svg-chart-container-large">
-          <svg viewBox="0 0 500 220" width="100%" height="100%">
-            {[]}
-            <line x1="15" y1="190" x2="490" y2="190" stroke="#F5ECEF" strokeWidth="1" />
-          </svg>
+  if (loading) return (
+    <div className="admin-analytics-view" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
+      <p style={{ color: '#8E7A6B', fontSize: 16 }}>Loading earnings data...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="admin-analytics-view" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
+      <p style={{ color: '#D94C7A', fontSize: 15 }}>{error}</p>
+    </div>
+  );
+
+  const {
+    todayEarnings = 0, todayOrders = 0, monthEarnings = 0, monthTrend = 0,
+    lifetimeEarnings = 0, pendingPayout = 0, totalOrders = 0,
+    avgOrderValue = 0, monthlyData = [], topProducts = []
+  } = data || {};
+
+  const chartH = 160;
+  const barMax = Math.max(...monthlyData.map(d => d.revenue), 1);
+  const barW = 22;
+  const chartW = 500;
+  const spacing = chartW / monthlyData.length;
+
+  const totalTopRevenue = topProducts.reduce((s, p) => s + p.revenue, 0) || 1;
+  const DONUT_COLORS = ['#EF6F8F', '#D94C7A', '#D4AF37', '#8E7A6B', '#a78bfa'];
+
+  const circumference = 2 * Math.PI * 55;
+  let donutOffset = 0;
+  const donutSegments = topProducts.map((p, i) => {
+    const pct = p.revenue / totalTopRevenue;
+    const dash = pct * circumference;
+    const seg = { pct, dash, offset: donutOffset, color: DONUT_COLORS[i % DONUT_COLORS.length] };
+    donutOffset += dash;
+    return seg;
+  });
+
+  return (
+    <div className="admin-analytics-view fade-in">
+      <div className="section-title-row">
+        <div>
+          <h2>Earnings Overview</h2>
+          <p className="subtitle">Track your earnings, payouts and sales performance.</p>
+        </div>
+        <div className="date-picker-box"><FaCalendarAlt /><span>This Year</span></div>
+      </div>
+
+      <div className="analytics-metrics-grid">
+        <div className="analytics-metric-card">
+          <span>Today's Earnings</span>
+          <h3>₹{Number(todayEarnings).toLocaleString()}</h3>
+          <p className="text-pink"><FaShoppingBag /> {todayOrders} orders today</p>
+        </div>
+        <div className="analytics-metric-card">
+          <span>This Month</span>
+          <h3>₹{Number(monthEarnings).toLocaleString()}</h3>
+          <p className="text-pink">
+            {monthTrend >= 0 ? <FaArrowUp /> : '↓'} {Math.abs(monthTrend)}% from last month
+          </p>
+        </div>
+        <div className="analytics-metric-card">
+          <span>Total Earnings</span>
+          <h3>₹{Number(lifetimeEarnings).toLocaleString()}</h3>
+          <p className="text-pink"><FaWallet /> Lifetime</p>
+        </div>
+        <div className="analytics-metric-card" style={{ borderLeft: '4px solid #D4AF37' }}>
+          <span>Pending Payout</span>
+          <h3>₹{Number(pendingPayout).toLocaleString()}</h3>
+          <p><FaClock /> Pending orders</p>
         </div>
       </div>
 
-      <div className="analytics-chart-card">
-        <h3>Sales Report</h3>
-        <div className="donut-chart-wrapper" style={{ gap: 20 }}>
-          <div className="donut-svg-container">
-            <svg viewBox="0 0 150 150" width="150" height="150">
-              <circle cx="75" cy="75" r="55" fill="none" stroke="#F5ECEF" strokeWidth="18" />
-              <circle cx="75" cy="75" r="55" fill="none" stroke="#EF6F8F" strokeWidth="18" strokeDasharray="138 208" strokeDashoffset="0" transform="rotate(-90 75 75)" />
-              <circle cx="75" cy="75" r="55" fill="none" stroke="#D94C7A" strokeWidth="18" strokeDasharray="69 277" strokeDashoffset="-138" transform="rotate(-90 75 75)" />
-              <circle cx="75" cy="75" r="55" fill="none" stroke="#D4AF37" strokeWidth="18" strokeDasharray="52 294" strokeDashoffset="-207" transform="rotate(-90 75 75)" />
-              <circle cx="75" cy="75" r="55" fill="none" stroke="#8E7A6B" strokeWidth="18" strokeDasharray="35 311" strokeDashoffset="-259" transform="rotate(-90 75 75)" />
+      <div className="analytics-charts-grid">
+        <div className="analytics-chart-card">
+          <h3>Monthly Revenue</h3>
+          <div className="svg-chart-container-large">
+            <svg viewBox={`0 0 ${chartW} 220`} width="100%" height="100%">
+              {monthlyData.map((d, i) => {
+                const barH = Math.max((d.revenue / barMax) * chartH, d.revenue > 0 ? 4 : 0);
+                const x = i * spacing + (spacing - barW) / 2;
+                const y = 185 - barH;
+                return (
+                  <g key={i}>
+                    <rect x={x} y={y} width={barW} height={barH}
+                      fill={d.revenue === barMax && barMax > 0 ? '#D94C7A' : '#EF6F8F'} rx="4">
+                      <title>₹{Number(d.revenue).toLocaleString()} ({d.orders} orders)</title>
+                    </rect>
+                    <text x={x + barW / 2} y="205" textAnchor="middle" fill="#8E7A6B" fontSize="9">{d.month}</text>
+                  </g>
+                );
+              })}
+              <line x1="0" y1="190" x2={chartW} y2="190" stroke="#F5ECEF" strokeWidth="1" />
             </svg>
-            <div className="donut-center-lbl"><h5>1,250</h5><span>Items Sold</span></div>
-          </div>
-          <div className="donut-legend">
-            <div className="legend-item"><span className="legend-dot color-pink1" /><span>Necklace</span><strong>40%</strong></div>
-            <div className="legend-item"><span className="legend-dot color-pink2" /><span>Earrings</span><strong>25%</strong></div>
-            <div className="legend-item"><span className="legend-dot color-gold" /><span>Rings</span><strong>19%</strong></div>
-            <div className="legend-item"><span className="legend-dot color-brown" /><span>Other</span><strong>16%</strong></div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div className="summary-cards-grid" style={{ marginTop: 30, gridTemplateColumns: "repeat(4, 1fr)" }}>
-      {[
-        ["Orders", "425"],
-        ["Revenue", "₹3,48,950"],
-        ["Avg Order Value", "₹820"],
-        ["Return Rate", "2.1%"],
-      ].map(([label, val]) => (
-        <div className="summary-card" key={label}>
-          <div className="card-top">
-            <div>
-              <span>{label}</span>
-              <h3>{val}</h3>
+        <div className="analytics-chart-card">
+          <h3>Top Products by Revenue</h3>
+          {topProducts.length === 0 ? (
+            <p style={{ color: '#8E7A6B', fontSize: 13, textAlign: 'center', padding: '40px 0' }}>No product revenue data yet.</p>
+          ) : (
+            <div className="donut-chart-wrapper" style={{ gap: 20 }}>
+              <div className="donut-svg-container">
+                <svg viewBox="0 0 150 150" width="150" height="150">
+                  <circle cx="75" cy="75" r="55" fill="none" stroke="#F5ECEF" strokeWidth="18" />
+                  {donutSegments.map((seg, i) => (
+                    <circle key={i} cx="75" cy="75" r="55" fill="none"
+                      stroke={seg.color} strokeWidth="18"
+                      strokeDasharray={`${seg.dash} ${circumference - seg.dash}`}
+                      strokeDashoffset={-(seg.offset - circumference / 4)}
+                      transform="rotate(-90 75 75)" />
+                  ))}
+                </svg>
+                <div className="donut-center-lbl">
+                  <h5>{topProducts.reduce((s, p) => s + p.sold, 0)}</h5>
+                  <span>Items Sold</span>
+                </div>
+              </div>
+              <div className="donut-legend">
+                {topProducts.map((p, i) => (
+                  <div className="legend-item" key={i}>
+                    <span className="legend-dot" style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }} />
+                    <span title={p.name}>{p.name.length > 18 ? p.name.slice(0, 18) + '…' : p.name}</span>
+                    <strong>{p.percentage}%</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="summary-cards-grid" style={{ marginTop: 30, gridTemplateColumns: 'repeat(4, 1fr)' }}>
+        {[
+          ['Total Orders', totalOrders],
+          ['Total Revenue', `₹${Number(lifetimeEarnings).toLocaleString()}`],
+          ['Avg Order Value', `₹${Number(avgOrderValue).toLocaleString()}`],
+          ['This Month', `₹${Number(monthEarnings).toLocaleString()}`],
+        ].map(([label, val]) => (
+          <div className="summary-card" key={label}>
+            <div className="card-top">
+              <div>
+                <span>{label}</span>
+                <h3>{val}</h3>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-const ReviewsSection = ({ reviews, deleteReview }) => {
+const ReviewsSection = ({ reviews, deleteReview, toggleReviewStatus }) => {
   const [filter, setFilter] = useState("All Reviews");
   const filtered =
     filter === "Pending"
@@ -854,9 +975,11 @@ const ReviewsSection = ({ reviews, deleteReview }) => {
       <div className="list-card" style={{ marginBottom: 30 }}>
         <div style={{ display: "flex", gap: 40, alignItems: "center", flexWrap: "wrap" }}>
           <div style={{ textAlign: "center", minWidth: 140 }}>
-            <h3 style={{ fontSize: 44, fontWeight: 700, color: "var(--primary-color)", marginBottom: 4 }}>4.8</h3>
-            <Stars count={5} />
-            <p className="subtitle" style={{ marginTop: 6 }}>Based on 425 orders</p>
+            <h3 style={{ fontSize: 44, fontWeight: 700, color: "var(--primary-color)", marginBottom: 4 }}>
+              {reviews.length > 0 ? (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).toFixed(1) : "0.0"}
+            </h3>
+            <Stars count={Math.round(reviews.length > 0 ? (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length) : 0)} />
+            <p className="subtitle" style={{ marginTop: 6 }}>Based on {reviews.length} review{reviews.length !== 1 ? 's' : ''}</p>
           </div>
           <div style={{ flex: 1, minWidth: 260 }}>
             {[]}
@@ -899,7 +1022,9 @@ const ReviewsSection = ({ reviews, deleteReview }) => {
                   <td className="review-text-cell">{rev.review}</td>
                   <td><span className={`status-badge-inline ${rev.status === "Approved" ? "active" : "pending"}`}>{rev.status}</span></td>
                   <td>
-                    <button className="tbl-action-btn check" title="Reply"><FaReply /></button>
+                    <button className="tbl-action-btn check" onClick={() => toggleReviewStatus(rev.id)} title="Toggle Status">
+                      {rev.status === "Approved" ? <FaTimes /> : <FaCheck />}
+                    </button>
                     <button className="tbl-action-btn delete" onClick={() => deleteReview(rev.id)} title="Delete"><FaTrash /></button>
                   </td>
                 </tr>
@@ -992,7 +1117,7 @@ const ProfileSection = ({ profile, updateProfile }) => {
                 <label className="profile-form-label">Email Address</label>
                 <div className="input-with-icon">
                   <FaEnvelope className="input-icon" />
-                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <input type="email" value={form.email} disabled style={{ backgroundColor: '#f5f5f5', color: '#999', cursor: 'not-allowed' }} />
                 </div>
               </div>
               <div>
@@ -1026,6 +1151,11 @@ const SettingsSection = ({ settings, updateSettings }) => {
   const [activeTab, setActiveTab] = useState("General");
   const [form, setForm] = useState({ ...settings });
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setForm({ ...settings });
+  }, [settings]);
 
   const tabs = [
     { name: "General", icon: <FaStore /> },
@@ -1036,10 +1166,15 @@ const SettingsSection = ({ settings, updateSettings }) => {
     { name: "Store Policy", icon: <FaFileContract /> },
   ];
 
-  const handleSave = () => {
-    updateSettings(form);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    setError("");
+    try {
+      await updateSettings(form);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to update settings");
+    }
   };
 
   return (
@@ -1109,6 +1244,7 @@ const SettingsSection = ({ settings, updateSettings }) => {
               </div>
             )}
             <div className="settings-action-row">
+              {error && <span className="save-error-msg" style={{ color: "#D94C7A", marginRight: 15 }}>{error}</span>}
               {saved && <span className="save-success-msg">Settings saved successfully!</span>}
               <button type="button" className="admin-btn-primary" onClick={handleSave}><FaSave /> Save Changes</button>
             </div>
@@ -1122,6 +1258,10 @@ const SettingsSection = ({ settings, updateSettings }) => {
 const SellerDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 992);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("sellerToken"));
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -1133,12 +1273,37 @@ const SellerDashboard = () => {
     contactNumber: "+91 98765 43210",
   });
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "john@fashionoasis.store",
+    name: "Seller",
+    email: "",
     storeName: "Fashion Oasis",
-    phone: "+91 98765 43210",
+    phone: "",
     img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80",
   });
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+    try {
+      const res = await loginSeller(loginForm.email, loginForm.password);
+      if (res.data?.success) {
+        localStorage.setItem('sellerToken', res.data.data.token);
+        const u = res.data.data.user;
+        setProfile(prev => ({ ...prev, name: u.name || 'Seller', email: u.email || '' }));
+        setIsAuthenticated(true);
+      }
+    } catch (err) {
+      setLoginError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('sellerToken');
+    setIsAuthenticated(false);
+    setLoginForm({ email: '', password: '' });
+  };
 
   const sidebarLinks = [
     { name: "Dashboard", key: "dashboard", icon: <FaChartPie /> },
@@ -1152,11 +1317,205 @@ const SellerDashboard = () => {
     { name: "Settings", key: "settings", icon: <FaCog /> },
   ];
 
-  const addProduct = (p) => setProducts([p, ...products]);
-  const deleteProduct = (id) => setProducts(products.filter((p) => p.id !== id));
-  const toggleStatus = (id) =>
-    setProducts(products.map((p) => (p.id === id ? { ...p, status: p.status === "Active" ? "Inactive" : "Active" } : p)));
-  const deleteReview = (id) => setReviews(reviews.filter((r) => r.id !== id));
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    fetchSellerProducts().then((res) => {
+      const formatted = res.data.data.map(p => ({ ...p, id: p._id }));
+      setProducts(formatted);
+    }).catch(console.error);
+
+    fetchSellerOrders().then((res) => {
+      const formatted = res.data.data.map(o => ({
+        id: o._id,
+        orderId: o.orderId || o._id.substring(0, 8),
+        customer: o.customer?.name || o.customerEmail || 'Guest',
+        product: o.items?.[0]?.productName + (o.items?.length > 1 ? ` (+${o.items.length - 1} more)` : ''),
+        date: new Date(o.createdAt).toLocaleDateString(),
+        amount: o.totalAmount,
+        status: o.status
+      }));
+      setOrders(formatted);
+    }).catch(console.error);
+
+    fetchSellerReviews().then((res) => {
+      if (res.data?.success) {
+        setReviews(res.data.data.map(r => ({ ...r, id: r._id })));
+      }
+    }).catch(console.error);
+
+    getSellerProfile().then((res) => {
+      if (res.data?.success) {
+        const u = res.data.data;
+        setProfile(prev => ({ 
+          ...prev, 
+          name: u.name || 'Seller', 
+          email: u.email || '', 
+          storeName: u.storeName || 'Fashion Oasis',
+          phone: u.phone || '',
+          img: u.avatar || prev.img
+        }));
+        setSettings({
+          storeName: u.storeName || "Fashion Oasis",
+          storeLogo: u.storeLogo || "FO",
+          storeEmail: u.storeEmail || "seller@fashionoasis.store",
+          contactNumber: u.phone || "+91 98765 43210",
+        });
+      }
+    }).catch(console.error);
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #FFECF5 0%, #FFF5F8 100%)' }}>
+        <div style={{ background: '#fff', borderRadius: 16, padding: '48px 40px', boxShadow: '0 8px 32px rgba(217,76,122,0.12)', width: '100%', maxWidth: 400 }}>
+          <div style={{ textAlign: 'center', marginBottom: 32 }}>
+            <h2 style={{ fontFamily: 'var(--heading-font, serif)', color: '#D94C7A', fontSize: 28, marginBottom: 8 }}>Seller Login</h2>
+            <p style={{ color: '#8E7A6B', fontSize: 14 }}>Sign in to your Fashion Oasis seller account</p>
+          </div>
+          {loginError && <div style={{ background: '#FEE2E2', color: '#D94C7A', padding: '10px 14px', borderRadius: 8, marginBottom: 20, fontSize: 13 }}>{loginError}</div>}
+          <form onSubmit={handleLogin}>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#4A3728', marginBottom: 6 }}>Email</label>
+              <input type="email" required value={loginForm.email}
+                onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))}
+                placeholder="seller@example.com"
+                style={{ width: '100%', padding: '12px 16px', borderRadius: 8, border: '1px solid #F5ECEF', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ marginBottom: 28 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#4A3728', marginBottom: 6 }}>Password</label>
+              <input type="password" required value={loginForm.password}
+                onChange={e => setLoginForm(p => ({ ...p, password: e.target.value }))}
+                placeholder="••••••••"
+                style={{ width: '100%', padding: '12px 16px', borderRadius: 8, border: '1px solid #F5ECEF', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <button type="submit" disabled={loginLoading}
+              style={{ width: '100%', padding: '14px', background: 'linear-gradient(135deg, #D94C7A, #EF6F8F)', color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: loginLoading ? 'not-allowed' : 'pointer', opacity: loginLoading ? 0.7 : 1 }}>
+              {loginLoading ? 'Signing in…' : 'Sign In'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+
+
+  const addProduct = async (p) => {
+    try {
+      const res = await createSellerProduct(p);
+      const newProd = { ...res.data.data, id: res.data.data._id };
+      setProducts([newProd, ...products]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteProduct = async (id) => {
+    try {
+      await deleteSellerProduct(id);
+      setProducts(products.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const toggleStatus = async (id) => {
+    try {
+      await toggleSellerProductStatus(id);
+      setProducts(products.map((p) => (p.id === id ? { ...p, status: p.status === "Active" ? "Inactive" : "Active" } : p)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateStock = async (id, stock) => {
+    try {
+      await updateSellerProductStock(id, stock);
+      setProducts(products.map((p) => (p.id === id ? { ...p, stock } : p)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateOrderStatus = async (id, status) => {
+    try {
+      await updateSellerOrderStatus(id, status);
+      setOrders(orders.map((o) => (o.id === id ? { ...o, status } : o)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteReview = async (id) => {
+    try {
+      await deleteSellerReview(id);
+      setReviews(reviews.filter((r) => r.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleToggleReviewStatus = async (id) => {
+    try {
+      await toggleSellerReviewStatus(id);
+      setReviews(reviews.map((r) => (r.id === id ? { ...r, status: r.status === "Approved" ? "Pending" : "Approved" } : r)));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateProfile = async (p) => {
+    try {
+      const res = await updateSellerProfile({
+        name: p.name,
+        email: p.email,
+        storeName: p.storeName,
+        phone: p.phone,
+        img: p.img
+      });
+      if (res.data?.success) {
+        const u = res.data.data;
+        setProfile(prev => ({ 
+          ...prev, 
+          name: u.name || 'Seller', 
+          email: u.email || '', 
+          storeName: u.storeName || 'Fashion Oasis',
+          phone: u.phone || '',
+          img: u.avatar || prev.img
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateSettings = async (s) => {
+    try {
+      const res = await updateSellerProfile({
+        storeName: s.storeName,
+        storeLogo: s.storeLogo,
+        storeEmail: s.storeEmail,
+        phone: s.contactNumber
+      });
+      if (res.data?.success) {
+        const u = res.data.data;
+        setSettings({
+          storeName: u.storeName || "Fashion Oasis",
+          storeLogo: u.storeLogo || "FO",
+          storeEmail: u.storeEmail || "seller@fashionoasis.store",
+          contactNumber: u.phone || "+91 98765 43210",
+        });
+        setProfile(prev => ({
+          ...prev,
+          storeName: u.storeName || 'Fashion Oasis',
+          phone: u.phone || ''
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
 
   const renderSection = () => {
     switch (activeSection) {
@@ -1172,20 +1531,20 @@ const SellerDashboard = () => {
       case "add-product":
         return <AddProductSection addProduct={addProduct} onBack={() => setActiveSection("products")} />;
       case "inventory":
-        return <InventorySection products={products} />;
+        return <InventorySection products={products} updateStock={updateStock} onAddProduct={() => setActiveSection("add-product")} />;
       case "orders":
-        return <OrdersSection orders={orders} />;
+        return <OrdersSection orders={orders} updateOrderStatus={updateOrderStatus} />;
       case "earnings":
         return <EarningsSection />;
       case "reviews":
-        return <ReviewsSection reviews={reviews} deleteReview={deleteReview} />;
+        return <ReviewsSection reviews={reviews} deleteReview={handleDeleteReview} toggleReviewStatus={handleToggleReviewStatus} />;
       case "profile":
-        return <ProfileSection profile={profile} updateProfile={(p) => setProfile((prev) => ({ ...prev, ...p }))} />;
+        return <ProfileSection profile={profile} updateProfile={handleUpdateProfile} />;
       case "settings":
-        return <SettingsSection settings={settings} updateSettings={setSettings} />;
+        return <SettingsSection settings={settings} updateSettings={handleUpdateSettings} />;
       default:
         return (
-          <OverviewSection onAddProduct={() => setActiveSection("add-product")} />
+          <OverviewSection onAddProduct={() => setActiveSection("add-product")} reviews={reviews} />
         );
     }
   };
@@ -1246,7 +1605,7 @@ const SellerDashboard = () => {
           </ul>
 
           <div className="sidebar-footer">
-            <button className="sidebar-link logout-btn">
+            <button className="sidebar-link logout-btn" onClick={handleLogout}>
               <FaSignOutAlt />
               <span>Logout</span>
             </button>

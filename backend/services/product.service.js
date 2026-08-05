@@ -41,3 +41,16 @@ export const toggleProductStatus = async (productId, user) => {
   await product.save();
   return product;
 };
+
+export const updateProductStock = async (productId, stock, user) => {
+  const product = await Product.findById(productId);
+  if (!product) throw new AppError('Product not found', 404);
+  
+  if (user && user.role === 'seller' && product.seller?.toString() !== user._id.toString()) {
+    throw new AppError('Not authorized', 403);
+  }
+  
+  product.stock = stock;
+  await product.save();
+  return product;
+};

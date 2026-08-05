@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
     role: { type: String, enum: ['customer', 'seller', 'admin', 'super-admin'], default: 'customer' },
     avatar: { type: String, default: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80' },
+    storeName: { type: String, trim: true },
+    phone: { type: String, trim: true },
+    storeEmail: { type: String, lowercase: true, trim: true },
+    storeLogo: { type: String, trim: true, maxlength: 3 },
     status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }
   },
   { timestamps: true }
@@ -19,8 +23,8 @@ userSchema.pre('save', async function () {
 });
 
 
-userSchema.methods.comparePassword = async function (candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
 export default mongoose.model('User', userSchema);
