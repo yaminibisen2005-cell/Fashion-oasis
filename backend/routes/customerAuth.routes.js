@@ -5,7 +5,10 @@ import {
   forgotPassword,
   resetPassword,
   getProfile, 
-  updateProfile 
+  updateProfile,
+  updatePassword,
+  deleteAccount,
+  updateTwoFactor // <-- IMPORT THIS
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { customerRegisterSchema, customerLoginSchema } from '../schemas/customer.schema.js';
@@ -22,5 +25,10 @@ router.put('/reset-password/:token', resetPassword);
 // Profile routes
 router.get('/profile', getProfile);
 router.put('/profile', updateProfile);
+
+// Account Settings Management routes
+router.put('/password', updatePassword);
+router.put('/two-factor', updateTwoFactor); // <-- ADD THIS ROUTE
+router.delete('/account', deleteAccount);
 
 export default router;

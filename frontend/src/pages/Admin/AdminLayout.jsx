@@ -34,7 +34,7 @@ import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
 
 import "./AdminLayout.css";
-
+import logo from "../../assets/logo.png";
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -105,8 +105,8 @@ const AdminLayout = () => {
   const [settings, setSettings] = useState({
     storeName: "Fashion Oasis",
     storeLogo: "FO",
-    storeEmail: "info@fashionoasis.com",
-    contactNumber: "+91 98765 43210",
+    storeEmail: "fashionoasis082@gmail.com",
+    contactNumber: "+91 7739479666",
   });
 
   const [profile, setProfile] = useState(() => {
@@ -252,11 +252,7 @@ const AdminLayout = () => {
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
           <div className="header-logo-group">
-            <span className="logo-initial">{settings.storeLogo || "FO"}</span>
-            <div>
-              <h3>{settings.storeName || "FASHION OASIS"}</h3>
-              <p>Timeless Elegance</p>
-            </div>
+            <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
           </div>
         </div>
 

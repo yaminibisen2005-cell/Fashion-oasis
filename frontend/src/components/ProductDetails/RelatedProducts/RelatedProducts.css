@@ -46,7 +46,7 @@
 
 
 
-.divider{
+.fo-divider{
 
   width: 60px;
 
@@ -132,7 +132,7 @@
 
 
 
-  .divider{
+  .fo-divider{
 
     width: 50px;
 
@@ -160,5 +160,10 @@
 
   }
 
+}
+
+.related-product-card-wrapper{
+width: 100%;
+max-width: 320px;
 }
 

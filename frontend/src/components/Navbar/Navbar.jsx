@@ -17,16 +17,13 @@ import {
 } from "react-icons/fa";
 
 const serviceCategories = [
-  "Necklace",
-  "Earrings",
-  "Rings",
-  "Bracelets",
-  "Jewellery Sets",
-  "Personalized Gifts",
-  "Couple Gifts",
-  "Best Sellers",
-  "New Arrivals",
-  "View All Products",
+  { name: "All Products", path: "/shop" },
+  { name: "Necklace", category: "necklace" },
+  { name: "Earrings", category: "earrings" },
+  { name: "Rings", category: "rings" },
+  { name: "Bracelets", category: "bracelets" },
+  { name: "Mangalsutra", category: "mangalsutra" },
+  { name: "Wedding", category: "wedding" },
 ];
 
 const Navbar = () => {
@@ -79,7 +76,7 @@ const Navbar = () => {
     <header className="navbar-wrapper">
 
       <nav
-        className={`navbar ${scrolled ? "scrolled" : ""} ${
+        className={`fo-navbar ${scrolled ? "scrolled" : ""} ${
           !isHomePage ? "solid" : ""
         }`}
       >
@@ -96,13 +93,7 @@ const Navbar = () => {
               alt="Fashion Oasis"
             />
 
-            <div className="brand-text">
-
-              <h1>FASHION OASIS</h1>
-
-              <p>PREMIUM JEWELLERY</p>
-
-            </div>
+          
 
           </Link>
                     {/* ==========================
@@ -134,22 +125,29 @@ const Navbar = () => {
               <FaChevronDown />
 
               <div
-                className={`dropdown-menu ${
+                className={`fo-dropdown-menu ${
                   serviceOpen ? "show" : ""
                 }`}
               >
 
-                {serviceCategories.map((item, index) => (
-
-                  <Link
-                    key={index}
-                    className="dropdown-item"
-                    to={`/collections?category=${encodeURIComponent(item)}`}
-                  >
-                    {item}
-                  </Link>
-
-                ))}
+                {serviceCategories.map((item, index) => {
+                  const to = item.path 
+                    ? item.path 
+                    : item.category 
+                      ? `/shop?category=${item.category}` 
+                      : item.filter 
+                        ? `/shop?filter=${item.filter}` 
+                        : '/shop';
+                  return (
+                    <Link
+                      key={index}
+                      className="fo-dropdown-item"
+                      to={to}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
 
               </div>
 
@@ -309,20 +307,25 @@ const Navbar = () => {
 
               <ul className="mobile-dropdown">
 
-                {serviceCategories.map((item, index) => (
-
-                  <li key={index}>
-
-                    <Link
-                      to={`/collections?category=${encodeURIComponent(item)}`}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {item}
-                    </Link>
-
-                  </li>
-
-                ))}
+                {serviceCategories.map((item, index) => {
+                  const to = item.path 
+                    ? item.path 
+                    : item.category 
+                      ? `/shop?category=${item.category}` 
+                      : item.filter 
+                        ? `/shop?filter=${item.filter}` 
+                        : '/shop';
+                  return (
+                    <li key={index}>
+                      <Link
+                        to={to}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
 
               </ul>
 

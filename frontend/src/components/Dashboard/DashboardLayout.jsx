@@ -1,4 +1,5 @@
-import "./DashboardLayout.css";
+ import "./DashboardLayout.css";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import sidebarbg from "../../assets/sidebarbg.png"
 
@@ -10,16 +11,30 @@ import {
   FaStar,
   FaCog,
   FaSignOutAlt,
+  FaCamera,
 } from "react-icons/fa";
 
 import logo from "../../assets/logo.png"; // Change to your logo
 
-function DashboardLayout({ children ,showProfile = true}) {
+function DashboardLayout({ children, showProfile = true }) {
+  const [userName, setUserName] = useState("User");
+
+  useEffect(() => {
+    // Fetch logged-in user details from local storage
+    const storedUser = JSON.parse(localStorage.getItem("customerInfo"));
+    if (storedUser) {
+      // Combines firstName and lastName if both exist, or falls back appropriately
+      const fullName = `${storedUser.firstName || ""} ${storedUser.lastName || ""}`.trim();
+      if (fullName) {
+        setUserName(fullName);
+      }
+    }
+  }, []);
+
   return (
     <div className="dashboard-layout">
 
       {/* Sidebar */}
-
      <aside
   className="sidebar"
   style={{
@@ -31,16 +46,20 @@ function DashboardLayout({ children ,showProfile = true}) {
 
   {showProfile ? (
     <>
-      <img
-        src="https://i.pravatar.cc/150?img=12"
-        alt="Profile"
-        className="sidebar-profile"
-      />
+  <div className="profile-wrapper">
+    <img
+      src="https://i.pravatar.cc/150?img=12"
+      alt="Profile"
+      className="sidebar-profile"
+    />
 
-      <h3>Shwet Samrat</h3>
+    <button className="edit-profile-btn">
+      <FaCamera />
+    </button>
+  </div>
 
-      
-    </>
+  <h3>{userName}</h3>
+</>
   ) : (
     <>
       <img src={logo} alt="Fashion Oasis" />

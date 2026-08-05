@@ -13,8 +13,6 @@ const Checkout = () => {
     setShippingAddress,
     sameAsShipping,
     setSameAsShipping,
-    paymentMethod,
-    setPaymentMethod,
     placeOrder,
   } = useContext(ShopContext);
 
@@ -335,60 +333,6 @@ const Checkout = () => {
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Payment Method */}
-              <div className="checkout-card">
-                <h2>Payment Method</h2>
-                <div className="payment-options">
-                  <label className="payment-radio-label">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="upi"
-                      checked={paymentMethod === "upi"}
-                      onChange={() => setPaymentMethod("upi")}
-                    />
-                    <span className="radio-circle"></span>
-                    <span className="payment-text">UPI / QR Code</span>
-                  </label>
-
-                  <label className="payment-radio-label">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="card"
-                      checked={paymentMethod === "card"}
-                      onChange={() => setPaymentMethod("card")}
-                    />
-                    <span className="radio-circle"></span>
-                    <span className="payment-text">Credit / Debit Card</span>
-                  </label>
-
-                  <label className="payment-radio-label">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="netbanking"
-                      checked={paymentMethod === "netbanking"}
-                      onChange={() => setPaymentMethod("netbanking")}
-                    />
-                    <span className="radio-circle"></span>
-                    <span className="payment-text">Net Banking</span>
-                  </label>
-
-                  <label className="payment-radio-label">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={paymentMethod === "cod"}
-                      onChange={() => setPaymentMethod("cod")}
-                    />
-                    <span className="radio-circle"></span>
-                    <span className="payment-text">Cash on Delivery</span>
-                  </label>
-                </div>
               </div>
 
             </div>

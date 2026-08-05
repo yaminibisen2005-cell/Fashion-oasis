@@ -44,21 +44,60 @@ display:block;
 button{
 cursor:pointer;
 } */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #EF6F8F;
-  --secondary-color: #D94C7A;
-  --background-color: #FFF8FA;
-  --accent-color: #D4AF37;
-  --heading-font: 'Playfair Display', serif;
+  /* Fashion Oasis Brand Colors */
+  --primary-pink: #EA6B8D;
+  --hover-pink: #D95579;
+  --gold-accent: #D4A73A;
+  --heading-color: #3F2B2F;
+  --body-text: #6F5A5F;
+  --light-background: #FFF9F8;
+  --card-background: #FFFFFF;
+  --border-color: #F3DDE3;
+  --white: #FFFFFF;
+
+  /* Typography */
+  --heading-font: 'Cormorant Garamond', serif;
   --body-font: 'Poppins', sans-serif;
-  --text-dark: #34211D;
-  --text-muted: #8E7A6B;
-  --white: #ffffff;
-  --card-shadow: 0 10px 30px rgba(239, 111, 143, 0.06);
-  --border-color: #F7E3E7;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spacing System */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 48px;
+  --spacing-6xl: 64px;
+
+  /* Section Spacing */
+  --section-padding-top: 80px;
+  --section-padding-bottom: 80px;
+  --card-padding: 24px;
+  --container-width: 1320px;
+
+  /* Border Radius System */
+  --radius-card: 24px;
+  --radius-btn: 999px;
+  --radius-input: 16px;
+  --radius-badge: 999px;
+  --radius-sm: 8px;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 18px 45px rgba(239, 111, 143, 0.18);
+  --shadow-luxury: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.35s ease;
+  --transition-slow: 0.5s ease;
 }
 
 * {
@@ -68,14 +107,14 @@ cursor:pointer;
 }
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-dark);
+  background-color: var(--light-background);
+  color: var(--body-text);
   font-family: var(--body-font);
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--heading-font);
-  color: var(--text-dark);
+  color: var(--heading-color);
 }
 

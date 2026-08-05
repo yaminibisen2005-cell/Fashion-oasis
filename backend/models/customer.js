@@ -40,6 +40,20 @@ const customerSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
+  // ADD THIS FIELD FOR 2FA
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
+  wishlist: [
+    {
+      id: { type: String },
+      name: { type: String },
+      image: { type: String },
+      price: { type: mongoose.Schema.Types.Mixed },
+      oldPrice: { type: mongoose.Schema.Types.Mixed }
+    }
+  ],
   resetPasswordToken: String,
   resetPasswordExpire: Date
 }, {

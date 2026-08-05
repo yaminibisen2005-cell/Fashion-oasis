@@ -7,6 +7,7 @@ const AddProductSection = ({ addProduct, categories }) => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
+    material: "Gold Plated",
     price: "",
     stock: "",
     description: "",
@@ -20,7 +21,7 @@ const AddProductSection = ({ addProduct, categories }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.category || !formData.price || !formData.stock) {
+    if (!formData.name || !formData.category || !formData.material || !formData.price || !formData.stock) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -29,6 +30,7 @@ const AddProductSection = ({ addProduct, categories }) => {
       id: Date.now(),
       name: formData.name,
       category: formData.category,
+      material: formData.material,
       price: parseFloat(formData.price),
       stock: parseInt(formData.stock),
       description: formData.description,
@@ -86,6 +88,25 @@ const AddProductSection = ({ addProduct, categories }) => {
               </div>
 
               <div className="form-group">
+                <label>Material <span className="text-danger">*</span></label>
+                <select
+                  name="material"
+                  value={formData.material}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="Gold Plated">Gold Plated</option>
+                  <option value="Rose Gold">Rose Gold</option>
+                  <option value="Silver">Silver</option>
+                  <option value="Pearl">Pearl</option>
+                  <option value="Diamond">Diamond</option>
+                  <option value="Kundan">Kundan</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-row-2">
+              <div className="form-group">
                 <label>Price (₹) <span className="text-danger">*</span></label>
                 <input
                   type="number"
@@ -97,9 +118,7 @@ const AddProductSection = ({ addProduct, categories }) => {
                   min="0"
                 />
               </div>
-            </div>
 
-            <div className="form-row-2">
               <div className="form-group">
                 <label>Stock Count <span className="text-danger">*</span></label>
                 <input
@@ -112,17 +131,17 @@ const AddProductSection = ({ addProduct, categories }) => {
                   min="0"
                 />
               </div>
+            </div>
 
-              <div className="form-group">
-                <label>Image URL (Optional)</label>
-                <input
-                  type="text"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://images.unsplash.com/..."
-                />
-              </div>
+            <div className="form-group full-width">
+              <label>Image URL (Optional)</label>
+              <input
+                type="text"
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+                placeholder="https://images.unsplash.com/..."
+              />
             </div>
 
             <div className="form-group full-width">

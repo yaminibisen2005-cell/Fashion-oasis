@@ -183,6 +183,7 @@ export const resetPassword = async (req, res, next) => {
 };
 
 // @desc    Get current customer profile by email query
+ // Inside getProfile, update the response object to include twoFactorEnabled:
 export const getProfile = async (req, res, next) => {
   try {
     const email = req.query.email;
@@ -203,7 +204,8 @@ export const getProfile = async (req, res, next) => {
         email: customer.email,
         phone: customer.phone || '',
         gender: customer.gender || '',
-        address: customer.address || ''
+        address: customer.address || '',
+        twoFactorEnabled: customer.twoFactorEnabled || false
       }
     });
   } catch (error) {
@@ -244,6 +246,85 @@ export const updateProfile = async (req, res, next) => {
         gender: customer.gender,
         address: customer.address
       }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update customer password
+export const updatePassword = async (req, res, next) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+
+    if (!email || !currentPassword || !newPassword) {
+      return next(new AppError('Please provide email, current password, and new password', 400));
+    }
+
+    const customer = await Customer.findOne({ email }).select('+password');
+
+    if (!customer || !(await customer.comparePassword(currentPassword))) {
+      return next(new AppError('Your current password is incorrect', 401));
+    }
+
+    customer.password = newPassword;
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete customer account
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const email = req.body.email || req.query.email;
+
+    if (!email) {
+      return next(new AppError('Email is required to delete account', 400));
+    }
+
+    const customer = await Customer.findOneAndDelete({ email });
+
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Account deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update Two-Factor Authentication status
+// @route   PUT /api/v1/customer/two-factor
+export const updateTwoFactor = async (req, res, next) => {
+  try {
+    const { email, twoFactorEnabled } = req.body;
+
+    if (!email) {
+      return next(new AppError('Email is required', 400));
+    }
+
+    const customer = await Customer.findOne({ email });
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    customer.twoFactorEnabled = twoFactorEnabled;
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Two-factor authentication ${twoFactorEnabled ? 'enabled' : 'disabled'} successfully`,
+      data: { twoFactorEnabled: customer.twoFactorEnabled }
     });
   } catch (error) {
     next(error);
