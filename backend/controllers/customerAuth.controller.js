@@ -249,3 +249,54 @@ export const updateProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Update customer password
+export const updatePassword = async (req, res, next) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+
+    if (!email || !currentPassword || !newPassword) {
+      return next(new AppError('Please provide email, current password, and new password', 400));
+    }
+
+    const customer = await Customer.findOne({ email }).select('+password');
+
+    if (!customer || !(await customer.comparePassword(currentPassword))) {
+      return next(new AppError('Your current password is incorrect', 401));
+    }
+
+    customer.password = newPassword;
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete customer account
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const email = req.body.email || req.query.email;
+
+    if (!email) {
+      return next(new AppError('Email is required to delete account', 400));
+    }
+
+    const customer = await Customer.findOneAndDelete({ email });
+
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Account deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
