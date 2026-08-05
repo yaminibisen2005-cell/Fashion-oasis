@@ -1,51 +1,44 @@
+ import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Orders.css";
-
-import product7 from "../../assets/product7.jpg";
-import product8 from "../../assets/product8.jpg";
-import product5 from "../../assets/product5.jpg";
-import product6 from "../../assets/product6.jpg";
-
-const orders = [
-  {
-    id: "#FO1001",
-    product: "Necklace",
-    image: product5,
-    date: "18 Jul 2026",
-    price: "₹2,499",
-    status: "Delivered",
-    material: "Gold Plated",
-  },
-  {
-    id: "#FO1002",
-    product: "Key-chain",
-    image: product8,
-    date: "16 Jul 2026",
-    price: "₹3,999",
-    status: "Shipped",
-    material: "Silver",
-  },
-  {
-    id: "#FO1003",
-    product: "Rings",
-    image: product6,
-    date: "12 Jul 2026",
-    price: "₹1,899",
-    status: "Confirmed",
-    material: "Diamond",
-  },
-  {
-    id: "#FO1004",
-    product: "Decorative Flower",
-    image: product7,
-    date: "10 Jul 2026",
-    price: "₹5,299",
-    status: "Cancelled",
-    material: "Kundan",
-  },
-];
+import product5 from "../../assets/product5.jpg"; // Fallback image
 
 function Orders() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const customerEmail = localStorage.getItem("customerEmail");
+        
+        if (!customerEmail) {
+          setErrorMessage("Please log in to view your orders.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`http://localhost:5000/api/v1/orders?email=${customerEmail}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch orders");
+        }
+
+        // Handle array response structure safely
+        const ordersList = Array.isArray(data) ? data : data.orders || data.data || [];
+        setOrders(ordersList);
+      } catch (err) {
+        setErrorMessage(err.message || "Could not load orders.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="orders-page">
@@ -55,37 +48,55 @@ function Orders() {
           <p>Track and manage all your purchases.</p>
         </div>
 
-        {orders.map((item) => (
-          <div className="order-card" key={item.id}>
+        {loading && <p style={{ textAlign: "center", padding: "20px" }}>Loading your orders...</p>}
+        {errorMessage && <p style={{ color: "red", textAlign: "center", padding: "20px" }}>{errorMessage}</p>}
 
-            <div className="order-left">
+        {!loading && !errorMessage && orders.length === 0 && (
+          <p style={{ textAlign: "center", padding: "20px", color: "#777" }}>You have not placed any orders yet.</p>
+        )}
 
-              <img src={item.image} alt={item.product} />
+        {!loading && orders.map((item, index) => {
+          // Extract proper fields depending on backend naming convention
+          const orderId = item._id ? `#${item._id.slice(-6).toUpperCase()}` : `#FO100${index + 1}`;
+          const productTitle = item.items && item.items[0] ? item.items[0].productName : "Jewellery Item";
+          const productPrice = item.totalAmount ? `₹${item.totalAmount.toLocaleString()}` : "₹0";
+          const orderDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "Recent";
+          const orderStatus = item.status || "Confirmed";
+          const orderImage = item.items && item.items[0] && item.items[0].image ? item.items[0].image : product5;
 
-              <div className="order-info">
-                <h4>{item.product}</h4>
-                <p className="order-material">Material: {item.material}</p>
-                <p>Order ID: {item.id}</p>
-                <p>{item.date}</p>
-                <h3>{item.price}</h3>
+          return (
+            <div className="order-card" key={item._id || index}>
+
+              <div className="order-left">
+
+                <img src={orderImage} alt={productTitle} />
+
+                <div className="order-info">
+                  <h4>{productTitle}</h4>
+                  <p className="order-material">Material: Handcrafted Luxury</p>
+                  <p>Order ID: {orderId}</p>
+                  <p>{orderDate}</p>
+                  <h3>{productPrice}</h3>
+                </div>
+
+              </div>
+
+              <div className="order-right">
+
+                <span
+                  className={`status ${orderStatus.toLowerCase()}`}
+                >
+                  {orderStatus}
+                </span>
+
+                <button>View Details</button>
+
               </div>
 
             </div>
+          );
+        })}
 
-            <div className="order-right">
-
-              <span
-                className={`status ${item.status.toLowerCase()}`}
-              >
-                {item.status}
-              </span>
-
-              <button>View Details</button>
-
-            </div>
-
-          </div>
-        ))}
       </div>
     </DashboardLayout>
   );

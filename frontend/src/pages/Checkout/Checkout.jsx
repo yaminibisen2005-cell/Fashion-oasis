@@ -20,6 +20,9 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Payment method must be lowercase to match backend Zod schema enum ['credit_card', 'debit_card', 'upi', 'cod']
+  const paymentMethod = "cod"; 
+
   // Independent local state for billing address to prevent any context bleeding
   const [localBillingAddress, setLocalBillingAddress] = useState({
     fullName: "",
@@ -50,6 +53,11 @@ const Checkout = () => {
     const { name, value } = e.target;
     setLocalBillingAddress((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Fallback dataset if cart is empty
+  const displayItems = cart.length > 0 ? cart : [
+    { product: { name: "Rose Quartz Necklace", price: 1299, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100&q=80" }, quantity: 1 }
+  ];
 
   const handlePlaceOrderSubmit = async (e) => {
     e.preventDefault();
@@ -86,6 +94,9 @@ const Checkout = () => {
             pincode: localBillingAddress.pincode,
           };
 
+      // Calculate total precisely to pass backend Zod refiner validation check
+      const calculatedTotal = formattedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
       const orderPayload = {
         customerEmail,
         shippingAddress: {
@@ -100,7 +111,7 @@ const Checkout = () => {
         billingAddress: finalBillingAddress,
         paymentMethod,
         items: formattedItems,
-        totalAmount: totals.total,
+        totalAmount: calculatedTotal,
       };
 
       const response = await fetch("http://localhost:5000/api/v1/orders/checkout", {
@@ -125,11 +136,6 @@ const Checkout = () => {
       setErrorMessage(err.message || "Something went wrong during checkout.");
     }
   };
-
-  // Fallback dataset if cart is empty
-  const displayItems = cart.length > 0 ? cart : [
-    { product: { name: "Rose Quartz Necklace", price: 1299, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100&q=80" }, quantity: 1 }
-  ];
 
   return (
     <>

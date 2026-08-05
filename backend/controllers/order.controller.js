@@ -35,3 +35,20 @@ export const createOrder = catchAsync(async (req, res, next) => {
     data: order
   });
 });
+
+// Get orders for a specific customer email
+export const getOrders = catchAsync(async (req, res, next) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return next(new AppError('Customer email query parameter is required', 400));
+  }
+
+  const orders = await Order.find({ customerEmail: email }).sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: orders.length,
+    orders: orders
+  });
+});

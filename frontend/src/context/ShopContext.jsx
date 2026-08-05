@@ -81,24 +81,7 @@ export const ShopProvider = ({ children }) => {
   const [paymentMethod, setPaymentMethod] = useState("upi");
   
   // Holds current active order for Order Confirmation & Tracking
-  const [currentOrder, setCurrentOrder] = useState({
-    orderId: "FO12345",
-    date: "15 July 2025",
-    items: [
-      { product: initialProducts[0], quantity: 1 },
-      { product: initialProducts[1], quantity: 1 },
-      { product: initialProducts[2], quantity: 1 },
-    ],
-    subtotal: 4097,
-    discount: 410,
-    shipping: "FREE",
-    total: 3687,
-    status: "Out for Delivery",
-    courier: "Delhivery",
-    shippingId: "123453498",
-    expectedDelivery: "20 July 2025",
-  });
-
+ const [currentOrder, setCurrentOrder] = useState(null);
   // Calculate cart totals
   const [totals, setTotals] = useState({ subtotal: 0, discount: 0, total: 0 });
 

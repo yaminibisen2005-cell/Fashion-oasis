@@ -1,4 +1,4 @@
-  import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+ import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -40,10 +40,11 @@ function Dashboard() {
     // }
 
     // 2. Extract user details robustly from any matching storage key
-  const storedUser = 
-      JSON.parse(localStorage.getItem("user")) ||
+    const storedUser = 
       JSON.parse(localStorage.getItem("customerInfo")) || 
-      JSON.parse(localStorage.getItem("userInfo"));
+      JSON.parse(localStorage.getItem("userInfo")) || 
+      JSON.parse(localStorage.getItem("user"));
+
     if (storedUser) {
       const resolvedName = 
         storedUser.fullName || 
