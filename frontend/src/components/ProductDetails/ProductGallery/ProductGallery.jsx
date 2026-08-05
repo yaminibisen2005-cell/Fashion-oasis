@@ -1,11 +1,15 @@
 import "./ProductGallery.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ProductGallery = ({ product }) => {
   const images = product.gallery?.length ? product.gallery : [product.image];
   const [selectedImage, setSelectedImage] = useState(
     product.gallery?.[0] || product.image
   );
+
+  useEffect(() => {
+    setSelectedImage(product.gallery?.[0] || product.image);
+  }, [product]);
 
   return (
     <div className="product-gallery">
