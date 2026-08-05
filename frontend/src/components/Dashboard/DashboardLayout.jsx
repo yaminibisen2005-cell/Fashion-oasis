@@ -10,6 +10,7 @@ import {
   FaStar,
   FaCog,
   FaSignOutAlt,
+  FaCamera,
 } from "react-icons/fa";
 
 import logo from "../../assets/logo.png"; // Change to your logo
@@ -31,16 +32,20 @@ function DashboardLayout({ children ,showProfile = true}) {
 
   {showProfile ? (
     <>
-      <img
-        src="https://i.pravatar.cc/150?img=12"
-        alt="Profile"
-        className="sidebar-profile"
-      />
+  <div className="profile-wrapper">
+    <img
+      src="https://i.pravatar.cc/150?img=12"
+      alt="Profile"
+      className="sidebar-profile"
+    />
 
-      <h3>Shwet Samrat</h3>
+    <button className="edit-profile-btn">
+      <FaCamera />
+    </button>
+  </div>
 
-      
-    </>
+  <h3>Shwet Samrat</h3>
+</>
   ) : (
     <>
       <img src={logo} alt="Fashion Oasis" />

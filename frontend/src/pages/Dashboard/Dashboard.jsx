@@ -1,8 +1,6 @@
-
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
-// import Navbar from "../../components/Navbar/Navbar";
-// import Footer from "../../components/Footer/Footer";
+
 
 import {
   FaShoppingBag,
@@ -134,30 +132,35 @@ function Dashboard() {
     <DashboardLayout>
       {/* HERO SECTION */}
       
-      <section
-        className="dashboard-hero"
-        style={{
-          backgroundImage: `linear-gradient(
-              rgba(35, 25, 28, 0.45),
-              rgba(35, 25, 28, 0.45)
-            ),
-            url(${dashboardbanner})`,
-        }}
-      >
-        <div className="hero-content">
-          <h1>Welcome back, Shwet Samrat! ✨</h1>
-          <p>Here's what's happening with your Fashion Oasis account.</p>
+  
+<div className="dashboard-header-text">
+  
+  
+</div>
 
-          <div className="hero-actions">
-            <button className="btn-primary">
-              <FaShoppingBag /> Track Order
-            </button>
-            <button className="btn-secondary">
-              <FaShoppingBag /> Continue Shopping
-            </button>
-          </div>
-        </div>
-      </section>
+
+<section
+  className="dashboard-hero"
+  style={{ backgroundImage: `url(${dashboardbanner})` }}
+>
+  <div className="hero-content">
+    <span className="hero-eyebrow">FASHION OASIS • MEMBER PERKS</span>
+
+    <h2>Welcome back, Shwet Samrat!✨</h2>
+    <p>Here's what's happening with your Fashion Oasis account today.</p>
+
+    <div className="hero-actions">
+      <button className="btn-primary">
+        <FaShoppingBag />
+        Continue Shopping
+      </button>
+
+      
+    </div>
+  </div>
+
+  
+</section>
 
       {/* STATS & QUICK ACTIONS SECTION */}
       <section className="dashboard-metrics">

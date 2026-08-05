@@ -32,7 +32,7 @@ function AccountSetting() {
           {/* ================= Account Information ================= */}
 
           <div className="setting-section">
-          <div className="setting-section">
+          
 
   <h3>
     <FaUserCircle className="section-icon" />
@@ -125,7 +125,7 @@ function AccountSetting() {
     Save Personal Information
   </button>
 
-</div>
+
             
   
             
@@ -236,36 +236,11 @@ function AccountSetting() {
 
           </div>
 
-          {/* ================= Appearance ================= */}
+              
 
-          <div className="setting-section">
+            
 
-           <h3>
-  <FaMoon className="section-icon" />
-  Appearance
-</h3>
-
-            <div className="setting-row">
-
-              <div>
-
-                <h4>Dark Mode</h4>
-
-                <p>Enable dark mode for better viewing at night.</p>
-
-              </div>
-
-              <label className="switch">
-
-                <input type="checkbox" />
-
-                <span className="slider"></span>
-
-              </label>
-
-            </div>
-
-          </div>
+          
 
           {/* ================= Language ================= */}
 
@@ -335,10 +310,8 @@ function AccountSetting() {
             </button>
 
           </div>
-
-        </div>
-
-      </div>
+          </div>
+          </div>
     </DashboardLayout>
   );
 }
