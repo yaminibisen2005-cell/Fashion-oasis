@@ -4,7 +4,7 @@ import "./Reviews.css";
 import product1 from "../../assets/product1.jpg";
 import product5 from "../../assets/product5.jpg";
 import product6 from "../../assets/product6.jpg";
-
+import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
 const reviews = [
@@ -32,6 +32,7 @@ const reviews = [
 ];
 
 function Reviews() {
+  const navigate = useNavigate();
   return (
     <DashboardLayout>
       <div className="reviews-page">
@@ -58,7 +59,12 @@ function Reviews() {
 
               <p>{item.review}</p>
 
-              <button>View Product</button>
+              <button
+    className="view-product-btn"
+    onClick={() => navigate(`/product/${item.id}`)}
+>
+    View Product
+</button>
 
             </div>
 

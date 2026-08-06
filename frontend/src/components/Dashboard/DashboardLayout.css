@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap");
 
+
 .dashboard-layout,
 .dashboard-layout *{
     margin:0;
@@ -17,8 +18,7 @@ Dashboard Layout
 ==========================*/
 
 .dashboard-layout{
-    display:flex;
-    min-height:100vh;
+   
     background:#FFF8F8;
 }
 
@@ -26,34 +26,24 @@ Dashboard Layout
 Sidebar
 ==========================*/
 
-.sidebar{
-
-    width:270px;
-    min-width:270px;
-    height:100vh;
-
-    position:sticky;
-    top:0;
-
-    background-image:url("../../assets/sidebarbg.png");
-    background-size:cover;
-    background-repeat:no-repeat;
-    background-position:center;
-
-    border-right:1px solid #F5E3E6;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-
-    padding:35px 22px;
-
-    box-shadow:0 10px 35px rgba(0,0,0,.05);
-    overflow:hidden;
-
-    z-index:1000;
-
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 270px;
+    height: 100vh;
+    overflow-y: auto;
+    background: #FFF8F8;
+    border-right: 1px solid #F5E3E6;
+    padding: 35px 22px;
+    z-index: 1000;
+    flex-shrink: 0;
+    
 }
+.sidebar::-webkit-scrollbar {
+    display: none;              /* Chrome, Safari */
+}
+
 .sidebar-profile{
     width:90px;
     
@@ -212,18 +202,23 @@ Logout
 Content
 ==========================*/
 
-.dashboard-content{
-    flex:1;
-    min-width: 0;
-    padding:30px;
-    background:#FFF8F8;
+.dashboard-main {
+    flex: 1;
+    margin-left: 270px;
+    width: calc(100% - 270px);
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 30px;
+    background: #FFF8F8;
+    
 }
 
-.dashboard-content::-webkit-scrollbar{
+.dashboard-main::-webkit-scrollbar{
     width:8px;
 }
 
-.dashboard-content::-webkit-scrollbar-thumb{
+.dashboard-main::-webkit-scrollbar-thumb{
     background:#EB879D;
     border-radius:20px;
 }
@@ -241,9 +236,11 @@ min-width:250px;
 
 }
 
-.dashboard-content{
+.dashboard-main{
 
-padding:35px;
+margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 35px;
 
 }
 
@@ -277,10 +274,10 @@ font-size:14px;
 
 }
 
-.dashboard-content{
-    width: 100%;
- 
-padding:30px;
+.dashboard-main{
+    margin-left: 230px;
+    width: calc(100% - 230px);
+    padding: 30px;
 
 }
 
@@ -300,7 +297,7 @@ flex-direction:column;
 
 .sidebar{
 
-position:relative;
+position:sticky;
 
 width:100%;
 min-width:100%;
@@ -359,9 +356,11 @@ margin-top:25px;
 
 }
 
-.dashboard-content{
+.dashboard-main{
 
-padding:25px;
+margin-left: 0;
+    width: 100%;
+    padding: 25px;
 
 }
 
@@ -388,7 +387,7 @@ font-size:28px;
 
 }
 
-.dashboard-content{
+.dashboard-main{
 
 padding:20px;
 
@@ -428,7 +427,7 @@ font-size:24px;
 
 }
 
-.dashboard-content{
+.dashboard-main{
 
 padding:15px;
 
@@ -476,7 +475,7 @@ font-size:12px;
 
 }
 
-.dashboard-content{
+.dashboard-main{
 
 padding:12px;
 

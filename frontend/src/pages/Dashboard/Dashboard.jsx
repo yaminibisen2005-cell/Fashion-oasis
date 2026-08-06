@@ -1,7 +1,8 @@
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
-
-
+import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { ShopContext } from "../../context/ShopContext";
 import {
   FaShoppingBag,
   FaHeart,
@@ -21,6 +22,8 @@ import product3 from "../../assets/product3.jpg";
 import product4 from "../../assets/product4.jpg";
 
 function Dashboard() {
+ const navigate = useNavigate(); 
+ const { addToCart } = useContext(ShopContext);
   const stats = [
     {
       icon: <FaShoppingBag />,
@@ -50,11 +53,27 @@ function Dashboard() {
   ];
 
   const quickActions = [
-    { icon: <FaShoppingBag />, label: "Shop Now" },
-    { icon: <FaHeart />, label: "Wishlist" },
-    { icon: <FaTruck />, label: "Track Order" },
-    { icon: <FaGift />, label: "Rewards" },
-  ];
+  {
+    icon: <FaShoppingBag />,
+    label: "Shop Now",
+    path: "/shop",
+  },
+  {
+    icon: <FaHeart />,
+    label: "Wishlist",
+    path: "/dashboard/wishlist",
+  },
+  {
+    icon: <FaTruck />,
+    label: "Track Order",
+    path: "/track-order",
+  },
+  {
+    icon: <FaGift />,
+    label: "Rewards",
+    path: "/dashboard/rewards", // Change if you have a different page
+  },
+];
 
   const orders = [
     {
@@ -129,7 +148,7 @@ function Dashboard() {
       {/* HERO SECTION */}
       
   
-<div className="dashboard-header-text">
+<div className="dashboard-page">
   
   
 </div>
@@ -145,13 +164,11 @@ function Dashboard() {
     <h2>Welcome back, Shwet Samrat!✨</h2>
     <p>Here's what's happening with your Fashion Oasis account today.</p>
 
-    <div className="hero-actions">
-      <button className="btn-primary">
+   <div className="hero-actions">
+      <button onClick={() => navigate('/Shop')} className="btn-primary">
         <FaShoppingBag />
         Continue Shopping
       </button>
-
-      
     </div>
   </div>
 
@@ -178,10 +195,14 @@ function Dashboard() {
           <h5>Quick Actions</h5>
           <div className="quick-actions-grid">
             {quickActions.map((action, index) => (
-              <button key={index} className="quick-action-btn">
-                {action.icon}
-                <span>{action.label}</span>
-              </button>
+              <button
+  key={index}
+  className="quick-action-btn"
+  onClick={() => navigate(action.path)}
+>
+  {action.icon}
+  <span>{action.label}</span>
+</button>
             ))}
           </div>
         </div>
@@ -193,9 +214,12 @@ function Dashboard() {
           <div>
             <h3>Recent Orders</h3>
           </div>
-          <button className="view-all-link">
-            View All <FaArrowRight />
-          </button>
+          <button
+  className="view-all-link"
+  onClick={() => navigate("/dashboard/orders")}
+>
+  View All <FaArrowRight />
+</button>
         </div>
 
         <div className="table-responsive">
@@ -244,9 +268,12 @@ function Dashboard() {
       <section className="recommendations-section">
         <div className="section-header">
           <h3>Recommended For You</h3>
-          <button className="view-all-link">
-            View All Products <FaArrowRight />
-          </button>
+          <button
+  className="view-all-link"
+  onClick={() => navigate("/shop")}
+>
+  View All <FaArrowRight />
+</button>
         </div>
 
         <div className="recommendations-grid">
@@ -268,9 +295,16 @@ function Dashboard() {
                   <span className="price">{prod.price}</span>
                   <span className="original-price">{prod.originalPrice}</span>
                 </div>
-                <button className="add-to-cart-btn">
-                  <FaShoppingBag /> Add to Cart
-                </button>
+                <button
+  className="add-to-cart-btn"
+  onClick={() => {
+    addToCart(prod);
+    alert(`${prod.name} added to cart!`);
+  }}
+>
+  <FaShoppingBag />
+  Add to Cart
+</button>
               </div>
             </div>
           ))}

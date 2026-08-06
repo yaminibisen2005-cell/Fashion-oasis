@@ -1,6 +1,6 @@
 import "./DashboardLayout.css";
 import { Link } from "react-router-dom";
-import sidebarbg from "../../assets/sidebarbg.png"
+import { useRef, useState } from "react";
 
 import {
   FaHome,
@@ -16,32 +16,60 @@ import {
 import logo from "../../assets/logo.png"; // Change to your logo
 
 function DashboardLayout({ children ,showProfile = true}) {
+   const fileInputRef = useRef(null);
+
+  const [profileImage, setProfileImage] = useState(
+    "https://i.pravatar.cc/150?img=12"
+  );
+
+  const handleEditClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setProfileImage(imageUrl);
+
+    // Later you can upload this file to your backend
+    // console.log(file);
+  };
   return (
     <div className="dashboard-layout">
 
       {/* Sidebar */}
 
-     <aside
-  className="sidebar"
-  style={{
-    backgroundImage: `url(${sidebarbg})`,
-  }}
->
+     <aside className="sidebar">
+  
+
 
        <div className="logo-section">
 
   {showProfile ? (
     <>
   <div className="profile-wrapper">
-    <img
-      src="https://i.pravatar.cc/150?img=12"
-      alt="Profile"
-      className="sidebar-profile"
-    />
+   <img
+  src={profileImage}
+  alt="Profile"
+  className="sidebar-profile"
+/>
 
-    <button className="edit-profile-btn">
-      <FaCamera />
-    </button>
+    <button
+  className="edit-profile-btn"
+  onClick={handleEditClick}
+>
+  <FaCamera />
+</button>
+<input
+  type="file"
+  accept="image/*"
+  ref={fileInputRef}
+  onChange={handleImageChange}
+  style={{ display: "none" }}
+/>
   </div>
 
   <h3>Shwet Samrat</h3>
@@ -114,7 +142,7 @@ function DashboardLayout({ children ,showProfile = true}) {
 
       {/* Main */}
 
-      <main className="dashboard-content">
+      <main className="dashboard-main">
 
         {children}
 

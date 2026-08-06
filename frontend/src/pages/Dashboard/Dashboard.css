@@ -4,32 +4,32 @@
    GLOBAL
 =========================== */
 
-.dashboard-content,
-.dashboard-content * {
+.dashboard-page,
+.dashboard-page * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.dashboard-content {
+.dashboard-page {
   background: #FFF8F8;
   font-family: 'Poppins', sans-serif;
 }
 
-.dashboard-content {
+.dashboard-page {
   width: 100%;
 }
 
-.dashboard-content a {
+.dashboard-page a {
   text-decoration: none;
 }
 
-.dashboard-content input,
-.dashboard-content button {
+.dashboard-page input,
+.dashboard-page button {
   font-family: 'Poppins', sans-serif;
 }
 
-.dashboard-content button:active {
+.dashboard-page button:active {
   transform: scale(.98);
 }
 
