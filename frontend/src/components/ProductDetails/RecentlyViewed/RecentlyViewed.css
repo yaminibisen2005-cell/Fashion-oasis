@@ -23,6 +23,11 @@
     gap:30px;
 }
 
+/* Reduce height of product cards in recently viewed section */
+.recent-grid .product-card {
+    min-height: 320px;
+}
+
 @media(max-width:1100px){
 
 .recent-grid{
@@ -59,6 +64,10 @@ grid-template-columns:1fr;
   .recent-grid{
     gap: 20px;
   }
+
+  .recent-grid .product-card {
+    min-height: 280px;
+  }
 }
 
 @media(max-width:576px){
@@ -77,6 +86,10 @@ grid-template-columns:1fr;
   .recent-grid{
     gap: 16px;
   }
+
+  .recent-grid .product-card {
+    min-height: 260px;
+  }
 }
 
 @media(max-width:390px){
@@ -86,5 +99,9 @@ grid-template-columns:1fr;
 
   .section-heading p{
     font-size: 13px;
+  }
+
+  .recent-grid .product-card {
+    min-height: 240px;
   }
 }
