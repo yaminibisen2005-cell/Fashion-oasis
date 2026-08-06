@@ -102,7 +102,7 @@ const SellerRegister = () => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Create seller registration data with pending status
+      // Create seller registration data with approved status
       const sellerData = {
         id: "seller_" + Date.now(),
         fullName,
@@ -115,22 +115,22 @@ const SellerRegister = () => {
         state,
         pincode,
         password,
-        status: "pending",
+        status: "approved",
         registeredAt: new Date().toISOString()
       };
 
-      // Store in localStorage as pending registration
-      const pendingRegistrations = JSON.parse(localStorage.getItem("pendingSellerRegistrations") || "[]");
-      pendingRegistrations.push(sellerData);
-      localStorage.setItem("pendingSellerRegistrations", JSON.stringify(pendingRegistrations));
+      // Store in localStorage as approved sellers
+      const approvedSellers = JSON.parse(localStorage.getItem("approvedSellers") || "[]");
+      approvedSellers.push(sellerData);
+      localStorage.setItem("approvedSellers", JSON.stringify(approvedSellers));
 
-      console.log("Seller registration submitted:", sellerData);
+      console.log("Seller registration completed and approved:", sellerData);
 
       // Redirect to login with success message
       navigate("/seller/login", { 
         state: { 
           registrationSuccess: true,
-          message: "Registration submitted successfully" 
+          message: "Registration completed and approved successfully" 
         } 
       });
 

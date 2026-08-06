@@ -20,6 +20,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const paymentMethod = "cod";
+
   // Independent local state for billing address to prevent any context bleeding
   const [localBillingAddress, setLocalBillingAddress] = useState({
     fullName: "",
@@ -50,6 +52,11 @@ const Checkout = () => {
     const { name, value } = e.target;
     setLocalBillingAddress((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Fallback dataset if cart is empty
+  const displayItems = cart.length > 0 ? cart : [
+    { product: { name: "Rose Quartz Necklace", price: 1299, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100&q=80" }, quantity: 1 }
+  ];
 
   const handlePlaceOrderSubmit = async (e) => {
     e.preventDefault();
@@ -125,11 +132,6 @@ const Checkout = () => {
       setErrorMessage(err.message || "Something went wrong during checkout.");
     }
   };
-
-  // Fallback dataset if cart is empty
-  const displayItems = cart.length > 0 ? cart : [
-    { product: { name: "Rose Quartz Necklace", price: 1299, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100&q=80" }, quantity: 1 }
-  ];
 
   return (
     <>

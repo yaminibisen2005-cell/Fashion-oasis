@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ShopProvider } from "./context/ShopContext";
 
 import AOS from "aos";
@@ -35,7 +35,6 @@ import TermsAndConditions from "./pages/TermsAndConditions/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
 import SellerLogin from "./pages/SellerAuth/SellerLogin";
 import SellerRegister from "./pages/SellerAuth/SellerRegister";
-import SellerDashboard from "./pages/SellerDashboard/SellerDashboard";
 import ProtectedSellerRoute from "./components/ProtectedSellerRoute/ProtectedSellerRoute";
 
 function App() {
@@ -76,7 +75,7 @@ function App() {
           <Route path="/admin/*" element={<AdminLayout />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          <Route path="/seller" element={<SellerDashboard />} />
+          <Route path="/seller" element={<Navigate to="/seller/dashboard" replace />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/seller/login" element={<SellerLogin />} />

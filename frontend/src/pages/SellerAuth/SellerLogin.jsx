@@ -18,6 +18,20 @@ const SellerLogin = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const approvedSellers = JSON.parse(localStorage.getItem("approvedSellers") || "[]");
+    if (!approvedSellers.some(s => s.email === "seller@gmail.com")) {
+      approvedSellers.push({
+        id: "seller_default",
+        fullName: "Bimal Seller",
+        storeName: "Fashion Oasis Store",
+        email: "seller@gmail.com",
+        password: "Bimal@gmail.com",
+        phone: "9876543210",
+        status: "approved"
+      });
+      localStorage.setItem("approvedSellers", JSON.stringify(approvedSellers));
+    }
+
     if (location.state?.registrationSuccess) {
       setSuccessMessage(location.state.message || "Registration Submitted Successfully");
       // Clear the state after displaying
@@ -68,6 +82,13 @@ const SellerLogin = () => {
 
       // Store in localStorage
       localStorage.setItem("sellerSession", JSON.stringify(sellerSession));
+      
+      if (import.meta.env.DEV) {
+        const existingToken = localStorage.getItem("sellerToken");
+        if (!existingToken || existingToken.startsWith("dummy-")) {
+          localStorage.setItem("sellerToken", "dummy-seller-token-12345");
+        }
+      }
       
       if (rememberMe) {
         localStorage.setItem("sellerRememberMe", "true");

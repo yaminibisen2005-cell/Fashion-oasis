@@ -65,6 +65,8 @@ const Footer = () => {
 
             <li><Link to="/contact">Contact</Link></li>
 
+            <li><Link to="/seller/dashboard">Seller Portal</Link></li>
+
           </ul>
 
         </div>

@@ -166,6 +166,13 @@ const Login = () => {
                 Create your account &rarr;
               </Link>
             </p>
+
+            <p className="register anim-fade-up-register" style={{ marginTop: "10px" }}>
+              Are you a seller?
+              <Link to="/seller/login">
+                Access Seller Portal &rarr;
+              </Link>
+            </p>
           </div>
         </div>
 
