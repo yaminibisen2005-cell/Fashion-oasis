@@ -2,7 +2,7 @@ import "./DashboardLayout.css";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import sidebarbg from "../../assets/sidebarbg.png";
+
 import logo from "../../assets/logo.png";
 
 import {
@@ -64,7 +64,7 @@ function DashboardLayout({ children, showProfile = true }) {
       <aside
         className="sidebar"
         style={{
-          backgroundImage: `url(${sidebarbg})`,
+        
         }}
       >
         <div className="logo-section">
