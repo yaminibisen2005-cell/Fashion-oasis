@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaSave, FaStore, FaCreditCard, FaShareAlt, FaFileContract } from "react-icons/fa";
+import { FaSave, FaStore, FaCreditCard, FaShareAlt, FaFileContract, FaHandshake } from "react-icons/fa";
 
 const SettingsSection = ({ settings, updateSettings }) => {
   const [activeTab, setActiveTab] = useState("General");
@@ -11,6 +11,7 @@ const SettingsSection = ({ settings, updateSettings }) => {
     { name: "Payment", icon: <FaCreditCard /> },
     { name: "Social Media", icon: <FaShareAlt /> },
     { name: "Store Policy", icon: <FaFileContract /> },
+    { name: "Seller / Vendor", icon: <FaHandshake /> },
   ];
 
   const handleInputChange = (e) => {
@@ -353,6 +354,229 @@ const SettingsSection = ({ settings, updateSettings }) => {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === "Seller / Vendor" && (
+              <div className="settings-form-tab fade-in">
+                <h3>Seller / Vendor Settings</h3>
+                <p className="subtitle" style={{ marginBottom: '20px', color: 'var(--text-muted)', fontSize: '13px' }}>
+                  Manage global rules, commissions, permissions, and payout settings for sellers.
+                </p>
+
+                {/* Section 1: Commission Management */}
+                <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-dark)', marginBottom: '15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '5px' }}>
+                  Commission Management
+                </h4>
+                <div className="settings-form-grid" style={{ marginBottom: '30px' }}>
+                  <div className="form-group">
+                    <label>Global Commission Rate (%)</label>
+                    <input
+                      type="number"
+                      name="sellerCommissionGlobal"
+                      value={formData.sellerCommissionGlobal || 0}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="100"
+                      required
+                    />
+                  </div>
+                  <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label style={{ marginBottom: '10px', display: 'block', fontWeight: '600' }}>Category-Specific Commission Rates (%)</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px' }}>
+                      <div className="form-group">
+                        <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Necklaces</label>
+                        <input
+                          type="number"
+                          name="sellerCommissionNecklace"
+                          value={formData.sellerCommissionNecklace || 0}
+                          onChange={handleInputChange}
+                          min="0"
+                          max="100"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Earrings</label>
+                        <input
+                          type="number"
+                          name="sellerCommissionEarrings"
+                          value={formData.sellerCommissionEarrings || 0}
+                          onChange={handleInputChange}
+                          min="0"
+                          max="100"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Rings</label>
+                        <input
+                          type="number"
+                          name="sellerCommissionRings"
+                          value={formData.sellerCommissionRings || 0}
+                          onChange={handleInputChange}
+                          min="0"
+                          max="100"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Bracelets</label>
+                        <input
+                          type="number"
+                          name="sellerCommissionBracelets"
+                          value={formData.sellerCommissionBracelets || 0}
+                          onChange={handleInputChange}
+                          min="0"
+                          max="100"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 2: Onboarding & Verification */}
+                <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-dark)', marginBottom: '15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '5px' }}>
+                  Onboarding & Verification Requirements
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '30px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-muted)' }}>Required Documents for Registration</span>
+                  <div style={{ display: 'flex', gap: '20px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                      <input
+                        type="checkbox"
+                        name="sellerDocGstin"
+                        checked={formData.sellerDocGstin}
+                        onChange={(e) => setFormData(prev => ({ ...prev, sellerDocGstin: e.target.checked }))}
+                        style={{ width: '16px', height: '16px' }}
+                      />
+                      GSTIN Verification
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                      <input
+                        type="checkbox"
+                        name="sellerDocPan"
+                        checked={formData.sellerDocPan}
+                        onChange={(e) => setFormData(prev => ({ ...prev, sellerDocPan: e.target.checked }))}
+                        style={{ width: '16px', height: '16px' }}
+                      />
+                      PAN Card
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                      <input
+                        type="checkbox"
+                        name="sellerDocLicense"
+                        checked={formData.sellerDocLicense}
+                        onChange={(e) => setFormData(prev => ({ ...prev, sellerDocLicense: e.target.checked }))}
+                        style={{ width: '16px', height: '16px' }}
+                      />
+                      Trade / Business License
+                    </label>
+                  </div>
+                  
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '13px', fontWeight: '600', marginTop: '10px' }}>
+                    <input
+                      type="checkbox"
+                      name="sellerAutoApprove"
+                      checked={formData.sellerAutoApprove}
+                      onChange={(e) => setFormData(prev => ({ ...prev, sellerAutoApprove: e.target.checked }))}
+                      style={{ width: '16px', height: '16px' }}
+                    />
+                    Auto-Approve Sellers (Skip Verification Queue)
+                  </label>
+                </div>
+
+                {/* Section 3: Coupon Privileges */}
+                <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-dark)', marginBottom: '15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '5px' }}>
+                  Seller Coupon Privileges
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '30px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>
+                    <input
+                      type="checkbox"
+                      name="sellerAllowCoupons"
+                      checked={formData.sellerAllowCoupons}
+                      onChange={(e) => setFormData(prev => ({ ...prev, sellerAllowCoupons: e.target.checked }))}
+                      style={{ width: '16px', height: '16px' }}
+                    />
+                    Allow sellers to create and run custom discount coupons
+                  </label>
+                  
+                  {formData.sellerAllowCoupons && (
+                    <div style={{ marginLeft: '25px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-muted)' }}>Who bears the cost of the discount?</span>
+                      <div style={{ display: 'flex', gap: '20px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                          <input
+                            type="radio"
+                            name="sellerCouponSponsor"
+                            value="seller"
+                            checked={formData.sellerCouponSponsor === "seller"}
+                            onChange={(e) => setFormData(prev => ({ ...prev, sellerCouponSponsor: "seller" }))}
+                          />
+                          Seller (Deducted from Seller payout)
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                          <input
+                            type="radio"
+                            name="sellerCouponSponsor"
+                            value="marketplace"
+                            checked={formData.sellerCouponSponsor === "marketplace"}
+                            onChange={(e) => setFormData(prev => ({ ...prev, sellerCouponSponsor: "marketplace" }))}
+                          />
+                          Marketplace (Deducted from Admin commission)
+                        </label>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Section 4: Payout & Withdrawal Rules */}
+                <h4 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-dark)', marginBottom: '15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '5px' }}>
+                  Payout & Withdrawal Rules
+                </h4>
+                <div className="settings-form-grid" style={{ marginBottom: '20px' }}>
+                  <div className="form-group">
+                    <label>Minimum Payout Threshold Amount (₹)</label>
+                    <input
+                      type="number"
+                      name="sellerMinPayout"
+                      value={formData.sellerMinPayout || 0}
+                      onChange={handleInputChange}
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <label style={{ fontWeight: '600' }}>Supported Payout Methods</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                        <input
+                          type="checkbox"
+                          name="sellerPayoutStripe"
+                          checked={formData.sellerPayoutStripe}
+                          onChange={(e) => setFormData(prev => ({ ...prev, sellerPayoutStripe: e.target.checked }))}
+                        />
+                        Stripe Connect
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                        <input
+                          type="checkbox"
+                          name="sellerPayoutBank"
+                          checked={formData.sellerPayoutBank}
+                          onChange={(e) => setFormData(prev => ({ ...prev, sellerPayoutBank: e.target.checked }))}
+                        />
+                        Direct Bank Transfer
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                        <input
+                          type="checkbox"
+                          name="sellerPayoutPaypal"
+                          checked={formData.sellerPayoutPaypal}
+                          onChange={(e) => setFormData(prev => ({ ...prev, sellerPayoutPaypal: e.target.checked }))}
+                        />
+                        PayPal Payouts
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
