@@ -1,324 +1,161 @@
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ShopContext } from "../../context/ShopContext";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
-import { useNavigate } from 'react-router-dom';
-import { useContext } from "react";
-import { ShopContext } from "../../context/ShopContext";
 import {
-  FaShoppingBag,
-  FaHeart,
-  FaStar,
-  FaGift,
-  FaRegHeart,
-  FaTruck,
   FaArrowRight,
+  FaGift,
+  FaHeart,
+  FaRegHeart,
+  FaShoppingBag,
+  FaStar,
+  FaTruck,
 } from "react-icons/fa";
-
 import dashboardbanner from "../../assets/shop/hero-banner1.png";
 
-// Import actual product images from your assets folder
-import product1 from "../../assets/product1.jpg";
-import product2 from "../../assets/product2.jpg";
-import product3 from "../../assets/product3.jpg";
-import product4 from "../../assets/product4.jpg";
+const safeStoredJson = (key) => {
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch {
+    return null;
+  }
+};
 
 function Dashboard() {
- const navigate = useNavigate(); 
- const { addToCart } = useContext(ShopContext);
-  const stats = [
-    {
-      icon: <FaShoppingBag />,
-      title: "Total Orders",
-      value: "24",
-      subtitle: "↑ 3 this month",
-      subtitleClass: "growth",
-    },
-    {
-      icon: <FaHeart />,
-      title: "Wishlist",
-      value: "12",
-      subtitle: "Items",
-    },
-    {
-      icon: <FaStar />,
-      title: "Reviews",
-      value: "8",
-      subtitle: "Reviews",
-    },
-    {
-      icon: <FaGift />,
-      title: "Reward Points",
-      value: "350",
-      subtitle: "Points",
-    },
+  const navigate = useNavigate();
+  const { addToCart } = useContext(ShopContext);
+  const [userName, setUserName] = useState("User");
+  const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0" });
+  const [orders, setOrders] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const customerInfo = safeStoredJson("customerInfo");
+    const user = customerInfo || safeStoredJson("userInfo") || safeStoredJson("user");
+    const token = localStorage.getItem("token") || localStorage.getItem("authToken") || customerInfo?.token;
+
+    const name = user?.fullName || user?.name || user?.username || `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
+    if (name) setUserName(name);
+
+    const loadDashboard = async () => {
+      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+      try {
+        if (user?.email) {
+          const response = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${encodeURIComponent(user.email)}`, config);
+          const data = response.data?.data;
+          if (response.data?.success && data) {
+            setStats({
+              totalOrders: String(data.totalOrders || 0),
+              wishlistCount: String(data.wishlist?.length || 0),
+              reviewsCount: String(data.reviewsCount || 0),
+              rewardPoints: String(data.rewardPoints || 0),
+            });
+            setOrders(data.recentOrders || []);
+          }
+        }
+
+        const response = await axios.get("http://localhost:5000/api/v1/products/recommended", config);
+        if (response.data?.success) setRecommendations(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboard();
+  }, []);
+
+  const statCards = [
+    { icon: <FaShoppingBag />, title: "Total Orders", value: stats.totalOrders, subtitle: "Active orders" },
+    { icon: <FaHeart />, title: "Wishlist", value: stats.wishlistCount, subtitle: "Items" },
+    { icon: <FaStar />, title: "Reviews", value: stats.reviewsCount, subtitle: "Reviews" },
+    { icon: <FaGift />, title: "Reward Points", value: stats.rewardPoints, subtitle: "Points" },
   ];
 
   const quickActions = [
-  {
-    icon: <FaShoppingBag />,
-    label: "Shop Now",
-    path: "/shop",
-  },
-  {
-    icon: <FaHeart />,
-    label: "Wishlist",
-    path: "/dashboard/wishlist",
-  },
-  {
-    icon: <FaTruck />,
-    label: "Track Order",
-    path: "/track-order",
-  },
-  {
-    icon: <FaGift />,
-    label: "Rewards",
-    path: "/dashboard/rewards", // Change if you have a different page
-  },
-];
-
-  const orders = [
-    {
-      id: "Order #FO12345",
-      image: product1,
-      product: "Rose Quartz Necklace",
-      date: "18 July 2025",
-      amount: "₹1,299",
-      status: "Delivered",
-    },
-    {
-      id: "Order #FO12344",
-      image: product2,
-      product: "Floral Diamond Ring",
-      date: "14 July 2025",
-      amount: "₹1,799",
-      status: "Shipped",
-    },
-    {
-      id: "Order #FO12343",
-      image: product3,
-      product: "Pearl Drop Earrings",
-      date: "10 July 2025",
-      amount: "₹999",
-      status: "Processing",
-    },
-  ];
-
-  const recommendations = [
-    {
-      id: 1,
-      name: "Kundan Flower Earrings",
-      rating: "★★★★★",
-      reviewsCount: 128,
-      price: "₹1,199",
-      originalPrice: "₹1,599",
-      image: product1,
-      material: "Kundan",
-    },
-    {
-      id: 2,
-      name: "Dainty Pearl Necklace",
-      rating: "★★★★★",
-      reviewsCount: 96,
-      price: "₹1,499",
-      originalPrice: "₹1,999",
-      image: product2,
-      material: "Pearl",
-    },
-    {
-      id: 3,
-      name: "Gold Plated Bracelet",
-      rating: "★★★★★",
-      reviewsCount: 78,
-      price: "₹999",
-      originalPrice: "₹1,299",
-      image: product3,
-      material: "Gold Plated",
-    },
-    {
-      id: 4,
-      name: "Floral Stud Earrings",
-      rating: "★★★★★",
-      reviewsCount: 64,
-      price: "₹749",
-      originalPrice: "₹999",
-      image: product4,
-      material: "Diamond",
-    },
+    { icon: <FaShoppingBag />, label: "Shop Now", path: "/shop" },
+    { icon: <FaHeart />, label: "Wishlist", path: "/dashboard/wishlist" },
+    { icon: <FaTruck />, label: "Track Order", path: "/track-order" },
   ];
 
   return (
-   <>
-   
     <DashboardLayout>
-      {/* HERO SECTION */}
-      
-  
-<div className="dashboard-page">
-  
-  
-</div>
+      <section className="dashboard-hero" style={{ backgroundImage: `url(${dashboardbanner})` }}>
+        <div className="hero-content">
+          <span className="hero-eyebrow">FASHION OASIS • MEMBER PERKS</span>
+          <h2>Welcome back, {userName}! ✨</h2>
+          <p>Here's what's happening with your Fashion Oasis account today.</p>
+          <div className="hero-actions">
+            <button className="btn-primary" onClick={() => navigate("/shop")}><FaShoppingBag /> Continue Shopping</button>
+          </div>
+        </div>
+      </section>
 
-
-<section
-  className="dashboard-hero"
-  style={{ backgroundImage: `url(${dashboardbanner})` }}
->
-  <div className="hero-content">
-    <span className="hero-eyebrow">FASHION OASIS • MEMBER PERKS</span>
-
-    <h2>Welcome back, Shwet Samrat!✨</h2>
-    <p>Here's what's happening with your Fashion Oasis account today.</p>
-
-   <div className="hero-actions">
-      <button onClick={() => navigate('/Shop')} className="btn-primary">
-        <FaShoppingBag />
-        Continue Shopping
-      </button>
-    </div>
-  </div>
-
-  
-</section>
-
-      {/* STATS & QUICK ACTIONS SECTION */}
       <section className="dashboard-metrics">
         <div className="dashboard-cards">
-          {stats.map((item, index) => (
-            <div className="card-box" key={index}>
+          {statCards.map((item) => (
+            <div className="card-box" key={item.title}>
               <div className="icon">{item.icon}</div>
               <h5>{item.title}</h5>
               <h2>{item.value}</h2>
-              <span className={`subtitle ${item.subtitleClass || ""}`}>
-                {item.subtitle}
-              </span>
+              <span className="subtitle">{item.subtitle}</span>
             </div>
           ))}
         </div>
-
-        {/* QUICK ACTIONS PANEL */}
         <div className="quick-actions-card">
           <h5>Quick Actions</h5>
           <div className="quick-actions-grid">
-            {quickActions.map((action, index) => (
-              <button
-  key={index}
-  className="quick-action-btn"
-  onClick={() => navigate(action.path)}
->
-  {action.icon}
-  <span>{action.label}</span>
-</button>
+            {quickActions.map((action) => (
+              <button key={action.label} className="quick-action-btn" onClick={() => navigate(action.path)}>
+                {action.icon}<span>{action.label}</span>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* RECENT ORDERS */}
       <section className="orders-card">
         <div className="orders-header">
-          <div>
-            <h3>Recent Orders</h3>
-          </div>
-          <button
-  className="view-all-link"
-  onClick={() => navigate("/dashboard/orders")}
->
-  View All <FaArrowRight />
-</button>
+          <h3>Recent Orders</h3>
+          <button className="view-all-link" onClick={() => navigate("/dashboard/orders")}>View All <FaArrowRight /></button>
         </div>
-
         <div className="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Amount</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((item, index) => (
-                <tr key={index}>
-                  <td>
-                    <div className="product">
-                      <img src={item.image} alt={item.product} />
-                      <div className="product-details">
-                        <h6>{item.product}</h6>
-                        <span className="order-id">{item.id}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{item.date}</td>
-                  <td>
-                    <span
-                      className={`status ${item.status.toLowerCase()}`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="amount">{item.amount}</td>
-                  <td>
-                    <button className="view-details-btn">View Details</button>
-                  </td>
+          {loading ? <p className="dashboard-empty-state">Loading orders...</p> : orders.length === 0 ? <p className="dashboard-empty-state">No recent orders found.</p> : (
+            <table>
+              <thead><tr><th>Product</th><th>Date</th><th>Status</th><th>Amount</th><th>Action</th></tr></thead>
+              <tbody>{orders.map((item, index) => (
+                <tr key={item.id || item._id || index}>
+                  <td><div className="product"><img src={item.image} alt={item.product || item.name || "Product"} /><div className="product-details"><h6>{item.product || item.name}</h6><span className="order-id">{item.id || item.orderId}</span></div></div></td>
+                  <td>{item.date}</td><td><span className={`status ${item.status?.toLowerCase() || ""}`}>{item.status}</span></td><td className="amount">{item.amount}</td><td><button className="view-details-btn">View Details</button></td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              ))}</tbody>
+            </table>
+          )}
         </div>
       </section>
 
-      {/* RECOMMENDED FOR YOU */}
       <section className="recommendations-section">
-        <div className="section-header">
-          <h3>Recommended For You</h3>
-          <button
-  className="view-all-link"
-  onClick={() => navigate("/shop")}
->
-  View All <FaArrowRight />
-</button>
-        </div>
-
+        <div className="section-header"><h3>Recommended For You</h3><button className="view-all-link" onClick={() => navigate("/shop")}>View All Products <FaArrowRight /></button></div>
         <div className="recommendations-grid">
-          {recommendations.map((prod) => (
-            <div className="recommendation-card" key={prod.id}>
-              <button className="wishlist-btn">
-                <FaRegHeart />
-              </button>
-              <div className="img-wrapper">
-                <img src={prod.image} alt={prod.name} />
-              </div>
+          {loading ? <p className="dashboard-empty-state">Loading recommendations...</p> : recommendations.length === 0 ? <p className="dashboard-empty-state">No recommendations available right now.</p> : recommendations.map((product) => (
+            <div className="recommendation-card" key={product.id || product._id}>
+              <button className="wishlist-btn" aria-label={`Add ${product.name} to wishlist`}><FaRegHeart /></button>
+              <div className="img-wrapper"><img src={product.image} alt={product.name} /></div>
               <div className="recommendation-details">
-                <span className="recommendation-material">{prod.material}</span>
-                <h6>{prod.name}</h6>
-                <div className="rating">
-                  <span className="stars">{prod.rating}</span>
-                  <span className="reviews-count">({prod.reviewsCount})</span>
-                </div>
-                <div className="pricing">
-                  <span className="price">{prod.price}</span>
-                  <span className="original-price">{prod.originalPrice}</span>
-                </div>
-                <button
-  className="add-to-cart-btn"
-  onClick={() => {
-    addToCart(prod);
-    alert(`${prod.name} added to cart!`);
-  }}
->
-  <FaShoppingBag />
-  Add to Cart
-</button>
+                <span className="recommendation-material">{product.material}</span><h6>{product.name}</h6>
+                <div className="rating"><span className="stars">★★★★★</span><span className="reviews-count">({product.reviewsCount || 0})</span></div>
+                <div className="pricing"><span className="price">₹{product.price}</span>{product.originalPrice && <span className="original-price">₹{product.originalPrice}</span>}</div>
+                <button className="add-to-cart-btn" onClick={() => addToCart(product)}><FaShoppingBag /> Add to Cart</button>
               </div>
             </div>
           ))}
         </div>
       </section>
-     
     </DashboardLayout>
-     
-     </>
   );
 }
 

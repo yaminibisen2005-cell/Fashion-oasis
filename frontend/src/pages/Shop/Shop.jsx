@@ -1,4 +1,5 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import "./Shop.css";
 
@@ -14,6 +15,7 @@ import Footer from "../../components/Footer/Footer";
 
 export default function Shop() {
   const shopContentRef = useRef(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
@@ -24,12 +26,44 @@ export default function Shop() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(9);
 
+  // Read URL query parameters on mount and when they change
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    const filterParam = searchParams.get('filter');
+
+    if (categoryParam) {
+      // Map URL category to product category
+      const categoryMap = {
+        'necklace': 'Necklace',
+        'earrings': 'Earrings',
+        'rings': 'Rings',
+        'bracelets': 'Bracelets',
+        'mangalsutra': 'Mangalsutra',
+        'wedding': 'Wedding',
+      };
+      setSelectedCategory(categoryMap[categoryParam] || categoryParam);
+    }
+
+    if (filterParam === 'best-sellers') {
+      setSortBy('Popularity');
+    } else if (filterParam === 'new-arrivals') {
+      setSortBy('Newest');
+    }
+  }, [searchParams]);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Category filter
+    // Category filter - handle both exact match and partial match for categories
     if (selectedCategory !== "All Products") {
-      result = result.filter(item => item.category === selectedCategory);
+      result = result.filter(item => {
+        // Exact match
+        if (item.category === selectedCategory) return true;
+        // Partial match for categories like "Jewellery Sets" matching "Jewellery"
+        if (selectedCategory.toLowerCase().includes(item.category.toLowerCase())) return true;
+        if (item.category.toLowerCase().includes(selectedCategory.toLowerCase())) return true;
+        return false;
+      });
     }
 
     // Search filter

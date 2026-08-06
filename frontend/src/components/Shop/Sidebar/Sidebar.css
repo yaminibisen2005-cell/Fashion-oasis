@@ -14,15 +14,15 @@ top:110px;
 
 .filter-card{
 
-background:#fff;
+background:var(--card-background);
 
-border-radius:20px;
+border-radius:var(--radius-card);
 
 padding:25px;
 
-border:1px solid #f3e7e7;
+border:1px solid var(--border-color);
 
-box-shadow:0 8px 24px rgba(0,0,0,.04);
+box-shadow:var(--shadow-md);
 
 }
 
@@ -34,7 +34,7 @@ font-weight:700;
 
 margin-bottom:22px;
 
-color:#2f2a2a;
+color:var(--heading-color);
 
 }
 
@@ -58,11 +58,11 @@ align-items:center;
 
 padding:13px 16px;
 
-border-radius:12px;
+border-radius:var(--radius-input);
 
 cursor:pointer;
 
-transition:.3s;
+transition:var(--transition-fast);
 
 margin-bottom:8px;
 
@@ -70,7 +70,7 @@ margin-bottom:8px;
 
 .category-list li:hover{
 
-background:#fff4f5;
+background:var(--light-background);
 
 }
 
@@ -78,7 +78,7 @@ background:#fff4f5;
 
 background:#fdecef;
 
-color:#ef6f8f;
+color:var(--primary-pink);
 
 font-weight:600;
 
@@ -90,7 +90,7 @@ background:#f6f6f6;
 
 padding:4px 10px;
 
-border-radius:20px;
+border-radius:var(--radius-card);
 
 font-size:13px;
 
@@ -118,34 +118,34 @@ width:18px;
 
 height:18px;
 
-accent-color:#d95f72;
+accent-color:var(--primary-pink);
 
 }
 
 .clear-filters-btn{
   width: 100%;
   padding: 12px 20px;
-  border: 1px solid #ef6f8f;
-  background: #fff;
-  color: #ef6f8f;
-  border-radius: 12px;
+  border: 1px solid var(--primary-pink);
+  background: var(--card-background);
+  color: var(--primary-pink);
+  border-radius: var(--radius-input);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: .3s;
+  transition: var(--transition-fast);
   margin-top: 16px;
 }
 
 .clear-filters-btn:hover{
-  background: #ef6f8f;
-  color: #fff;
+  background: var(--primary-pink);
+  color: var(--card-background);
 }
 
 .shop-sidebar input[type="range"]{
 
 width:100%;
 
-accent-color:#ef6f8f;
+accent-color:var(--primary-pink);
 
 margin:20px 0;
 

@@ -15,7 +15,6 @@ import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
-import Payment from "./pages/Payment/Payment";
 import ThankYou from "./pages/ThankYou/ThankYou";
 import TrackOrder from "./pages/TrackOrder/TrackOrder";
 import Login from "./pages/Login/Login";
@@ -30,6 +29,16 @@ import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+// import SellerDashboard from "./pages/Seller/SellerDashboard";
+
+
+import TermsAndConditions from "./pages/TermsAndConditions/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
+import SellerLogin from "./pages/SellerAuth/SellerLogin";
+import SellerRegister from "./pages/SellerAuth/SellerRegister";
+import SellerDashboard from "./pages/SellerDashboard/SellerDashboard";
+import ProtectedSellerRoute from "./components/ProtectedSellerRoute/ProtectedSellerRoute";
+
 function App() {
   useEffect(() => {
     AOS.init({
@@ -54,7 +63,6 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment" element={<Payment />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -68,6 +76,21 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/*" element={<AdminLayout />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+          <Route path="/seller" element={<SellerDashboard />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/seller/login" element={<SellerLogin />} />
+          <Route path="/seller/register" element={<SellerRegister />} />
+          <Route
+            path="/seller/dashboard"
+            element={
+              <ProtectedSellerRoute>
+                <SellerDashboard />
+              </ProtectedSellerRoute>
+            }
+          />
+
         </Routes>
 
       </Router>

@@ -44,47 +44,70 @@ display:block;
 button{
 cursor:pointer;
 } */
-@import url('https://fonts.googleapis.com/css2?family=Allura&family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Colors */
-  --primary-color: #EF6F8F;
-  --primary-hover: #E4577C;
-  --luxury-gold: #D4A04B;
-  --background-color: #FFF8F6;
-  --section-background: #FFFDFC;
-  --light-pink: #FDF2F5;
+  /* Fashion Oasis Brand Colors */
+  --primary-pink: #EA6B8D;
+  --hover-pink: #D95579;
+  --gold-accent: #D4A73A;
+  --heading-color: #3F2B2F;
+  --body-text: #6F5A5F;
+  --light-background: #FFF9F8;
+  --card-background: #FFFFFF;
+  --border-color: #F3DDE3;
   --white: #FFFFFF;
-  --heading-color: #34211D;
-  --body-text: #6B5B5B;
-  --muted-text: #8E7A6B;
-  --border-color: #F2E6E9;
-  --success-color: #43A047;
-  --danger-color: #E53935;
 
   /* Typography */
-  --heading-font: 'DM Serif Display', serif;
-  --script-font: 'Allura', cursive;
+  --heading-font: 'Cormorant Garamond', serif;
   --body-font: 'Poppins', sans-serif;
 
-  /* Spacing */
-  --section-padding-top: 100px;
-  --section-padding-bottom: 100px;
+  /* Spacing System */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 48px;
+  --spacing-6xl: 64px;
+
+  /* Section Spacing */
+  --section-padding-top: 80px;
+  --section-padding-bottom: 80px;
   --card-padding: 24px;
   --container-width: 1320px;
 
-  /* Shadows */
-  --card-shadow: 0 10px 35px rgba(0,0,0,.08);
-  --card-shadow-hover: 0 18px 45px rgba(239,111,143,.18);
-
-  /* Border Radii */
+  /* Border Radius System */
   --radius-card: 24px;
-  --radius-btn: 12px;
-  --radius-input: 14px;
+  --radius-btn: 999px;
+  --radius-input: 16px;
   --radius-badge: 999px;
+  --radius-sm: 8px;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 18px 45px rgba(239, 111, 143, 0.18);
+  --shadow-luxury: 0 10px 35px rgba(0, 0, 0, 0.08);
 
   /* Transitions */
-  --transition: 0.35s ease;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.35s ease;
+  --transition-slow: 0.5s ease;
+
+  /* Admin / Seller Dashboard Theme (used by AdminLayout.css & SellerLayout.css) */
+  --primary-color: #EF6F8F;
+  --secondary-color: #D94C7A;
+  --accent-color: #D4AF37;
+  --text-dark: #2D2324;
+  --text-muted: #8E7A6B;
+  --background-color: #FAF6F5;
+  --card-shadow: 0 4px 15px rgba(239, 111, 143, 0.08);
+  --transition: all 0.3s ease;
 }
 
 * {
@@ -94,7 +117,7 @@ cursor:pointer;
 }
 
 body {
-  background-color: var(--background-color);
+  background-color: var(--light-background);
   color: var(--body-text);
   font-family: var(--body-font);
   overflow-x: hidden;

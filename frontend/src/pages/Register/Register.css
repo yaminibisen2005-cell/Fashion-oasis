@@ -1,12 +1,12 @@
 @import "../Auth.css";
 
 .register-theme {
-  --auth-wrapper-y: 15px;
-  --auth-title-margin-top: 25px;
-  --auth-title-margin-bottom: 14px;
-  --auth-subtitle-margin-bottom: 32px;
-  --auth-input-gap: 23px;
-  --auth-register-margin-top: 26px;
+  --auth-wrapper-y: 0px;
+  --auth-title-margin-top: 16px;
+  --auth-title-margin-bottom: 8px;
+  --auth-subtitle-margin-bottom: 24px;
+  --auth-input-gap: 16px;
+  --auth-register-margin-top: 20px;
 }
 
 /* ==========================================

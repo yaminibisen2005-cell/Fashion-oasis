@@ -57,8 +57,8 @@ const CouponsSection = ({ coupons, addCoupon, deleteCoupon, toggleCouponStatus }
             </tr>
           </thead>
           <tbody>
-            {coupons.map((coupon, idx) => (
-              <tr key={idx}>
+            {coupons.map((coupon) => (
+              <tr key={coupon._id || Math.random()}>
                 <td><strong>{coupon.code}</strong></td>
                 <td>{coupon.discount}</td>
                 <td>{coupon.minOrder}</td>
@@ -68,7 +68,7 @@ const CouponsSection = ({ coupons, addCoupon, deleteCoupon, toggleCouponStatus }
                     className={`status-badge-inline ${
                       coupon.status === "Active" ? "active" : "inactive"
                     }`}
-                    onClick={() => toggleCouponStatus(coupon.code)}
+                    onClick={() => toggleCouponStatus(coupon._id)}
                     style={{ cursor: "pointer" }}
                     title="Click to toggle status"
                   >
@@ -78,7 +78,7 @@ const CouponsSection = ({ coupons, addCoupon, deleteCoupon, toggleCouponStatus }
                 <td>
                   <button
                     className="tbl-action-btn delete"
-                    onClick={() => deleteCoupon(coupon.code)}
+                    onClick={() => deleteCoupon(coupon._id)}
                     title="Delete Coupon"
                   >
                     <FaTrash />

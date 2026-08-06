@@ -69,21 +69,16 @@ const About = () => {
             </h2>
 
             <p>
-
-              Fashion Oasis was born from a love for timeless beauty
-              and fine craftsmanship. Every jewellery piece is
-              thoughtfully handcrafted to celebrate life's precious
-              moments.
-
+              Established in 2024, Fashion Oasis is a handmade gifting and artificial jewellery brand dedicated to creating unique and thoughtfully crafted products for every special occasion. Since its inception, the brand has successfully delivered 500+ orders, earning the trust of customers through quality craftsmanship, creative designs, and attention to detail. With a growing collection of fashion accessories, bouquets, and artificial jewellery, Fashion Oasis continues to make every celebration more memorable.
             </p>
 
             <div className="story-list">
 
-              <div>❤ Made With Love</div>
+              <div>❤️ Made With Love</div>
 
-              <div>💎 Premium Quality</div>
+              <div>✨ Premium Quality</div>
 
-              <div>🌿 Ethical & Sustainable</div>
+              <div>� Ethical & Sustainable</div>
 
             </div>
 
@@ -113,15 +108,58 @@ const About = () => {
 
             <ul>
 
-              <li>✔ Genuine Materials</li>
+              <li>
+                <div className="promise-icon">✨</div>
+                <div className="promise-content">
+                  <h4>Genuine Materials</h4>
+                  <p>Carefully selected premium-quality materials.</p>
+                </div>
+              </li>
 
-              <li>✔ Skilled Craftsmanship</li>
+              <li>
+                <div className="promise-icon">💎</div>
+                <div className="promise-content">
+                  <h4>Skilled Craftsmanship</h4>
+                  <p>Handcrafted by skilled artisans.</p>
+                </div>
+              </li>
 
-              <li>✔ Timeless Designs</li>
+              <li>
+                <div className="promise-icon">🌸</div>
+                <div className="promise-content">
+                  <h4>Timeless Designs</h4>
+                  <p>Elegant styles made to last.</p>
+                </div>
+              </li>
 
-              <li>✔ Customer Satisfaction</li>
+              <li>
+                <div className="promise-icon">❤️</div>
+                <div className="promise-content">
+                  <h4>Customer Satisfaction</h4>
+                  <p>Trusted by hundreds of happy customers.</p>
+                </div>
+              </li>
 
             </ul>
+
+            <div className="promise-stats">
+
+              <div className="stat-item">
+                <div className="stat-number">500+</div>
+                <div className="stat-label">Happy Orders</div>
+              </div>
+
+              <div className="stat-item">
+                <div className="stat-number">2024</div>
+                <div className="stat-label">Established</div>
+              </div>
+
+              <div className="stat-item">
+                <div className="stat-number">100%</div>
+                <div className="stat-label">Handcrafted</div>
+              </div>
+
+            </div>
 
           </div>
 

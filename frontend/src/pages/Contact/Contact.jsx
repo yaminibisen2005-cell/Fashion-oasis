@@ -473,7 +473,7 @@ const faqs = [
 </section>
 {/* ================= FAQ SECTION ================= */}
 
-<section className="faq-section">
+<section className="faq-section" id="faq-section">
 
   <div className="faq-header">
 

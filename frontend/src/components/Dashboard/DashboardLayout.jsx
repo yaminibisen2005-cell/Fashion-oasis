@@ -1,6 +1,9 @@
 import "./DashboardLayout.css";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+
+import sidebarbg from "../../assets/sidebarbg.png";
+import logo from "../../assets/logo.png";
 
 import {
   FaHome,
@@ -13,14 +16,36 @@ import {
   FaCamera,
 } from "react-icons/fa";
 
-import logo from "../../assets/logo.png"; // Change to your logo
+function DashboardLayout({ children, showProfile = true }) {
+  const [userName, setUserName] = useState("User");
 
-function DashboardLayout({ children ,showProfile = true}) {
-   const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const [profileImage, setProfileImage] = useState(
     "https://i.pravatar.cc/150?img=12"
   );
+
+  useEffect(() => {
+    const storedUser =
+      JSON.parse(localStorage.getItem("user")) ||
+      JSON.parse(localStorage.getItem("customerInfo")) ||
+      JSON.parse(localStorage.getItem("userInfo")) ||
+      JSON.parse(localStorage.getItem("profile"));
+
+    if (storedUser) {
+      const resolvedName =
+        storedUser.name ||
+        storedUser.fullName ||
+        storedUser.userName ||
+        storedUser.username ||
+        storedUser.displayName ||
+        `${storedUser.firstName || ""} ${storedUser.lastName || ""}`.trim();
+
+      if (resolvedName) {
+        setUserName(resolvedName);
+      }
+    }
+  }, []);
 
   const handleEditClick = () => {
     fileInputRef.current.click();
@@ -31,123 +56,108 @@ function DashboardLayout({ children ,showProfile = true}) {
 
     if (!file) return;
 
-    const imageUrl = URL.createObjectURL(file);
-    setProfileImage(imageUrl);
-
-    // Later you can upload this file to your backend
-    // console.log(file);
+    setProfileImage(URL.createObjectURL(file));
   };
+
   return (
     <div className="dashboard-layout">
+      <aside
+        className="sidebar"
+        style={{
+          backgroundImage: `url(${sidebarbg})`,
+        }}
+      >
+        <div className="logo-section">
+          {showProfile ? (
+            <>
+              <div className="profile-wrapper">
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="sidebar-profile"
+                />
 
-      {/* Sidebar */}
+                <button
+                  className="edit-profile-btn"
+                  onClick={handleEditClick}
+                >
+                  <FaCamera />
+                </button>
 
-     <aside className="sidebar">
-  
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+              </div>
 
+              <h3>{userName}</h3>
+            </>
+          ) : (
+            <>
+              <img src={logo} alt="Fashion Oasis" />
+              <h3>Fashion Oasis</h3>
+            </>
+          )}
+        </div>
 
-       <div className="logo-section">
-
-  {showProfile ? (
-    <>
-  <div className="profile-wrapper">
-   <img
-  src={profileImage}
-  alt="Profile"
-  className="sidebar-profile"
-/>
-
-    <button
-  className="edit-profile-btn"
-  onClick={handleEditClick}
->
-  <FaCamera />
-</button>
-<input
-  type="file"
-  accept="image/*"
-  ref={fileInputRef}
-  onChange={handleImageChange}
-  style={{ display: "none" }}
-/>
-  </div>
-
-  <h3>Shwet Samrat</h3>
-</>
-  ) : (
-    <>
-      <img src={logo} alt="Fashion Oasis" />
-
-      <h3>Fashion Oasis</h3>
-    </>
-  )}
-
-</div>
         <ul className="menu">
-
-          <li className="">
+          <li>
             <Link to="/dashboard">
               <FaHome />
-              Dashboard
+              <span>Dashboard</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/profile">
               <FaUser />
-              Profile
+              <span>Profile</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/orders">
               <FaShoppingBag />
-              Orders
+              <span>Orders</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/wishlist">
               <FaHeart />
-              Wishlist
+              <span>Wishlist</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/reviews">
               <FaStar />
-              Reviews
+              <span>Reviews</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/settings">
               <FaCog />
-              Account Settings
+              <span>Account Settings</span>
             </Link>
           </li>
-
         </ul>
 
         <div className="logout">
-
-          <Link to="/">
+          <Link to="/" onClick={() => localStorage.clear()}>
             <FaSignOutAlt />
-            Logout
+            <span>Logout</span>
           </Link>
-
         </div>
-
       </aside>
 
-      {/* Main */}
-
       <main className="dashboard-main">
-
         {children}
-
       </main>
-
     </div>
   );
 }
