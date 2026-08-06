@@ -17,16 +17,13 @@ import {
 } from "react-icons/fa";
 
 const serviceCategories = [
-  "Necklace",
-  "Earrings",
-  "Rings",
-  "Bracelets",
-  "Jewellery Sets",
-  "Personalized Gifts",
-  "Couple Gifts",
-  "Best Sellers",
-  "New Arrivals",
-  "View All Products",
+  { name: "All Products", path: "/shop" },
+  { name: "Necklace", category: "necklace" },
+  { name: "Earrings", category: "earrings" },
+  { name: "Rings", category: "rings" },
+  { name: "Bracelets", category: "bracelets" },
+  { name: "Mangalsutra", category: "mangalsutra" },
+  { name: "Wedding", category: "wedding" },
 ];
 
 const Navbar = () => {
@@ -45,6 +42,7 @@ const Navbar = () => {
 
   const [navLogo, setNavLogo] = useState(logo);
   const [storeName, setStoreName] = useState("FASHION OASIS");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const cartCount = cart.reduce(
     (sum, item) => sum + item.quantity,
@@ -64,6 +62,11 @@ const Navbar = () => {
       );
     };
 
+    const checkAuth = () => {
+      const customerEmail = localStorage.getItem("customerEmail");
+      setIsAuthenticated(!!customerEmail);
+    };
+
     // Load store settings
     const saved = localStorage.getItem("storeSettings");
     if (saved) {
@@ -76,13 +79,16 @@ const Navbar = () => {
 
     handleScroll();
     checkHomePage();
+    checkAuth();
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("popstate", checkHomePage);
+    window.addEventListener("storage", checkAuth);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("popstate", checkHomePage);
+      window.removeEventListener("storage", checkAuth);
     };
 
   }, []);
@@ -92,7 +98,7 @@ const Navbar = () => {
     <header className="navbar-wrapper">
 
       <nav
-        className={`navbar ${scrolled ? "scrolled" : ""} ${
+        className={`fo-navbar ${scrolled ? "scrolled" : ""} ${
           !isHomePage ? "solid" : ""
         }`}
       >
@@ -148,22 +154,29 @@ const Navbar = () => {
               <FaChevronDown />
 
               <div
-                className={`dropdown-menu ${
+                className={`fo-dropdown-menu ${
                   serviceOpen ? "show" : ""
                 }`}
               >
 
-                {serviceCategories.map((item, index) => (
-
-                  <Link
-                    key={index}
-                    className="dropdown-item"
-                    to={`/collections?category=${encodeURIComponent(item)}`}
-                  >
-                    {item}
-                  </Link>
-
-                ))}
+                {serviceCategories.map((item, index) => {
+                  const to = item.path 
+                    ? item.path 
+                    : item.category 
+                      ? `/shop?category=${item.category}` 
+                      : item.filter 
+                        ? `/shop?filter=${item.filter}` 
+                        : '/shop';
+                  return (
+                    <Link
+                      key={index}
+                      className="fo-dropdown-item"
+                      to={to}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
 
               </div>
 
@@ -189,57 +202,65 @@ const Navbar = () => {
 
           <div className="nav-icons">
 
-            <Link
-              to="/search"
-              className="icon-wrapper"
-            >
-              <FaSearch />
-            </Link>
+            {!isAuthenticated ? (
+              <Link to="/login" className="login-btn">
+                Login
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/search"
+                  className="icon-wrapper"
+                >
+                  <FaSearch />
+                </Link>
 
-            <Link
-              to="/wishlist"
-              className="icon-wrapper"
-            >
+                <Link
+                  to="/wishlist"
+                  className="icon-wrapper"
+                >
 
-              <FaRegHeart />
+                  <FaRegHeart />
 
-              {wishlist.length > 0 && (
+                  {wishlist.length > 0 && (
 
-                <span className="nav-badge">
+                    <span className="nav-badge">
 
-                  {wishlist.length}
+                      {wishlist.length}
 
-                </span>
+                    </span>
 
-              )}
+                  )}
 
-            </Link>
+                </Link>
 
-            <Link
-              to="/cart"
-              className="icon-wrapper"
-            >
+                <Link
+                  to="/cart"
+                  className="icon-wrapper"
+                >
 
-              <FaShoppingBag />
+                  <FaShoppingBag />
 
-              {cartCount > 0 && (
+                  {cartCount > 0 && (
 
-                <span className="nav-badge">
+                    <span className="nav-badge">
 
-                  {cartCount}
+                      {cartCount}
 
-                </span>
+                    </span>
 
-              )}
+                  )}
 
-            </Link>
+                </Link>
 
-            <Link
-  to="/dashboard"
-  className="icon-wrapper"
->
-  <FaRegUser />
-</Link>
+                <Link
+                  to="/dashboard"
+                  className="icon-wrapper"
+                >
+                  <FaRegUser />
+                </Link>
+              </>
+            )}
 
           </div>
 
@@ -323,20 +344,25 @@ const Navbar = () => {
 
               <ul className="mobile-dropdown">
 
-                {serviceCategories.map((item, index) => (
-
-                  <li key={index}>
-
-                    <Link
-                      to={`/collections?category=${encodeURIComponent(item)}`}
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      {item}
-                    </Link>
-
-                  </li>
-
-                ))}
+                {serviceCategories.map((item, index) => {
+                  const to = item.path 
+                    ? item.path 
+                    : item.category 
+                      ? `/shop?category=${item.category}` 
+                      : item.filter 
+                        ? `/shop?filter=${item.filter}` 
+                        : '/shop';
+                  return (
+                    <li key={index}>
+                      <Link
+                        to={to}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
 
               </ul>
 
@@ -368,53 +394,65 @@ const Navbar = () => {
 
           <div className="mobile-nav-icons">
 
-            <Link
-              to="/search"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
-              <FaSearch />
-            </Link>
+            {!isAuthenticated ? (
+              <Link
+                to="/login"
+                className="login-btn"
+                onClick={() => setMenuOpen(false)}
+              >
+                Login
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/search"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaSearch />
+                </Link>
 
-            <Link
-              to="/wishlist"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
+                <Link
+                  to="/wishlist"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
 
-              <FaRegHeart />
+                  <FaRegHeart />
 
-              {wishlist.length > 0 && (
-                <span className="nav-badge">
-                  {wishlist.length}
-                </span>
-              )}
+                  {wishlist.length > 0 && (
+                    <span className="nav-badge">
+                      {wishlist.length}
+                    </span>
+                  )}
 
-            </Link>
+                </Link>
 
-            <Link
-              to="/cart"
-              className="icon-wrapper"
-              onClick={() => setMenuOpen(false)}
-            >
+                <Link
+                  to="/cart"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
 
-              <FaShoppingBag />
+                  <FaShoppingBag />
 
-              {cartCount > 0 && (
-                <span className="nav-badge">
-                  {cartCount}
-                </span>
-              )}
+                  {cartCount > 0 && (
+                    <span className="nav-badge">
+                      {cartCount}
+                    </span>
+                  )}
 
-            </Link>
+                </Link>
 
-           <Link
-  to="/dashboard"
-  className="icon-wrapper"
-  onClick={() => setMenuOpen(false)}
->
-  <FaRegUser />
-</Link>
+                <Link
+                  to="/dashboard"
+                  className="icon-wrapper"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaRegUser />
+                </Link>
+              </>
+            )}
 
           </div>
 

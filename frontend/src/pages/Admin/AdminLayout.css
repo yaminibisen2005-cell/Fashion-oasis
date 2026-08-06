@@ -1547,3 +1547,114 @@
     width: 90%;
   }
 }
+
+/* Custom Card Typography Classes requested by user */
+.card-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #5f4b4b;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.card-value {
+  font-family: "Inter", sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: #3b2a2a;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.card-growth {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #16a34a;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.card-growth-stable {
+  color: #5f4b4b;
+}
+
+/* Dashboard-wide Font Family Override (Poppins / Inter) */
+.admin-layout-container,
+.seller-layout-container,
+.admin-layout-container h1, .admin-layout-container h2, .admin-layout-container h3, .admin-layout-container h4, .admin-layout-container h5, .admin-layout-container h6,
+.seller-layout-container h1, .seller-layout-container h2, .seller-layout-container h3, .seller-layout-container h4, .seller-layout-container h5, .seller-layout-container h6,
+.admin-layout-container p, .seller-layout-container p,
+.admin-layout-container span, .seller-layout-container span,
+.admin-layout-container button, .seller-layout-container button,
+.admin-layout-container input, .seller-layout-container input,
+.admin-layout-container select, .seller-layout-container select,
+.admin-layout-container textarea, .seller-layout-container textarea {
+  font-family: "Poppins", "Inter", sans-serif !important;
+}
+
+/* Enlarge Section Titles & Align Subtitles Directly Below */
+.admin-layout-container .section-title-row,
+.seller-layout-container .section-title-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  margin-bottom: 32px !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.admin-layout-container .section-title-row > div:first-child,
+.seller-layout-container .section-title-row > div:first-child {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+}
+
+.admin-layout-container .section-title-row h2,
+.seller-layout-container .section-title-row h2 {
+  font-family: "Poppins", "Inter", sans-serif !important;
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  color: #2D2324 !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.5px !important;
+  text-align: left !important;
+}
+
+/* Restore navbar header typography back to original font */
+.admin-header .header-logo-group h3,
+.seller-header .header-logo-group h3,
+.admin-layout-container .header-logo-group h3,
+.seller-layout-container .header-logo-group h3 {
+  font-family: var(--heading-font, 'Cormorant Garamond', serif) !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--text-dark, #2D2324) !important;
+  margin-bottom: 0 !important;
+  line-height: 1.1 !important;
+}
+
+.admin-header .header-logo-group p,
+.seller-header .header-logo-group p,
+.admin-layout-container .header-logo-group p,
+.seller-layout-container .header-logo-group p {
+  font-family: var(--body-font, 'Poppins', sans-serif) !important;
+  font-size: 10px !important;
+  color: var(--accent-color, #D4AF37) !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0 !important;
+}
+
+
+

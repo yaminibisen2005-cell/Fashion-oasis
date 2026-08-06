@@ -1,6 +1,6 @@
 .cart-page {
   padding: 120px 0 80px 0;
-  background-color: var(--background-color);
+  background-color: var(--light-background);
   min-height: 80vh;
 }
 
@@ -12,14 +12,14 @@
 .cart-title h1 {
   font-size: 38px;
   font-weight: 700;
-  color: var(--text-dark);
+  color: var(--heading-color);
   margin-bottom: 10px;
 }
 
 .cart-title p {
   font-family: var(--body-font);
   font-size: 15px;
-  color: var(--text-muted);
+  color: var(--body-text);
 }
 
 .cart-content-wrapper {
@@ -37,9 +37,9 @@
 }
 
 .cart-table-card {
-  background-color: var(--white);
-  border-radius: 16px;
-  box-shadow: var(--card-shadow);
+  background-color: var(--card-background);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   overflow: hidden;
 }
@@ -52,7 +52,7 @@
   border-bottom: 1px solid var(--border-color);
   font-family: var(--body-font);
   font-weight: 600;
-  color: var(--text-dark);
+  color: var(--heading-color);
   font-size: 14px;
   letter-spacing: 0.5px;
 }
@@ -92,7 +92,7 @@
 .cart-item-meta h4 {
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-dark);
+  color: var(--heading-color);
   margin-bottom: 5px;
 }
 
@@ -100,7 +100,7 @@
   display: inline-block;
   font-family: var(--body-font);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--body-text);
   background-color: #FFF2F5;
   padding: 2px 10px;
   border-radius: 20px;
@@ -113,7 +113,7 @@
   gap: 6px;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--body-text);
   font-family: var(--body-font);
   font-size: 13px;
   cursor: pointer;
@@ -128,7 +128,7 @@
   font-family: var(--body-font);
   font-size: 18px;
   font-weight: 500;
-  color: var(--text-dark);
+  color: var(--heading-color);
 }
 
 /* Quantity selector styling */
@@ -147,7 +147,7 @@
   border-radius: 50%;
   background: var(--white);
   border: 1px solid var(--border-color);
-  color: var(--text-dark);
+  color: var(--heading-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,10 +172,10 @@
 
 /* Coupon Card Styling */
 .coupon-card {
-  background-color: var(--white);
-  border-radius: 16px;
+  background-color: var(--card-background);
+  border-radius: var(--radius-card);
   padding: 30px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
 }
 
@@ -209,7 +209,7 @@
 
 .coupon-form button {
   padding: 12px 30px;
-  background-color: var(--white);
+  background-color: var(--card-background);
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
   border-radius: 8px;
@@ -246,7 +246,7 @@
 .coupon-tip {
   font-family: var(--body-font);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--body-text);
 }
 
 /* Trust Badges Styling */
@@ -257,14 +257,14 @@
 }
 
 .badge-item {
-  background-color: var(--white);
+  background-color: var(--card-background);
   padding: 20px;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 15px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-md);
 }
 
 .badge-icon-wrapper {
@@ -287,22 +287,22 @@
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 2px;
-  color: var(--text-dark);
+  color: var(--heading-color);
 }
 
 .badge-text p {
   font-family: var(--body-font);
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--body-text);
   margin-bottom: 0;
 }
 
 /* Right Column Order Summary Styling */
 .summary-card {
-  background-color: var(--white);
-  border-radius: 16px;
+  background-color: var(--card-background);
+  border-radius: var(--radius-card);
   padding: 30px;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   position: sticky;
   top: 100px;
@@ -312,7 +312,7 @@
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 20px;
-  color: var(--text-dark);
+  color: var(--heading-color);
 }
 
 .summary-divider {
@@ -327,7 +327,7 @@
   margin-bottom: 15px;
   font-family: var(--body-font);
   font-size: 15px;
-  color: var(--text-dark);
+  color: var(--heading-color);
 }
 
 .summary-row.discount {
@@ -405,14 +405,14 @@
 
 .empty-cart h2 {
   font-size: 28px;
-  color: var(--text-dark);
+  color: var(--heading-color);
   margin-bottom: 12px;
 }
 
 .empty-cart p {
   font-family: var(--body-font);
   font-size: 15px;
-  color: var(--text-muted);
+  color: var(--body-text);
   margin-bottom: 30px;
 }
 

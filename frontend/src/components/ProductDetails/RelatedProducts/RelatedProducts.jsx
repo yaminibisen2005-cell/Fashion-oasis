@@ -35,7 +35,7 @@ const RelatedProducts = ({ currentProduct, products }) => {
 
         <div className="section-title">
           <h2>You May Also Like</h2>
-          <div className="divider"></div>
+          <div className="fo-divider"></div>
           <p>Handpicked jewellery specially for you.</p>
         </div>
 
@@ -56,7 +56,9 @@ const RelatedProducts = ({ currentProduct, products }) => {
         >
           {relatedProducts.map((product) => (
             <SwiperSlide key={product.id}>
-              <ProductCard product={product} />
+              <div className="related-product-card-wrapper">
+                <ProductCard product={product} showAddToCart={true} hideName={true} hideRating={true} />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>

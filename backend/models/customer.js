@@ -39,7 +39,32 @@ const customerSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: ''
-  }
+  },
+  status: {
+    type: String,
+    enum: ['Active', 'Inactive'],
+    default: 'Active'
+  },
+  avatar: {
+    type: String,
+    default: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&q=80'
+  },
+  // ADD THIS FIELD FOR 2FA
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
+  wishlist: [
+    {
+      id: { type: String },
+      name: { type: String },
+      image: { type: String },
+      price: { type: mongoose.Schema.Types.Mixed },
+      oldPrice: { type: mongoose.Schema.Types.Mixed }
+    }
+  ],
+  resetPasswordToken: String,
+  resetPasswordExpire: Date
 }, {
   timestamps: true
 });

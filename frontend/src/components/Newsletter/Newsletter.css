@@ -7,7 +7,7 @@
     max-width: 1450px;
    margin: 40px auto 60px;
     position: relative;
-    border-radius: 10px;
+    border-radius: var(--radius-card);
     overflow: hidden;
    
 }

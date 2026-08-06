@@ -17,7 +17,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center right;
 }
 
 .hero-overlay-shop {
@@ -25,9 +25,10 @@
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0.3) 100%
+    rgba(58,42,46,.72) 0%,
+    rgba(58,42,46,.55) 30%,
+    rgba(58,42,46,.20) 60%,
+    rgba(58,42,46,0) 100%
   );
 }
 
@@ -36,7 +37,7 @@
   z-index: 2;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 20px 0 80px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -47,50 +48,57 @@
   flex-direction: column;
   justify-content: center;
   color: #fff;
-  max-width: 600px;
+  max-width: 520px;
 }
 
-.breadcrumb {
+.fo-breadcrumb {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 15px;
   margin-bottom: 25px;
   color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 4px rgba(58, 42, 46, 0.2);
 }
 
-.breadcrumb a {
+.fo-breadcrumb a {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.9);
   transition: .3s;
 }
 
-.breadcrumb a:hover {
+.fo-breadcrumb a:hover {
   color: #ef6f8f;
 }
 
-.breadcrumb span {
+.fo-breadcrumb span {
   color: rgba(255, 255, 255, 0.6);
 }
 
 .hero-left h1 {
   font-size: 60px;
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.05;
   margin-bottom: 22px;
   color: #fff;
+  text-shadow: 0 2px 12px rgba(58, 42, 46, 0.25);
 }
 
 .hero-left p {
   font-size: 20px;
-  line-height: 1.8;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
   max-width: 520px;
+  text-shadow: 0 1px 8px rgba(58, 42, 46, 0.2);
 }
 
 @media(max-width: 992px) {
   .shop-hero {
     height: 400px;
+  }
+
+  .shop-hero-content {
+    padding: 0 20px 0 48px;
   }
 
   .hero-left h1 {
@@ -105,6 +113,10 @@
 @media(max-width: 768px) {
   .shop-hero {
     height: 350px;
+  }
+
+  .shop-hero-content {
+    padding: 0 16px 0 24px;
   }
 
   .hero-left {
@@ -126,10 +138,10 @@
   }
 
   .shop-hero-content {
-    padding: 0 16px;
+    padding: 0 16px 0 24px;
   }
 
-  .breadcrumb {
+  .fo-breadcrumb {
     font-size: 14px;
     margin-bottom: 20px;
   }
@@ -160,7 +172,7 @@
     line-height: 1.6;
   }
 
-  .breadcrumb {
+  .fo-breadcrumb {
     font-size: 13px;
   }
 }

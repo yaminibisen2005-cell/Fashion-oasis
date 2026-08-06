@@ -1,36 +1,79 @@
-import React, { useContext, useState } from "react";
+ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
-import { FaHeart, FaStar, FaTrash } from "react-icons/fa";
+import { FaHeart, FaStar } from "react-icons/fa";
+import { getWishlist, toggleWishlist } from "../../api/customer";
 import "./Wishlist.css";
 
 const Wishlist = () => {
-  const { wishlist, removeFromWishlist, moveToCart, moveAllToCart } =
-    useContext(ShopContext);
-  const navigate = useNavigate();
-
-  // State to track loading for individual items
+  const [wishlist, setWishlist] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [loadingItems, setLoadingItems] = useState({});
-  // State for "Move All to Cart" loading
-  const [loadingAll, setLoadingAll] = useState(false);
+  const navigate = useNavigate();
+  const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
-  const handleMoveToCart = (id) => {
+  useEffect(() => {
+    const fetchWishlistData = async () => {
+      if (!customerToken) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await getWishlist();
+        if (data && data.wishlist) {
+          setWishlist(data.wishlist);
+        }
+      } catch (err) {
+        console.error("Error fetching wishlist:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWishlistData();
+  }, [customerToken]);
+
+  const removeFromWishlist = async (item) => {
+    const id = item.id || item._id;
+    try {
+      const data = await toggleWishlist({
+        product: {
+          id,
+          name: item.name,
+          image: item.image,
+          price: item.price,
+          oldPrice: item.oldPrice,
+        },
+      });
+      if (data && data.wishlist) {
+        setWishlist(data.wishlist);
+      }
+    } catch (err) {
+      console.error("Failed to remove item", err);
+    }
+  };
+
+  const handleMoveToCart = (item) => {
+    const id = item.id || item._id;
     setLoadingItems((prev) => ({ ...prev, [id]: true }));
-    setTimeout(() => {
-      moveToCart(id);
+    setTimeout(async () => {
+      await removeFromWishlist(item);
       setLoadingItems((prev) => ({ ...prev, [id]: false }));
-    }, 600); // 600ms premium loader
+    }, 600);
   };
 
-  const handleMoveAllToCart = () => {
-    setLoadingAll(true);
-    setTimeout(() => {
-      moveAllToCart();
-      setLoadingAll(false);
-    }, 1000); // 1s premium loader for bulk action
-  };
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="wishlist-page text-center" style={{ padding: "80px 0" }}>
+          <p>Loading your wishlist...</p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -57,15 +100,16 @@ const Wishlist = () => {
               </button>
             </div>
           ) : (
-            <>
-              <div className="wishlist-grid">
-                {wishlist.map((item) => (
-                  <div className="wishlist-card" key={item.id}>
+            <div className="wishlist-grid">
+              {wishlist.map((item) => {
+                const itemId = item.id || item._id;
+                return (
+                  <div className="wishlist-card" key={itemId}>
                     <div className="wishlist-image-wrapper">
                       <img src={item.image} alt={item.name} />
                       <button
                         className="remove-wishlist-btn"
-                        onClick={() => removeFromWishlist(item.id)}
+                        onClick={() => removeFromWishlist(item)}
                         title="Remove from wishlist"
                       >
                         <FaHeart className="heart-icon-filled" />
@@ -75,32 +119,28 @@ const Wishlist = () => {
                     <div className="wishlist-info">
                       <h3>{item.name}</h3>
                       <div className="wishlist-stars">
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
+                        <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
                         <span>(5.0)</span>
                       </div>
                       <div className="wishlist-price">
                         <span className="current-price">
-                          ₹{item.price.toLocaleString()}
+                          {typeof item.price === "number" ? `₹${item.price.toLocaleString()}` : item.price}
                         </span>
                         {item.oldPrice && (
                           <del className="old-price">
-                            ₹{item.oldPrice.toLocaleString()}
+                            {typeof item.oldPrice === "number" ? `₹${item.oldPrice.toLocaleString()}` : item.oldPrice}
                           </del>
                         )}
                       </div>
 
                       <button
                         className={`move-to-cart-btn ${
-                          loadingItems[item.id] ? "loading" : ""
+                          loadingItems[itemId] ? "loading" : ""
                         }`}
-                        onClick={() => handleMoveToCart(item.id)}
-                        disabled={loadingItems[item.id]}
+                        onClick={() => handleMoveToCart(item)}
+                        disabled={loadingItems[itemId]}
                       >
-                        {loadingItems[item.id] ? (
+                        {loadingItems[itemId] ? (
                           <span className="spinner"></span>
                         ) : (
                           "MOVE TO CART"
@@ -108,23 +148,9 @@ const Wishlist = () => {
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="wishlist-actions text-center">
-                <button
-                  className={`move-all-btn ${loadingAll ? "loading" : ""}`}
-                  onClick={handleMoveAllToCart}
-                  disabled={loadingAll}
-                >
-                  {loadingAll ? (
-                    <span className="spinner"></span>
-                  ) : (
-                    "MOVE ALL TO CART"
-                  )}
-                </button>
-              </div>
-            </>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>

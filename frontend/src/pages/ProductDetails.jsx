@@ -1,6 +1,6 @@
 import RelatedProducts from "../components/ProductDetails/RelatedProducts/RelatedProducts";
 import "./ProductDetails.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { products } from "../data/products";
 
 
@@ -12,9 +12,14 @@ import RecentlyViewed from "../components/ProductDetails/RecentlyViewed/Recently
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 
-const product = products[0];
-
 const ProductDetails = () => {
+  const { id } = useParams();
+  const product = products.find(p => p.id === parseInt(id));
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
   return (
     <>
    <Navbar/>
@@ -44,7 +49,6 @@ const ProductDetails = () => {
  <RecentlyViewed
           products={products}
       />
-      
       
 
     </div>

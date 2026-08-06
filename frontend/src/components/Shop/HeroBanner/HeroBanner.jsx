@@ -11,7 +11,7 @@ const HeroBanner = () => {
       </div>
 
       <div className="shop-hero-content">
-        <div className="hero-left">
+        <div className="hero-left" data-aos="fade-right">
 
           
 

@@ -1,8 +1,9 @@
-import React, { createContext, useState, useEffect } from "react";
+ import React, { createContext, useState, useEffect } from "react";
 import thumb1 from "../assets/thumb1.png";
 import thumb2 from "../assets/thumb2.png";
 import thumb3 from "../assets/thumb3.png";
 import thumb4 from "../assets/thumb4.png";
+import { toggleWishlist } from "../api/customer"; // <-- Import your wishlist API
 
 export const ShopContext = createContext();
 
@@ -46,15 +47,8 @@ const initialProducts = [
 ];
 
 export const ShopProvider = ({ children }) => {
-  // Wishlist starts with all 4 items
   const [wishlist, setWishlist] = useState([]);
-
-  // Cart starts with 3 items (Rose Quartz Necklace x1, Pearl Drop Earrings x2, Floral Diamond Ring x1)
-  const [cart, setCart] = useState([
-    { product: initialProducts[0], quantity: 1 },
-    { product: initialProducts[1], quantity: 2 },
-    { product: initialProducts[2], quantity: 1 },
-  ]);
+  const [cart, setCart] = useState([]);
 
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -62,48 +56,28 @@ export const ShopProvider = ({ children }) => {
   const [couponSuccess, setCouponSuccess] = useState("");
 
   const [shippingAddress, setShippingAddress] = useState({
-    fullName: "Neha Sharma",
-    phone: "+91 98760 42725",
-    address: "123 MG Road, Bandra West",
-    address2: "101-B Jasmine Heights",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400050",
+    fullName: "",
+    phone: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
 
   const [billingAddress, setBillingAddress] = useState({
-    fullName: "Neha Sharma",
-    phone: "+91 98760 42725",
-    address: "123 MG Road, Bandra West",
-    address2: "101-B Jasmine Heights",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400050",
+    fullName: "",
+    phone: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
 
   const [sameAsShipping, setSameAsShipping] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("upi");
-  
-  // Holds current active order for Order Confirmation & Tracking
-  const [currentOrder, setCurrentOrder] = useState({
-    orderId: "FO12345",
-    date: "15 July 2025",
-    items: [
-      { product: initialProducts[0], quantity: 1 },
-      { product: initialProducts[1], quantity: 1 },
-      { product: initialProducts[2], quantity: 1 },
-    ],
-    subtotal: 4097,
-    discount: 410,
-    shipping: "FREE",
-    total: 3687,
-    status: "Out for Delivery",
-    courier: "Delhivery",
-    shippingId: "123453498",
-    expectedDelivery: "20 July 2025",
-  });
-
-  // Calculate cart totals
+  const [currentOrder, setCurrentOrder] = useState(null);
   const [totals, setTotals] = useState({ subtotal: 0, discount: 0, total: 0 });
 
   useEffect(() => {
@@ -116,22 +90,52 @@ export const ShopProvider = ({ children }) => {
     setTotals({ subtotal, discount, total });
   }, [cart, discountPercent]);
 
-  // Sync billing address if sameAsShipping is true
   useEffect(() => {
     if (sameAsShipping) {
       setBillingAddress({ ...shippingAddress });
     }
   }, [shippingAddress, sameAsShipping]);
 
-  // Wishlist handlers
-  const addToWishlist = (product) => {
-    if (!wishlist.find((item) => item.id === product.id)) {
-      setWishlist([...wishlist, product]);
+  // Updated Wishlist handler to sync with backend API
+  const addToWishlist = async (product) => {
+    try {
+      // Format payload to match your backend schema expectation
+      const payload = {
+        product: {
+          id: String(product.id),
+          name: product.name,
+          image: typeof product.image === "string" ? product.image : "",
+          price: product.price,
+          oldPrice: product.oldPrice || product.price,
+        },
+      };
+
+      await toggleWishlist(payload);
+
+      if (!wishlist.find((item) => item.id === product.id)) {
+        setWishlist([...wishlist, product]);
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist on backend:", error);
     }
   };
 
-  const removeFromWishlist = (id) => {
-    setWishlist(wishlist.filter((item) => item.id !== id));
+  const removeFromWishlist = async (id) => {
+    try {
+      const productToRemove = wishlist.find((item) => item.id === id);
+      if (productToRemove) {
+        await toggleWishlist({
+          product: {
+            id: String(productToRemove.id),
+            name: productToRemove.name,
+            price: productToRemove.price,
+          },
+        });
+      }
+      setWishlist(wishlist.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Failed to remove from wishlist:", error);
+    }
   };
 
   // Cart handlers
@@ -166,7 +170,6 @@ export const ShopProvider = ({ children }) => {
     setCart(cart.filter((item) => item.product.id !== id));
   };
 
-  // Move items from Wishlist to Cart
   const moveToCart = (id) => {
     const target = wishlist.find((item) => item.id === id);
     if (target) {
@@ -182,7 +185,6 @@ export const ShopProvider = ({ children }) => {
     setWishlist([]);
   };
 
-  // Coupon application
   const applyCoupon = (code) => {
     setCouponCode(code);
     if (code.trim().toUpperCase() === "KGL56M6UX") {
@@ -203,7 +205,6 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  // Place order
   const placeOrder = () => {
     const generatedOrderId = "FO" + Math.floor(10000 + Math.random() * 90000);
     const today = new Date();
@@ -213,7 +214,6 @@ export const ShopProvider = ({ children }) => {
       year: "numeric",
     });
     
-    // Calculate final tracking details
     const newOrder = {
       orderId: generatedOrderId,
       date: formattedDate,
@@ -233,7 +233,7 @@ export const ShopProvider = ({ children }) => {
     };
     
     setCurrentOrder(newOrder);
-    setCart([]); // Clear cart after successful order placement
+    setCart([]);
     return newOrder;
   };
 

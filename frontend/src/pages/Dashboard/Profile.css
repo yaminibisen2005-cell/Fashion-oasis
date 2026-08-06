@@ -6,13 +6,13 @@
 
 .profile-card{
 
-    background:#fff;
+    background:var(--card-background);
 
-    border-radius:24px;
+    border-radius:var(--radius-card);
 
     padding:40px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    box-shadow:var(--shadow-md);
 
 }
 
@@ -22,22 +22,22 @@
     gap:25px;
     margin-bottom:40px;
     padding-bottom:25px;
-    border-bottom:1px solid #f1f1f1;
+    border-bottom:1px solid var(--border-color);
 }
 
-.profile-avatar{
+/* .profile-avatar{
     width:100px;
     height:100px;
     border-radius:50%;
     object-fit:cover;
     border:4px solid #EF6F8F;
     box-shadow:0 10px 25px rgba(239,111,143,.25);
-}
+} */
 
 .profile-information h2{
-    font-family:'Cormorant Garamond',serif;
+    font-family:var(--heading-font);
     font-size:36px;
-    color:#352525;
+    color:var(--heading-color);
     margin-bottom:8px;
 }
 
@@ -59,6 +59,7 @@
     display:flex;
 
     flex-direction:column;
+    
 
 }
 
@@ -106,7 +107,7 @@
 
 }
 
-.save-btn{
+.profile-page .fo-save-btn{
 
     margin-top:35px;
 
@@ -130,7 +131,7 @@
 
 }
 
-.save-btn:hover{
+.profile-page .fo-save-btn:hover{
 
     background:#d96b82;
 
@@ -159,12 +160,12 @@ grid-column:auto;
 }
 
 }
-.input-group{
+.profile-page .fo-input-group{
     position:relative;
     width:100%;
 }
 
-.input-icon{
+.profile-page .input-icon{
     position:absolute;
     left:20px;
     top:50%;
@@ -176,11 +177,11 @@ grid-column:auto;
     pointer-events:none;
 }
 
-.input-group input,
-.input-group select,
-.input-group textarea{
+.profile-page .fo-input-group input,
+.profile-page .fo-input-group select,
+.profile-page .fo-input-group textarea{
     width:100%;
-    height:54px;
+    height:56px;
     padding:0 18px 0 58px;   /* More left space */
     border:1px solid #e7d9dc;
     border-radius:12px;
@@ -188,26 +189,225 @@ grid-column:auto;
     font-family:"Poppins",sans-serif;
     outline:none;
     padding-left:60px !important;
+    /* position: relative; */
+    resize: vertical;
 }
 
-.input-group textarea{
+.profile-page .fo-input-group textarea{
     min-height:120px;
     padding:16px 18px 16px 58px;
     resize:none;
 }
 
-.textarea-icon{
+.profile-page .textarea-icon{
     top:22px;
     transform:none;
 }
-input::placeholder,
-textarea::placeholder{
+.profile-page input::placeholder,
+.profile-page textarea::placeholder{
     color:#B7A9AC;
     font-size:15px;
     font-family:'Poppins',sans-serif;
     
 }
 
-select{
+.profile-page select{
     color:#666;
+}
+.profile-page{
+    width:100%;
+    padding:10px 0;
+}
+
+.profile-card{
+    background:var(--ivory);
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:45px;
+    box-shadow:var(--shadow);
+}
+
+.profile-header{
+    margin-bottom:40px;
+    padding-bottom:30px;
+    border-bottom:2px solid var(--blush);
+}
+
+.profile-information h2{
+    font-size:46px;
+    font-family:"Cormorant Garamond",serif;
+    font-weight:700;
+    color:var(--heading);
+    margin-bottom:8px;
+}
+
+.profile-information p{
+    font-size:18px;
+    color:var(--text);
+}
+
+.profile-message{
+    margin-top:15px;
+    color:#16a34a;
+    font-weight:600;
+}
+.profile-info{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:28px;
+}
+
+.info-box{
+    display:flex;
+    flex-direction:column;
+}
+
+.info-box label{
+    font-size:18px;
+    font-weight:600;
+    color:var(--heading);
+    margin-bottom:12px;
+}
+
+.full{
+    grid-column:1/3;
+}
+.input-group{
+    position:relative;
+    width:100%;
+}
+
+.input-icon{
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--primary);
+    font-size:18px;
+    pointer-events:none;
+}
+
+.textarea-icon{
+    top:22px;
+    transform:none;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea{
+    width:100%;
+    background:#fff;
+    border:1.5px solid var(--border);
+    border-radius:16px;
+    font-size:16px;
+    color:var(--heading);
+    font-family:"Poppins",sans-serif;
+    transition:.3s;
+
+    padding-left:58px;
+    padding-right:20px;
+}
+
+.input-group input,
+.input-group select{
+    height:58px;
+}
+
+.input-group textarea{
+    min-height:140px;
+    resize:none;
+    padding-top:18px;
+    padding-bottom:18px;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(239,111,143,.15);
+    outline:none;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder{
+    color:#b3a2a2;
+}
+
+.input-group select{
+    appearance:none;
+    cursor:pointer;
+}
+.save-btn{
+    margin-top:35px;
+    padding:16px 36px;
+    border:none;
+    border-radius:16px;
+    background:var(--primary);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 12px 30px rgba(239,111,143,.25);
+}
+
+.save-btn:hover{
+    background:#E65D80;
+    transform:translateY(-3px);
+}
+@media(max-width:992px){
+
+.profile-card{
+    padding:30px;
+}
+
+.profile-info{
+    grid-template-columns:1fr;
+}
+
+.full{
+    grid-column:auto;
+}
+
+}
+
+@media(max-width:768px){
+
+.profile-card{
+    padding:25px;
+}
+
+.profile-information h2{
+    font-size:36px;
+}
+
+.profile-information p{
+    font-size:16px;
+}
+
+.info-box label{
+    font-size:16px;
+}
+
+.input-group input,
+.input-group select{
+    height:54px;
+}
+
+}
+
+@media(max-width:480px){
+
+.profile-card{
+    padding:20px;
+}
+
+.profile-information h2{
+    font-size:30px;
+}
+
+.save-btn{
+    width:100%;
+}
+
 }
