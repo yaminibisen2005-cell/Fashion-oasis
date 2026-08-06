@@ -61,7 +61,7 @@ const Cart = () => {
               <p>Add some beautiful jewellery pieces to start shopping.</p>
               <button
                 className="continue-shopping-btn"
-                onClick={() => navigate("/collections")}
+                onClick={() => navigate("/shop")}
               >
                 Go to Collections
               </button>

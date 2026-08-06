@@ -10,7 +10,7 @@ function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { addToCart, removeFromWishlist: removeContextWishlist } = useContext(ShopContext);
+  const { addToCart } = useContext(ShopContext);
 
   const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
@@ -59,7 +59,7 @@ function Wishlist() {
   const handleAddToCart = async (item) => {
     const itemId = item.id || item._id;
     
-    // 1. Add item to cart context
+    // 1. Add item to cart context and localStorage
     addToCart(item, 1);
     
     // 2. Remove item from backend wishlist database via toggle
@@ -68,7 +68,7 @@ function Wishlist() {
     // 3. Remove locally from state list
     setWishlistItems(wishlistItems.filter((i) => (i.id || i._id) !== itemId));
     
-    // 4. Navigate to cart section/page
+    // 4. Navigate directly to cart page
     navigate("/cart");
   };
 
@@ -120,7 +120,7 @@ function Wishlist() {
                       onClick={() => handleAddToCart(item)}
                     >
                       <FaShoppingCart />
-                      Add To Cart
+                      Move To Cart
                     </button>
                   </div>
                 </div>

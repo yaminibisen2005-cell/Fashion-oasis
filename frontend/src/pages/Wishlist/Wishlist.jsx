@@ -1,9 +1,10 @@
- import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { getWishlist, toggleWishlist } from "../../api/customer";
+import { ShopContext } from "../../context/ShopContext";
 import "./Wishlist.css";
 
 const Wishlist = () => {
@@ -11,6 +12,8 @@ const Wishlist = () => {
   const [loading, setLoading] = useState(true);
   const [loadingItems, setLoadingItems] = useState({});
   const navigate = useNavigate();
+  const { addToCart } = useContext(ShopContext);
+
   const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
   useEffect(() => {
@@ -54,13 +57,22 @@ const Wishlist = () => {
     }
   };
 
-  const handleMoveToCart = (item) => {
+   const handleMoveToCart = (item) => {
     const id = item.id || item._id;
     setLoadingItems((prev) => ({ ...prev, [id]: true }));
+    
     setTimeout(async () => {
+      // 1. Add item to cart and store it persistently
+      addToCart(item, 1);
+      
+      // 2. Remove item from wishlist API/state
       await removeFromWishlist(item);
+      
       setLoadingItems((prev) => ({ ...prev, [id]: false }));
-    }, 600);
+      
+      // 3. Use client-side routing instead of hard reload
+      navigate("/cart");
+    }, 400);
   };
 
   if (loading) {
@@ -94,7 +106,7 @@ const Wishlist = () => {
               <p>Explore our collections and add items you love!</p>
               <button
                 className="shop-now-btn"
-                onClick={() => navigate("/collections")}
+                onClick={() => navigate("/shop")}
               >
                 Explore Collections
               </button>

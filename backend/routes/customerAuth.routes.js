@@ -8,7 +8,10 @@ import {
   updateProfile,
   updatePassword,
   deleteAccount,
-  updateTwoFactor // <-- IMPORT THIS
+  updateTwoFactor ,
+  getCart,   // <-- IMPORT THIS
+  saveCart// <-- IMPORT THIS
+
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { protectCustomer } from '../middlewares/auth.middleware.js';
@@ -33,4 +36,6 @@ router.put('/password', protectCustomer, validate(updatePasswordSchema), updateP
 router.put('/two-factor', protectCustomer, validate(updateTwoFactorSchema), updateTwoFactor); // <-- ADD THIS ROUTE
 router.delete('/account', protectCustomer, validate(deleteAccountSchema), deleteAccount);
 
+router.get('/cart', protectCustomer, getCart);
+router.post('/cart', protectCustomer, saveCart);
 export default router;

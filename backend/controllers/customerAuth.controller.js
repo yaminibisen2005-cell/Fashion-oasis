@@ -333,3 +333,62 @@ export const updateTwoFactor = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Get user cart
+// @route   GET /api/v1/customer/cart
+export const getCart = async (req, res, next) => {
+  try {
+    const customer = req.customer;
+    
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      cart: customer.cart || []
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Save/Sync user cart
+// @route   POST /api/v1/customer/cart
+ // @desc    Save/Sync user cart
+// @route   POST /api/v1/customer/cart
+export const saveCart = async (req, res, next) => {
+  try {
+    const { cart } = req.body;
+    const customerId = req.customer._id;
+
+    const formattedCart = (cart || []).map(item => ({
+      product: {
+        id: String(item.product?.id || item.product?._id || ''),
+        name: item.product?.name || '',
+        image: item.product?.image || '',
+        price: item.product?.price || 0,
+        oldPrice: item.product?.oldPrice || 0
+      },
+      quantity: item.quantity || 1
+    }));
+
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+      customerId,
+      { $set: { cart: formattedCart } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCustomer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Cart updated successfully',
+      cart: updatedCustomer.cart
+    });
+  } catch (error) {
+    next(error);
+  }
+};
