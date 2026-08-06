@@ -1558,6 +1558,9 @@ const SellerDashboard = () => {
           </button>
           <div className="header-logo-group">
             <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
+            <div>
+              <p>Seller Central</p>
+            </div>
           </div>
         </div>
 
