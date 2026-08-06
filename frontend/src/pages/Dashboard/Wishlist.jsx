@@ -1,12 +1,16 @@
- import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Wishlist.css";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { getWishlist, toggleWishlist } from "../../api/customer";
+import { ShopContext } from "../../context/ShopContext";
 
 function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { addToCart, removeFromWishlist: removeContextWishlist } = useContext(ShopContext);
 
   const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
@@ -52,6 +56,22 @@ function Wishlist() {
     }
   };
 
+  const handleAddToCart = async (item) => {
+    const itemId = item.id || item._id;
+    
+    // 1. Add item to cart context
+    addToCart(item, 1);
+    
+    // 2. Remove item from backend wishlist database via toggle
+    await handleRemoveFromWishlist(item);
+    
+    // 3. Remove locally from state list
+    setWishlistItems(wishlistItems.filter((i) => (i.id || i._id) !== itemId));
+    
+    // 4. Navigate to cart section/page
+    navigate("/cart");
+  };
+
   return (
     <DashboardLayout>
       <div className="wishlist-page">
@@ -95,7 +115,10 @@ function Wishlist() {
                         : item.price}
                     </h3>
 
-                    <button className="cart-btn">
+                    <button 
+                      className="cart-btn"
+                      onClick={() => handleAddToCart(item)}
+                    >
                       <FaShoppingCart />
                       Add To Cart
                     </button>

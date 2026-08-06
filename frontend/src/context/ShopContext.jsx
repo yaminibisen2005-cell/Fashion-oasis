@@ -3,6 +3,7 @@ import thumb1 from "../assets/thumb1.png";
 import thumb2 from "../assets/thumb2.png";
 import thumb3 from "../assets/thumb3.png";
 import thumb4 from "../assets/thumb4.png";
+import { toggleWishlist } from "../api/customer"; // <-- Import your wishlist API
 
 export const ShopContext = createContext();
 
@@ -46,10 +47,7 @@ const initialProducts = [
 ];
 
 export const ShopProvider = ({ children }) => {
-  // Wishlist starts empty
   const [wishlist, setWishlist] = useState([]);
-
-  // Cart starts completely empty
   const [cart, setCart] = useState([]);
 
   const [couponCode, setCouponCode] = useState("");
@@ -79,10 +77,7 @@ export const ShopProvider = ({ children }) => {
 
   const [sameAsShipping, setSameAsShipping] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("upi");
-  
-  // Holds current active order for Order Confirmation & Tracking
- const [currentOrder, setCurrentOrder] = useState(null);
-  // Calculate cart totals
+  const [currentOrder, setCurrentOrder] = useState(null);
   const [totals, setTotals] = useState({ subtotal: 0, discount: 0, total: 0 });
 
   useEffect(() => {
@@ -95,22 +90,52 @@ export const ShopProvider = ({ children }) => {
     setTotals({ subtotal, discount, total });
   }, [cart, discountPercent]);
 
-  // Sync billing address if sameAsShipping is true
   useEffect(() => {
     if (sameAsShipping) {
       setBillingAddress({ ...shippingAddress });
     }
   }, [shippingAddress, sameAsShipping]);
 
-  // Wishlist handlers
-  const addToWishlist = (product) => {
-    if (!wishlist.find((item) => item.id === product.id)) {
-      setWishlist([...wishlist, product]);
+  // Updated Wishlist handler to sync with backend API
+  const addToWishlist = async (product) => {
+    try {
+      // Format payload to match your backend schema expectation
+      const payload = {
+        product: {
+          id: String(product.id),
+          name: product.name,
+          image: typeof product.image === "string" ? product.image : "",
+          price: product.price,
+          oldPrice: product.oldPrice || product.price,
+        },
+      };
+
+      await toggleWishlist(payload);
+
+      if (!wishlist.find((item) => item.id === product.id)) {
+        setWishlist([...wishlist, product]);
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist on backend:", error);
     }
   };
 
-  const removeFromWishlist = (id) => {
-    setWishlist(wishlist.filter((item) => item.id !== id));
+  const removeFromWishlist = async (id) => {
+    try {
+      const productToRemove = wishlist.find((item) => item.id === id);
+      if (productToRemove) {
+        await toggleWishlist({
+          product: {
+            id: String(productToRemove.id),
+            name: productToRemove.name,
+            price: productToRemove.price,
+          },
+        });
+      }
+      setWishlist(wishlist.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Failed to remove from wishlist:", error);
+    }
   };
 
   // Cart handlers
@@ -145,7 +170,6 @@ export const ShopProvider = ({ children }) => {
     setCart(cart.filter((item) => item.product.id !== id));
   };
 
-  // Move items from Wishlist to Cart
   const moveToCart = (id) => {
     const target = wishlist.find((item) => item.id === id);
     if (target) {
@@ -161,7 +185,6 @@ export const ShopProvider = ({ children }) => {
     setWishlist([]);
   };
 
-  // Coupon application
   const applyCoupon = (code) => {
     setCouponCode(code);
     if (code.trim().toUpperCase() === "KGL56M6UX") {
@@ -182,7 +205,6 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  // Place order
   const placeOrder = () => {
     const generatedOrderId = "FO" + Math.floor(10000 + Math.random() * 90000);
     const today = new Date();
@@ -192,7 +214,6 @@ export const ShopProvider = ({ children }) => {
       year: "numeric",
     });
     
-    // Calculate final tracking details
     const newOrder = {
       orderId: generatedOrderId,
       date: formattedDate,
@@ -212,7 +233,7 @@ export const ShopProvider = ({ children }) => {
     };
     
     setCurrentOrder(newOrder);
-    setCart([]); // Clear cart after successful order placement
+    setCart([]);
     return newOrder;
   };
 

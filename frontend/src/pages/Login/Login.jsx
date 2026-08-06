@@ -37,7 +37,7 @@ const Login = () => {
       alert("Login Successful!");
       
       // Navigate straight to your dashboard route
-      navigate("/dashboard");
+      navigate("/");
 
     } catch (error) {
       console.error("Login error:", error);
