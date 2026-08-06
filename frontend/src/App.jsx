@@ -29,6 +29,8 @@ import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+
+// import SellerDashboard from "./pages/Seller/SellerDashboard";
 import TermsAndConditions from "./pages/TermsAndConditions/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
 import SellerLogin from "./pages/SellerAuth/SellerLogin";

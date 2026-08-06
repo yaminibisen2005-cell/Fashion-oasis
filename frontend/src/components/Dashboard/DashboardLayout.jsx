@@ -1,7 +1,9 @@
- import "./DashboardLayout.css";
-import React, { useState, useEffect } from "react";
+import "./DashboardLayout.css";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import sidebarbg from "../../assets/sidebarbg.png";
+
+
+import logo from "../../assets/logo.png";
 
 import {
   FaHome,
@@ -14,26 +16,28 @@ import {
   FaCamera,
 } from "react-icons/fa";
 
-import logo from "../../assets/logo.png";
-
 function DashboardLayout({ children, showProfile = true }) {
   const [userName, setUserName] = useState("User");
 
+  const fileInputRef = useRef(null);
+
+  const [profileImage, setProfileImage] = useState(
+    "https://i.pravatar.cc/150?img=12"
+  );
+
   useEffect(() => {
-    // Check all possible keys where Login.jsx might be storing the user object
-    const storedUser = 
+    const storedUser =
       JSON.parse(localStorage.getItem("user")) ||
-      JSON.parse(localStorage.getItem("customerInfo")) || 
-      JSON.parse(localStorage.getItem("userInfo")) || 
+      JSON.parse(localStorage.getItem("customerInfo")) ||
+      JSON.parse(localStorage.getItem("userInfo")) ||
       JSON.parse(localStorage.getItem("profile"));
 
     if (storedUser) {
-      // Maps every possible property name your backend might use for the name
-      const resolvedName = 
-        storedUser.name || 
-        storedUser.fullName || 
-        storedUser.userName || 
-        storedUser.username || 
+      const resolvedName =
+        storedUser.name ||
+        storedUser.fullName ||
+        storedUser.userName ||
+        storedUser.username ||
         storedUser.displayName ||
         `${storedUser.firstName || ""} ${storedUser.lastName || ""}`.trim();
 
@@ -43,13 +47,24 @@ function DashboardLayout({ children, showProfile = true }) {
     }
   }, []);
 
+  const handleEditClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setProfileImage(URL.createObjectURL(file));
+  };
+
   return (
     <div className="dashboard-layout">
-      {/* Sidebar */}
       <aside
         className="sidebar"
         style={{
-          backgroundImage: `url(${sidebarbg})`,
+        
         }}
       >
         <div className="logo-section">
@@ -57,14 +72,25 @@ function DashboardLayout({ children, showProfile = true }) {
             <>
               <div className="profile-wrapper">
                 <img
-                  src="https://i.pravatar.cc/150?img=12"
+                  src={profileImage}
                   alt="Profile"
                   className="sidebar-profile"
                 />
 
-                <button className="edit-profile-btn">
+                <button
+                  className="edit-profile-btn"
+                  onClick={handleEditClick}
+                >
                   <FaCamera />
                 </button>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
               </div>
 
               <h3>{userName}</h3>
@@ -81,42 +107,42 @@ function DashboardLayout({ children, showProfile = true }) {
           <li>
             <Link to="/dashboard">
               <FaHome />
-              Dashboard
+              <span>Dashboard</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/profile">
               <FaUser />
-              Profile
+              <span>Profile</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/orders">
               <FaShoppingBag />
-              Orders
+              <span>Orders</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/wishlist">
               <FaHeart />
-              Wishlist
+              <span>Wishlist</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/reviews">
               <FaStar />
-              Reviews
+              <span>Reviews</span>
             </Link>
           </li>
 
           <li>
             <Link to="/dashboard/settings">
               <FaCog />
-              Account Settings
+              <span>Account Settings</span>
             </Link>
           </li>
         </ul>
@@ -124,13 +150,14 @@ function DashboardLayout({ children, showProfile = true }) {
         <div className="logout">
           <Link to="/" onClick={() => localStorage.clear()}>
             <FaSignOutAlt />
-            Logout
+            <span>Logout</span>
           </Link>
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="dashboard-content">{children}</main>
+      <main className="dashboard-main">
+        {children}
+      </main>
     </div>
   );
 }
