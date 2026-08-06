@@ -3,7 +3,7 @@ import thumb1 from "../assets/thumb1.png";
 import thumb2 from "../assets/thumb2.png";
 import thumb3 from "../assets/thumb3.png";
 import thumb4 from "../assets/thumb4.png";
-import { toggleWishlist } from "../api/customer"; // <-- Import your wishlist API
+import { toggleWishlist } from "../api/customer";
 
 export const ShopContext = createContext();
 
@@ -48,7 +48,17 @@ const initialProducts = [
 
 export const ShopProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
-  const [cart, setCart] = useState([]);
+
+  // Load cart from localStorage initially so it persists across refreshes and logins
+  const [cart, setCart] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem("fashion_oasis_cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error("Failed to load cart from storage:", error);
+      return [];
+    }
+  });
 
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -80,6 +90,15 @@ export const ShopProvider = ({ children }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [totals, setTotals] = useState({ subtotal: 0, discount: 0, total: 0 });
 
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("fashion_oasis_cart", JSON.stringify(cart));
+    } catch (error) {
+      console.error("Failed to save cart to storage:", error);
+    }
+  }, [cart]);
+
   useEffect(() => {
     const subtotal = cart.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
@@ -96,10 +115,9 @@ export const ShopProvider = ({ children }) => {
     }
   }, [shippingAddress, sameAsShipping]);
 
-  // Updated Wishlist handler to sync with backend API
+  // Wishlist handler
   const addToWishlist = async (product) => {
     try {
-      // Format payload to match your backend schema expectation
       const payload = {
         product: {
           id: String(product.id),
