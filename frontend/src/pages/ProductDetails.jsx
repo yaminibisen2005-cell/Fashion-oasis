@@ -76,7 +76,6 @@ const ProductDetails = () => {
           products={allProducts}
       />
       
-      
 
     </div>
     <Footer/>

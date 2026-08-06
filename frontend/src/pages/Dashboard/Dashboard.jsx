@@ -1,8 +1,7 @@
-
-import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+ import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
-// import Navbar from "../../components/Navbar/Navbar";
-// import Footer from "../../components/Footer/Footer";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   FaShoppingBag,
@@ -16,37 +15,113 @@ import {
 
 import dashboardbanner from "../../assets/shop/hero-banner1.png";
 
-// Import actual product images from your assets folder
-import product1 from "../../assets/product1.jpg";
-import product2 from "../../assets/product2.jpg";
-import product3 from "../../assets/product3.jpg";
-import product4 from "../../assets/product4.jpg";
-
 function Dashboard() {
-  const stats = [
+  const [userName, setUserName] = useState("User");
+  const [stats, setStats] = useState({
+    totalOrders: "0",
+    wishlistCount: "0",
+    reviewsCount: "0",
+    rewardPoints: "0",
+  });
+  const [orders, setOrders] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 1. Check all potential storage keys for token and user data
+    const token = 
+      localStorage.getItem("token") || 
+      localStorage.getItem("authToken") || 
+      JSON.parse(localStorage.getItem("customerInfo"))?.token;
+
+    // if (!token) {
+    //   window.location.href = "/login";
+    //   return;
+    // }
+
+    // 2. Extract user details robustly from any matching storage key
+    const storedUser = 
+      JSON.parse(localStorage.getItem("customerInfo")) || 
+      JSON.parse(localStorage.getItem("userInfo")) || 
+      JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser) {
+      const resolvedName = 
+        storedUser.fullName || 
+        storedUser.name || 
+        storedUser.username || 
+        `${storedUser.firstName || ""} ${storedUser.lastName || ""}`.trim();
+
+      if (resolvedName) {
+        setUserName(resolvedName);
+      }
+    }
+
+    // 3. Fetch dashboard data from backend
+    const fetchDashboardData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const email = storedUser?.email;
+        if (email) {
+          const profileRes = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${email}`, config);
+          if (profileRes.data.success && profileRes.data.data) {
+            const data = profileRes.data.data;
+            setStats({
+              totalOrders: data.totalOrders?.toString() || "0",
+              wishlistCount: data.wishlist?.length?.toString() || "0",
+              reviewsCount: data.reviewsCount?.toString() || "0",
+              rewardPoints: data.rewardPoints?.toString() || "0",
+            });
+            setOrders(data.recentOrders || []);
+          }
+        }
+
+        const prodRes = await axios.get("http://localhost:5000/api/v1/products/recommended", config);
+        if (prodRes.data.success) {
+          setRecommendations(prodRes.data.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        if (err.response?.status === 401) {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const statCardsData = [
     {
       icon: <FaShoppingBag />,
       title: "Total Orders",
-      value: "24",
-      subtitle: "↑ 3 this month",
-      subtitleClass: "growth",
+      value: stats.totalOrders,
+      subtitle: "Active orders",
     },
     {
       icon: <FaHeart />,
       title: "Wishlist",
-      value: "12",
+      value: stats.wishlistCount,
       subtitle: "Items",
     },
     {
       icon: <FaStar />,
       title: "Reviews",
-      value: "8",
+      value: stats.reviewsCount,
       subtitle: "Reviews",
     },
     {
       icon: <FaGift />,
       title: "Reward Points",
-      value: "350",
+      value: stats.rewardPoints,
       subtitle: "Points",
     },
   ];
@@ -58,225 +133,166 @@ function Dashboard() {
     { icon: <FaGift />, label: "Rewards" },
   ];
 
-  const orders = [
-    {
-      id: "Order #FO12345",
-      image: product1,
-      product: "Rose Quartz Necklace",
-      date: "18 July 2025",
-      amount: "₹1,299",
-      status: "Delivered",
-    },
-    {
-      id: "Order #FO12344",
-      image: product2,
-      product: "Floral Diamond Ring",
-      date: "14 July 2025",
-      amount: "₹1,799",
-      status: "Shipped",
-    },
-    {
-      id: "Order #FO12343",
-      image: product3,
-      product: "Pearl Drop Earrings",
-      date: "10 July 2025",
-      amount: "₹999",
-      status: "Processing",
-    },
-  ];
-
-  const recommendations = [
-    {
-      id: 1,
-      name: "Kundan Flower Earrings",
-      rating: "★★★★★",
-      reviewsCount: 128,
-      price: "₹1,199",
-      originalPrice: "₹1,599",
-      image: product1,
-    },
-    {
-      id: 2,
-      name: "Dainty Pearl Necklace",
-      rating: "★★★★★",
-      reviewsCount: 96,
-      price: "₹1,499",
-      originalPrice: "₹1,999",
-      image: product2,
-    },
-    {
-      id: 3,
-      name: "Gold Plated Bracelet",
-      rating: "★★★★★",
-      reviewsCount: 78,
-      price: "₹999",
-      originalPrice: "₹1,299",
-      image: product3,
-    },
-    {
-      id: 4,
-      name: "Floral Stud Earrings",
-      rating: "★★★★★",
-      reviewsCount: 64,
-      price: "₹749",
-      originalPrice: "₹999",
-      image: product4,
-    },
-  ];
-
   return (
-   <>
-   
-    <DashboardLayout>
-      {/* HERO SECTION */}
-      
-      <section
-        className="dashboard-hero"
-        style={{
-          backgroundImage: `linear-gradient(
-              rgba(35, 25, 28, 0.45),
-              rgba(35, 25, 28, 0.45)
-            ),
-            url(${dashboardbanner})`,
-        }}
-      >
-        <div className="hero-content">
-          <h1>Welcome back, Shwet Samrat! ✨</h1>
-          <p>Here's what's happening with your Fashion Oasis account.</p>
+    <>
+      <DashboardLayout>
+        {/* HERO SECTION */}
+        <div className="dashboard-header-text"></div>
 
-          <div className="hero-actions">
-            <button className="btn-primary">
-              <FaShoppingBag /> Track Order
-            </button>
-            <button className="btn-secondary">
-              <FaShoppingBag /> Continue Shopping
-            </button>
-          </div>
-        </div>
-      </section>
+        <section
+          className="dashboard-hero"
+          style={{ backgroundImage: `url(${dashboardbanner})` }}
+        >
+          <div className="hero-content">
+            <span className="hero-eyebrow">FASHION OASIS • MEMBER PERKS</span>
 
-      {/* STATS & QUICK ACTIONS SECTION */}
-      <section className="dashboard-metrics">
-        <div className="dashboard-cards">
-          {stats.map((item, index) => (
-            <div className="card-box" key={index}>
-              <div className="icon">{item.icon}</div>
-              <h5>{item.title}</h5>
-              <h2>{item.value}</h2>
-              <span className={`subtitle ${item.subtitleClass || ""}`}>
-                {item.subtitle}
-              </span>
-            </div>
-          ))}
-        </div>
+            <h2>Welcome back, {userName}!✨</h2>
+            <p>Here's what's happening with your Fashion Oasis account today.</p>
 
-        {/* QUICK ACTIONS PANEL */}
-        <div className="quick-actions-card">
-          <h5>Quick Actions</h5>
-          <div className="quick-actions-grid">
-            {quickActions.map((action, index) => (
-              <button key={index} className="quick-action-btn">
-                {action.icon}
-                <span>{action.label}</span>
+            <div className="hero-actions">
+              <button className="btn-primary" onClick={() => window.location.href = "/shop"}>
+                <FaShoppingBag />
+                Continue Shopping
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* STATS & QUICK ACTIONS SECTION */}
+        <section className="dashboard-metrics">
+          <div className="dashboard-cards">
+            {statCardsData.map((item, index) => (
+              <div className="card-box" key={index}>
+                <div className="icon">{item.icon}</div>
+                <h5>{item.title}</h5>
+                <h2>{item.value}</h2>
+                <span className="subtitle">
+                  {item.subtitle}
+                </span>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* RECENT ORDERS */}
-      <section className="orders-card">
-        <div className="orders-header">
-          <div>
-            <h3>Recent Orders</h3>
-          </div>
-          <button className="view-all-link">
-            View All <FaArrowRight />
-          </button>
-        </div>
-
-        <div className="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Amount</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((item, index) => (
-                <tr key={index}>
-                  <td>
-                    <div className="product">
-                      <img src={item.image} alt={item.product} />
-                      <div className="product-details">
-                        <h6>{item.product}</h6>
-                        <span className="order-id">{item.id}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{item.date}</td>
-                  <td>
-                    <span
-                      className={`status ${item.status.toLowerCase()}`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="amount">{item.amount}</td>
-                  <td>
-                    <button className="view-details-btn">View Details</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* RECOMMENDED FOR YOU */}
-      <section className="recommendations-section">
-        <div className="section-header">
-          <h3>Recommended For You</h3>
-          <button className="view-all-link">
-            View All Products <FaArrowRight />
-          </button>
-        </div>
-
-        <div className="recommendations-grid">
-          {recommendations.map((prod) => (
-            <div className="recommendation-card" key={prod.id}>
-              <button className="wishlist-btn">
-                <FaRegHeart />
-              </button>
-              <div className="img-wrapper">
-                <img src={prod.image} alt={prod.name} />
-              </div>
-              <div className="recommendation-details">
-                <h6>{prod.name}</h6>
-                <div className="rating">
-                  <span className="stars">{prod.rating}</span>
-                  <span className="reviews-count">({prod.reviewsCount})</span>
-                </div>
-                <div className="pricing">
-                  <span className="price">{prod.price}</span>
-                  <span className="original-price">{prod.originalPrice}</span>
-                </div>
-                <button className="add-to-cart-btn">
-                  <FaShoppingBag /> Add to Cart
+          {/* QUICK ACTIONS PANEL */}
+          <div className="quick-actions-card">
+            <h5>Quick Actions</h5>
+            <div className="quick-actions-grid">
+              {quickActions.map((action, index) => (
+                <button key={index} className="quick-action-btn">
+                  {action.icon}
+                  <span>{action.label}</span>
                 </button>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
-     
-    </DashboardLayout>
-     
-     </>
+          </div>
+        </section>
+
+        {/* RECENT ORDERS */}
+        <section className="orders-card">
+          <div className="orders-header">
+            <div>
+              <h3>Recent Orders</h3>
+            </div>
+            <button className="view-all-link">
+              View All <FaArrowRight />
+            </button>
+          </div>
+
+          <div className="table-responsive">
+            {orders.length === 0 ? (
+              <p style={{ padding: "30px", textAlign: "center", color: "#888" }}>
+                {loading ? "Loading orders..." : "No recent orders found."}
+              </p>
+            ) : (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="product">
+                          <img src={item.image} alt={item.product} />
+                          <div className="product-details">
+                            <h6>{item.product}</h6>
+                            <span className="order-id">{item.id}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>{item.date}</td>
+                      <td>
+                        <span
+                          className={`status ${item.status?.toLowerCase()}`}
+                        >
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="amount">{item.amount}</td>
+                      <td>
+                        <button className="view-details-btn">View Details</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </section>
+
+        {/* RECOMMENDED FOR YOU */}
+        <section className="recommendations-section">
+          <div className="section-header">
+            <h3>Recommended For You</h3>
+            <button className="view-all-link">
+              View All Products <FaArrowRight />
+            </button>
+          </div>
+
+          <div className="recommendations-grid">
+            {recommendations.length === 0 ? (
+              <p style={{ padding: "30px", textAlign: "center", color: "#888", gridColumn: "1 / -1" }}>
+                {loading ? "Loading recommendations..." : "No recommendations available right now."}
+              </p>
+            ) : (
+              recommendations.map((prod) => (
+                <div className="recommendation-card" key={prod.id || prod._id}>
+                  <button className="wishlist-btn">
+                    <FaRegHeart />
+                  </button>
+                  <div className="img-wrapper">
+                    <img src={prod.image} alt={prod.name} />
+                  </div>
+                  <div className="recommendation-details">
+                    <span className="recommendation-material">{prod.material}</span>
+                    <h6>{prod.name}</h6>
+                    <div className="rating">
+                      <span className="stars">★★★★★</span>
+                      <span className="reviews-count">({prod.reviewsCount || 0})</span>
+                    </div>
+                    <div className="pricing">
+                      <span className="price">₹{prod.price}</span>
+                      {prod.originalPrice && (
+                        <span className="original-price">₹{prod.originalPrice}</span>
+                      )}
+                    </div>
+                    <button className="add-to-cart-btn">
+                      <FaShoppingBag /> Add to Cart
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+      </DashboardLayout>
+    </>
   );
 }
 

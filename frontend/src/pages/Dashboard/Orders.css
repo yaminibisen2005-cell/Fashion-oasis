@@ -1,84 +1,139 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap");
 
 .orders-page {
-  width: 100%;
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 36px 10px 48px;
+  font-family: var(--body-font);
 }
 
 .orders-title {
-  margin-bottom: 30px;
+  margin: 0 0 28px;
 }
 
 .orders-title h2 {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 42px;
-  color: #4b2e2e;
+  margin: 0;
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+  font-size: clamp(38px, 4vw, 48px);
+  line-height: 1;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .orders-title p {
-  font-family: Poppins, sans-serif;
-  color: #777;
-  margin-top: 8px;
+  margin: 10px 0 0;
+  color: var(--body-text);
+  font-size: 15px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
+/* Order card */
 .order-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px 25px;
-  margin-bottom: 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f8dfe4;
-  transition: 0.3s ease;
+  justify-content: space-between;
+  gap: 28px;
+  min-height: 142px;
+  margin-bottom: 16px;
+  padding: 22px 26px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .order-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 18px 35px rgba(186, 82, 112, 0.14);
 }
 
 .order-left {
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 20px;
 }
 
 .order-left img {
-  width: 95px;
-  height: 95px;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border: 1px solid #f6dce2;
+  border-radius: 16px;
   object-fit: cover;
-  border-radius: 15px;
+}
+
+.order-info {
+  min-width: 0;
 }
 
 .order-info h4 {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 28px;
-  color: #4b2e2e;
-  margin-bottom: 8px;
+  margin: 0 0 6px;
+  overflow: hidden;
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+  font-size: 29px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .order-info p {
-  font-family: Poppins, sans-serif;
-  color: #777;
-  font-size: 14px;
-  margin: 3px 0;
+  margin: 4px 0;
+  color: #887378;
+  font-size: 13px;
 }
 
 .order-info h3 {
-  margin-top: 10px;
-  color: #eb879d;
-  font-family: Poppins, sans-serif;
-  font-size: 22px;
+  margin: 9px 0 0;
+  color: #e9688c;
+  font-size: 20px;
+  font-weight: 700;
 }
 
+/* Status and action */
 .order-right {
   display: flex;
-  flex-direction: column;
+  flex-shrink: 0;
   align-items: flex-end;
-  gap: 15px;
+  gap: 12px;
+}
+.order-card .status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 102px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
-.status {
+.order-card .delivered {
+  background: #e7f7ed;
+  color: #159447;
+}
+
+.order-card .shipped {
+  background: #eaf2ff;
+  color: #3269dc;
+}
+
+.order-card .confirmed {
+  background: #fff5dc;
+  color: #bb7d10;
+}
+
+.order-card .cancelled {
+  background: #ffeaed;
+  color: #d84a5a;
+}
+
+.orders-page .status {
   padding: 8px 18px;
   border-radius: 25px;
   font-size: 13px;
@@ -86,61 +141,130 @@
   font-weight: 600;
 }
 
-.delivered {
+.orders-page .delivered {
   background: #e8f8ea;
   color: #2f9e44;
 }
 
-.shipped {
+.orders-page .shipped {
   background: #fff4d6;
   color: #e67e22;
 }
 
-.confirmed {
+.orders-page .confirmed {
   background: #efe7ff;
   color: #7c4dff;
 }
 
-.cancelled {
+.orders-page .cancelled {
   background: #ffe6e6;
   color: #e74c3c;
 }
 
 .order-right button {
-  background: #eb879d;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 24px;
+  min-width: 132px;
+  min-height: 44px;
+  border: 1px solid #ea6b8d;
+  border-radius: 12px;
+  background: #ea6b8d;
+  color: #fff;
+  font-family: var(--body-font);
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  font-family: Poppins, sans-serif;
-  transition: 0.3s;
+  box-shadow: 0 8px 16px rgba(234, 107, 141, 0.22);
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .order-right button:hover {
-  background: #d96d86;
+  background: #d95579;
+  transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
+/* Tablet */
+@media (max-width: 900px) {
+  .orders-page {
+    padding-top: 28px;
+  }
+
   .order-card {
+    padding: 20px;
+  }
+
+  .order-right button {
+    min-width: 118px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .orders-page {
+    padding: 24px 0 36px;
+  }
+
+  .orders-title h2 {
+    font-size: 38px;
+  }
+
+  .order-card {
+    align-items: stretch;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+    gap: 18px;
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .order-left {
+    gap: 14px;
+  }
+
+  .order-left img {
+    width: 76px;
+    height: 76px;
+    border-radius: 13px;
+  }
+
+  .order-info h4 {
+    font-size: 24px;
+  }
+
+  .order-info h3 {
+    font-size: 18px;
   }
 
   .order-right {
     width: 100%;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
+  .order-right button {
+    min-width: 126px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 390px) {
   .order-left {
-    flex-direction: column;
     align-items: flex-start;
+    flex-direction: column;
   }
 
-  .order-left img {
-    width: 100%;
-    max-width: 220px;
-    height: auto;
+  .order-right {
+    align-items: stretch;
+    flex-direction: column;
   }
+
+  .order-card .status,
+  .order-right button {
+    width: 100%;
+  }
+}
+
+.order-material {
+  font-family: Poppins, sans-serif;
+  font-size: 13px;
+  color: #EF6F8F;
+  font-weight: 600;
 }

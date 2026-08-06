@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaBoxOpen, FaShoppingBag, FaRupeeSign, FaUsers, FaArrowUp } from "react-icons/fa";
-
-const API = "http://localhost:5000/api/v1/admin/dashboard";
+import { fetchDashboardData } from "../../../api/admin";
 
 const DashboardSection = () => {
   const [stats, setStats] = useState(null);
@@ -19,21 +18,13 @@ const DashboardSection = () => {
       return;
     }
 
-    const headers = { Authorization: `Bearer ${token}` };
-
-    Promise.all([
-      fetch(`${API}/stats`, { headers }).then((r) => r.json()),
-      fetch(`${API}/recent-orders?limit=4`, { headers }).then((r) => r.json()),
-      fetch(`${API}/top-products?limit=4`, { headers }).then((r) => r.json()),
-      fetch(`${API}/top-customers?limit=4`, { headers }).then((r) => r.json()),
-      fetch(`${API}/sales-analytics?range=7days`, { headers }).then((r) => r.json()),
-    ])
-      .then(([statsRes, ordersRes, productsRes, customersRes, salesRes]) => {
-        if (statsRes.success) setStats(statsRes.data);
-        if (ordersRes.success) setRecentOrders(ordersRes.data);
-        if (productsRes.success) setTopSelling(productsRes.data);
-        if (customersRes.success) setCustomerOverview(customersRes.data);
-        if (salesRes.success) setSalesData(salesRes.data.series || []);
+    fetchDashboardData()
+      .then(({ stats, recentOrders, topProducts, topCustomers, salesAnalytics }) => {
+        if (stats.success) setStats(stats.data);
+        if (recentOrders.success) setRecentOrders(recentOrders.data);
+        if (topProducts.success) setTopSelling(topProducts.data);
+        if (topCustomers.success) setCustomerOverview(topCustomers.data);
+        if (salesAnalytics.success) setSalesData(salesAnalytics.data.series || []);
       })
       .catch((err) => {
         console.error("Failed to load dashboard data:", err);
@@ -80,7 +71,6 @@ const DashboardSection = () => {
     <div className="admin-dashboard-view">
       <div className="section-title-row">
         <div>
-          <h2>Welcome back, Admin 👋</h2>
           <p className="subtitle">Here's what's happening with your store today.</p>
         </div>
         <div className="date-picker-box">

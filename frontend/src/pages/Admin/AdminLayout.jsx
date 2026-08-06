@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   FaChartPie,
   FaBox,
@@ -33,12 +32,38 @@ import AnalyticsSection from "./Sections/AnalyticsSection";
 import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
 
-import "./AdminLayout.css";
+import {
+  fetchProducts as getProducts,
+  createProduct,
+  deleteProduct as removeProduct,
+  toggleProductStatus as setProductStatus,
+  fetchCategories as getCategories,
+  createCategory,
+  deleteCategory as removeCategory,
+  toggleCategoryStatus as setCategoryStatus,
+  fetchOrders as getOrders,
+  updateOrderStatus as setOrderStatus,
+  fetchCustomers as getCustomers,
+  toggleCustomerStatus as setCustomerStatus,
+  fetchReviews as getReviews,
+  toggleReviewStatus as setReviewStatus,
+  deleteReview as removeReview,
+  fetchCoupons as getCoupons,
+  createCoupon as addCouponAPI,
+  deleteCoupon as removeCoupon,
+  toggleCouponStatus as setCouponStatus,
+} from "../../api/admin";
 
+import "./AdminLayout.css";
+import logo from "../../assets/logo.png";
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    if (!localStorage.getItem("adminToken")) navigate("/admin/login");
+  }, []);
 
   // --- central states to enable dynamic flow ---
   const [products, setProducts] = useState([]);
@@ -52,12 +77,10 @@ const AdminLayout = () => {
   const fetchProducts = async (page = 1, limit = 10) => {
     try {
       setLoadingProducts(true);
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get(`http://localhost:5000/api/v1/admin/products?page=${page}&limit=${limit}`, config);
-      if (res.data.success) {
-        setProducts(res.data.data);
-        if (res.data.pagination) setPagination(res.data.pagination);
+      const data = await getProducts(page, limit);
+      if (data.success) {
+        setProducts(data.data);
+        if (data.pagination) setPagination(data.pagination);
       }
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -66,47 +89,111 @@ const AdminLayout = () => {
     }
   };
 
-  const [categories, setCategories] = useState([
-    { name: "Necklace", productsCount: 68, status: "Active" },
-    { name: "Earrings", productsCount: 85, status: "Active" },
-    { name: "Rings", productsCount: 45, status: "Active" },
-    { name: "Bracelets", productsCount: 32, status: "Inactive" },
-    { name: "Accessories", productsCount: 20, status: "Active" },
-  ]);
+  const [categories, setCategories] = useState([]);
 
-  const [orders, setOrders] = useState([
-    { id: "1025", customer: "Priya Sharma", date: "18 May, 2024", amount: 12450, status: "Pending" },
-    { id: "1024", customer: "Ananya Verma", date: "18 May, 2024", amount: 8750, status: "Processing" },
-    { id: "1023", customer: "Neha Kapoor", date: "17 May, 2024", amount: 15800, status: "Shipped" },
-    { id: "1022", customer: "Ritika Singh", date: "17 May, 2024", amount: 6250, status: "Delivered" },
-  ]);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  const [customers, setCustomers] = useState([
-    { name: "Priya Sharma", email: "priya@gmail.com", orders: 8, spent: 15890, status: "Active", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&q=80" },
-    { name: "Ananya Verma", email: "ananya@gmail.com", orders: 5, spent: 8750, status: "Active", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80" },
-    { name: "Neha Kapoor", email: "neha@gmail.com", orders: 7, spent: 12450, status: "Active", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&q=80" },
-    { name: "Ritika Singh", email: "ritika@gmail.com", orders: 3, spent: 6250, status: "Active", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&q=80" },
-  ]);
+  const fetchCategories = async () => {
+    try {
+      const data = await getCategories();
+      if (data.success) setCategories(data.data);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
+  };
 
-  const [reviews, setReviews] = useState([
-    { customer: "Priya Sharma", product: "Floral Diamond Necklace", rating: 5, review: "Beautiful design!", status: "Approved" },
-    { customer: "Ananya Verma", product: "Gold Plated Earrings", rating: 5, review: "Very elegant!", status: "Approved" },
-    { customer: "Neha Kapoor", product: "Pearl Drop Earrings", rating: 4, review: "Loved it!", status: "Approved" },
-    { customer: "Ritika Singh", product: "Classic Gold Ring", rating: 5, review: "Perfect fit", status: "Approved" },
-  ]);
+  const [orders, setOrders] = useState([]);
 
-  const [coupons, setCoupons] = useState([
-    { code: "OASIS10", discount: "10% OFF", minOrder: "₹999", expiryDate: "31 May 2024", status: "Active" },
-    { code: "OASIS20", discount: "20% OFF", minOrder: "₹1999", expiryDate: "30 Jun 2024", status: "Active" },
-    { code: "WELCOME5", discount: "5% OFF", minOrder: "₹499", expiryDate: "31 May 2024", status: "Inactive" },
-    { code: "FREESHIP", discount: "Free Shipping", minOrder: "₹1499", expiryDate: "30 Jun 2024", status: "Active" },
-  ]);
+  useEffect(() => {
+    fetchOrdersList();
+  }, []);
+
+  const fetchOrdersList = async (page = 1, limit = 10) => {
+    try {
+      const data = await getOrders(page, limit);
+      if (data.success) {
+        const mappedOrders = data.data.map(o => ({
+          id: o._id,
+          orderId: o.orderId,
+          customer: o.customerName || o.customerEmail || "Guest",
+          date: new Date(o.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+          amount: o.totalAmount,
+          status: o.status
+        }));
+        setOrders(mappedOrders);
+      }
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+    }
+  };
+
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    fetchCustomersList();
+  }, []);
+
+  const fetchCustomersList = async (page = 1, limit = 10) => {
+    try {
+      const data = await getCustomers(page, limit);
+      if (data.success) {
+        const mappedCustomers = data.data.map(c => ({
+          id: c._id,
+          name: `${c.firstName} ${c.lastName}`.trim() || 'No Name',
+          email: c.email,
+          orders: c.ordersCount,
+          spent: c.spent,
+          status: c.status,
+          img: c.avatar || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&q=80"
+        }));
+        setCustomers(mappedCustomers);
+      }
+    } catch (err) {
+      console.error("Error fetching customers:", err);
+    }
+  };
+
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    fetchReviewsList();
+  }, []);
+
+  const fetchReviewsList = async () => {
+    try {
+      const data = await getReviews();
+      if (data.success) {
+        setReviews(data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+    }
+  };
+
+  const [coupons, setCoupons] = useState([]);
+
+  useEffect(() => {
+    fetchCouponsList();
+  }, []);
+
+  const fetchCouponsList = async () => {
+    try {
+      const data = await getCoupons();
+      if (data.success) {
+        setCoupons(data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching coupons:", err);
+    }
+  };
 
   const [settings, setSettings] = useState({
     storeName: "Fashion Oasis",
     storeLogo: "FO",
-    storeEmail: "info@fashionoasis.com",
-    contactNumber: "+91 98765 43210",
+    storeEmail: "fashionoasis082@gmail.com",
+    contactNumber: "+91 7739479666",
   });
 
   const [profile, setProfile] = useState(() => {
@@ -153,10 +240,8 @@ const AdminLayout = () => {
     if (!isConfirmed) return;
 
     try {
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.delete(`http://localhost:5000/api/v1/admin/products/${id}`, config);
-      if (res.data.success) setProducts(products.filter((p) => p._id !== id));
+      const data = await removeProduct(id);
+      if (data.success) setProducts(products.filter((p) => p._id !== id));
     } catch (err) {
       console.error("Error deleting product:", err);
     }
@@ -164,13 +249,11 @@ const AdminLayout = () => {
 
   const toggleProductStatus = async (id) => {
     try {
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.patch(`http://localhost:5000/api/v1/admin/products/${id}/status`, {}, config);
-      if (res.data.success) {
+      const data = await setProductStatus(id);
+      if (data.success) {
         setProducts(
           products.map((p) =>
-            p._id === id ? { ...p, status: res.data.data.status } : p
+            p._id === id ? { ...p, status: data.data.status } : p
           )
         );
       }
@@ -179,47 +262,141 @@ const AdminLayout = () => {
     }
   };
 
-  const addCategory = (newC) => setCategories([newC, ...categories]);
-  const deleteCategory = (name) => setCategories(categories.filter((c) => c.name !== name));
-  const toggleCategoryStatus = (name) => {
-    setCategories(
-      categories.map((c) =>
-        c.name === name ? { ...c, status: c.status === "Active" ? "Inactive" : "Active" } : c
-      )
-    );
+  const addCategory = async (newC) => {
+    try {
+      const data = await createCategory(newC.name);
+      if (data.success) {
+        setCategories([data.data, ...categories]);
+        return true;
+      }
+    } catch (err) {
+      console.error("Error adding category:", err);
+      return false;
+    }
   };
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders(
-      orders.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-    );
+  const deleteCategory = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this category?");
+    if (!isConfirmed) return;
+
+    try {
+      const data = await removeCategory(id);
+      if (data.success) setCategories(categories.filter((c) => c._id !== id));
+    } catch (err) {
+      console.error("Error deleting category:", err);
+    }
   };
 
-  const toggleCustomerStatus = (name) => {
-    setCustomers(
-      customers.map((cust) =>
-        cust.name === name
-          ? { ...cust, status: cust.status === "Active" ? "Inactive" : "Active" }
-          : cust
-      )
-    );
+  const toggleCategoryStatus = async (id) => {
+    try {
+      const data = await setCategoryStatus(id);
+      if (data.success) {
+        setCategories(
+          categories.map((c) =>
+            c._id === id ? { ...c, status: data.data.status } : c
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error toggling category status:", err);
+    }
   };
 
-  const deleteReview = (idx) => setReviews(reviews.filter((_, i) => i !== idx));
-  const toggleReviewStatus = (idx) => {
-    setReviews(
-      reviews.map((rev, i) => (i === idx ? { ...rev, status: "Approved" } : rev))
-    );
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const data = await setOrderStatus(orderId, newStatus);
+      if (data.success) {
+        setOrders(
+          orders.map((o) => (o.id === orderId ? { ...o, status: data.data.status } : o))
+        );
+      }
+    } catch (err) {
+      console.error("Error updating order status:", err);
+    }
   };
 
-  const addCoupon = (newCp) => setCoupons([newCp, ...coupons]);
-  const deleteCoupon = (code) => setCoupons(coupons.filter((cp) => cp.code !== code));
-  const toggleCouponStatus = (code) => {
-    setCoupons(
-      coupons.map((cp) =>
-        cp.code === code ? { ...cp, status: cp.status === "Active" ? "Inactive" : "Active" } : cp
-      )
-    );
+  const toggleCustomerStatus = async (id) => {
+    try {
+      const data = await setCustomerStatus(id);
+      if (data.success) {
+        setCustomers(
+          customers.map((cust) =>
+            cust.id === id ? { ...cust, status: data.data.status } : cust
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error toggling customer status:", err);
+    }
+  };
+
+  const deleteReview = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this review?");
+    if (!isConfirmed) return;
+
+    try {
+      const data = await removeReview(id);
+      if (data.success) {
+        setReviews(reviews.filter((r) => r._id !== id));
+      }
+    } catch (err) {
+      console.error("Error deleting review:", err);
+    }
+  };
+  
+  const toggleReviewStatus = async (id) => {
+    try {
+      const data = await setReviewStatus(id);
+      if (data.success) {
+        setReviews(
+          reviews.map((rev) => (rev._id === id ? { ...rev, status: data.data.status } : rev))
+        );
+      }
+    } catch (err) {
+      console.error("Error toggling review status:", err);
+    }
+  };
+
+  const addCoupon = async (newCp) => {
+    try {
+      const data = await addCouponAPI(newCp);
+      if (data.success) {
+        setCoupons([data.data, ...coupons]);
+        return true;
+      }
+    } catch (err) {
+      console.error("Error adding coupon:", err);
+      return false;
+    }
+  };
+  
+  const deleteCoupon = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this coupon?");
+    if (!isConfirmed) return;
+
+    try {
+      const data = await removeCoupon(id);
+      if (data.success) {
+        setCoupons(coupons.filter((cp) => cp._id !== id));
+      }
+    } catch (err) {
+      console.error("Error deleting coupon:", err);
+    }
+  };
+  
+  const toggleCouponStatus = async (id) => {
+    try {
+      const data = await setCouponStatus(id);
+      if (data.success) {
+        setCoupons(
+          coupons.map((cp) =>
+            cp._id === id ? { ...cp, status: data.data.status } : cp
+          )
+        );
+      }
+    } catch (err) {
+      console.error("Error toggling coupon status:", err);
+    }
   };
 
   const updateSettings = (newS) => setSettings(newS);
@@ -252,11 +429,7 @@ const AdminLayout = () => {
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
           <div className="header-logo-group">
-            <span className="logo-initial">{settings.storeLogo || "FO"}</span>
-            <div>
-              <h3>{settings.storeName || "FASHION OASIS"}</h3>
-              <p>Timeless Elegance</p>
-            </div>
+            <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
           </div>
         </div>
 

@@ -8,16 +8,30 @@ const errorHandler = (err, req, res, next) => {
     return res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
+      errors: err.errors,
       error: err,
       stack: err.stack,
     });
   }
 
+  if (err.name === 'CastError') {
+    return res.status(400).json({ status: 'fail', message: 'Invalid resource ID' });
+  }
+
+  if (err.name === 'ValidationError') {
+    const messages = Object.values(err.errors).map((e) => e.message);
+    return res.status(400).json({ status: 'fail', message: messages });
+  }
+
   if (err.isOperational) {
-    return res.status(err.statusCode).json({
+    const response = {
       status: err.status,
       message: err.message,
-    });
+    };
+    if (err.errors && err.errors.length > 0) {
+      response.errors = err.errors;
+    }
+    return res.status(err.statusCode).json(response);
   }
 
   console.error('ERROR 💥:', err);

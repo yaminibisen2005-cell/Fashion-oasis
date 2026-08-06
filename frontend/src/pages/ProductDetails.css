@@ -4,7 +4,7 @@
   padding: 0 20px;
 }
 
-.breadcrumb {
+.product-details-page .fo-breadcrumb {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -13,17 +13,17 @@
   color: #666;
 }
 
-.breadcrumb a {
+.product-details-page .fo-breadcrumb a {
   color: #666;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-.breadcrumb a:hover {
+.product-details-page .fo-breadcrumb a:hover {
   color: #ef6f8f;
 }
 
-.breadcrumb span {
+.product-details-page .fo-breadcrumb span {
   color: #999;
 }
 
@@ -49,7 +49,7 @@
     margin: 30px auto 60px;
   }
 
-  .breadcrumb {
+  .product-details-page .fo-breadcrumb {
     font-size: 13px;
     margin-bottom: 20px;
   }

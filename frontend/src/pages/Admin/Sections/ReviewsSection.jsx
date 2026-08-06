@@ -31,8 +31,8 @@ const ReviewsSection = ({ reviews, deleteReview, toggleReviewStatus }) => {
                 </td>
               </tr>
             ) : (
-              reviews.map((rev, idx) => (
-                <tr key={idx}>
+              reviews.map((rev) => (
+                <tr key={rev._id || rev.id || Math.random()}>
                   <td><strong>{rev.customer}</strong></td>
                   <td>{rev.product}</td>
                   <td>
@@ -56,7 +56,7 @@ const ReviewsSection = ({ reviews, deleteReview, toggleReviewStatus }) => {
                       {rev.status !== "Approved" && (
                         <button
                           className="tbl-action-btn check"
-                          onClick={() => toggleReviewStatus(idx)}
+                          onClick={() => toggleReviewStatus(rev._id)}
                           title="Approve Review"
                         >
                           <FaCheck />
@@ -64,7 +64,7 @@ const ReviewsSection = ({ reviews, deleteReview, toggleReviewStatus }) => {
                       )}
                       <button
                         className="tbl-action-btn delete"
-                        onClick={() => deleteReview(idx)}
+                        onClick={() => deleteReview(rev._id)}
                         title="Delete Review"
                       >
                         <FaTrash />

@@ -8,7 +8,6 @@ import customerAuthRoutes from './routes/customerAuth.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import adminDashboardRoutes from './routes/adminDashboard.routes.js';
 import productRoutes from './routes/product.routes.js';
-import publicProductRoutes from './routes/publicProduct.routes.js';
 
 dotenv.config();
 
@@ -18,29 +17,32 @@ const app = express();
 connectDB();
 
 // Global Middlewares
-app.use(cors());
-app.use(express.json({ limit: '10kb' }));
+app.use(cors({ origin: "*" }));
+app.use(express.json({ limit: "10kb" }));
 
 // Base API Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/admin/dashboard', adminDashboardRoutes);
 app.use('/api/v1/admin/products', productRoutes);
-app.use('/api/v1/products', publicProductRoutes);
 app.use('/api/v1/customer', customerAuthRoutes);
 app.get('/', (req, res) => {
   res.status(200).json({ success: true, message: 'Fashion Oasis API is running cleanly' });
 });
 
-// 404 Unhandled Route Handler
+// 404 Handler
 app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-// Centralized Error Middleware
+// Error Middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  console.log(
+    `Server running in ${process.env.NODE_ENV || "development"
+    } mode on port ${PORT}`
+  );
 });
 // trigger restart

@@ -1,12 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap");
-
 /* ===========================
    WHY CHOOSE US
-=========================== */
+   =========================== */
 
 .why-section{
-    padding:80px 0 80px;
-    background:#FFF9FA;
+    padding:45px 0 80px;
+    background:var(--light-background);
 }
 
 .why-heading{
@@ -16,27 +14,27 @@
 
 .why-heading span{
     display:inline-block;
-    font-family:"Poppins",sans-serif;
+    font-family:var(--body-font);
     font-size:13px;
     font-weight:600;
     letter-spacing:4px;
-    color:#EF6F8F;
+    color:var(--primary-pink);
     text-transform:uppercase;
     margin-bottom:12px;
 }
 
 .why-heading h2{
-    font-family:"Cormorant Garamond",serif;
+    font-family:var(--heading-font);
     font-size:54px;
     font-weight:600;
-    color:#34211D;
+    color:var(--heading-color);
     margin-bottom:18px;
 }
 
 .why-heading p{
     max-width:650px;
     margin:auto;
-    font-family:"Poppins",sans-serif;
+    font-family:var(--body-font);
     font-size:16px;
     line-height:28px;
     color:#666;
@@ -44,7 +42,7 @@
 
 /* ===========================
    GRID
-=========================== */
+   =========================== */
 
 .why-grid{
     display:grid;
@@ -54,7 +52,7 @@
 
 /* ===========================
    CARD
-=========================== */
+   =========================== */
 
 .why-card{
     background:#ffffff;
@@ -74,7 +72,7 @@
 
 /* ===========================
    ICON
-=========================== */
+   =========================== */
 
 .why-icon{
     width:78px;
@@ -86,7 +84,7 @@
     align-items:center;
     justify-content:center;
     font-size:30px;
-    color:#EF6F8F;
+    color:var(--primary-pink);
     transition:.35s;
 }
 
@@ -98,23 +96,23 @@
 
 /* ===========================
    TITLE
-=========================== */
+   =========================== */
 
 .why-card h3{
     margin-top:24px;
     margin-bottom:14px;
-    font-family:"Cormorant Garamond",serif;
+    font-family:var(--heading-font);
     font-size:30px;
-    color:#34211D;
+    color:var(--heading-color);
     font-weight:600;
 }
 
 /* ===========================
    DESCRIPTION
-=========================== */
+   =========================== */
 
 .why-card p{
-    font-family:"Poppins",sans-serif;
+    font-family:var(--body-font);
     font-size:15px;
     color:#666;
     line-height:27px;
@@ -122,9 +120,13 @@
 
 /* ===========================
    TABLET
-=========================== */
+   =========================== */
 
 @media(max-width:992px){
+
+.why-section{
+    padding:40px 0 70px;
+}
 
 .why-grid{
     grid-template-columns:repeat(2,1fr);
@@ -138,12 +140,12 @@
 
 /* ===========================
    MOBILE
-=========================== */
+   =========================== */
 
 @media(max-width:768px){
 
 .why-section{
-    padding:60px 0 50px;
+    padding:35px 0 60px;
 }
 
 .why-grid{

@@ -4,6 +4,10 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 
 // Helper function to send email via Brevo SMTP
+import jwt from 'jsonwebtoken';
+
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -26,44 +30,47 @@ const sendEmail = async (options) => {
 
 // @desc    Register new customer
 // @route   POST /api/v1/customer/auth/register
-export const registerCustomer = async (req, res, next) => {
+ export const registerCustomer = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
+    // Accept either 'phone' or 'phoneNumber' from the frontend form
+    const phone = req.body.phone || req.body.phoneNumber;
 
-    // Check if passwords match
     if (password !== confirmPassword) {
       return next(new AppError('Passwords do not match', 400));
     }
 
-    // Check if customer already exists
     const existingCustomer = await Customer.findOne({ email });
     if (existingCustomer) {
       return next(new AppError('Email is already registered', 400));
     }
 
-    // Create customer in MongoDB
     const customer = await Customer.create({
       firstName,
       lastName,
       email,
-      password
+      password,
+      phone: phone || ''
     });
+
+    const token = signToken(customer._id);
 
     res.status(201).json({
       success: true,
       message: 'Registration successful',
+      token,
       data: {
         id: customer._id,
         firstName: customer.firstName,
         lastName: customer.lastName,
-        email: customer.email
+        email: customer.email,
+        phone: customer.phone
       }
     });
   } catch (error) {
     next(error);
   }
 };
-
 // @desc    Login customer
 // @route   POST /api/v1/customer/auth/login
 export const loginCustomer = async (req, res, next) => {
@@ -82,9 +89,12 @@ export const loginCustomer = async (req, res, next) => {
       return next(new AppError('Incorrect email or password', 401));
     }
 
+    const token = signToken(customer._id);
+
     res.status(200).json({
       success: true,
       message: 'Login successful',
+      token,
       data: {
         id: customer._id,
         firstName: customer.firstName,
@@ -105,7 +115,10 @@ export const forgotPassword = async (req, res, next) => {
     const customer = await Customer.findOne({ email });
 
     if (!customer) {
-      return next(new AppError('There is no user with that email address.', 404));
+      return res.status(200).json({
+        success: true,
+        message: 'If an account with that email exists, a password reset link has been sent.',
+      });
     }
 
     // Generate random reset token
@@ -134,7 +147,7 @@ export const forgotPassword = async (req, res, next) => {
 
       res.status(200).json({
         success: true,
-        message: 'Token sent to email!',
+        message: 'If an account with that email exists, a password reset link has been sent.',
       });
     } catch (err) {
       customer.resetPasswordToken = undefined;
@@ -183,12 +196,10 @@ export const resetPassword = async (req, res, next) => {
 };
 
 // @desc    Get current customer profile by email query
+ // Inside getProfile, update the response object to include twoFactorEnabled:
 export const getProfile = async (req, res, next) => {
   try {
-    const email = req.query.email;
-    const customer = email
-      ? await Customer.findOne({ email })
-      : await Customer.findOne();
+    const customer = req.customer;
 
     if (!customer) {
       return next(new AppError('Customer not found', 404));
@@ -203,7 +214,8 @@ export const getProfile = async (req, res, next) => {
         email: customer.email,
         phone: customer.phone || '',
         gender: customer.gender || '',
-        address: customer.address || ''
+        address: customer.address || '',
+        twoFactorEnabled: customer.twoFactorEnabled || false
       }
     });
   } catch (error) {
@@ -214,18 +226,17 @@ export const getProfile = async (req, res, next) => {
 // @desc    Update customer profile supporting originalEmail reference
 export const updateProfile = async (req, res, next) => {
   try {
-    const { originalEmail, firstName, lastName, email, phone, gender, address } = req.body;
+    const { firstName, lastName, email, phone, gender, address } = req.body;
 
-    const lookupEmail = originalEmail || email;
-    const customer = await Customer.findOne({ email: lookupEmail });
+    const customer = req.customer;
 
     if (!customer) {
       return next(new AppError('Customer not found', 404));
     }
 
-    if (firstName) customer.firstName = firstName;
-    if (lastName) customer.lastName = lastName;
-    if (email) customer.email = email;
+    if (firstName !== undefined) customer.firstName = firstName;
+    if (lastName !== undefined) customer.lastName = lastName;
+    if (email !== undefined) customer.email = email;
     if (phone !== undefined) customer.phone = phone;
     if (gender !== undefined) customer.gender = gender;
     if (address !== undefined) customer.address = address;
@@ -244,6 +255,79 @@ export const updateProfile = async (req, res, next) => {
         gender: customer.gender,
         address: customer.address
       }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update customer password
+export const updatePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (currentPassword === newPassword) {
+      return next(new AppError('New password cannot be the same as the current password', 400));
+    }
+
+    const customer = await Customer.findById(req.customer._id).select('+password');
+
+    if (!customer || !(await customer.comparePassword(currentPassword))) {
+      return next(new AppError('Your current password is incorrect', 401));
+    }
+
+    customer.password = newPassword;
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete customer account
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+
+    const customer = await Customer.findById(req.customer._id).select('+password');
+
+    if (!customer || !(await customer.comparePassword(password))) {
+      return next(new AppError('Incorrect password', 401));
+    }
+
+    await Customer.findByIdAndDelete(req.customer._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Account deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update Two-Factor Authentication status
+// @route   PUT /api/v1/customer/two-factor
+export const updateTwoFactor = async (req, res, next) => {
+  try {
+    const { twoFactorEnabled } = req.body;
+
+    const customer = req.customer;
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    customer.twoFactorEnabled = twoFactorEnabled;
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Two-factor authentication ${twoFactorEnabled ? 'enabled' : 'disabled'} successfully`,
+      data: { twoFactorEnabled: customer.twoFactorEnabled }
     });
   } catch (error) {
     next(error);

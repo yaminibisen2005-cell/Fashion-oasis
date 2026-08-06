@@ -71,14 +71,12 @@ const Hero = () => {
               <div className="hero-overlay"></div>
               <div className="container">
                 <div className="row align-items-center hero-row">
-                  <div className="col-lg-5">
+                  <div className="col-lg-5 hero-content-col">
                     <div className="hero-content">
-                      <div className="hero-tag">
+                     
                         
-                        <div className="line"></div>
-                        <FaHeart />
-                      </div>
-                      <h1 color="#ef6f8f">
+                      
+                      <h1>
                         Crafted
                         <span>With Love</span>
                       </h1>
