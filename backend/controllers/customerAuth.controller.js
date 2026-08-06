@@ -30,27 +30,27 @@ const sendEmail = async (options) => {
 
 // @desc    Register new customer
 // @route   POST /api/v1/customer/auth/register
-export const registerCustomer = async (req, res, next) => {
+ export const registerCustomer = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
+    // Accept either 'phone' or 'phoneNumber' from the frontend form
+    const phone = req.body.phone || req.body.phoneNumber;
 
-    // Check if passwords match
     if (password !== confirmPassword) {
       return next(new AppError('Passwords do not match', 400));
     }
 
-    // Check if customer already exists
     const existingCustomer = await Customer.findOne({ email });
     if (existingCustomer) {
       return next(new AppError('Email is already registered', 400));
     }
 
-    // Create customer in MongoDB
     const customer = await Customer.create({
       firstName,
       lastName,
       email,
-      password
+      password,
+      phone: phone || ''
     });
 
     const token = signToken(customer._id);
@@ -63,14 +63,14 @@ export const registerCustomer = async (req, res, next) => {
         id: customer._id,
         firstName: customer.firstName,
         lastName: customer.lastName,
-        email: customer.email
+        email: customer.email,
+        phone: customer.phone
       }
     });
   } catch (error) {
     next(error);
   }
 };
-
 // @desc    Login customer
 // @route   POST /api/v1/customer/auth/login
 export const loginCustomer = async (req, res, next) => {

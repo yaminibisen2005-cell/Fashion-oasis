@@ -1,4 +1,4 @@
-import "./Login.css";
+ import "./Login.css";
 import loginAuth from "../../assets/login-auth.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -18,25 +18,30 @@ const Login = () => {
 
     try {
       const data = await customerLogin({ email, password });
+      console.log("Login response data:", data);
 
-      if (data.success && data.data) {
-        // Save the full user data object so the dashboard can read the name and token
-        localStorage.setItem("customerInfo", JSON.stringify(data.data));
-        
-        if (data.data.email) {
-          localStorage.setItem("customerEmail", data.data.email);
-        }
-        if (data.data.token) {
-          localStorage.setItem("token", data.data.token);
-        }
+      // Robustly check top-level or nested response properties for token and user info
+      const token = data.token || data.data?.token;
+      const userInfo = data.data || data.user || data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+      if (userInfo) {
+        localStorage.setItem("customerInfo", JSON.stringify(userInfo));
+      }
+      if (userInfo?.email || email) {
+        localStorage.setItem("customerEmail", userInfo?.email || email);
       }
 
       alert("Login Successful!");
-      console.log("LoggedIn user data:", data);
-      navigate("/");
+      
+      // Navigate straight to your dashboard route
+      navigate("/dashboard");
 
     } catch (error) {
-      alert(error.response?.data?.message || "Invalid email or password");
+      console.error("Login error:", error);
+      alert(error.response?.data?.message || error.message || "Invalid email or password");
     }
   };
 

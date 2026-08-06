@@ -21,7 +21,7 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+ const handleRegister = async (e) => {
     e.preventDefault();
     setPasswordError("");
     setPhoneError("");
@@ -47,41 +47,22 @@ const Register = () => {
     }
 
     try {
-
-      await customerRegister({ firstName, lastName, email, password, confirmPassword });
-
-      const response = await fetch(
-        "http://localhost:5000/api/v1/customer/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            password,
-            confirmPassword,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
+      // Single API call sending all fields including phoneNumber
+      await customerRegister({ 
+        firstName, 
+        lastName, 
+        email, 
+        phone: phoneNumber, 
+        password, 
+        confirmPassword 
+      });
 
       alert("Registration Successful!");
       navigate("/login");
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
+      alert(error.response?.data?.message || error.message || "Something went wrong");
     }
   };
-
   const glassCardItems = [
     { icon: <FiAward />, text: "Certified Jewellery" },
     { icon: <FiShield />, text: "Secure Payments" },
