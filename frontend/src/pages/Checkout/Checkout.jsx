@@ -70,6 +70,7 @@ const Checkout = () => {
         productName: item.product.name,
         quantity: item.quantity,
         price: item.product.price,
+        image: item.product.image, // <--- Add this property
       }));
 
       // Determine final billing payload based on checkbox
@@ -125,7 +126,7 @@ const Checkout = () => {
       }
 
       placeOrder();
-      navigate("/payment");
+    navigate("/thank-you");
       
     } catch (err) {
       setLoading(false);

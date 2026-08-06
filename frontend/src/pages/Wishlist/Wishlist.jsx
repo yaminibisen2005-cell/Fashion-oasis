@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { FaHeart, FaStar } from "react-icons/fa";
+import { getWishlist, toggleWishlist } from "../../api/customer";
 import "./Wishlist.css";
 
 const Wishlist = () => {
@@ -10,18 +11,17 @@ const Wishlist = () => {
   const [loading, setLoading] = useState(true);
   const [loadingItems, setLoadingItems] = useState({});
   const navigate = useNavigate();
-  const customerEmail = localStorage.getItem("customerEmail");
+  const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchWishlist = async () => {
-      if (!customerEmail) {
+    const fetchWishlistData = async () => {
+      if (!customerToken) {
         setLoading(false);
         return;
       }
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/wishlist/${customerEmail}`);
-        const data = await response.json();
-        if (response.ok && data.wishlist) {
+        const data = await getWishlist();
+        if (data && data.wishlist) {
           setWishlist(data.wishlist);
         }
       } catch (err) {
@@ -31,22 +31,23 @@ const Wishlist = () => {
       }
     };
 
-    fetchWishlist();
-  }, [customerEmail]);
+    fetchWishlistData();
+  }, [customerToken]);
 
-  const removeFromWishlist = async (id) => {
+  const removeFromWishlist = async (item) => {
+    const id = item.id || item._id;
     try {
-      const response = await fetch("http://localhost:5000/api/v1/wishlist/toggle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerEmail,
-          product: { id },
-        }),
+      const data = await toggleWishlist({
+        product: {
+          id,
+          name: item.name,
+          image: item.image,
+          price: item.price,
+          oldPrice: item.oldPrice,
+        },
       });
-
-      if (response.ok) {
-        setWishlist((prev) => prev.filter((item) => (item.id || item._id) !== id));
+      if (data && data.wishlist) {
+        setWishlist(data.wishlist);
       }
     } catch (err) {
       console.error("Failed to remove item", err);
@@ -57,8 +58,7 @@ const Wishlist = () => {
     const id = item.id || item._id;
     setLoadingItems((prev) => ({ ...prev, [id]: true }));
     setTimeout(async () => {
-      // Add your cart API action here if needed, then remove from wishlist
-      await removeFromWishlist(id);
+      await removeFromWishlist(item);
       setLoadingItems((prev) => ({ ...prev, [id]: false }));
     }, 600);
   };
@@ -109,7 +109,7 @@ const Wishlist = () => {
                       <img src={item.image} alt={item.name} />
                       <button
                         className="remove-wishlist-btn"
-                        onClick={() => removeFromWishlist(itemId)}
+                        onClick={() => removeFromWishlist(item)}
                         title="Remove from wishlist"
                       >
                         <FaHeart className="heart-icon-filled" />

@@ -1,4 +1,4 @@
-import apiClient from "./client";
+ import apiClient from "./client";
 
 // auth
 export const customerRegister = (payload) => apiClient.post("/customer/register", payload).then((r) => r.data);
@@ -7,13 +7,13 @@ export const forgotPassword = (payload) => apiClient.post("/customer/forgot-pass
 export const resetPassword = (token, payload) => apiClient.put(`/customer/reset-password/${token}`, payload).then((r) => r.data);
 
 // profile
-export const getProfile = (email) => apiClient.get(`/customer/profile?email=${email}`).then((r) => r.data);
+export const getProfile = () => apiClient.get("/customer/profile").then((r) => r.data);
 export const updateProfile = (payload) => apiClient.put("/customer/profile", payload).then((r) => r.data);
 export const updatePassword = (payload) => apiClient.put("/customer/password", payload).then((r) => r.data);
-export const deleteAccount = (email) => apiClient.delete("/customer/account", { data: { email } }).then((r) => r.data);
+export const deleteAccount = (payload) => apiClient.delete("/customer/account", { data: payload }).then((r) => r.data);
 
-// wishlist
-export const getWishlist = (email) => apiClient.get(`/wishlist/${email}`).then((r) => r.data);
+// wishlist (Uses the token attached by the interceptor automatically)
+export const getWishlist = () => apiClient.get("/wishlist").then((r) => r.data);
 export const toggleWishlist = (payload) => apiClient.post("/wishlist/toggle", payload).then((r) => r.data);
 
 // orders

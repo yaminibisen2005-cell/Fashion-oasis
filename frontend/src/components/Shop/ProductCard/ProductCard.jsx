@@ -1,8 +1,9 @@
-import "./ProductCard.css";
+ import "./ProductCard.css";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../../context/ShopContext";
+import { toggleWishlist } from "../../../api/customer";
 
 const ProductCard = ({
   product,
@@ -14,34 +15,26 @@ const ProductCard = ({
   const [addedToCart, setAddedToCart] = useState(false);
   const { addToCart } = useContext(ShopContext);
 
-  const customerEmail = localStorage.getItem("customerEmail");
+  const customerToken = localStorage.getItem("token") || localStorage.getItem("customerToken");
 
   const handleWishlistToggle = async () => {
-    if (!customerEmail) {
+    if (!customerToken) {
       alert("Please log in to manage your wishlist.");
       return;
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/wishlist/toggle",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            customerEmail,
-            product: {
-              id: product.id || product._id,
-              name: product.name,
-              image: product.image,
-              price: product.price,
-              oldPrice: product.oldPrice,
-            },
-          }),
-        }
-      );
+       const data = await toggleWishlist({
+        product: {
+          id: String(product.id || product._id),
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          oldPrice: product.oldPrice,
+        },
+      });
 
-      if (response.ok) {
+      if (data) {
         setLiked(!liked);
       }
     } catch (err) {

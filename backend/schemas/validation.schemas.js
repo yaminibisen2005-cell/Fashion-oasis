@@ -1,4 +1,4 @@
-import { z } from 'zod';
+ import { z } from 'zod';
 
 export const orderCreateSchema = z.object({
   body: z.object({
@@ -7,6 +7,7 @@ export const orderCreateSchema = z.object({
       fullName: z.string().min(1),
       phoneNumber: z.string().min(10).regex(/^\d+$/, 'Must be digits'),
       address: z.string().min(1),
+      addressLine2: z.string().optional(),
       city: z.string().min(1),
       state: z.string().min(1),
       pincode: z.string().min(5).regex(/^\d+$/, 'Must be digits'),
@@ -15,6 +16,7 @@ export const orderCreateSchema = z.object({
       fullName: z.string().min(1),
       phoneNumber: z.string().min(10).regex(/^\d+$/, 'Must be digits'),
       address: z.string().min(1),
+      addressLine2: z.string().optional(),
       city: z.string().min(1),
       state: z.string().min(1),
       pincode: z.string().min(5).regex(/^\d+$/, 'Must be digits'),
@@ -29,8 +31,9 @@ export const orderCreateSchema = z.object({
     ).min(1),
     totalAmount: z.number().positive(),
   }).refine((data) => {
-    const calc = data.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    return calc === data.totalAmount;
+    const subtotal = data.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const discountedTotal = subtotal * 0.9;
+    return Math.abs(data.totalAmount - subtotal) < 1 || Math.abs(data.totalAmount - discountedTotal) < 1;
   }, { message: 'Total amount does not match items', path: ['totalAmount'] })
 });
 
@@ -56,12 +59,12 @@ export const adminToggleStatusSchema = z.object({
   })
 });
 
-export const wishlistToggleSchema = z.object({
+ export const wishlistToggleSchema = z.object({
   body: z.object({
     product: z.object({
       id: z.string().min(1),
       name: z.string().min(1),
-      image: z.string().url().optional(),
+      image: z.string().optional(), // Changed from z.string().url().optional()
       price: z.number().positive().optional(),
       oldPrice: z.number().positive().optional()
     })

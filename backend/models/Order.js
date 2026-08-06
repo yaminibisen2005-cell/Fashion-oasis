@@ -29,7 +29,8 @@ const orderSchema = new mongoose.Schema(
       {
         productName: { type: String, required: true },
         quantity: { type: Number, required: true, default: 1 },
-        price: { type: Number, required: true }
+        price: { type: Number, required: true },
+        image: { type: String }
       }
     ],
     totalAmount: { type: Number, required: true },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Wishlist.css";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
@@ -8,18 +8,18 @@ function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const customerEmail = localStorage.getItem("customerEmail");
+  const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchWishlist = async () => {
-      if (!customerEmail) {
+    const fetchWishlistData = async () => {
+      if (!customerToken) {
         setLoading(false);
         return;
       }
 
       try {
-        const data = await getWishlist(customerEmail);
-        if (data.wishlist) {
+        const data = await getWishlist();
+        if (data && data.wishlist) {
           setWishlistItems(data.wishlist);
         }
       } catch (err) {
@@ -29,15 +29,24 @@ function Wishlist() {
       }
     };
 
-    fetchWishlist();
-  }, [customerEmail]);
+    fetchWishlistData();
+  }, [customerToken]);
 
-  const handleRemoveFromWishlist = async (productId) => {
+  const handleRemoveFromWishlist = async (item) => {
+    const itemId = item.id || item._id;
     try {
-      await toggleWishlist({ customerEmail, product: { id: productId } });
-      setWishlistItems((prev) =>
-        prev.filter((item) => (item.id || item._id) !== productId)
-      );
+      const data = await toggleWishlist({
+        product: {
+          id: itemId,
+          name: item.name,
+          image: item.image,
+          price: item.price,
+          oldPrice: item.oldPrice,
+        },
+      });
+      if (data && data.wishlist) {
+        setWishlistItems(data.wishlist);
+      }
     } catch (err) {
       console.error("Failed to remove item", err);
     }
@@ -71,7 +80,7 @@ function Wishlist() {
 
                     <button
                       className="heart-btn"
-                      onClick={() => handleRemoveFromWishlist(itemId)}
+                      onClick={() => handleRemoveFromWishlist(item)}
                     >
                       <FaHeart color="#e91e63" />
                     </button>
