@@ -127,12 +127,30 @@ function Dashboard() {
           {loading ? <p className="dashboard-empty-state">Loading orders...</p> : orders.length === 0 ? <p className="dashboard-empty-state">No recent orders found.</p> : (
             <table>
               <thead><tr><th>Product</th><th>Date</th><th>Status</th><th>Amount</th><th>Action</th></tr></thead>
-              <tbody>{orders.map((item, index) => (
-                <tr key={item.id || item._id || index}>
-                  <td><div className="product"><img src={item.image} alt={item.product || item.name || "Product"} /><div className="product-details"><h6>{item.product || item.name}</h6><span className="order-id">{item.id || item.orderId}</span></div></div></td>
-                  <td>{item.date}</td><td><span className={`status ${item.status?.toLowerCase() || ""}`}>{item.status}</span></td><td className="amount">{item.amount}</td><td><button className="view-details-btn">View Details</button></td>
-                </tr>
-              ))}</tbody>
+              <tbody>
+  {orders.flatMap((order, orderIdx) => {
+    // If the order has multiple items, map each item. Otherwise fallback to the order itself.
+    const orderItems = order.items && order.items.length > 0 ? order.items : [order];
+    
+    return orderItems.map((item, itemIdx) => (
+      <tr key={`${order._id || orderIdx}-${itemIdx}`}>
+        <td>
+          <div className="product">
+            <img src={item.image || item.product?.image} alt={item.productName || item.name || "Product"} />
+            <div className="product-details">
+              <h6>{item.productName || item.name || item.product}</h6>
+              <span className="order-id">Order: {order.orderId || order.id} (Qty: {item.quantity})</span>
+            </div>
+          </div>
+        </td>
+        <td>{order.date || new Date(order.createdAt).toLocaleDateString()}</td>
+        <td><span className={`status ${order.status?.toLowerCase() || ""}`}>{order.status}</span></td>
+        <td className="amount">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
+        <td><button className="view-details-btn" onClick={() => navigate(`/dashboard/orders`)}>View Details</button></td>
+      </tr>
+    ));
+  })}
+</tbody>
             </table>
           )}
         </div>

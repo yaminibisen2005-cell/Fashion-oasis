@@ -28,16 +28,17 @@ function AccountSetting() {
   // Feedback states
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Personal Information form state
   const [formData, setFormData] = useState({
     firstName: storedUser.firstName || "",
     lastName: storedUser.lastName || "",
     email: userEmail,
-    phone: "",
-    gender: "Male",
-    dob: "",
-    address: "",
+    phone: storedUser.phone || "",
+    gender: storedUser.gender || "Male",
+    dob: storedUser.dob || "",
+    address: storedUser.address || "",
   });
 
   // Password state
@@ -47,16 +48,23 @@ function AccountSetting() {
     confirmPassword: "",
   });
 
-  // Preferences states
-  const [notifications, setNotifications] = useState({
-    orderUpdates: true,
-    promotions: true,
-    newArrivals: false,
-    newsletter: true,
-  });
+  // Preferences states (loaded from localStorage if available)
+  const [notifications, setNotifications] = useState(
+    JSON.parse(localStorage.getItem("customerNotifications")) || {
+      orderUpdates: true,
+      promotions: true,
+      newArrivals: false,
+      newsletter: true,
+    }
+  );
 
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState("English");
+  const [darkMode, setDarkMode] = useState(
+    JSON.parse(localStorage.getItem("customerDarkMode")) || false
+  );
+  
+  const [language, setLanguage] = useState(
+    localStorage.getItem("customerLanguage") || "English"
+  );
 
   // Fetch full customer profile on mount
   useEffect(() => {
@@ -95,6 +103,7 @@ function AccountSetting() {
     e.preventDefault();
     setMessage("");
     setError("");
+    setLoading(true);
 
     try {
       const nameParts = formData.firstName.trim().split(" ");
@@ -108,6 +117,7 @@ function AccountSetting() {
         email: formData.email,
         phone: formData.phone,
         gender: formData.gender,
+        dob: formData.dob,
         address: formData.address,
       });
 
@@ -117,6 +127,8 @@ function AccountSetting() {
       }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update profile.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,18 +167,31 @@ function AccountSetting() {
     }
   };
 
+  // Save Preferences
+  const handleSavePreferences = (e) => {
+    e.preventDefault();
+    localStorage.setItem("customerNotifications", JSON.stringify(notifications));
+    localStorage.setItem("customerDarkMode", JSON.stringify(darkMode));
+    localStorage.setItem("customerLanguage", language);
+    setMessage("Preferences saved successfully!");
+  };
+
   // Delete Account
+ // Delete Account
   const handleDeleteAccount = async () => {
+    const password = window.prompt("To delete your account, please enter your current password:");
+    if (!password) return;
+
     if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
       try {
-        const data = await deleteAccount(userEmail);
+        const data = await deleteAccount({ email: userEmail, password });
 
         if (data.success) {
           localStorage.removeItem("customerInfo");
           window.location.href = "/login";
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to delete account.");
+        setError(err.response?.data?.message || "Failed to delete account. Check your password.");
       }
     }
   };
@@ -279,9 +304,9 @@ function AccountSetting() {
               </div>
             </div>
 
-            <button type="submit" className="fo-save-btn">
+            <button type="submit" className="fo-save-btn" disabled={loading}>
               <FaSave />
-              Save Personal Information
+              {loading ? "Saving..." : "Save Personal Information"}
             </button>
           </form>
 
@@ -342,8 +367,8 @@ function AccountSetting() {
             </button>
           </form>
 
-          {/* ================= Notifications ================= */}
-          <div className="setting-section">
+          {/* ================= Preferences, Appearance & Language ================= */}
+          <form onSubmit={handleSavePreferences} className="setting-section">
             <h3>
               <FaBell className="section-icon" />
               Notification Preferences
@@ -385,18 +410,7 @@ function AccountSetting() {
               <span>Newsletter</span>
             </label>
 
-            <button
-              type="button"
-              className="fo-save-btn"
-              onClick={() => alert("Notification preferences saved successfully!")}
-            >
-              Save Preferences
-            </button>
-          </div>
-
-          {/* ================= Appearance ================= */}
-          <div className="setting-section">
-            <h3>
+            <h3 className="mt-6">
               <FaMoon className="section-icon" />
               Appearance
             </h3>
@@ -416,11 +430,8 @@ function AccountSetting() {
                 <span className="slider"></span>
               </label>
             </div>
-          </div>
 
-          {/* ================= Language ================= */}
-          <div className="setting-section">
-            <h3>
+            <h3 className="mt-6">
               <FaLanguage className="section-icon" />
               Language
             </h3>
@@ -432,7 +443,11 @@ function AccountSetting() {
               <option value="English">English</option>
               <option value="Hindi">Hindi</option>
             </select>
-          </div>
+
+            <button type="submit" className="fo-save-btn mt-4">
+              Save Preferences
+            </button>
+          </form>
 
           {/* ================= Danger Zone ================= */}
           <div className="setting-section danger-zone">

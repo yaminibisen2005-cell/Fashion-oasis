@@ -1,4 +1,4 @@
-import "./ProductActions.css";
+ import "./ProductActions.css";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../../context/ShopContext";
@@ -8,10 +8,12 @@ import { FiHeart, FiShoppingCart } from "react-icons/fi";
 const ProductActions = ({ product }) => {
   const navigate = useNavigate();
 
-const {
-  addToCart,
-  addToWishlist,
-} = useContext(ShopContext);
+  const {
+    addToCart,
+    addToWishlist,
+    setBuyNowItem, // <--- 1. Pull setBuyNowItem from context
+  } = useContext(ShopContext);
+
   const [qty, setQty] = useState(1);
 
   const decrease = () => {
@@ -44,12 +46,12 @@ const {
         </div>
 
        <button
-  className="add-cart-btn"
-  onClick={() => {
-    addToCart(product, qty);
-    navigate("/cart");
-  }}
->
+          className="add-cart-btn"
+          onClick={() => {
+            addToCart(product, qty);
+            navigate("/cart");
+          }}
+        >
           <FiShoppingCart />
           Add to Cart
         </button>
@@ -59,19 +61,19 @@ const {
       <div className="actions-row-2">
 
        <button
-  className="buy-btn"
-  onClick={() => {
-    addToCart(product, qty);
-    navigate("/checkout");
-  }}
->
+          className="buy-btn"
+          onClick={() => {
+            setBuyNowItem({ product, quantity: qty }); // <--- 2. Set only this item for checkout
+            navigate("/checkout");
+          }}
+        >
           Buy Now
         </button>
 
-      <button
-  className="wishlist-btn-detail"
-  onClick={() => addToWishlist(product)}
->
+        <button
+          className="wishlist-btn-detail"
+          onClick={() => addToWishlist(product)}
+        >
           <FiHeart />
         </button>
 

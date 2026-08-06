@@ -55,46 +55,42 @@ function Orders() {
           <p style={{ textAlign: "center", padding: "20px", color: "#777" }}>You have not placed any orders yet.</p>
         )}
 
-        {!loading && orders.map((item, index) => {
-          // Extract proper fields depending on backend naming convention
-          const orderId = item._id ? `#${item._id.slice(-6).toUpperCase()}` : `#FO100${index + 1}`;
-          const productTitle = item.items && item.items[0] ? item.items[0].productName : "Jewellery Item";
-          const productPrice = item.totalAmount ? `₹${item.totalAmount.toLocaleString()}` : "₹0";
-          const orderDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "Recent";
-          const orderStatus = item.status || "Confirmed";
-          const orderImage = item.items && item.items[0] && item.items[0].image ? item.items[0].image : product5;
+        {!loading && orders.flatMap((order, orderIndex) => {
+          const orderListId = order.orderId || (order._id ? `#${order._id.slice(-6).toUpperCase()}` : `#FO100${orderIndex + 1}`);
+          const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "Recent";
+          const orderStatus = order.status || "Confirmed";
+          
+          // Grab all items in the order, or fallback if empty
+          const orderItems = order.items && order.items.length > 0 ? order.items : [{ productName: "Jewellery Item", price: order.totalAmount || 0, quantity: 1, image: product5 }];
 
-          return (
-            <div className="order-card" key={item._id || index}>
+          // Render a card for EVERY individual item in the order
+          return orderItems.map((item, itemIdx) => {
+            const productTitle = item.productName || item.name || "Jewellery Item";
+         const itemPrice = "₹" + ((item.price || 0) * (item.quantity || 1)).toLocaleString();
+            const orderImage = item.image || product5;
 
-              <div className="order-left">
-
-                <img src={orderImage} alt={productTitle} />
-
-                <div className="order-info">
-                  <h4>{productTitle}</h4>
-                  <p className="order-material">Material: Handcrafted Luxury</p>
-                  <p>Order ID: {orderId}</p>
-                  <p>{orderDate}</p>
-                  <h3>{productPrice}</h3>
+            return (
+              <div className="order-card" key={`${order._id || orderIndex}-${itemIdx}`}>
+                <div className="order-left">
+                  <img src={orderImage} alt={productTitle} />
+                  <div className="order-info">
+                    <h4>{productTitle}</h4>
+                    <p className="order-material">Qty: {item.quantity || 1} | Handcrafted Luxury</p>
+                    <p>Order ID: {orderListId}</p>
+                    <p>{orderDate}</p>
+                    <h3>{itemPrice}</h3>
+                  </div>
                 </div>
 
+                <div className="order-right">
+                  <span className={`status ${orderStatus.toLowerCase()}`}>
+                    {orderStatus}
+                  </span>
+                  <button>View Details</button>
+                </div>
               </div>
-
-              <div className="order-right">
-
-                <span
-                  className={`status ${orderStatus.toLowerCase()}`}
-                >
-                  {orderStatus}
-                </span>
-
-                <button>View Details</button>
-
-              </div>
-
-            </div>
-          );
+            );
+          });
         })}
 
       </div>

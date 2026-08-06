@@ -49,6 +49,7 @@ const initialProducts = [
 export const ShopProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
+  const [buyNowItem, setBuyNowItem] = useState(null);
   const isInitialMount = useRef(true);
   
   const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
@@ -138,15 +139,17 @@ export const ShopProvider = ({ children }) => {
     }
   }, [cart, customerToken]);
 
-  useEffect(() => {
-    const subtotal = cart.reduce(
+ useEffect(() => {
+    // If cart has items, use cart exclusively. Ignore buyNowItem entirely if cart has elements.
+    const activeItems = cart && cart.length > 0 ? cart : (buyNowItem ? [buyNowItem] : []);
+    const subtotal = activeItems.reduce(
       (sum, item) => sum + (item.product?.price || 0) * item.quantity,
       0
     );
     const discount = Math.round(subtotal * (discountPercent / 100));
     const total = subtotal - discount;
     setTotals({ subtotal, discount, total });
-  }, [cart, discountPercent]);
+  }, [cart, buyNowItem, discountPercent]);
 
   useEffect(() => {
     if (sameAsShipping) {
@@ -202,6 +205,7 @@ export const ShopProvider = ({ children }) => {
 
   // Cart handlers with structure normalization
   const addToCart = (product, qty = 1) => {
+    setBuyNowItem(null);
     const rawProd = product.product || product;
     const productId = String(rawProd.id || rawProd._id);
 
@@ -303,10 +307,13 @@ export const ShopProvider = ({ children }) => {
       year: "numeric",
     });
     
+    // Fixed: Prioritize full cart array items unless buyNowItem is explicitly set and cart is empty
+    const itemsToOrder = (cart && cart.length > 0) ? [...cart] : (buyNowItem ? [buyNowItem] : []);
+
     const newOrder = {
       orderId: generatedOrderId,
       date: formattedDate,
-      items: [...cart],
+      items: itemsToOrder,
       subtotal: totals.subtotal,
       discount: totals.discount,
       shipping: "FREE",
@@ -323,7 +330,38 @@ export const ShopProvider = ({ children }) => {
     
     setCurrentOrder(newOrder);
     setCart([]);
+    setBuyNowItem(null);
     return newOrder;
+  };
+
+  // Complete cleanup function for secure logouts
+  const logout = () => {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("fashion_oasis_cart");
+    localStorage.removeItem("customerName");
+    setCart([]);
+    setWishlist([]);
+    setBuyNowItem(null);
+    setCurrentOrder(null);
+    setShippingAddress({
+      fullName: "",
+      phone: "",
+      address: "",
+      address2: "",
+      city: "",
+      state: "",
+      pincode: "",
+    });
+    setBillingAddress({
+      fullName: "",
+      phone: "",
+      address: "",
+      address2: "",
+      city: "",
+      state: "",
+      pincode: "",
+    });
   };
 
   return (
@@ -332,6 +370,8 @@ export const ShopProvider = ({ children }) => {
         products: initialProducts,
         wishlist,
         cart,
+        buyNowItem,
+        setBuyNowItem,
         totals,
         couponCode,
         couponSuccess,
@@ -355,6 +395,7 @@ export const ShopProvider = ({ children }) => {
         applyCoupon,
         placeOrder,
         setCurrentOrder,
+        logout,
       }}
     >
       {children}

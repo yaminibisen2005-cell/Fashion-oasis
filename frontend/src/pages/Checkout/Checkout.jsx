@@ -8,6 +8,8 @@ import "./Checkout.css";
 const Checkout = () => {
   const {
     cart,
+    buyNowItem,
+    setBuyNowItem,
     totals,
     shippingAddress,
     setShippingAddress,
@@ -22,7 +24,6 @@ const Checkout = () => {
 
   const paymentMethod = "cod";
 
-  // Independent local state for billing address to prevent any context bleeding
   const [localBillingAddress, setLocalBillingAddress] = useState({
     fullName: "",
     phone: "",
@@ -33,7 +34,6 @@ const Checkout = () => {
     pincode: "",
   });
 
-  // Automatically load logged-in user name into shipping address if available
   useEffect(() => {
     const loggedInName = localStorage.getItem("customerName") || localStorage.getItem("userName") || "";
     if (loggedInName && !shippingAddress.fullName) {
@@ -41,22 +41,18 @@ const Checkout = () => {
     }
   }, [setShippingAddress, shippingAddress.fullName]);
 
-  // Shipping input state handler
   const handleShippingChange = (e) => {
     const { name, value } = e.target;
     setShippingAddress((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Local billing input state handler
   const handleBillingChange = (e) => {
     const { name, value } = e.target;
     setLocalBillingAddress((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Fallback dataset if cart is empty
-  const displayItems = cart.length > 0 ? cart : [
-    { product: { name: "Rose Quartz Necklace", price: 1299, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100&q=80" }, quantity: 1 }
-  ];
+  // Fixed: Prioritize the cart array first. Only use buyNowItem if the cart is completely empty.
+  const displayItems = (cart && cart.length > 0) ? cart : (buyNowItem ? [buyNowItem] : []);
 
   const handlePlaceOrderSubmit = async (e) => {
     e.preventDefault();
@@ -70,10 +66,9 @@ const Checkout = () => {
         productName: item.product.name,
         quantity: item.quantity,
         price: item.product.price,
-        image: item.product.image, // <--- Add this property
+        image: item.product.image,
       }));
 
-      // Determine final billing payload based on checkbox
       const finalBillingAddress = sameAsShipping 
         ? {
             fullName: shippingAddress.fullName,
@@ -126,7 +121,7 @@ const Checkout = () => {
       }
 
       placeOrder();
-    navigate("/thank-you");
+      navigate("/thank-you");
       
     } catch (err) {
       setLoading(false);
