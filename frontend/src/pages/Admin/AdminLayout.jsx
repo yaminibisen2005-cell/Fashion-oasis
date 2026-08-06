@@ -102,11 +102,31 @@ const AdminLayout = () => {
     { code: "FREESHIP", discount: "Free Shipping", minOrder: "₹1499", expiryDate: "30 Jun 2024", status: "Active" },
   ]);
 
-  const [settings, setSettings] = useState({
-    storeName: "Fashion Oasis",
-    storeLogo: "FO",
-    storeEmail: "info@fashionoasis.com",
-    contactNumber: "+91 98765 43210",
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      storeName: "Fashion Oasis",
+      storeLogo: "", // Base64 representation of custom logo
+      storeEmail: "info@fashionoasis.com",
+      contactNumber: "+91 98765 43210",
+      cardEnabled: true,
+      upiEnabled: true,
+      netbankingEnabled: true,
+      codEnabled: true,
+      socialInstagram: "https://instagram.com/fashionoasis",
+      socialFacebook: "https://facebook.com/fashionoasis",
+      socialPinterest: "https://pinterest.com/fashionoasis",
+      socialYoutube: "https://youtube.com/fashionoasis",
+      policyType: "text",
+      policyText: "Welcome to Fashion Oasis. Returns are accepted within 30 days...",
+      policyFileName: "",
+      policyFileData: "",
+    };
   });
 
   const [profile, setProfile] = useState(() => {
@@ -222,7 +242,10 @@ const AdminLayout = () => {
     );
   };
 
-  const updateSettings = (newS) => setSettings(newS);
+  const updateSettings = (newS) => {
+    setSettings(newS);
+    localStorage.setItem("storeSettings", JSON.stringify(newS));
+  };
   const updateProfile = (newP) => setProfile((prev) => ({ ...prev, ...newP }));
 
   const sidebarLinks = [
@@ -252,7 +275,7 @@ const AdminLayout = () => {
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
           <div className="header-logo-group">
-            <img src={logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
+            <img src={settings.storeLogo || logo} alt="Fashion Oasis Logo" className="admin-header-logo" />
           </div>
         </div>
 
@@ -398,7 +421,7 @@ const AdminLayout = () => {
       </div>
 
       <footer className="admin-footer-sub text-center py-3">
-        💎 This admin panel is designed with the Fashion Oasis theme – Elegant, Soft & Luxurious ❤
+        💎 This admin panel is designed with the {settings.storeName || "Fashion Oasis"} theme – Elegant, Soft & Luxurious ❤
       </footer>
     </div>
   );

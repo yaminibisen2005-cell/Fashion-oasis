@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import "./DashboardLayout.css";
 import { Link } from "react-router-dom";
 import sidebarbg from "../../assets/sidebarbg.png"
@@ -15,6 +16,19 @@ import {
 import logo from "../../assets/logo.png"; // Change to your logo
 
 function DashboardLayout({ children ,showProfile = true}) {
+  const [storeLogo, setStoreLogo] = useState(logo);
+  const [storeName, setStoreName] = useState("Fashion Oasis");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.storeLogo) setStoreLogo(parsed.storeLogo);
+        if (parsed.storeName) setStoreName(parsed.storeName);
+      } catch (e) {}
+    }
+  }, []);
   return (
     <div className="dashboard-layout">
 
@@ -43,9 +57,9 @@ function DashboardLayout({ children ,showProfile = true}) {
     </>
   ) : (
     <>
-      <img src={logo} alt="Fashion Oasis" />
+      <img src={storeLogo} alt={storeName} style={{ maxHeight: '50px', objectFit: 'contain' }} />
 
-      <h3>Fashion Oasis</h3>
+      <h3>{storeName}</h3>
     </>
   )}
 

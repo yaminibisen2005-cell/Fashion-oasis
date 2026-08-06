@@ -43,6 +43,9 @@ const Navbar = () => {
 
   const [isHomePage, setIsHomePage] = useState(true);
 
+  const [navLogo, setNavLogo] = useState(logo);
+  const [storeName, setStoreName] = useState("FASHION OASIS");
+
   const cartCount = cart.reduce(
     (sum, item) => sum + item.quantity,
     0
@@ -60,6 +63,16 @@ const Navbar = () => {
         window.location.pathname === "/home"
       );
     };
+
+    // Load store settings
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.storeLogo) setNavLogo(parsed.storeLogo);
+        if (parsed.storeName) setStoreName(parsed.storeName);
+      } catch (e) {}
+    }
 
     handleScroll();
     checkHomePage();
@@ -92,13 +105,14 @@ const Navbar = () => {
             className="logo"
           >
             <img
-              src={logo}
-              alt="Fashion Oasis"
+              src={navLogo}
+              alt={storeName}
+              style={{ maxHeight: '50px', objectFit: 'contain' }}
             />
 
             <div className="brand-text">
 
-              <h1>FASHION OASIS</h1>
+              <h1>{storeName.toUpperCase()}</h1>
 
               <p>PREMIUM JEWELLERY</p>
 

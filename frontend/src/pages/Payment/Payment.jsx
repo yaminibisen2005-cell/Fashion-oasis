@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
@@ -26,6 +26,39 @@ const Payment = () => {
 
   // Form states
   const [activeMethod, setActiveMethod] = useState("card"); // "card" | "upi" | "netbanking" | "cod"
+  const [enabledMethods, setEnabledMethods] = useState({
+    card: true,
+    upi: true,
+    netbanking: true,
+    cod: true
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const cardVal = parsed.cardEnabled !== false;
+        const upiVal = parsed.upiEnabled !== false;
+        const netVal = parsed.netbankingEnabled !== false;
+        const codVal = parsed.codEnabled !== false;
+        
+        setEnabledMethods({
+          card: cardVal,
+          upi: upiVal,
+          netbanking: netVal,
+          cod: codVal
+        });
+
+        // Set default active tab to the first enabled method
+        if (cardVal) setActiveMethod("card");
+        else if (upiVal) setActiveMethod("upi");
+        else if (netVal) setActiveMethod("netbanking");
+        else if (codVal) setActiveMethod("cod");
+        else setActiveMethod("");
+      } catch (e) {}
+    }
+  }, []);
   const [upiProvider, setUpiProvider] = useState("gpay"); // "gpay" | "phonepe" | "paytm" | "other"
   const [upiId, setUpiId] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -299,312 +332,337 @@ const Payment = () => {
                 <form onSubmit={handlePay} className="payment-form">
                   {/* Payment Method Selector Grid */}
                   <div className="payment-methods-grid">
-                    <div
-                      className={`method-tab-btn ${activeMethod === "card" ? "active" : ""}`}
-                      onClick={() => { setActiveMethod("card"); setErrorMessage(""); }}
-                    >
-                      <FaCreditCard />
-                      <span>Card</span>
-                    </div>
+                    {enabledMethods.card && (
+                      <div
+                        className={`method-tab-btn ${activeMethod === "card" ? "active" : ""}`}
+                        onClick={() => { setActiveMethod("card"); setErrorMessage(""); }}
+                      >
+                        <FaCreditCard />
+                        <span>Card</span>
+                      </div>
+                    )}
 
-                    <div
-                      className={`method-tab-btn ${activeMethod === "upi" ? "active" : ""}`}
-                      onClick={() => { setActiveMethod("upi"); setErrorMessage(""); }}
-                    >
-                      <FaMobileAlt />
-                      <span>UPI</span>
-                    </div>
+                    {enabledMethods.upi && (
+                      <div
+                        className={`method-tab-btn ${activeMethod === "upi" ? "active" : ""}`}
+                        onClick={() => { setActiveMethod("upi"); setErrorMessage(""); }}
+                      >
+                        <FaMobileAlt />
+                        <span>UPI</span>
+                      </div>
+                    )}
 
-                    <div
-                      className={`method-tab-btn ${activeMethod === "netbanking" ? "active" : ""}`}
-                      onClick={() => { setActiveMethod("netbanking"); setErrorMessage(""); }}
-                    >
-                      <FaUniversity />
-                      <span>Net Banking</span>
-                    </div>
+                    {enabledMethods.netbanking && (
+                      <div
+                        className={`method-tab-btn ${activeMethod === "netbanking" ? "active" : ""}`}
+                        onClick={() => { setActiveMethod("netbanking"); setErrorMessage(""); }}
+                      >
+                        <FaUniversity />
+                        <span>Net Banking</span>
+                      </div>
+                    )}
 
-                    <div
-                      className={`method-tab-btn ${activeMethod === "cod" ? "active" : ""}`}
-                      onClick={() => { setActiveMethod("cod"); setErrorMessage(""); }}
-                    >
-                      <FaMoneyBillWave />
-                      <span>COD</span>
-                    </div>
+                    {enabledMethods.cod && (
+                      <div
+                        className={`method-tab-btn ${activeMethod === "cod" ? "active" : ""}`}
+                        onClick={() => { setActiveMethod("cod"); setErrorMessage(""); }}
+                      >
+                        <FaMoneyBillWave />
+                        <span>COD</span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Sub Form Container */}
-                  <div className="payment-subform-box">
-                    
-                    {/* Credit / Debit Card Form */}
-                    {activeMethod === "card" && (
-                      <div className="card-form-wrapper fade-in">
-                        <div className="form-group-row logos-row">
-                          <label>Credit / Debit Card</label>
-                          <div className="card-brand-logos">
-                            <img
-                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6Z3Xm02y0rZifjX2q76HlC3v1v6zG3K2Dyw&s"
-                              alt="Visa"
-                              className="brand-logo"
-                            />
-                            <img
-                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRw23c5C63B4rGkC8rNn3gN3Q0_WbZ4W5e-g&s"
-                              alt="Mastercard"
-                              className="brand-logo"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="input-field-group">
-                          <label htmlFor="cardNumber">Card Number</label>
-                          <input
-                            type="text"
-                            id="cardNumber"
-                            placeholder="1234 5678 9101 1121"
-                            value={cardNumber}
-                            onChange={handleCardNumberChange}
-                            className={errorMessage.toLowerCase().includes("card no") ? "error-input" : ""}
-                          />
-                        </div>
-
-                        <div className="input-field-row">
-                          <div className="input-field-group col-6">
-                            <label htmlFor="cardExpiry">Expiry Date</label>
-                            <input
-                              type="text"
-                              id="cardExpiry"
-                              placeholder="MM/YY"
-                              value={cardExpiry}
-                              onChange={handleExpiryChange}
-                              className={errorMessage.toLowerCase().includes("expiry") ? "error-input" : ""}
-                            />
-                          </div>
-                          <div className="input-field-group col-6">
-                            <label htmlFor="cardCvv">CVV</label>
-                            <input
-                              type="password"
-                              id="cardCvv"
-                              placeholder="123"
-                              value={cardCvv}
-                              onChange={handleCvvChange}
-                              className={errorMessage.toLowerCase().includes("cvv") ? "error-input" : ""}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="input-field-group">
-                          <label htmlFor="cardName">Cardholder Name</label>
-                          <input
-                            type="text"
-                            id="cardName"
-                            placeholder="Cardholder Full Name"
-                            value={cardName}
-                            onChange={handleNameChange}
-                            className={errorMessage.toLowerCase().includes("cardholder") ? "error-input" : ""}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* UPI Form */}
-                    {activeMethod === "upi" && (
-                      <div className="upi-form-wrapper fade-in">
-                        <label className="section-label">UPI Provider Logo Mode</label>
-                        <div className="upi-logos-row">
-                          <div
-                            className={`upi-logo-option ${upiProvider === "gpay" ? "active" : ""}`}
-                            onClick={() => setUpiProvider("gpay")}
-                          >
-                            <img
-                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaJWuzguunIiksOOw26hiCgGUijGmj3jyxvSbGH-a47g&s=10"
-                              alt="Google Pay"
-                            />
-                          </div>
-                          <div
-                            className={`upi-logo-option ${upiProvider === "phonepe" ? "active" : ""}`}
-                            onClick={() => setUpiProvider("phonepe")}
-                          >
-                            <img
-                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0N6bjzJ89P1KNnl9g-kueY850sUinE6Hj4HQkpCGqQ8OlY1BzUoFdXk&s=10"
-                              alt="PhonePe"
-                            />
-                          </div>
-                          <div
-                            className={`upi-logo-option ${upiProvider === "paytm" ? "active" : ""}`}
-                            onClick={() => setUpiProvider("paytm")}
-                          >
-                            <img
-                              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3_bSjW-fG0UvK-48FhB1n6kYyW8s7c6K-iw&s"
-                              alt="Paytm"
-                            />
-                          </div>
-                          <div
-                            className={`upi-logo-option text-option ${upiProvider === "other" ? "active" : ""}`}
-                            onClick={() => setUpiProvider("other")}
-                          >
-                            <span>Other UPI</span>
-                          </div>
-                        </div>
-
-                        <div className="input-field-group">
-                          <label htmlFor="upiId">
-                            {upiProvider === "gpay" && "GPay UPI ID"}
-                            {upiProvider === "phonepe" && "PhonePe UPI ID"}
-                            {upiProvider === "paytm" && "Paytm UPI ID"}
-                            {upiProvider === "other" && "UPI ID"}
-                          </label>
-                          <input
-                            type="text"
-                            id="upiId"
-                            placeholder={
-                              upiProvider === "gpay" ? "example@okaxis" :
-                              upiProvider === "phonepe" ? "example@ybl" :
-                              upiProvider === "paytm" ? "example@paytm" : "example@upi"
-                            }
-                            value={upiId}
-                            onChange={handleUpiChange}
-                            className={errorMessage.toLowerCase().includes("upi id") ? "error-input" : ""}
-                          />
-                          <p className="field-hint">e.g. name@bank, phone@ybl</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Net Banking Form */}
-                    {activeMethod === "netbanking" && (
-                      <div className="netbanking-form-wrapper fade-in">
-                        <div className="netbanking-header">
-                          <label>Net Banking</label>
-                          <img
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzQOaF5p0b5zPq6b_dE1wP8s9Xw_Q4F2z8Pg&s"
-                            alt="Net Banking"
-                            className="nb-logo"
-                          />
-                        </div>
-
-                        <div className="input-field-group">
-                          <label htmlFor="bankSelect">Select Bank</label>
-                          <select
-                            id="bankSelect"
-                            value={bank}
-                            onChange={handleBankChange}
-                            className={errorMessage.toLowerCase().includes("bank") ? "error-input" : ""}
-                          >
-                            <option value="">-- Choose Your Bank --</option>
-                            <optgroup label="Popular Banks">
-                              <option value="State Bank of India">State Bank of India (SBI)</option>
-                              <option value="HDFC Bank">HDFC Bank</option>
-                              <option value="ICICI Bank">ICICI Bank</option>
-                              <option value="Axis Bank">Axis Bank</option>
-                              <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
-                            </optgroup>
-                            <optgroup label="Other Major Banks">
-                              <option value="IndusInd Bank">IndusInd Bank</option>
-                              <option value="Yes Bank">Yes Bank</option>
-                              <option value="IDFC FIRST Bank">IDFC FIRST Bank</option>
-                              <option value="Federal Bank">Federal Bank</option>
-                              <option value="Punjab National Bank">Punjab National Bank (PNB)</option>
-                              <option value="Bank of Baroda">Bank of Baroda</option>
-                              <option value="Canara Bank">Canara Bank</option>
-                              <option value="Union Bank of India">Union Bank of India</option>
-                              <option value="Indian Bank">Indian Bank</option>
-                              <option value="UCO Bank">UCO Bank</option>
-                              <option value="Central Bank of India">Central Bank of India</option>
-                              <option value="South Indian Bank">South Indian Bank</option>
-                              <option value="Bank of India">Bank of India</option>
-                              <option value="IDBI Bank">IDBI Bank</option>
-                              <option value="Bandhan Bank">Bandhan Bank</option>
-                              <option value="Karur Vysya Bank">Karur Vysya Bank</option>
-                              <option value="Karnataka Bank">Karnataka Bank</option>
-                              <option value="RBL Bank">RBL Bank</option>
-                              <option value="Standard Chartered Bank">Standard Chartered Bank</option>
-                              <option value="Citibank">Citibank</option>
-                              <option value="HSBC Bank">HSBC Bank</option>
-                            </optgroup>
-                          </select>
-                        </div>
-
-                        {bank && (
-                          <div className="netbanking-credentials-box fade-in" style={{ marginTop: "20px", borderTop: "1px dashed var(--border-color)", paddingTop: "20px" }}>
-                            <div className="secure-badge" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#1B9C52", marginBottom: "15px", fontWeight: "600" }}>
-                              <FaLock />
-                              <span>Redirecting to secured {bank} NetBanking login page</span>
-                            </div>
-                            
-                            <div className="input-field-group" style={{ marginBottom: "15px" }}>
-                              <label htmlFor="nbUser">Customer ID / User ID</label>
-                              <input
-                                type="text"
-                                id="nbUser"
-                                placeholder="Enter Customer ID"
-                                value={netbankingUser}
-                                onChange={handleNetbankingUserChange}
-                                className={errorMessage.toLowerCase().includes("customer id") ? "error-input" : ""}
-                              />
+                  {activeMethod === "" ? (
+                    <div className="payment-error-alert text-center py-4" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', marginTop: '25px', padding: '20px', borderRadius: '10px' }}>
+                      <FaTimesCircle style={{ fontSize: '32px', color: '#E74C3C' }} />
+                      <p style={{ margin: 0, fontSize: '15px' }}><strong>No Payment Options Configured:</strong> The store administrator has not enabled any payment methods. Please contact support.</p>
+                      <button
+                        type="button"
+                        className="payment-form-back-btn"
+                        onClick={() => navigate("/checkout")}
+                        style={{ marginTop: '10px' }}
+                      >
+                        <FaArrowLeft /> Back to Checkout
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Sub Form Container */}
+                      <div className="payment-subform-box">
+                        
+                        {/* Credit / Debit Card Form */}
+                        {activeMethod === "card" && (
+                          <div className="card-form-wrapper fade-in">
+                            <div className="form-group-row logos-row">
+                              <label>Credit / Debit Card</label>
+                              <div className="card-brand-logos">
+                                <img
+                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6Z3Xm02y0rZifjX2q76HlC3v1v6zG3K2Dyw&s"
+                                  alt="Visa"
+                                  className="brand-logo"
+                                />
+                                <img
+                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRw23c5C63B4rGkC8rNn3gN3Q0_WbZ4W5e-g&s"
+                                  alt="Mastercard"
+                                  className="brand-logo"
+                                />
+                              </div>
                             </div>
                             
                             <div className="input-field-group">
-                              <label htmlFor="nbPass">Password / IPIN</label>
+                              <label htmlFor="cardNumber">Card Number</label>
                               <input
-                                type="password"
-                                id="nbPass"
-                                placeholder="Enter NetBanking Password"
-                                value={netbankingPass}
-                                onChange={handleNetbankingPassChange}
-                                className={errorMessage.toLowerCase().includes("password") ? "error-input" : ""}
+                                type="text"
+                                id="cardNumber"
+                                placeholder="1234 5678 9101 1121"
+                                value={cardNumber}
+                                onChange={handleCardNumberChange}
+                                className={errorMessage.toLowerCase().includes("card no") ? "error-input" : ""}
+                              />
+                            </div>
+                            
+                            <div className="input-field-row">
+                              <div className="input-field-group col-6">
+                                <label htmlFor="cardExpiry">Expiry Date</label>
+                                <input
+                                  type="text"
+                                  id="cardExpiry"
+                                  placeholder="MM/YY"
+                                  value={cardExpiry}
+                                  onChange={handleExpiryChange}
+                                  className={errorMessage.toLowerCase().includes("expiry") ? "error-input" : ""}
+                                />
+                              </div>
+                              <div className="input-field-group col-6">
+                                <label htmlFor="cardCvv">CVV</label>
+                                <input
+                                  type="password"
+                                  id="cardCvv"
+                                  placeholder="123"
+                                  value={cardCvv}
+                                  onChange={handleCvvChange}
+                                  className={errorMessage.toLowerCase().includes("cvv") ? "error-input" : ""}
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="input-field-group">
+                              <label htmlFor="cardName">Cardholder Name</label>
+                              <input
+                                type="text"
+                                id="cardName"
+                                placeholder="Cardholder Full Name"
+                                value={cardName}
+                                onChange={handleNameChange}
+                                className={errorMessage.toLowerCase().includes("cardholder") ? "error-input" : ""}
                               />
                             </div>
                           </div>
                         )}
-                      </div>
-                    )}
 
-                    {/* COD Info */}
-                    {activeMethod === "cod" && (
-                      <div className="cod-form-wrapper fade-in">
-                        <div className="cod-info-alert">
-                          <p>
-                            <strong>Cash on Delivery (COD) Selected:</strong> Pay ₹{currentOrder.total.toLocaleString()} in cash to our courier partner at the time of delivery.
-                          </p>
-                          <span className="cod-tagline">No extra handling fee applies.</span>
+                        {/* UPI Form */}
+                        {activeMethod === "upi" && (
+                          <div className="upi-form-wrapper fade-in">
+                            <label className="section-label">UPI Provider Logo Mode</label>
+                            <div className="upi-logos-row">
+                              <div
+                                className={`upi-logo-option ${upiProvider === "gpay" ? "active" : ""}`}
+                                onClick={() => setUpiProvider("gpay")}
+                              >
+                                <img
+                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaJWuzguunIiksOOw26hiCgGUijGmj3jyxvSbGH-a47g&s=10"
+                                  alt="Google Pay"
+                                />
+                              </div>
+                              <div
+                                className={`upi-logo-option ${upiProvider === "phonepe" ? "active" : ""}`}
+                                onClick={() => setUpiProvider("phonepe")}
+                              >
+                                <img
+                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0N6bjzJ89P1KNnl9g-kueY850sUinE6Hj4HQkpCGqQ8OlY1BzUoFdXk&s=10"
+                                  alt="PhonePe"
+                                />
+                              </div>
+                              <div
+                                className={`upi-logo-option ${upiProvider === "paytm" ? "active" : ""}`}
+                                onClick={() => setUpiProvider("paytm")}
+                              >
+                                <img
+                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3_bSjW-fG0UvK-48FhB1n6kYyW8s7c6K-iw&s"
+                                  alt="Paytm"
+                                />
+                              </div>
+                              <div
+                                className={`upi-logo-option text-option ${upiProvider === "other" ? "active" : ""}`}
+                                onClick={() => setUpiProvider("other")}
+                              >
+                                <span>Other UPI</span>
+                              </div>
+                            </div>
+
+                            <div className="input-field-group">
+                              <label htmlFor="upiId">
+                                {upiProvider === "gpay" && "GPay UPI ID"}
+                                {upiProvider === "phonepe" && "PhonePe UPI ID"}
+                                {upiProvider === "paytm" && "Paytm UPI ID"}
+                                {upiProvider === "other" && "UPI ID"}
+                              </label>
+                              <input
+                                type="text"
+                                id="upiId"
+                                placeholder={
+                                  upiProvider === "gpay" ? "example@okaxis" :
+                                  upiProvider === "phonepe" ? "example@ybl" :
+                                  upiProvider === "paytm" ? "example@paytm" : "example@upi"
+                                }
+                                value={upiId}
+                                onChange={handleUpiChange}
+                                className={errorMessage.toLowerCase().includes("upi id") ? "error-input" : ""}
+                              />
+                              <p className="field-hint">e.g. name@bank, phone@ybl</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Net Banking Form */}
+                        {activeMethod === "netbanking" && (
+                          <div className="netbanking-form-wrapper fade-in">
+                            <div className="netbanking-header">
+                              <label>Net Banking</label>
+                              <img
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzQOaF5p0b5zPq6b_dE1wP8s9Xw_Q4F2z8Pg&s"
+                                alt="Net Banking"
+                                className="nb-logo"
+                              />
+                            </div>
+
+                            <div className="input-field-group">
+                              <label htmlFor="bankSelect">Select Bank</label>
+                              <select
+                                id="bankSelect"
+                                value={bank}
+                                onChange={handleBankChange}
+                                className={errorMessage.toLowerCase().includes("bank") ? "error-input" : ""}
+                              >
+                                <option value="">-- Choose Your Bank --</option>
+                                <optgroup label="Popular Banks">
+                                  <option value="State Bank of India">State Bank of India (SBI)</option>
+                                  <option value="HDFC Bank">HDFC Bank</option>
+                                  <option value="ICICI Bank">ICICI Bank</option>
+                                  <option value="Axis Bank">Axis Bank</option>
+                                  <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                                </optgroup>
+                                <optgroup label="Other Major Banks">
+                                  <option value="IndusInd Bank">IndusInd Bank</option>
+                                  <option value="Yes Bank">Yes Bank</option>
+                                  <option value="IDFC FIRST Bank">IDFC FIRST Bank</option>
+                                  <option value="Federal Bank">Federal Bank</option>
+                                  <option value="Punjab National Bank">Punjab National Bank (PNB)</option>
+                                  <option value="Bank of Baroda">Bank of Baroda</option>
+                                  <option value="Canara Bank">Canara Bank</option>
+                                  <option value="Union Bank of India">Union Bank of India</option>
+                                  <option value="Indian Bank">Indian Bank</option>
+                                  <option value="UCO Bank">UCO Bank</option>
+                                  <option value="Central Bank of India">Central Bank of India</option>
+                                  <option value="South Indian Bank">South Indian Bank</option>
+                                  <option value="Bank of India">Bank of India</option>
+                                  <option value="IDBI Bank">IDBI Bank</option>
+                                  <option value="Bandhan Bank">Bandhan Bank</option>
+                                  <option value="Karur Vysya Bank">Karur Vysya Bank</option>
+                                  <option value="Karnataka Bank">Karnataka Bank</option>
+                                  <option value="RBL Bank">RBL Bank</option>
+                                  <option value="Standard Chartered Bank">Standard Chartered Bank</option>
+                                  <option value="Citibank">Citibank</option>
+                                  <option value="HSBC Bank">HSBC Bank</option>
+                                </optgroup>
+                              </select>
+                            </div>
+
+                            {bank && (
+                              <div className="netbanking-credentials-box fade-in" style={{ marginTop: "20px", borderTop: "1px dashed var(--border-color)", paddingTop: "20px" }}>
+                                <div className="secure-badge" style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#1B9C52", marginBottom: "15px", fontWeight: "600" }}>
+                                  <FaLock />
+                                  <span>Redirecting to secured {bank} NetBanking login page</span>
+                                </div>
+                                
+                                <div className="input-field-group" style={{ marginBottom: "15px" }}>
+                                  <label htmlFor="nbUser">Customer ID / User ID</label>
+                                  <input
+                                    type="text"
+                                    id="nbUser"
+                                    placeholder="Enter Customer ID"
+                                    value={netbankingUser}
+                                    onChange={handleNetbankingUserChange}
+                                    className={errorMessage.toLowerCase().includes("customer id") ? "error-input" : ""}
+                                  />
+                                </div>
+                                
+                                <div className="input-field-group">
+                                  <label htmlFor="nbPass">Password / IPIN</label>
+                                  <input
+                                    type="password"
+                                    id="nbPass"
+                                    placeholder="Enter NetBanking Password"
+                                    value={netbankingPass}
+                                    onChange={handleNetbankingPassChange}
+                                    className={errorMessage.toLowerCase().includes("password") ? "error-input" : ""}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* COD Info */}
+                        {activeMethod === "cod" && (
+                          <div className="cod-form-wrapper fade-in">
+                            <div className="cod-info-alert">
+                              <p>
+                                <strong>Cash on Delivery (COD) Selected:</strong> Pay ₹{currentOrder.total.toLocaleString()} in cash to our courier partner at the time of delivery.
+                              </p>
+                              <span className="cod-tagline">No extra handling fee applies.</span>
+                            </div>
+                          </div>
+                        )}
+
+                      </div>
+
+                      {/* General Error Message */}
+                      {errorMessage && (
+                        <div className="payment-error-alert fade-in">
+                          <FaTimesCircle />
+                          <span>{errorMessage}</span>
                         </div>
-                      </div>
-                    )}
-
-                  </div>
-
-                  {/* General Error Message */}
-                  {errorMessage && (
-                    <div className="payment-error-alert fade-in">
-                      <FaTimesCircle />
-                      <span>{errorMessage}</span>
-                    </div>
-                  )}
-
-                  {/* Submit and Navigation */}
-                  <div className="form-submit-row">
-                    <button
-                      type="submit"
-                      className={`payment-form-pay-btn ${loading ? "loading" : ""}`}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <>
-                          <span className="spinner"></span> Processing...
-                        </>
-                      ) : (
-                        `PAY ₹${currentOrder.total.toLocaleString()}`
                       )}
-                    </button>
-                    
-                    <button
-                      type="button"
-                      className="payment-form-back-btn"
-                      onClick={() => navigate("/checkout")}
-                      disabled={loading}
-                    >
-                      <FaArrowLeft /> Back to Checkout
-                    </button>
-                  </div>
+
+                      {/* Submit and Navigation */}
+                      <div className="form-submit-row">
+                        <button
+                          type="submit"
+                          className={`payment-form-pay-btn ${loading ? "loading" : ""}`}
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="spinner"></span> Processing...
+                            </>
+                          ) : (
+                            `PAY ₹${currentOrder.total.toLocaleString()}`
+                          )}
+                        </button>
+                        
+                        <button
+                          type="button"
+                          className="payment-form-back-btn"
+                          onClick={() => navigate("/checkout")}
+                          disabled={loading}
+                        >
+                          <FaArrowLeft /> Back to Checkout
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </form>
 
                 <div className="secured-footer">

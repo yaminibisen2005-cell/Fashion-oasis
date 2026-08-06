@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import "./Footer.css";
 import logo from "../../assets/logo.png";
 
@@ -12,6 +13,32 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  const [footerLogo, setFooterLogo] = useState(logo);
+  const [storeName, setStoreName] = useState("Fashion Oasis");
+  const [socials, setSocials] = useState({
+    instagram: "#",
+    facebook: "#",
+    pinterest: "#",
+    youtube: "#",
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.storeLogo) setFooterLogo(parsed.storeLogo);
+        if (parsed.storeName) setStoreName(parsed.storeName);
+        setSocials({
+          instagram: parsed.socialInstagram || "#",
+          facebook: parsed.socialFacebook || "#",
+          pinterest: parsed.socialPinterest || "#",
+          youtube: parsed.socialYoutube || "#",
+        });
+      } catch (e) {}
+    }
+  }, []);
+
   return (
     <footer className="footer">
 
@@ -22,9 +49,10 @@ const Footer = () => {
         <div className="footer-brand">
 
           <img
-            src={logo}
-            alt="Fashion Oasis"
+            src={footerLogo}
+            alt={storeName}
             className="footer-logo"
+            style={{ maxHeight: '50px', objectFit: 'contain' }}
           />
 
           <p className="brand-description">
@@ -34,13 +62,13 @@ const Footer = () => {
 
           <div className="social-icons">
 
-            <a href="#"><FaFacebookF /></a>
+            <a href={socials.facebook} target="_blank" rel="noopener noreferrer"><FaFacebookF /></a>
 
-            <a href="#"><FaInstagram /></a>
+            <a href={socials.instagram} target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
 
-            <a href="#"><FaPinterestP /></a>
+            <a href={socials.pinterest} target="_blank" rel="noopener noreferrer"><FaPinterestP /></a>
 
-            <a href="#"><FaYoutube /></a>
+            <a href={socials.youtube} target="_blank" rel="noopener noreferrer"><FaYoutube /></a>
 
           </div>
 

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import sidebarbg from "../../assets/sidebarbg.png";
 import {
@@ -12,13 +13,25 @@ import {
 import "./Sidebar.css";
 
 function Sidebar() {
+  const [storeName, setStoreName] = useState("Fashion Oasis");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.storeName) setStoreName(parsed.storeName);
+      } catch (e) {}
+    }
+  }, []);
+
   return (
     <div className="sidebar"
     style={{backgroundImage: `url(${sidebarbg})`,}}>
 
       <div className="sidebar-logo">
         
-        <h3>Fashion Oasis</h3>
+        <h3>{storeName}</h3>
       </div>
 
       <ul className="sidebar-menu">
