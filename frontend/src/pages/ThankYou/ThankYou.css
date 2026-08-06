@@ -18,6 +18,9 @@
   box-shadow: var(--card-shadow);
   border: 1px solid var(--border-color);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .success-badge-icon {
@@ -364,4 +367,42 @@
     padding-top: 15px;
     width: 100%;
   }
+}
+
+/* Off-screen invoice hiding wrapper for PDF generation */
+.invoice-print-wrapper {
+  width: 790px !important;
+  height: 0 !important;
+  overflow: hidden;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ty-btn-secondary.bill-dl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ty-btn-secondary.bill-dl-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.thank-you-card .spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(239, 111, 143, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 0.8s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

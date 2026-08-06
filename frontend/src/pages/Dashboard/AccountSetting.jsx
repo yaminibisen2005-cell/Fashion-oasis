@@ -120,7 +120,7 @@ function AccountSetting() {
 
   </div>
 
-  <button className="save-btn">
+  <button className="fo-save-btn">
     <FaSave />
     Save Personal Information
   </button>
@@ -141,7 +141,7 @@ function AccountSetting() {
   Change Password
 </h3>
 
-            <div className="input-group">
+            <div className="fo-input-group">
 
               <label>
   <FaKey className="label-icon" />
@@ -155,7 +155,7 @@ function AccountSetting() {
 
             </div>
 
-            <div className="input-group">
+            <div className="fo-input-group">
 
              <label>
   <FaKey className="label-icon" />
@@ -169,7 +169,7 @@ function AccountSetting() {
 
             </div>
 
-            <div className="input-group">
+            <div className="fo-input-group">
 
             <label>
   <FaKey className="label-icon" />
@@ -230,7 +230,7 @@ function AccountSetting() {
 
             </label>
 
-            <button className="save-btn">
+            <button className="fo-save-btn">
               Save Preferences
             </button>
 

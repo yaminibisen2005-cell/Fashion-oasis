@@ -1,10 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap");
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+
+
 
 .categories{
 
@@ -103,7 +99,7 @@
 
     color:#352525;
 
-    font-family:"Cormorant Garamond",serif;
+    font-family:var(--heading-font);
 
 }
 .category-container{
@@ -324,7 +320,7 @@ transparent
 
 .large-card .overlay h3{
 
-    font-family:"Cormorant Garamond",serif;
+    font-family:var(--heading-font);
 
     font-size:42px;
 
@@ -450,7 +446,7 @@ transparent
 
 .small-card .overlay h4{
 
-    font-family:"Cormorant Garamond",serif;
+    font-family:var(--heading-font);
 
     font-size:26px;
 
@@ -625,7 +621,7 @@ transparent
 
 .banner-left h2{
 
-    font-family:"Cormorant Garamond",serif;
+    font-family:var(--heading-font);
 
     font-size:44px;
 

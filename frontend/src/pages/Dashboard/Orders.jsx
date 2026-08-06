@@ -14,6 +14,7 @@ const orders = [
     date: "18 Jul 2026",
     price: "₹2,499",
     status: "Delivered",
+    material: "Gold Plated",
   },
   {
     id: "#FO1002",
@@ -22,6 +23,7 @@ const orders = [
     date: "16 Jul 2026",
     price: "₹3,999",
     status: "Shipped",
+    material: "Silver",
   },
   {
     id: "#FO1003",
@@ -30,6 +32,7 @@ const orders = [
     date: "12 Jul 2026",
     price: "₹1,899",
     status: "Confirmed",
+    material: "Diamond",
   },
   {
     id: "#FO1004",
@@ -38,6 +41,7 @@ const orders = [
     date: "10 Jul 2026",
     price: "₹5,299",
     status: "Cancelled",
+    material: "Kundan",
   },
 ];
 
@@ -59,15 +63,11 @@ function Orders() {
               <img src={item.image} alt={item.product} />
 
               <div className="order-info">
-
                 <h4>{item.product}</h4>
-
+                <p className="order-material">Material: {item.material}</p>
                 <p>Order ID: {item.id}</p>
-
                 <p>{item.date}</p>
-
                 <h3>{item.price}</h3>
-
               </div>
 
             </div>

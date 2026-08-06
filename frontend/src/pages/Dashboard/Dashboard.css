@@ -75,7 +75,7 @@
   );
 }
 
-.hero-content {
+.dashboard-hero .hero-content {
   position: relative;
   z-index: 1;
   max-width: 485px;
@@ -87,11 +87,19 @@
   padding: 7px 12px;
   border: 1px solid #f5cbd7;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255,255,255,.7);
   color: #d95f81;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.2px;
+}
+
+.hero-content h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:46px;
+  font-weight:700;
+  color:#3f282c;
+  line-height:1;
 }
 
 .hero-content h2 {
@@ -110,7 +118,7 @@
   line-height: 1.7;
 }
 
-.hero-actions {
+.dashboard-hero .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -131,22 +139,29 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-primary {
-  border: 1px solid #ee6c90;
-  background: #ee6c90;
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(238, 108, 144, 0.28);
+.btn-primary{
+  border:1px solid #ee6c90;
+  background:#ee6c90;
+  color:#fff;
+  box-shadow:0 10px 20px rgba(238,108,144,.28);
+  transition:.3s;
 }
 
-.btn-secondary {
-  border: 1px solid #f0cbd5;
-  background: rgba(255, 255, 255, 0.84);
-  color: #50353b;
+.btn-primary:hover{
+  background:#E55E80;
+  transform:translateY(-2px);
 }
 
-.btn-primary:hover,
-.btn-secondary:hover {
-  transform: translateY(-2px);
+.btn-secondary{
+  border:1px solid #f0cbd5;
+  background:rgba(255,255,255,.84);
+  color:#50353b;
+  transition:.3s;
+}
+
+.btn-secondary:hover{
+  background:rgba(255,255,255,.95);
+  transform:translateY(-2px);
 }
 
 .hero-reward {
@@ -205,7 +220,7 @@
   
 }
 
-.card-box {
+.dashboard-content .card-box {
   background: #fff;
   border-radius: 20px;
   padding: 22px 16px;
@@ -222,12 +237,12 @@
   
 }
 
-.card-box:hover {
+.dashboard-content .card-box:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 35px rgba(239, 111, 143, 0.18);
 }
 
-.card-box .icon {
+.dashboard-content .card-box .icon {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -241,18 +256,18 @@
   transition: .3s;
 }
 
-.card-box:hover .icon {
+.dashboard-content .card-box:hover .icon {
   transform: scale(1.08) rotate(8deg);
 }
 
-.card-box h5 {
+.dashboard-content .card-box h5 {
   font-size: 13px;
   color: #666;
   font-weight: 500;
   margin-bottom: 6px;
 }
 
-.card-box h2 {
+.dashboard-content .card-box h2 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 34px;
   color: #352525;
@@ -261,19 +276,19 @@
   margin-bottom: 6px;
 }
 
-.card-box .subtitle {
+.dashboard-content .card-box .subtitle {
   font-size: 11px;
   color: #888;
 }
 
-.card-box .subtitle.growth {
+.dashboard-content .card-box .subtitle.growth {
   color: #1B9C52;
   font-weight: 600;
 }
 
 /* QUICK ACTIONS CARD */
 
-.quick-actions-card {
+.dashboard-content .quick-actions-card {
   background: #fff;
   border-radius: 20px;
   padding: 22px;
@@ -282,7 +297,7 @@
   margin-left: 10px;
 }
 
-.quick-actions-card h5 {
+.dashboard-content .quick-actions-card h5 {
   font-size: 16px;
   color: #352525;
   font-weight: 600;
@@ -716,17 +731,17 @@ tbody tr:hover td {
 
 @media (max-width: 992px) {
   .dashboard-hero {
-    padding: 30px;
-  }
+.dashboard-hero{
+    padding:30px;
+}
 
-  .hero-content h1 {
-    font-size: 34px;
-  }
-
+.hero-content h1{
+    font-size:36px;
+}
   .dashboard-cards {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+}}
 
 @media (max-width: 768px) {
   .dashboard-hero {
@@ -734,15 +749,25 @@ tbody tr:hover td {
     padding: 28px 20px;
   }
 
-  .dashboard-hero::before {
-    display: none; /* Hide background image overlay on mobile for cleaner view */
-  }
+.dashboard-hero{
+    min-height:auto;
+    padding:28px 20px;
+}
 
-  .hero-content h1 {
+.hero-content h1{
+    font-size:28px;
+}
+
+.dashboard-hero .hero-actions{
+    flex-direction:column;
+    align-items:stretch;
+}
+
+  .dashboard-hero .hero-content h1 {
     font-size: 28px;
   }
 
-  .hero-actions {
+  .dashboard-hero .hero-actions {
     flex-direction: column;
     align-items: stretch;
   }
@@ -769,4 +794,15 @@ tbody tr:hover td {
   .quick-actions-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.recommendation-material {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #EF6F8F;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  margin-bottom: 4px;
 }

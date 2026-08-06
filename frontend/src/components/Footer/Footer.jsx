@@ -36,7 +36,7 @@ const Footer = () => {
 
             <a href="#"><FaFacebookF /></a>
 
-            <a href="#"><FaInstagram /></a>
+            <a href="https://www.instagram.com/fashionoasisstore/" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
 
             <a href="#"><FaPinterestP /></a>
 
@@ -102,17 +102,17 @@ const Footer = () => {
 
             <div className="contact-item">
               <FaMapMarkerAlt />
-              <span>Nagpur, Maharashtra</span>
+              <span>Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India</span>
             </div>
 
             <div className="contact-item">
               <FaPhoneAlt />
-              <span>+91 98765 43210</span>
+              <span>+91 7739479666</span>
             </div>
 
             <div className="contact-item">
               <FaEnvelope />
-              <span>support@fashionoasis.com</span>
+              <span>fashionoasis082@gmail.com</span>
             </div>
 
           </div>

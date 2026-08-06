@@ -80,7 +80,6 @@ const DashboardSection = () => {
     <div className="admin-dashboard-view">
       <div className="section-title-row">
         <div>
-          <h2>Welcome back, Admin 👋</h2>
           <p className="subtitle">Here's what's happening with your store today.</p>
         </div>
         <div className="date-picker-box">

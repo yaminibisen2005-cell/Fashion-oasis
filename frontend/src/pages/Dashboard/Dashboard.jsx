@@ -111,6 +111,7 @@ function Dashboard() {
       price: "₹1,199",
       originalPrice: "₹1,599",
       image: product1,
+      material: "Kundan",
     },
     {
       id: 2,
@@ -120,6 +121,7 @@ function Dashboard() {
       price: "₹1,499",
       originalPrice: "₹1,999",
       image: product2,
+      material: "Pearl",
     },
     {
       id: 3,
@@ -129,6 +131,7 @@ function Dashboard() {
       price: "₹999",
       originalPrice: "₹1,299",
       image: product3,
+      material: "Gold Plated",
     },
     {
       id: 4,
@@ -138,6 +141,7 @@ function Dashboard() {
       price: "₹749",
       originalPrice: "₹999",
       image: product4,
+      material: "Diamond",
     },
   ];
 
@@ -286,6 +290,7 @@ function Dashboard() {
                 <img src={prod.image} alt={prod.name} />
               </div>
               <div className="recommendation-details">
+                <span className="recommendation-material">{prod.material}</span>
                 <h6>{prod.name}</h6>
                 <div className="rating">
                   <span className="stars">{prod.rating}</span>
