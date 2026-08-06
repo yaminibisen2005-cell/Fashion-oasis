@@ -1,7 +1,6 @@
-import "./DashboardLayout.css";
 import React, { useState, useEffect, useRef } from "react";
+import "./DashboardLayout.css";
 import { Link } from "react-router-dom";
-
 
 import logo from "../../assets/logo.png";
 
@@ -18,6 +17,8 @@ import {
 
 function DashboardLayout({ children, showProfile = true }) {
   const [userName, setUserName] = useState("User");
+  const [storeLogo, setStoreLogo] = useState(logo);
+  const [storeName, setStoreName] = useState("Fashion Oasis");
 
   const fileInputRef = useRef(null);
 
@@ -45,10 +46,21 @@ function DashboardLayout({ children, showProfile = true }) {
         setUserName(resolvedName);
       }
     }
+
+    const saved = localStorage.getItem("storeSettings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.storeLogo) setStoreLogo(parsed.storeLogo);
+        if (parsed.storeName) setStoreName(parsed.storeName);
+      } catch (e) {}
+    }
   }, []);
 
   const handleEditClick = () => {
-    fileInputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleImageChange = (e) => {
@@ -61,12 +73,7 @@ function DashboardLayout({ children, showProfile = true }) {
 
   return (
     <div className="dashboard-layout">
-      <aside
-        className="sidebar"
-        style={{
-        
-        }}
-      >
+      <aside className="sidebar">
         <div className="logo-section">
           {showProfile ? (
             <>
@@ -97,8 +104,12 @@ function DashboardLayout({ children, showProfile = true }) {
             </>
           ) : (
             <>
-              <img src={logo} alt="Fashion Oasis" />
-              <h3>Fashion Oasis</h3>
+              <img
+                src={storeLogo}
+                alt={storeName}
+                style={{ maxHeight: "50px", objectFit: "contain" }}
+              />
+              <h3>{storeName}</h3>
             </>
           )}
         </div>
@@ -162,4 +173,4 @@ function DashboardLayout({ children, showProfile = true }) {
   );
 }
 
-export default DashboardLayout;
+export default DashboardLayout;
