@@ -63,6 +63,18 @@ const customerSchema = new mongoose.Schema({
       oldPrice: { type: mongoose.Schema.Types.Mixed }
     }
   ],
+  cart: [
+    {
+      product: {
+        id: { type: String },
+        name: { type: String },
+        image: { type: String },
+        price: { type: mongoose.Schema.Types.Mixed },
+        oldPrice: { type: mongoose.Schema.Types.Mixed }
+      },
+      quantity: { type: Number, default: 1 }
+    }
+  ],
   resetPasswordToken: String,
   resetPasswordExpire: Date
 }, {

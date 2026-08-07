@@ -9,7 +9,13 @@ import { FiHeart, FiShoppingCart } from "react-icons/fi";
 
 const ProductActions = ({ product }) => {
   const navigate = useNavigate();
-  const { addToCart, addToWishlist } = useContext(ShopContext);
+
+  const {
+    addToCart,
+    addToWishlist,
+    setBuyNowItem,
+  } = useContext(ShopContext);
+
   const [qty, setQty] = useState(1);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authRedirectPath, setAuthRedirectPath] = useState("/checkout");
@@ -24,7 +30,9 @@ const ProductActions = ({ product }) => {
   };
 
   const handleBuyNow = () => {
-    // Save product to cart first so cart data is preserved
+    if (setBuyNowItem) {
+      setBuyNowItem({ product, quantity: qty });
+    }
     addToCart(product, qty);
 
     if (isCustomerAuthenticated()) {

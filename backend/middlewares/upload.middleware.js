@@ -39,3 +39,18 @@ export const uploadAvatarMiddleware = (req, res, next) => {
     next();
   });
 };
+
+export const uploadProductImagesMiddleware = (req, res, next) => {
+  uploadMulter.array('images', 5)(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return next(new AppError('File size cannot exceed 5MB', 400));
+        }
+        return next(new AppError(err.message, 400));
+      }
+      return next(err);
+    }
+    next();
+  });
+};

@@ -1,5 +1,6 @@
 import Order from '../models/Order.js';
 import AppError from '../utils/AppError.js';
+import { sendEmail } from '../utils/emailService.js';
 
 export const getAllOrders = async (page = 1, limit = 10) => {
   const skip = (page - 1) * limit;
@@ -30,6 +31,16 @@ export const updateOrderStatus = async (orderId, status) => {
 
   if (!order) {
     throw new AppError('Order not found', 404);
+  }
+  
+  if (order.customerEmail) {
+    await sendEmail({
+      to: order.customerEmail,
+      subject: `Order Status Update - ${order.orderId || order._id}`,
+      htmlContent: `<p>Hi ${order.customerName || 'Customer'},</p>
+                    <p>Your order status has been updated to: <strong>${status}</strong>.</p>
+                    <p>Thank you for shopping with Fashion Oasis!</p>`,
+    });
   }
   
   return order;

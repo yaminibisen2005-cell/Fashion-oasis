@@ -1,10 +1,12 @@
- import "./Login.css";
+import "./Login.css";
 import loginAuth from "../../assets/login-auth.jpg";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
 import { customerLogin } from "../../api/customer";
+import { auth, googleProvider, signInWithPopup } from "../../firebase";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -50,6 +52,39 @@ const Login = () => {
     }
   };
 
+  // Google Login Handler
+  const handleGoogleAuth = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+
+      const response = await axios.post("http://localhost:5000/api/v1/customer/google", {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        token: idToken
+      });
+
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("customerEmail", user.email);
+        localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
+
+        window.dispatchEvent(new Event("storage"));
+
+        alert("Google Login Successful!");
+
+        const fromPath = location.state?.from?.pathname || location.state?.from;
+        const redirectUrl = typeof fromPath === "string" ? fromPath : "/dashboard";
+        navigate(redirectUrl, { replace: true });
+      }
+    } catch (error) {
+      console.error("Google Auth Error:", error);
+      alert(error.response?.data?.message || "Google sign-in failed. Please try again.");
+    }
+  };
+
   return (
     <div className="login-page">
       <div className="login-overlay">
@@ -59,10 +94,8 @@ const Login = () => {
           <img src={loginAuth} alt="Premium Luxury Jewellery" className="brand-panel-image" />
           <div className="brand-panel-overlay"></div>
           
-          {/* Soft moving golden radial light */}
           <div className="golden-light-glow"></div>
 
-          {/* Floating Gold Particles */}
           <div className="gold-particles-container">
             <div className="gold-particle p1"></div>
             <div className="gold-particle p2"></div>
@@ -78,7 +111,6 @@ const Login = () => {
             <div className="gold-particle p12"></div>
           </div>
 
-          {/* Floating Glass Feature Card at the bottom */}
           <div className="bottom-glass-card">
             <div className="glass-card-col">
               <span className="glass-card-icon"><FiFeather /></span>
@@ -157,7 +189,7 @@ const Login = () => {
               <span></span>
             </div>
 
-            <button type="button" className="google-btn anim-fade-up-btn-700">
+            <button type="button" className="google-btn anim-fade-up-btn-700" onClick={handleGoogleAuth}>
               <img
                 src="https://www.svgrepo.com/show/475656/google-color.svg"
                 alt="Google"

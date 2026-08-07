@@ -1,9 +1,9 @@
- import React, { createContext, useState, useEffect } from "react";
+ import React, { createContext, useState, useEffect, useRef } from "react";
 import thumb1 from "../assets/thumb1.png";
 import thumb2 from "../assets/thumb2.png";
 import thumb3 from "../assets/thumb3.png";
 import thumb4 from "../assets/thumb4.png";
-import { toggleWishlist } from "../api/customer";
+import { toggleWishlist, getCart, saveCart, getWishlist } from "../api/customer";
 
 export const ShopContext = createContext();
 
@@ -48,17 +48,44 @@ const initialProducts = [
 
 export const ShopProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [buyNowItem, setBuyNowItem] = useState(null);
+  const isInitialMount = useRef(true);
+  
+  const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
 
-  // Load cart from localStorage initially so it persists across refreshes and logins
-  const [cart, setCart] = useState(() => {
-    try {
-      const savedCart = localStorage.getItem("fashion_oasis_cart");
-      return savedCart ? JSON.parse(savedCart) : [];
-    } catch (error) {
-      console.error("Failed to load cart from storage:", error);
-      return [];
-    }
-  });
+  // Fetch cart and wishlist from backend on mount/login
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!customerToken) {
+        try {
+          const savedCart = localStorage.getItem("fashion_oasis_cart");
+          if (savedCart) setCart(JSON.parse(savedCart));
+        } catch (e) {
+          console.error(e);
+        }
+        return;
+      }
+
+      try {
+        const [cartRes, wishlistRes] = await Promise.all([
+          getCart().catch(() => null),
+          getWishlist().catch(() => null)
+        ]);
+
+        if (cartRes && cartRes.cart) {
+          setCart(cartRes.cart);
+        }
+        if (wishlistRes && wishlistRes.wishlist) {
+          setWishlist(wishlistRes.wishlist);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data from backend:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [customerToken]);
 
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -90,24 +117,39 @@ export const ShopProvider = ({ children }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [totals, setTotals] = useState({ subtotal: 0, discount: 0, total: 0 });
 
-  // Save cart to localStorage whenever it changes
+  // Sync cart to backend database and localStorage with debounce protection
   useEffect(() => {
     try {
       localStorage.setItem("fashion_oasis_cart", JSON.stringify(cart));
+      
+      if (customerToken) {
+        if (isInitialMount.current) {
+          isInitialMount.current = false;
+          return;
+        }
+        const timer = setTimeout(() => {
+          saveCart({ cart }).catch((err) =>
+            console.error("Failed to sync cart to backend:", err)
+          );
+        }, 400);
+        return () => clearTimeout(timer);
+      }
     } catch (error) {
-      console.error("Failed to save cart to storage:", error);
+      console.error("Failed to save cart:", error);
     }
-  }, [cart]);
+  }, [cart, customerToken]);
 
-  useEffect(() => {
-    const subtotal = cart.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
+ useEffect(() => {
+    // If cart has items, use cart exclusively. Ignore buyNowItem entirely if cart has elements.
+    const activeItems = cart && cart.length > 0 ? cart : (buyNowItem ? [buyNowItem] : []);
+    const subtotal = activeItems.reduce(
+      (sum, item) => sum + (item.product?.price || 0) * item.quantity,
       0
     );
     const discount = Math.round(subtotal * (discountPercent / 100));
     const total = subtotal - discount;
     setTotals({ subtotal, discount, total });
-  }, [cart, discountPercent]);
+  }, [cart, buyNowItem, discountPercent]);
 
   useEffect(() => {
     if (sameAsShipping) {
@@ -118,9 +160,10 @@ export const ShopProvider = ({ children }) => {
   // Wishlist handler
   const addToWishlist = async (product) => {
     try {
+      const prodId = String(product.id || product._id);
       const payload = {
         product: {
-          id: String(product.id),
+          id: prodId,
           name: product.name,
           image: typeof product.image === "string" ? product.image : "",
           price: product.price,
@@ -128,10 +171,9 @@ export const ShopProvider = ({ children }) => {
         },
       };
 
-      await toggleWishlist(payload);
-
-      if (!wishlist.find((item) => item.id === product.id)) {
-        setWishlist([...wishlist, product]);
+      const res = await toggleWishlist(payload);
+      if (res && res.wishlist) {
+        setWishlist(res.wishlist);
       }
     } catch (error) {
       console.error("Failed to update wishlist on backend:", error);
@@ -140,56 +182,87 @@ export const ShopProvider = ({ children }) => {
 
   const removeFromWishlist = async (id) => {
     try {
-      const productToRemove = wishlist.find((item) => item.id === id);
+      const productToRemove = wishlist.find((item) => String(item.id || item._id) === String(id));
       if (productToRemove) {
-        await toggleWishlist({
+        const res = await toggleWishlist({
           product: {
-            id: String(productToRemove.id),
+            id: String(productToRemove.id || productToRemove._id),
             name: productToRemove.name,
             price: productToRemove.price,
+            image: productToRemove.image || "",
           },
         });
+        if (res && res.wishlist) {
+          setWishlist(res.wishlist);
+          return;
+        }
       }
-      setWishlist(wishlist.filter((item) => item.id !== id));
+      setWishlist(wishlist.filter((item) => String(item.id || item._id) !== String(id)));
     } catch (error) {
       console.error("Failed to remove from wishlist:", error);
     }
   };
 
-  // Cart handlers
+  // Cart handlers with structure normalization
   const addToCart = (product, qty = 1) => {
-    const existing = cart.find((item) => item.product.id === product.id);
-    if (existing) {
-      setCart(
-        cart.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + qty }
-            : item
-        )
+    setBuyNowItem(null);
+    const rawProd = product.product || product;
+    const productId = String(rawProd.id || rawProd._id);
+
+    setCart((prevCart) => {
+      const existingIndex = prevCart.findIndex(
+        (item) => String(item.product?.id || item.product?._id) === productId
       );
-    } else {
-      setCart([...cart, { product, quantity: qty }]);
-    }
+
+      if (existingIndex > -1) {
+        const updated = [...prevCart];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + qty,
+        };
+        return updated;
+      } else {
+        return [
+          ...prevCart,
+          {
+            product: {
+              id: productId,
+              name: rawProd.name,
+              image: rawProd.image || "",
+              price: rawProd.price || 0,
+              oldPrice: rawProd.oldPrice || rawProd.price || 0,
+            },
+            quantity: qty,
+          },
+        ];
+      }
+    });
   };
 
   const updateQuantity = (id, quantity) => {
+    const strId = String(id);
     if (quantity <= 0) {
-      removeFromCart(id);
+      removeFromCart(strId);
     } else {
-      setCart(
-        cart.map((item) =>
-          item.product.id === id ? { ...item, quantity } : item
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          String(item.product?.id || item.product?._id) === strId
+            ? { ...item, quantity }
+            : item
         )
       );
     }
   };
 
   const removeFromCart = (id) => {
-    setCart(cart.filter((item) => item.product.id !== id));
+    const strId = String(id);
+    setCart((prevCart) =>
+      prevCart.filter((item) => String(item.product?.id || item.product?._id) !== strId)
+    );
   };
 
   const moveToCart = (id) => {
-    const target = wishlist.find((item) => item.id === id);
+    const target = wishlist.find((item) => String(item.id || item._id) === String(id));
     if (target) {
       addToCart(target, 1);
       removeFromWishlist(id);
@@ -200,7 +273,9 @@ export const ShopProvider = ({ children }) => {
     wishlist.forEach((item) => {
       addToCart(item, 1);
     });
-    setWishlist([]);
+    wishlist.forEach((item) => {
+      removeFromWishlist(item.id || item._id);
+    });
   };
 
   const applyCoupon = (code) => {
@@ -232,10 +307,13 @@ export const ShopProvider = ({ children }) => {
       year: "numeric",
     });
     
+    // Fixed: Prioritize full cart array items unless buyNowItem is explicitly set and cart is empty
+    const itemsToOrder = (cart && cart.length > 0) ? [...cart] : (buyNowItem ? [buyNowItem] : []);
+
     const newOrder = {
       orderId: generatedOrderId,
       date: formattedDate,
-      items: [...cart],
+      items: itemsToOrder,
       subtotal: totals.subtotal,
       discount: totals.discount,
       shipping: "FREE",
@@ -252,7 +330,38 @@ export const ShopProvider = ({ children }) => {
     
     setCurrentOrder(newOrder);
     setCart([]);
+    setBuyNowItem(null);
     return newOrder;
+  };
+
+  // Complete cleanup function for secure logouts
+  const logout = () => {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("fashion_oasis_cart");
+    localStorage.removeItem("customerName");
+    setCart([]);
+    setWishlist([]);
+    setBuyNowItem(null);
+    setCurrentOrder(null);
+    setShippingAddress({
+      fullName: "",
+      phone: "",
+      address: "",
+      address2: "",
+      city: "",
+      state: "",
+      pincode: "",
+    });
+    setBillingAddress({
+      fullName: "",
+      phone: "",
+      address: "",
+      address2: "",
+      city: "",
+      state: "",
+      pincode: "",
+    });
   };
 
   return (
@@ -261,6 +370,8 @@ export const ShopProvider = ({ children }) => {
         products: initialProducts,
         wishlist,
         cart,
+        buyNowItem,
+        setBuyNowItem,
         totals,
         couponCode,
         couponSuccess,
@@ -284,9 +395,12 @@ export const ShopProvider = ({ children }) => {
         applyCoupon,
         placeOrder,
         setCurrentOrder,
+        logout,
       }}
     >
       {children}
     </ShopContext.Provider>
   );
 };
+
+export default ShopProvider;

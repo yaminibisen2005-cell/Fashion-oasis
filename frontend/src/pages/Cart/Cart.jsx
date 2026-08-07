@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
@@ -18,6 +18,7 @@ const Cart = () => {
     updateQuantity,
     removeFromCart,
     applyCoupon,
+    setBuyNowItem, // <-- Added: Destructure setBuyNowItem here
   } = useContext(ShopContext);
 
   const navigate = useNavigate();
@@ -42,10 +43,11 @@ const Cart = () => {
     }
 
     setLoadingCheckout(true);
+    setBuyNowItem(null); // <-- Added: Clears single-item buy-now state so full cart takes over
     setTimeout(() => {
       setLoadingCheckout(false);
       navigate("/checkout");
-    }, 800); // 800ms premium loader
+    }, 800);
   };
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -69,7 +71,7 @@ const Cart = () => {
               <p>Add some beautiful jewellery pieces to start shopping.</p>
               <button
                 className="continue-shopping-btn"
-                onClick={() => navigate("/collections")}
+                onClick={() => navigate("/shop")}
               >
                 Go to Collections
               </button>
