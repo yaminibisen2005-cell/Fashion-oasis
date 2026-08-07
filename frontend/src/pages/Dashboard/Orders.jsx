@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import { FaTimes, FaMapMarkerAlt, FaExclamationCircle } from "react-icons/fa";
+import { getMyOrders } from "../../api/customer";
 import "./Orders.css";
 
 const safeStoredJson = (key) => {
@@ -23,28 +24,14 @@ function Orders() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const customerInfo = safeStoredJson("customerInfo");
-        const user = customerInfo || safeStoredJson("userInfo") || safeStoredJson("user");
-        const customerEmail = localStorage.getItem("customerEmail") || user?.email;
-
-        if (!customerEmail) {
-          setErrorMessage("Please log in to view your orders.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch(`http://localhost:5000/api/v1/orders?email=${encodeURIComponent(customerEmail)}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch orders");
-        }
+        setLoading(true);
+        const data = await getMyOrders();
 
         // Handle array response structure safely
         const ordersList = Array.isArray(data) ? data : data.orders || data.data || [];
         setOrders(ordersList);
       } catch (err) {
-        setErrorMessage(err.message || "Could not load orders.");
+        setErrorMessage(err.response?.data?.message || err.message || "Could not load orders.");
       } finally {
         setLoading(false);
       }

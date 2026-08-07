@@ -3,15 +3,24 @@ import Footer from "../../components/Footer/Footer";
 import Newsletter from "../../components/Newsletter/Newsletter";
 import Testimonials from "../../components/Testimonials/Testimonials";
 import WhyChooseUs from "../../components/WhyChooseUs/WhyChooseUs";
-
 import InstagramGallery from "../../components/InstagramGallery/InstagramGallery";
+
+import { GiDiamondRing, GiHeartNecklace } from "react-icons/gi";
+import { BsShieldCheck } from "react-icons/bs";
+import { PiFlowerLotus } from "react-icons/pi";
+import { MdVerified } from "react-icons/md";
+import { LuSparkles } from "react-icons/lu";
 
 import aboutHero from "../../assets/about-banner.png";
 import story from "../../assets/about-story.png";
 
+import { useNavigate } from "react-router-dom";
+
 import "./About.css";
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Navbar />
@@ -40,12 +49,67 @@ const About = () => {
               occasion.
             </p>
 
-            <button>
+            <button className="about-explore-btn btn-primary" onClick={() => navigate("/shop")}>
               Explore Collection →
             </button>
 
           </div>
 
+        </section>
+
+        {/* TOP 5 LUXURY HIGHLIGHTS */}
+        <section className="about-highlights-section" data-aos="fade-up">
+          <div className="highlights-container">
+            <div className="highlight-card">
+              <div className="highlight-icon-wrapper">
+                <GiDiamondRing className="highlight-icon" />
+              </div>
+              <div className="highlight-text">
+                <h4>Premium Collection</h4>
+                <p>Exclusive Fine Jewellery</p>
+              </div>
+            </div>
+
+            <div className="highlight-card">
+              <div className="highlight-icon-wrapper">
+                <MdVerified className="highlight-icon" />
+              </div>
+              <div className="highlight-text">
+                <h4>Certified Quality</h4>
+                <p>100% Verified Standards</p>
+              </div>
+            </div>
+
+            <div className="highlight-card">
+              <div className="highlight-icon-wrapper">
+                <LuSparkles className="highlight-icon" />
+              </div>
+              <div className="highlight-text">
+                <h4>Elegant Designs</h4>
+                <p>Timeless & Modern Styles</p>
+              </div>
+            </div>
+
+            <div className="highlight-card">
+              <div className="highlight-icon-wrapper">
+                <BsShieldCheck className="highlight-icon" />
+              </div>
+              <div className="highlight-text">
+                <h4>Trusted Craftsmanship</h4>
+                <p>Master Artisan Finished</p>
+              </div>
+            </div>
+
+            <div className="highlight-card">
+              <div className="highlight-icon-wrapper">
+                <GiHeartNecklace className="highlight-icon" />
+              </div>
+              <div className="highlight-text">
+                <h4>Crafted With Love</h4>
+                <p>Thoughtfully Handcrafted</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* STORY */}
@@ -73,13 +137,35 @@ const About = () => {
             </p>
 
             <div className="story-list">
+              <div className="luxury-feature-card">
+                <div className="feature-icon-wrapper">
+                  <GiDiamondRing className="feature-icon" />
+                </div>
+                <div className="feature-card-content">
+                  <h3>Handcrafted with Care</h3>
+                  <p>Every jewellery piece is thoughtfully handcrafted with attention to detail.</p>
+                </div>
+              </div>
 
-              <div>❤️ Made With Love</div>
+              <div className="luxury-feature-card">
+                <div className="feature-icon-wrapper">
+                  <BsShieldCheck className="feature-icon" />
+                </div>
+                <div className="feature-card-content">
+                  <h3>Premium Quality Assured</h3>
+                  <p>Made from carefully selected materials with exceptional craftsmanship.</p>
+                </div>
+              </div>
 
-              <div>✨ Premium Quality</div>
-
-              <div>� Ethical & Sustainable</div>
-
+              <div className="luxury-feature-card">
+                <div className="feature-icon-wrapper">
+                  <PiFlowerLotus className="feature-icon" />
+                </div>
+                <div className="feature-card-content">
+                  <h3>Ethically Crafted</h3>
+                  <p>Responsibly created using sustainable and ethical production practices.</p>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -87,87 +173,12 @@ const About = () => {
         </section>
 
         <div data-aos="fade-up">
-    <WhyChooseUs />
-</div>
+          <WhyChooseUs />
+        </div>
 
-        {/* Brand Promise */}
-
-        <section className="brand-promise">
-
-          <div className="promise-left" data-aos="zoom-in">
-
-            <img src={story} alt="" />
-
-          </div>
-
-          <div className="promise-right" data-aos="fade-left">
-
-            <span>OUR PROMISE</span>
-
-            <h2>Beauty You Can Trust</h2>
-
-            <ul>
-
-              <li>
-                <div className="promise-icon">✨</div>
-                <div className="promise-content">
-                  <h4>Genuine Materials</h4>
-                  <p>Carefully selected premium-quality materials.</p>
-                </div>
-              </li>
-
-              <li>
-                <div className="promise-icon">💎</div>
-                <div className="promise-content">
-                  <h4>Skilled Craftsmanship</h4>
-                  <p>Handcrafted by skilled artisans.</p>
-                </div>
-              </li>
-
-              <li>
-                <div className="promise-icon">🌸</div>
-                <div className="promise-content">
-                  <h4>Timeless Designs</h4>
-                  <p>Elegant styles made to last.</p>
-                </div>
-              </li>
-
-              <li>
-                <div className="promise-icon">❤️</div>
-                <div className="promise-content">
-                  <h4>Customer Satisfaction</h4>
-                  <p>Trusted by hundreds of happy customers.</p>
-                </div>
-              </li>
-
-            </ul>
-
-            <div className="promise-stats">
-
-              <div className="stat-item">
-                <div className="stat-number">500+</div>
-                <div className="stat-label">Happy Orders</div>
-              </div>
-
-              <div className="stat-item">
-                <div className="stat-number">2024</div>
-                <div className="stat-label">Established</div>
-              </div>
-
-              <div className="stat-item">
-                <div className="stat-number">100%</div>
-                <div className="stat-label">Handcrafted</div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-      <div data-aos="fade-up">
-    <InstagramGallery />
-</div>
+        <div data-aos="fade-up">
+          <InstagramGallery />
+        </div>
 
         <div data-aos="fade-up">
     <Testimonials />

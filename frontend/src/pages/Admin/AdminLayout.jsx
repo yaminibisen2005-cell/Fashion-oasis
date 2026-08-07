@@ -20,6 +20,7 @@ import {
   FaHandshake,
   FaCheckDouble,
   FaWallet,
+  FaGift,
 } from "react-icons/fa";
 
 // Sections imports
@@ -31,6 +32,7 @@ import OrdersSection from "./Sections/OrdersSection";
 import CustomersSection from "./Sections/CustomersSection";
 import ReviewsSection from "./Sections/ReviewsSection";
 import CouponsSection from "./Sections/CouponsSection";
+import OffersSection from "./Sections/OffersSection";
 import AnalyticsSection from "./Sections/AnalyticsSection";
 import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
@@ -593,6 +595,7 @@ const AdminLayout = () => {
     { name: "Payouts", path: "payouts", icon: <FaWallet /> },
     { name: "Reviews", path: "reviews", icon: <FaStar /> },
     { name: "Coupons", path: "coupons", icon: <FaPercentage /> },
+    { name: "Special Offers", path: "offers", icon: <FaGift /> },
     { name: "Analytics", path: "analytics", icon: <FaChartLine /> },
     { name: "Settings", path: "settings", icon: <FaCog /> },
   ];
@@ -642,6 +645,12 @@ const AdminLayout = () => {
       </header>
 
       <div className="admin-body">
+        {/* Mobile Backdrop Overlay */}
+        <div
+          className={`sidebar-backdrop ${sidebarOpen ? "active" : ""}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
         {/* Sidebar */}
         <aside className={`admin-sidebar ${sidebarOpen ? "active" : ""}`}>
           <ul className="sidebar-links-list">
@@ -650,6 +659,9 @@ const AdminLayout = () => {
                 <Link
                   to={`/admin/${link.path}`}
                   className={`sidebar-link ${isActive(link.path) ? "active" : ""}`}
+                  onClick={() => {
+                    if (window.innerWidth <= 992) setSidebarOpen(false);
+                  }}
                 >
                   {link.icon}
                   <span>{link.name}</span>
@@ -744,6 +756,7 @@ const AdminLayout = () => {
                 />
               }
             />
+            <Route path="offers" element={<OffersSection />} />
             <Route path="analytics" element={<AnalyticsSection />} />
             <Route
               path="sellers"

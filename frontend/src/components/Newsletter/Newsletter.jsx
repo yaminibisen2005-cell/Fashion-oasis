@@ -1,13 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Newsletter.css";
 import { HiOutlineMail } from "react-icons/hi";
-
+import apiClient from "../../api/client";
 import banner from "../../assets/newsletter-bg.jpg";
 
 const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) {
+      setIsError(true);
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+    setIsError(false);
+
+    try {
+      const response = await apiClient.post("/newsletter/subscribe", { email });
+      if (response.data?.success) {
+        setIsError(false);
+        setMessage("Subscribed Successfully");
+        setEmail("");
+      } else {
+        throw new Error(response.data?.message || "Subscription failed.");
+      }
+    } catch (err) {
+      setIsError(true);
+      setMessage(err.response?.data?.message || err.message || "Failed to subscribe. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="newsletter">
-
       <img
         src={banner}
         alt="Fashion Oasis Newsletter"
@@ -15,7 +48,6 @@ const Newsletter = () => {
       />
 
       <div className="newsletter-overlay">
-
         <span className="newsletter-tag">
           BE THE FIRST TO KNOW
         </span>
@@ -32,27 +64,38 @@ const Newsletter = () => {
           directly to your inbox.
         </p>
 
-        <div className="newsletter-form">
-
+        <form className="newsletter-form" onSubmit={handleSubmit}>
           <div className="newsletter-input">
-
             <HiOutlineMail className="mail-icon" />
-
             <input
               type="email"
               placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
-
           </div>
 
-          <button>
-            Subscribe
+          <button type="submit" disabled={loading}>
+            {loading ? "Subscribing..." : "Subscribe"}
           </button>
+        </form>
 
-        </div>
-
+        {message && (
+          <div
+            className={`newsletter-message ${isError ? "error" : "success"}`}
+            style={{
+              marginTop: "15px",
+              color: isError ? "#ff4d4f" : "#52c41a",
+              fontWeight: 600,
+              fontSize: "15px",
+              textAlign: "center"
+            }}
+          >
+            {message}
+          </div>
+        )}
       </div>
-
     </section>
   );
 };

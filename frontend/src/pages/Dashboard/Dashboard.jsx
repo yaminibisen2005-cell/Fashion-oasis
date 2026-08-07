@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { ShopContext } from "../../context/ShopContext";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+import { getCustomerDashboardStats } from "../../api/customer";
+import apiClient from "../../api/client";
 import "./Dashboard.css";
 import {
   FaArrowRight,
@@ -27,7 +28,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const { addToCart } = useContext(ShopContext);
   const [userName, setUserName] = useState("User");
-  const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0" });
+  const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0", lastOrderDate: "" });
   const [orders, setOrders] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,30 +36,32 @@ function Dashboard() {
   useEffect(() => {
     const customerInfo = safeStoredJson("customerInfo");
     const user = customerInfo || safeStoredJson("userInfo") || safeStoredJson("user");
-    const token = localStorage.getItem("token") || localStorage.getItem("authToken") || customerInfo?.token;
 
     const name = user?.fullName || user?.name || user?.username || `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
     if (name) setUserName(name);
 
     const loadDashboard = async () => {
-      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
       try {
-        if (user?.email) {
-          const response = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${encodeURIComponent(user.email)}`, config);
-          const data = response.data?.data;
-          if (response.data?.success && data) {
-            setStats({
-              totalOrders: String(data.totalOrders || 0),
-              wishlistCount: String(data.wishlist?.length || 0),
-              reviewsCount: String(data.reviewsCount || 0),
-              rewardPoints: String(data.rewardPoints || 0),
-            });
-            setOrders(data.recentOrders || []);
-          }
-        }
+        setLoading(true);
+        const statsRes = await getCustomerDashboardStats();
+        const data = statsRes?.data || statsRes || {};
 
-        const response = await axios.get("http://localhost:5000/api/v1/products/recommended", config);
-        if (response.data?.success) setRecommendations(response.data.data || []);
+        console.log("Customer Dashboard Stats Data:", data);
+
+        setStats({
+          totalOrders: String(data.totalOrders ?? 0),
+          wishlistCount: String(data.wishlistCount ?? 0),
+          reviewsCount: String(data.reviewsCount ?? 0),
+          rewardPoints: String(data.rewardPoints ?? 0),
+          lastOrderDate: data.lastOrderDate || "",
+        });
+
+        setOrders(data.recentOrders || []);
+
+        const recRes = await apiClient.get("/products/recommended");
+        if (recRes.data?.success) {
+          setRecommendations(recRes.data.data || []);
+        }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {

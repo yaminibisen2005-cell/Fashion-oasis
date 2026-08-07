@@ -60,9 +60,18 @@ const Login = () => {
     }
   };
 
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
   // Google Login Handler
   const handleGoogleAuth = async () => {
+    if (isGoogleLoading) return;
+    setIsGoogleLoading(true);
     try {
+      if (!auth || !googleProvider) {
+        alert("Google Authentication is not configured or Firebase API keys are missing.");
+        setIsGoogleLoading(false);
+        return;
+      }
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const idToken = await user.getIdToken();
@@ -82,15 +91,24 @@ const Login = () => {
 
         window.dispatchEvent(new Event("storage"));
 
-        alert("Google Login Successful!");
-
         const fromPath = location.state?.from?.pathname || location.state?.from;
         const redirectUrl = typeof fromPath === "string" ? fromPath : "/";
         navigate(redirectUrl, { replace: true });
       }
     } catch (error) {
       console.error("Google Auth Error:", error);
-      alert(error.response?.data?.message || "Google sign-in failed. Please try again.");
+      if (
+        error.code === "auth/popup-closed-by-user" ||
+        error.code === "auth/cancelled-popup-request"
+      ) {
+        // User closed or canceled popup - handle gracefully
+      } else if (error.code === "auth/popup-blocked") {
+        alert("Pop-up blocked by your browser. Please allow pop-ups for this website to sign in with Google.");
+      } else {
+        alert(error.response?.data?.message || error.message || "Google sign-in failed. Please try again.");
+      }
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 

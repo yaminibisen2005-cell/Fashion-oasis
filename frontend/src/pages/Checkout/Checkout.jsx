@@ -1,6 +1,7 @@
  import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
+import apiClient from "../../api/client";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import "./Checkout.css";
@@ -51,7 +52,6 @@ const Checkout = () => {
     setLocalBillingAddress((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Fixed: Prioritize the cart array first. Only use buyNowItem if the cart is completely empty.
   const displayItems = (cart && cart.length > 0) ? cart : (buyNowItem ? [buyNowItem] : []);
 
   const handlePlaceOrderSubmit = async (e) => {
@@ -60,7 +60,12 @@ const Checkout = () => {
     setErrorMessage("");
 
     try {
-      const customerEmail = localStorage.getItem("customerEmail");
+      const storedUser = JSON.parse(localStorage.getItem("customerInfo") || "{}");
+      const customerEmail = localStorage.getItem("customerEmail") || storedUser.email || "";
+
+      if (!customerEmail) {
+        throw new Error("Please log in before placing an order.");
+      }
 
       const formattedItems = displayItems.map((item) => ({
         productName: item.product.name,
@@ -106,26 +111,22 @@ const Checkout = () => {
         totalAmount: totals.total,
       };
 
-      const response = await fetch("http://localhost:5000/api/v1/orders/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderPayload),
-      });
+      const activeToken = localStorage.getItem("token") || localStorage.getItem("customerToken");
+      console.log("TOKEN:", activeToken);
+      console.log("ORDER PAYLOAD:", orderPayload);
 
-      const data = await response.json();
+      const response = await apiClient.post("/orders/checkout", orderPayload);
+      console.log("API RESPONSE:", response.data);
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to place order");
+      if (response.data?.success) {
+        placeOrder();
+        navigate("/thank-you");
+      } else {
+        throw new Error(response.data?.message || "Failed to place order.");
       }
-
-      placeOrder();
-      navigate("/thank-you");
-      
     } catch (err) {
       setLoading(false);
-      setErrorMessage(err.message || "Something went wrong during checkout.");
+      setErrorMessage(err.response?.data?.message || err.message || "Something went wrong during checkout.");
     }
   };
 
