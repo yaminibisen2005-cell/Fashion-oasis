@@ -3,6 +3,7 @@ import loginBg from "../../assets/login-bg.png";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validatePasswordStrength } from "../../utils/passwordValidation";
+import { resetPassword } from "../../api/customer";
 
 const ResetPassword = () => {
   const { token } = useParams(); // Grabs the token from the URL route

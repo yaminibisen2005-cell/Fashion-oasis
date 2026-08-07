@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./DashboardLayout.css";
 import { Link } from "react-router-dom";
+import { uploadAvatar } from "../../api/customer";
 
 import logo from "../../assets/logo.png";
 
@@ -45,6 +46,9 @@ function DashboardLayout({ children, showProfile = true }) {
       if (resolvedName) {
         setUserName(resolvedName);
       }
+      if (storedUser.avatar) {
+        setProfileImage(storedUser.avatar);
+      }
     }
 
     const saved = localStorage.getItem("storeSettings");
@@ -63,12 +67,36 @@ function DashboardLayout({ children, showProfile = true }) {
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
 
     if (!file) return;
 
     setProfileImage(URL.createObjectURL(file));
+
+    try {
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      const res = await uploadAvatar(formData);
+      if (res.success && res.data.avatar) {
+        setProfileImage(res.data.avatar);
+
+        const storedUserStr = localStorage.getItem("customerInfo") || localStorage.getItem("user");
+        if (storedUserStr) {
+          const storedUser = JSON.parse(storedUserStr);
+          storedUser.avatar = res.data.avatar;
+          if (localStorage.getItem("customerInfo")) {
+            localStorage.setItem("customerInfo", JSON.stringify(storedUser));
+          } else {
+            localStorage.setItem("user", JSON.stringify(storedUser));
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Avatar upload failed:", err);
+      alert("Failed to upload avatar");
+    }
   };
 
   return (

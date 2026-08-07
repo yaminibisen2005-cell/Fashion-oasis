@@ -99,8 +99,8 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                     </tr>
                   </thead>
                   <tbody>
-                    {sellers.map((seller) => (
-                      <tr key={seller.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background-color 0.2s' }}>
+                    {sellers.map((seller, index) => (
+                      <tr key={seller._id || seller.id || index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background-color 0.2s' }}>
                         <td style={{ padding: '15px 20px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <div style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: '#FFF2F5', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
@@ -113,7 +113,7 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                           </div>
                         </td>
                         <td style={{ padding: '15px 20px', color: 'var(--text-muted)', fontSize: '13px' }}>{seller.contactPerson}</td>
-                        <td style={{ padding: '15px 20px', color: 'var(--text-dark)', fontWeight: '600', fontSize: '13px' }}>₹{seller.totalSales.toLocaleString()}</td>
+                        <td style={{ padding: '15px 20px', color: 'var(--text-dark)', fontWeight: '600', fontSize: '13px' }}>₹{(seller.totalSales ?? 0).toLocaleString()}</td>
                         <td style={{ padding: '15px 20px' }}>
                           <span style={{ backgroundColor: '#FFFDF9', color: '#D4AF37', border: '1px solid #FFF5D6', padding: '3px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold' }}>
                             ★ {seller.rating}
@@ -134,7 +134,7 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                         <td style={{ padding: '15px 20px', textAlign: 'right' }}>
                           <button
                             type="button"
-                            onClick={() => handleToggleSellerStatus(seller.id)}
+                            onClick={() => handleToggleSellerStatus(seller._id || seller.id)}
                             style={{
                               padding: '6px 12px',
                               borderRadius: '6px',
@@ -186,8 +186,8 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                     </tr>
                   </thead>
                   <tbody>
-                    {pendingSellers.map((seller) => (
-                      <tr key={seller.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                    {pendingSellers.map((seller, index) => (
+                      <tr key={seller._id || seller.id || index} style={{ borderBottom: '1px solid var(--border-color)' }}>
                         <td style={{ padding: '15px 20px' }}>
                           <div>
                             <strong style={{ display: 'block', color: 'var(--text-dark)' }}>{seller.storeName}</strong>
@@ -196,8 +196,8 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                         </td>
                         <td style={{ padding: '15px 20px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px' }}>
-                            <div>📄 GSTIN: <code style={{ backgroundColor: '#F5F5F5', padding: '2px 4px', borderRadius: '4px' }}>{seller.docs.gstin}</code></div>
-                            <div>📄 PAN: <code style={{ backgroundColor: '#F5F5F5', padding: '2px 4px', borderRadius: '4px' }}>{seller.docs.pan}</code></div>
+                            <div>📄 GSTIN: <code style={{ backgroundColor: '#F5F5F5', padding: '2px 4px', borderRadius: '4px' }}>{seller.docs?.gstin || seller.gstNumber || 'N/A'}</code></div>
+                            <div>📄 PAN: <code style={{ backgroundColor: '#F5F5F5', padding: '2px 4px', borderRadius: '4px' }}>{seller.docs?.pan || 'N/A'}</code></div>
                           </div>
                         </td>
                         <td style={{ padding: '15px 20px', color: 'var(--text-muted)', fontSize: '13px' }}>{seller.appliedDate}</td>
@@ -205,7 +205,7 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                           <div style={{ display: 'inline-flex', gap: '10px' }}>
                             <button
                               type="button"
-                              onClick={() => handleApproveSeller(seller.id)}
+                              onClick={() => handleApproveSeller(seller._id || seller.id)}
                               style={{
                                 padding: '6px 12px',
                                 borderRadius: '6px',
@@ -224,7 +224,7 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
                             </button>
                             <button
                               type="button"
-                              onClick={() => openRejectionModal(seller.id)}
+                              onClick={() => openRejectionModal(seller._id || seller.id)}
                               style={{
                                 padding: '6px 12px',
                                 borderRadius: '6px',

@@ -7,6 +7,7 @@ import { FiTrendingUp, FiShield } from "react-icons/fi";
 import AuthLayout from "../../components/AuthLayout/AuthLayout";
 
 import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
+import { registerSeller } from "../../api/seller";
 
 const SellerRegister = () => {
   const [fullName, setFullName] = useState("");
@@ -103,13 +104,8 @@ const SellerRegister = () => {
     }
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Create seller registration data with approved status
       const sellerData = {
-        id: "seller_" + Date.now(),
-        fullName,
+        name: fullName,
         storeName,
         email,
         phone,
@@ -119,27 +115,20 @@ const SellerRegister = () => {
         state,
         pincode,
         password,
-        status: "approved",
-        registeredAt: new Date().toISOString()
       };
 
-      // Store in localStorage as approved sellers
-      const approvedSellers = JSON.parse(localStorage.getItem("approvedSellers") || "[]");
-      approvedSellers.push(sellerData);
-      localStorage.setItem("approvedSellers", JSON.stringify(approvedSellers));
-
-      console.log("Seller registration completed and approved:", sellerData);
+      await registerSeller(sellerData);
 
       // Redirect to login with success message
       navigate("/seller/login", { 
         state: { 
           registrationSuccess: true,
-          message: "Registration completed and approved successfully" 
+          message: "Registration completed successfully. Please wait for admin approval." 
         } 
       });
 
     } catch (error) {
-      alert(error.message || "Registration failed. Please try again.");
+      alert(error.response?.data?.message || error.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }

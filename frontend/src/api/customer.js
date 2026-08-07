@@ -9,6 +9,7 @@ export const resetPassword = (token, payload) => apiClient.put(`/customer/reset-
 // profile
 export const getProfile = () => apiClient.get("/customer/profile").then((r) => r.data);
 export const updateProfile = (payload) => apiClient.put("/customer/profile", payload).then((r) => r.data);
+export const uploadAvatar = (payload) => apiClient.post("/customer/avatar", payload, { headers: { "Content-Type": "multipart/form-data" } }).then((r) => r.data);
 export const updatePassword = (payload) => apiClient.put("/customer/password", payload).then((r) => r.data);
 //
 // Fixed: Pass the email/identifier correctly inside the request body payload configuration for Axios delete

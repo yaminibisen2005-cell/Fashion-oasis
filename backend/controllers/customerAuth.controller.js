@@ -6,6 +6,7 @@ import crypto from 'crypto';
 // Helper function to send email via Brevo SMTP
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/emailService.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
@@ -479,6 +480,37 @@ export const googleAuth = async (req, res, next) => {
         phone: customer.phone || '',
         avatar: customer.avatar,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// @desc    Upload customer avatar
+// @route   POST /api/v1/customer/avatar
+export const uploadAvatar = async (req, res, next) => {
+  try {
+    const customer = req.customer;
+
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    if (!req.file) {
+      return next(new AppError('Please upload an image file', 400));
+    }
+
+    // Upload to cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, 'fashion_oasis/avatars');
+
+    customer.avatar = result.secure_url;
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Avatar uploaded successfully',
+      data: {
+        avatar: customer.avatar
+      }
     });
   } catch (error) {
     next(error);

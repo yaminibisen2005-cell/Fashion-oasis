@@ -7,6 +7,9 @@ const sellerHeaders = () => ({
 export const loginSeller = (email, password) =>
   apiClient.post("/auth/seller/login", { email, password });
 
+export const registerSeller = (data) =>
+  apiClient.post("/auth/seller/register", data);
+
 export const getSellerProfile = () =>
   apiClient.get("/auth/seller/me", sellerHeaders());
 

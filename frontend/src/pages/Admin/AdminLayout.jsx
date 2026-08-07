@@ -82,7 +82,31 @@ const AdminLayout = () => {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, total: 0 });
 
-  // existing fetchProducts logic unchanged
+  useEffect(() => {
+    fetchProductsList(pagination.currentPage);
+  }, [pagination.currentPage]);
+
+  const fetchProductsList = async (page = 1) => {
+    try {
+      setLoadingProducts(true);
+      const data = await getProducts(page, 10);
+      if (data.success) {
+        setProducts(data.data);
+        if (data.pagination) {
+          setPagination((prev) => ({
+            ...prev,
+            totalPages: data.pagination.totalPages,
+            total: data.pagination.total,
+            currentPage: data.pagination.currentPage,
+          }));
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
 
   const [categories, setCategories] = useState([]);
 
@@ -379,7 +403,7 @@ const AdminLayout = () => {
       const res = await axios.post("http://localhost:5000/api/v1/admin/products", newP, config);
       if (res.data.success) {
         // Simple optimistic update, but refreshing is safer for paginated data
-        await fetchProducts(1); // Fetch the first page to show newly added if sorted by newest
+        await fetchProductsList(1); // Fetch the first page to show newly added if sorted by newest
         return true;
       }
     } catch (err) {

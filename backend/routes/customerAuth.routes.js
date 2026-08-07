@@ -11,9 +11,11 @@ import {
   updateTwoFactor,
   getCart,
   saveCart,
-  googleAuth
+  googleAuth,
+  uploadAvatar
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
+import { uploadAvatarMiddleware } from '../middlewares/upload.middleware.js';
 import { protectCustomer } from '../middlewares/auth.middleware.js';
 import { customerRegisterSchema, customerLoginSchema, customerGoogleAuthSchema } from '../schemas/customer.schema.js';
 import { forgotPasswordSchema, resetPasswordSchema, updateProfileSchema, updatePasswordSchema, updateTwoFactorSchema, deleteAccountSchema } from '../schemas/validation.schemas.js';
@@ -28,6 +30,7 @@ router.put('/reset-password/:token', validate(resetPasswordSchema), resetPasswor
 
 router.get('/profile', protectCustomer, getProfile);
 router.put('/profile', protectCustomer, validate(updateProfileSchema), updateProfile);
+router.post('/avatar', protectCustomer, uploadAvatarMiddleware, uploadAvatar);
 
 router.put('/password', protectCustomer, validate(updatePasswordSchema), updatePassword);
 router.put('/two-factor', protectCustomer, validate(updateTwoFactorSchema), updateTwoFactor);

@@ -22,6 +22,7 @@ export const approveSeller = asyncHandler(async (req, res) => {
   const seller = await User.findById(id);
   if (!seller) throw new AppError('Seller not found', 404);
   seller.status = 'Active';
+  seller.pendingVerification = false;
   await seller.save();
   res.status(200).json({ success: true, data: seller });
 });

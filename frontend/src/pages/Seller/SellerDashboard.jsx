@@ -1173,13 +1173,18 @@ const ProfileSection = ({ profile, updateProfile }) => {
               <img src={form.img} alt={form.name} className="avatar-large" />
               <div className="avatar-info-box">
                 <h4>{form.storeName}</h4>
-                <p>Update your profile photo via URL</p>
+                <p>Update your profile photo</p>
                 <input
-                  type="text"
-                  className="url-input"
-                  placeholder="Image URL"
-                  value={form.img}
-                  onChange={(e) => setForm({ ...form, img: e.target.value })}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      setForm({ ...form, avatarFile: file, img: URL.createObjectURL(file) });
+                    }
+                  }}
+                  className="file-input"
+                  style={{ marginTop: '10px' }}
                 />
               </div>
             </div>
@@ -1637,13 +1642,24 @@ const SellerDashboard = () => {
 
   const handleUpdateProfile = async (p) => {
     try {
-      const res = await updateSellerProfile({
-        name: p.name,
-        email: p.email,
-        storeName: p.storeName,
-        phone: p.phone,
-        img: p.img
-      });
+      let payload;
+      if (p.avatarFile) {
+        payload = new FormData();
+        if (p.name) payload.append('name', p.name);
+        if (p.email) payload.append('email', p.email);
+        if (p.storeName) payload.append('storeName', p.storeName);
+        if (p.phone) payload.append('phone', p.phone);
+        payload.append('avatar', p.avatarFile);
+      } else {
+        payload = {
+          name: p.name,
+          email: p.email,
+          storeName: p.storeName,
+          phone: p.phone,
+          img: p.img
+        };
+      }
+      const res = await updateSellerProfile(payload);
       if (res.data?.success) {
         const u = res.data.data;
         setProfile(prev => ({ 

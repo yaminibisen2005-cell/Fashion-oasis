@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, trim: true },
     storeEmail: { type: String, lowercase: true, trim: true },
     storeLogo: { type: String, trim: true, maxlength: 3 },
-    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
+    status: { type: String, enum: ['Active', 'Inactive', 'Suspended'], default: 'Active' },
     pendingVerification: { type: Boolean, default: false }
   },
   { timestamps: true }

@@ -44,6 +44,7 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus, paginat
               <th>Product</th>
               <th>Category</th>
               <th>Material</th>
+              <th>Seller</th>
               <th>Price</th>
               <th>Stock</th>
               <th>Status</th>
@@ -53,7 +54,7 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus, paginat
           <tbody>
             {filteredProducts.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center py-4 text-muted">
+                <td colSpan="8" className="text-center py-4 text-muted">
                   No products found.
                 </td>
               </tr>
@@ -68,6 +69,7 @@ const ProductsSection = ({ products, deleteProduct, toggleProductStatus, paginat
                   </td>
                   <td>{prod.category}</td>
                   <td>{prod.material || "N/A"}</td>
+                  <td>{prod.seller?.name || "Admin"}</td>
                   <td>₹{prod.price.toLocaleString()}</td>
                   <td>{prod.stock}</td>
                   <td>
