@@ -1,53 +1,11 @@
-
-/* @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #F8F4EC;
-  color: #3E2C1C;
-  font-family: 'Poppins', sans-serif;
-}
-
-:root{
---primary:#C56A6A;
---primary-dark:#B75555;
---background:#FFFDFC;
---light:#FDF5F5;
---text:#3D2D2D;
---border:#E8DADA;
---rating:#FDBA12;
---success:#3FAF5A;
-}
-
-body{
-font-family:'Poppins',sans-serif;
-background:var(--background);
-color:var(--text);
-}
-h1,h2,h3,h4{
-font-family:'Playfair Display',serif;
-}
-a{
-text-decoration:none;
-color:inherit;
-}
-img{
-width:100%;
-display:block;
-}
-
-button{
-cursor:pointer;
-} */
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Allura&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
+/* ==========================================
+   FASHION OASIS DESIGN SYSTEM & GLOBAL STYLES
+========================================== */
+
 :root {
-  /* Fashion Oasis Brand Color Palette */
+  /* Brand Color Palette */
   --primary-pink: #EF6F8F;
   --hover-pink: #D95579;
   --gold-accent: #D4A04B;
@@ -67,12 +25,12 @@ cursor:pointer;
   --background-color: #FFF9F8;
   --card-shadow: 0 8px 24px rgba(239, 111, 143, 0.08);
 
-  /* Typography Design Tokens */
+  /* Typography Tokens */
   --heading-font: 'DM Serif Display', 'Cormorant Garamond', serif;
   --body-font: 'Poppins', sans-serif;
   --cursive-font: 'Allura', cursive;
 
-  /* Spacing System */
+  /* Spacing Tokens */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
@@ -101,17 +59,30 @@ cursor:pointer;
   --transition: all 0.3s ease;
 }
 
+/* ==========================================
+   GLOBAL RESETS
+========================================== */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--light-background);
   color: var(--body-text);
   font-family: var(--body-font);
-  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -119,19 +90,36 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--heading-color);
 }
 
-/* Numeric & Financial Values Typography Consistency */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ==========================================
+   TYPOGRAPHY & FORM CONTROLS
+========================================== */
+
 .price, .amount, .total, .stat-number, .rating-score, .price-value {
   font-family: var(--body-font);
   font-weight: 600;
   color: var(--primary-pink);
 }
 
-/* Global Form Input Consistency */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="tel"],
 input[type="number"],
+input[type="date"],
 select,
 textarea {
   font-family: var(--body-font);
@@ -141,6 +129,7 @@ textarea {
   background-color: #FFFFFF;
   color: var(--heading-color);
   transition: var(--transition-fast);
+  padding: 10px 14px;
 }
 
 input:focus,
@@ -180,7 +169,10 @@ input.input-error,
   }
 }
 
-/* Global Button Design System */
+/* ==========================================
+   BUTTON DESIGN SYSTEM
+========================================== */
+
 .btn-primary,
 .admin-btn-primary,
 .seller-btn-primary,
@@ -193,26 +185,45 @@ input.input-error,
   color: #FFFFFF;
   border: none;
   cursor: pointer;
+  padding: 12px 28px;
   box-shadow: 0 8px 20px rgba(239, 111, 143, 0.22);
   transition: var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-primary:hover,
 .admin-btn-primary:hover,
 .seller-btn-primary:hover,
 .fo-save-btn:hover {
-  background: linear-gradient(90deg, #d95579, #dc4c7c);
+  background: linear-gradient(90deg, #D95579, #DC4C7C);
   transform: translateY(-2px);
   box-shadow: 0 12px 25px rgba(239, 111, 143, 0.35);
 }
 
-/* Global Table & Badge Consistency */
+.btn-primary:disabled,
+.admin-btn-primary:disabled,
+.seller-btn-primary:disabled,
+.fo-save-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================
+   STATUS BADGES
+========================================== */
+
 .status-badge, .status-badge-inline {
   font-family: var(--body-font);
   font-size: 11px;
   font-weight: 600;
   padding: 4px 12px;
   border-radius: var(--radius-badge);
+  display: inline-block;
 }
 
 .status-badge.delivered, .status-badge-inline.delivered,
@@ -241,4 +252,3 @@ input.input-error,
   color: #D9363E;
   border: 1px solid #FFA39E;
 }
-
