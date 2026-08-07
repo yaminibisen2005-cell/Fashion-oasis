@@ -12,7 +12,7 @@ export const getAllSellers = asyncHandler(async (req, res) => {
 // Get pending seller verification requests (status Inactive and maybe a flag pendingVerification?)
 // Assuming pending sellers are those with status 'Inactive' and a field pendingVerification true
 export const getPendingSellers = asyncHandler(async (req, res) => {
-  const pending = await User.find({ role: 'seller', status: 'Inactive' }).lean();
+  const pending = await User.find({ role: 'seller', pendingVerification: true }).lean();
   res.status(200).json({ success: true, data: pending });
 });
 

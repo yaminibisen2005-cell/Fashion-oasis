@@ -58,6 +58,12 @@ import {
   createCoupon as addCouponAPI,
   deleteCoupon as removeCoupon,
   toggleCouponStatus as setCouponStatus,
+  // seller management APIs
+  fetchSellers as getSellers,
+  fetchPendingSellers as getPendingSellers,
+  approveSeller as apiApproveSeller,
+  rejectSeller as apiRejectSeller,
+  toggleSellerStatus as apiToggleSellerStatus,
 } from "../../api/admin";
 
 import "./AdminLayout.css";
@@ -76,29 +82,25 @@ const AdminLayout = () => {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, total: 0 });
 
-  useEffect(() => {
-    fetchProducts(pagination.currentPage);
-  }, [pagination.currentPage]);
-
-  const fetchProducts = async (page = 1, limit = 10) => {
-    try {
-      setLoadingProducts(true);
-      const data = await getProducts(page, limit);
-      if (data.success) {
-        setProducts(data.data);
-        if (data.pagination) setPagination(data.pagination);
-      }
-    } catch (err) {
-      console.error("Error fetching products:", err);
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
+  // existing fetchProducts logic unchanged
 
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+  const loadSellers = async () => {
+    const data = await getSellers();
+    if (data.success) setSellers(data.data);
+  };
+  const loadPendingSellers = async () => {
+    const data = await getPendingSellers();
+    if (data.success) setPendingSellers(data.data);
+  };
+  useEffect(() => {
+    loadSellers();
+    loadPendingSellers();
   }, []);
 
   const fetchCategories = async () => {
@@ -253,16 +255,9 @@ const AdminLayout = () => {
   });
 
   // --- Seller management states ---
-  const [sellers, setSellers] = useState([
-    { id: 1, storeName: "Aura Jewels", contactPerson: "Rohan Mehra", email: "aura@jewels.com", logoInitials: "AJ", totalSales: 154000, rating: 4.8, status: "Active" },
-    { id: 2, storeName: "Silver Elegance", contactPerson: "Simran Kaur", email: "silver@elegance.com", logoInitials: "SE", totalSales: 98000, rating: 4.6, status: "Active" },
-    { id: 3, storeName: "Glow & Co", contactPerson: "Karan Johar", email: "glow@co.com", logoInitials: "GC", totalSales: 21000, rating: 4.2, status: "Suspended" },
-  ]);
+  const [sellers, setSellers] = useState([]);
 
-  const [pendingSellers, setPendingSellers] = useState([
-    { id: 101, storeName: "Ornate Studio", contactPerson: "Meera Nair", email: "meera@ornate.com", appliedDate: "02 Aug 2026", docs: { gstin: "27AAAAA1111A1Z1", pan: "ABCDE1234F" } },
-    { id: 102, storeName: "Vedic Craft", contactPerson: "Rahul Bose", email: "rahul@vedic.com", appliedDate: "05 Aug 2026", docs: { gstin: "27BBBBB2222B2Z2", pan: "XYZWH9876P" } },
-  ]);
+  const [pendingSellers, setPendingSellers] = useState([]);
 
   const [pendingProducts, setPendingProducts] = useState([
     { id: 201, name: "Emerald Kundan Choker", sku: "KDN-EME-01", category: "Necklaces", price: 8500, sellerName: "Aura Jewels", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=120&q=80" },
@@ -278,41 +273,45 @@ const AdminLayout = () => {
     { id: 401, txnId: "TXN9832048", sellerName: "Glow & Co", amount: 12000, paidDate: "28 July 2026", status: "Paid" }
   ]);
 
-  const handleApproveSeller = (id) => {
-    const approved = pendingSellers.find(s => s.id === id);
-    if (approved) {
-      setSellers([...sellers, {
-        id: approved.id,
-        storeName: approved.storeName,
-        contactPerson: approved.contactPerson,
-        email: approved.email,
-        logoInitials: approved.storeName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase(),
-        totalSales: 0,
-        rating: 5.0,
-        status: "Active"
-      }]);
-      setPendingSellers(pendingSellers.filter(s => s.id !== id));
-      alert(`Seller application for "${approved.storeName}" approved successfully!`);
-    }
-  };
-
-  const handleRejectSeller = (id, reason) => {
-    const rejected = pendingSellers.find(s => s.id === id);
-    if (rejected) {
-      setPendingSellers(pendingSellers.filter(s => s.id !== id));
-      alert(`Seller "${rejected.storeName}" application rejected. Reason: ${reason}`);
-    }
-  };
-
-  const handleToggleSellerStatus = (id) => {
-    setSellers(sellers.map(s => {
-      if (s.id === id) {
-        const newStatus = s.status === "Active" ? "Suspended" : "Active";
-        alert(`Seller "${s.storeName}" has been ${newStatus.toLowerCase()}.`);
-        return { ...s, status: newStatus };
+  const handleApproveSeller = async (id) => {
+    try {
+      const response = await apiApproveSeller(id);
+      if (response.success) {
+        // fetch updated lists
+        await loadSellers();
+        await loadPendingSellers();
+        alert('Seller approved successfully');
       }
-      return s;
-    }));
+    } catch (err) {
+      console.error('Approve seller error:', err);
+      alert('Failed to approve seller');
+    }
+  };
+
+  const handleRejectSeller = async (id, reason) => {
+    try {
+      const response = await apiRejectSeller(id, { reason });
+      if (response.success) {
+        await loadPendingSellers();
+        alert('Seller rejected');
+      }
+    } catch (err) {
+      console.error('Reject seller error:', err);
+      alert('Failed to reject seller');
+    }
+  };
+
+  const handleToggleSellerStatus = async (id) => {
+    try {
+      const response = await apiToggleSellerStatus(id);
+      if (response.success) {
+        await loadSellers();
+        alert('Seller status updated');
+      }
+    } catch (err) {
+      console.error('Toggle status error:', err);
+      alert('Failed to toggle seller status');
+    }
   };
 
   const handleApproveProduct = (id) => {

@@ -57,6 +57,13 @@ export const fetchDashboardData = () => {
   }));
 };
 
+// seller management
+export const fetchSellers = () => apiClient.get('/admin/sellers', adminHeaders()).then(r => r.data);
+export const fetchPendingSellers = () => apiClient.get('/admin/sellers/pending', adminHeaders()).then(r => r.data);
+export const approveSeller = (id) => apiClient.patch(`/admin/sellers/${id}/approve`, {}, adminHeaders()).then(r => r.data);
+export const rejectSeller = (id, payload) => apiClient.delete(`/admin/sellers/${id}`, { ...adminHeaders(), data: payload }).then(r => r.data);
+export const toggleSellerStatus = (id) => apiClient.patch(`/admin/sellers/${id}/status`, {}, adminHeaders()).then(r => r.data);
+
 // analytics
 export const fetchAnalytics = (days = 30) => {
   return apiClient.get(`/admin/analytics?days=${days}`, adminHeaders()).then((r) => r.data.data);

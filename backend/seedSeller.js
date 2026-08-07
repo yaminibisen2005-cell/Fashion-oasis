@@ -17,7 +17,8 @@ const seller = await User.create({
   email: 'seller@gmail.com',
   password: 'Bimal@gmail.com',
   role: 'seller',
-  status: 'Active',
+  status: 'Inactive',
+  pendingVerification: true,
 });
 
 console.log('Seller created:', seller.email, '| id:', seller._id);
