@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
-import { FaCheckCircle, FaWhatsapp, FaArrowRight, FaDownload } from "react-icons/fa";
+import { FaCheckCircle, FaArrowRight, FaDownload } from "react-icons/fa";
 import "./ThankYou.css";
 
 const ThankYou = () => {
@@ -11,55 +11,9 @@ const ThankYou = () => {
   const navigate = useNavigate();
   
   const [showDetails, setShowDetails] = useState(false);
-  const [whatsappSent, setWhatsappSent] = useState(false);
-  const [loadingWhatsApp, setLoadingWhatsApp] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
 
   const firstName = shippingAddress.fullName.split(" ")[0] || "Customer";
-
-  // Share formatted bill details on WhatsApp
-  const handleWhatsAppSend = () => {
-    setLoadingWhatsApp(true);
-    setTimeout(() => {
-      setLoadingWhatsApp(false);
-      setWhatsappSent(true);
-      
-      const invoiceNo = `INV-2025-${currentOrder.orderId}`;
-      let itemsList = "";
-      currentOrder.items.forEach((item, idx) => {
-        itemsList += `${idx + 1}. ${item.product.name} x ${item.quantity} - ₹${(item.product.price * item.quantity).toLocaleString()}\n`;
-      });
-      
-      const message = 
-`🛍️ *FASHION OASIS - INVOICE* 🛍️
------------------------------------
-*Invoice No:* #${invoiceNo}
-*Date:* ${currentOrder.date}
-*Status:* Paid (SUCCESS)
-
-*Company Details:*
-Fashion Oasis Ltd.
-Bandra West, Mumbai
-GSTIN: 27FASHIOASIS123
-
-*Customer Details:*
-Name: ${shippingAddress.fullName}
-Phone: ${shippingAddress.phone}
-Address: ${shippingAddress.address}, ${shippingAddress.address2 ? shippingAddress.address2 + ', ' : ''}${shippingAddress.city}, ${shippingAddress.state} - ${shippingAddress.pincode}
-
-*Items:*
-${itemsList}
-*Subtotal:* ₹${currentOrder.subtotal.toLocaleString()}
-${currentOrder.discount > 0 ? `*Discount (10%):* - ₹${currentOrder.discount.toLocaleString()}\n` : ''}*Shipping:* FREE
-*Total Paid:* ₹${currentOrder.total.toLocaleString()}
------------------------------------
-Thank you for shopping with us!
-Track order: http://localhost:5173/track-order`;
-
-      const encodedMsg = encodeURIComponent(message);
-      window.open(`https://api.whatsapp.com/send?text=${encodedMsg}`, "_blank");
-    }, 800);
-  };
 
   // Automated PDF bill download using html2pdf.js dynamically loaded from CDN
   const handleDownloadBill = () => {
@@ -184,24 +138,6 @@ Track order: http://localhost:5173/track-order`;
                   </>
                 )}
               </button>
-              
-              <button
-                className={`ty-btn-whatsapp ${whatsappSent ? "sent" : ""} ${
-                  loadingWhatsApp ? "loading" : ""
-                }`}
-                onClick={handleWhatsAppSend}
-                disabled={loadingWhatsApp}
-              >
-                {loadingWhatsApp ? (
-                  <span className="spinner"></span>
-                ) : whatsappSent ? (
-                  "SENT ON WHATSAPP!"
-                ) : (
-                  <>
-                    <FaWhatsapp /> SHARE BILL ON WHATSAPP
-                  </>
-                )}
-              </button>
             </div>
 
             {/* Expandable Order Details Card */}
@@ -281,10 +217,10 @@ Track order: http://localhost:5173/track-order`;
             <div style={{ width: "48%" }}>
               <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "#D4AF37", borderBottom: "1px solid #F7E3E7", paddingBottom: "5px", marginBottom: "10px" }}>Sold By</h3>
               <p style={{ fontSize: "12px", margin: "0 0 4px 0" }}><strong>Fashion Oasis Ltd.</strong></p>
-              <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>123 MG Road, Bandra West</p>
-              <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>Mumbai, Maharashtra - 400050</p>
+              <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>Newton Garden Apartment, Jagdeo Path</p>
+              <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>Patna, Bihar – 800014, India</p>
               <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>Email: support@fashionoasis.com</p>
-              <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>GSTIN: </p>
+              <p style={{ fontSize: "12px", margin: "0 0 4px 0", color: "#555" }}>GSTIN: 10AABCF1234M1Z5</p>
             </div>
           <div style={{ width: "48%" }}>
             <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "#D4AF37", borderBottom: "1px solid #F7E3E7", paddingBottom: "5px", marginBottom: "10px" }}>Billing & Shipping Address</h3>
@@ -299,8 +235,8 @@ Track order: http://localhost:5173/track-order`;
         {/* Order Details Banner */}
         <div style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#FFF8FA", borderRadius: "8px", padding: "12px 18px", marginBottom: "30px", border: "1px solid #F7E3E7" }}>
           <div style={{ fontSize: "13px" }}>Order ID: <strong>#{currentOrder.orderId}</strong></div>
-          <div style={{ fontSize: "13px" }}>Payment Mode: <strong>{currentOrder.paymentMethod || "ONLINE"}</strong></div>
-          <div style={{ fontSize: "13px" }}>Payment Status: <strong style={{ color: "#2BA84A" }}>PAID</strong></div>
+          <div style={{ fontSize: "13px" }}>Payment Mode: <strong>{currentOrder.paymentMethod || "UPI / ONLINE"}</strong></div>
+          <div style={{ fontSize: "13px" }}>Payment Status: <strong style={{ color: "#2BA84A" }}>{currentOrder.paymentStatus || "PAID"}</strong></div>
         </div>
 
         {/* Items Table */}

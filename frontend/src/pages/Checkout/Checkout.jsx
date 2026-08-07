@@ -1,16 +1,16 @@
- import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import apiClient from "../../api/client";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import { FaLock, FaShieldAlt, FaTruck, FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
 import "./Checkout.css";
 
 const Checkout = () => {
   const {
     cart,
     buyNowItem,
-    setBuyNowItem,
     totals,
     shippingAddress,
     setShippingAddress,
@@ -23,7 +23,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const paymentMethod = "cod";
+  // Payment Method State: 'upi' or 'cod' (only 1 selectable at a time)
+  const [paymentMethod, setPaymentMethodState] = useState("upi");
 
   const [localBillingAddress, setLocalBillingAddress] = useState({
     fullName: "",
@@ -74,7 +75,7 @@ const Checkout = () => {
         image: item.product.image,
       }));
 
-      const finalBillingAddress = sameAsShipping 
+      const finalBillingAddress = sameAsShipping
         ? {
             fullName: shippingAddress.fullName,
             phoneNumber: shippingAddress.phone,
@@ -106,17 +107,12 @@ const Checkout = () => {
           pincode: shippingAddress.pincode,
         },
         billingAddress: finalBillingAddress,
-        paymentMethod,
+        paymentMethod: paymentMethod === "upi" ? "UPI (Pay Online)" : "Cash on Delivery (COD)",
         items: formattedItems,
         totalAmount: totals.total,
       };
 
-      const activeToken = localStorage.getItem("token") || localStorage.getItem("customerToken");
-      console.log("TOKEN:", activeToken);
-      console.log("ORDER PAYLOAD:", orderPayload);
-
       const response = await apiClient.post("/orders/checkout", orderPayload);
-      console.log("API RESPONSE:", response.data);
 
       if (response.data?.success) {
         placeOrder();
@@ -135,19 +131,23 @@ const Checkout = () => {
       <Navbar />
       <div className="checkout-page">
         <div className="container">
-          {errorMessage && <div className="checkout-error-banner" style={{ color: "red", marginBottom: "15px", textAlign: "center" }}>{errorMessage}</div>}
-          
+          {errorMessage && (
+            <div className="checkout-error-banner">
+              {errorMessage}
+            </div>
+          )}
+
           <form onSubmit={handlePlaceOrderSubmit} className="checkout-form-wrapper">
             
-            {/* Left Column: Form Fields */}
+            {/* Left Column: Delivery & Payment Details */}
             <div className="checkout-fields">
               
-              {/* Shipping Address */}
+              {/* Shipping Address Card */}
               <div className="checkout-card">
                 <h2>Shipping Address</h2>
                 <div className="checkout-grid">
                   <div className="form-group full-width">
-                    <label>Full Name</label>
+                    <label>Full Name *</label>
                     <input
                       type="text"
                       name="fullName"
@@ -159,26 +159,26 @@ const Checkout = () => {
                   </div>
 
                   <div className="form-group full-width">
-                    <label>Phone Number</label>
+                    <label>Phone Number *</label>
                     <input
                       type="tel"
                       name="phone"
                       value={shippingAddress.phone || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="Enter your phone number"
+                      placeholder="Enter 10-digit mobile number"
                     />
                   </div>
 
                   <div className="form-group full-width">
-                    <label>Address</label>
+                    <label>Street Address *</label>
                     <input
                       type="text"
                       name="address"
                       value={shippingAddress.address || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="Enter street address, P.O. Box"
+                      placeholder="Flat, House no., Building, Street"
                     />
                   </div>
 
@@ -189,49 +189,49 @@ const Checkout = () => {
                       name="address2"
                       value={shippingAddress.address2 || ""}
                       onChange={handleShippingChange}
-                      placeholder="Apartment, suite, unit, building"
+                      placeholder="Landmark, Area, Colony"
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>City</label>
+                    <label>City *</label>
                     <input
                       type="text"
                       name="city"
                       value={shippingAddress.city || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="Enter city"
+                      placeholder="City / Town"
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>State</label>
+                    <label>State *</label>
                     <input
                       type="text"
                       name="state"
                       value={shippingAddress.state || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="Enter state"
+                      placeholder="State"
                     />
                   </div>
 
                   <div className="form-group full-width">
-                    <label>Pincode</label>
+                    <label>Pincode *</label>
                     <input
                       type="text"
                       name="pincode"
                       value={shippingAddress.pincode || ""}
                       onChange={handleShippingChange}
                       required
-                      placeholder="Enter 6 digit pincode"
+                      placeholder="6-digit PIN code"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Billing Address */}
+              {/* Billing Address Card */}
               <div className="checkout-card">
                 <div className="billing-header">
                   <h2>Billing Address</h2>
@@ -249,7 +249,7 @@ const Checkout = () => {
                 {!sameAsShipping && (
                   <div className="checkout-grid fade-in">
                     <div className="form-group full-width">
-                      <label>Full Name</label>
+                      <label>Full Name *</label>
                       <input
                         type="text"
                         name="fullName"
@@ -261,7 +261,7 @@ const Checkout = () => {
                     </div>
 
                     <div className="form-group full-width">
-                      <label>Phone Number</label>
+                      <label>Phone Number *</label>
                       <input
                         type="tel"
                         name="phone"
@@ -273,7 +273,7 @@ const Checkout = () => {
                     </div>
 
                     <div className="form-group full-width">
-                      <label>Address</label>
+                      <label>Address *</label>
                       <input
                         type="text"
                         name="address"
@@ -291,47 +291,93 @@ const Checkout = () => {
                         name="address2"
                         value={localBillingAddress.address2}
                         onChange={handleBillingChange}
-                        placeholder="Apartment, suite, unit, building"
+                        placeholder="Landmark, Area, Colony"
                       />
                     </div>
 
                     <div className="form-group">
-                      <label>City</label>
+                      <label>City *</label>
                       <input
                         type="text"
                         name="city"
                         value={localBillingAddress.city}
                         onChange={handleBillingChange}
                         required
-                        placeholder="Enter billing city"
+                        placeholder="City"
                       />
                     </div>
 
                     <div className="form-group">
-                      <label>State</label>
+                      <label>State *</label>
                       <input
                         type="text"
                         name="state"
                         value={localBillingAddress.state}
                         onChange={handleBillingChange}
                         required
-                        placeholder="Enter billing state"
+                        placeholder="State"
                       />
                     </div>
 
                     <div className="form-group full-width">
-                      <label>Pincode</label>
+                      <label>Pincode *</label>
                       <input
                         type="text"
                         name="pincode"
                         value={localBillingAddress.pincode}
                         onChange={handleBillingChange}
                         required
-                        placeholder="Enter billing pincode"
+                        placeholder="PIN code"
                       />
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Payment Method Card */}
+              <div className="checkout-card payment-method-card">
+                <h2>Payment Method</h2>
+                <p className="payment-subtitle">Choose your preferred payment method to proceed.</p>
+
+                <div className="payment-options">
+                  {/* Option 1: UPI (Pay Online) */}
+                  <label className={`payment-radio-label ${paymentMethod === "upi" ? "selected" : ""}`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="upi"
+                      checked={paymentMethod === "upi"}
+                      onChange={(e) => setPaymentMethodState(e.target.value)}
+                    />
+                    <span className="radio-circle"></span>
+                    <div className="payment-option-content">
+                      <div className="payment-option-header">
+                        <FaMobileAlt className="payment-icon" />
+                        <span className="payment-title">UPI (Pay Online)</span>
+                      </div>
+                      <span className="payment-desc">Pay instantly using Google Pay, PhonePe, Paytm or BHIM UPI</span>
+                    </div>
+                  </label>
+
+                  {/* Option 2: Cash on Delivery (COD) */}
+                  <label className={`payment-radio-label ${paymentMethod === "cod" ? "selected" : ""}`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cod"
+                      checked={paymentMethod === "cod"}
+                      onChange={(e) => setPaymentMethodState(e.target.value)}
+                    />
+                    <span className="radio-circle"></span>
+                    <div className="payment-option-content">
+                      <div className="payment-option-header">
+                        <FaMoneyBillWave className="payment-icon" />
+                        <span className="payment-title">Cash on Delivery (COD)</span>
+                      </div>
+                      <span className="payment-desc">Pay cash or UPI when your parcel arrives</span>
+                    </div>
+                  </label>
+                </div>
               </div>
 
             </div>
@@ -382,21 +428,44 @@ const Checkout = () => {
                 <div className="summary-divider"></div>
 
                 <div className="summary-row total">
-                  <span>Total</span>
+                  <span>Total Payable</span>
                   <span>₹{totals.total.toLocaleString()}</span>
                 </div>
 
-                <button
-                  type="submit"
-                  className={`place-order-btn ${loading ? "loading" : ""}`}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <span className="spinner"></span>
+                {/* Conditional Payment Button & Note */}
+                <div className="payment-action-box">
+                  <button
+                    type="submit"
+                    className={`place-order-btn ${loading ? "loading" : ""}`}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className="spinner"></span>
+                    ) : paymentMethod === "upi" ? (
+                      "PAY NOW"
+                    ) : (
+                      "PLACE ORDER"
+                    )}
+                  </button>
+
+                  {/* Payment Note based on selection */}
+                  {paymentMethod === "cod" ? (
+                    <p className="payment-note cod-note">
+                      <FaTruck style={{ marginRight: "6px", color: "#2BA84A" }} />
+                      Pay when your order is delivered.
+                    </p>
                   ) : (
-                    "PLACE ORDER"
+                    <p className="payment-note upi-note">
+                      <FaLock style={{ marginRight: "6px", color: "#EF6F8F" }} />
+                      100% Secure Encrypted Online Payment
+                    </p>
                   )}
-                </button>
+                </div>
+
+                <div className="security-trust-badge">
+                  <FaShieldAlt style={{ color: "#D4AF37", fontSize: "16px" }} />
+                  <span>30-Day Easy Returns & Money Back Guarantee</span>
+                </div>
               </div>
             </div>
 

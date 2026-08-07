@@ -13,6 +13,7 @@ import {
   FaShoppingBag,
   FaStar,
   FaTruck,
+  FaCheckCircle,
 } from "react-icons/fa";
 import dashboardbanner from "../../assets/shop/hero-banner1.png";
 
@@ -26,12 +27,13 @@ const safeStoredJson = (key) => {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { addToCart } = useContext(ShopContext);
+  const { addToCart, wishlist, addToWishlist, removeFromWishlist } = useContext(ShopContext);
   const [userName, setUserName] = useState("User");
   const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0", lastOrderDate: "" });
   const [orders, setOrders] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toastMsg, setToastMsg] = useState("");
 
   useEffect(() => {
     const customerInfo = safeStoredJson("customerInfo");
@@ -45,8 +47,6 @@ function Dashboard() {
         setLoading(true);
         const statsRes = await getCustomerDashboardStats();
         const data = statsRes?.data || statsRes || {};
-
-        console.log("Customer Dashboard Stats Data:", data);
 
         setStats({
           totalOrders: String(data.totalOrders ?? 0),
@@ -72,6 +72,30 @@ function Dashboard() {
     loadDashboard();
   }, []);
 
+  const isInWishlist = (productId) => {
+    return wishlist?.some(
+      (item) => String(item.product?.id || item.product?._id || item.id || item._id) === String(productId)
+    );
+  };
+
+  const handleWishlistToggle = async (product) => {
+    const prodId = product.id || product._id;
+    if (isInWishlist(prodId)) {
+      await removeFromWishlist(prodId);
+      setToastMsg(`"${product.name}" removed from wishlist.`);
+    } else {
+      await addToWishlist(product);
+      setToastMsg(`"${product.name}" added to wishlist!`);
+    }
+    setTimeout(() => setToastMsg(""), 3000);
+  };
+
+  const handleAddToCart = (product) => {
+    addToCart(product, 1);
+    setToastMsg(`"${product.name}" added to cart!`);
+    setTimeout(() => setToastMsg(""), 3000);
+  };
+
   const statCards = [
     { icon: <FaShoppingBag />, title: "Total Orders", value: stats.totalOrders, subtitle: "Active orders" },
     { icon: <FaHeart />, title: "Wishlist", value: stats.wishlistCount, subtitle: "Items" },
@@ -87,6 +111,27 @@ function Dashboard() {
 
   return (
     <DashboardLayout>
+      {toastMsg && (
+        <div style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          backgroundColor: "#EF6F8F",
+          color: "#fff",
+          padding: "12px 20px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 15px rgba(239, 111, 143, 0.3)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          fontWeight: "600",
+          fontSize: "14px"
+        }}>
+          <FaCheckCircle /> {toastMsg}
+        </div>
+      )}
+
       <section className="dashboard-hero" style={{ backgroundImage: `url(${dashboardbanner})` }}>
         <div className="hero-content">
           <span className="hero-eyebrow">FASHION OASIS • MEMBER PERKS</span>
@@ -162,13 +207,23 @@ function Dashboard() {
         <div className="recommendations-grid">
           {loading ? <p className="dashboard-empty-state">Loading recommendations...</p> : recommendations.length === 0 ? <p className="dashboard-empty-state">No recommendations available right now.</p> : recommendations.map((product) => (
             <div className="recommendation-card" key={product.id || product._id}>
-              <button className="wishlist-btn" aria-label={`Add ${product.name} to wishlist`}><FaRegHeart /></button>
+              <button
+                className={`wishlist-btn ${isInWishlist(product.id || product._id) ? "active" : ""}`}
+                onClick={() => handleWishlistToggle(product)}
+                aria-label={`Wishlist ${product.name}`}
+              >
+                {isInWishlist(product.id || product._id) ? (
+                  <FaHeart style={{ color: "#EF6F8F" }} />
+                ) : (
+                  <FaRegHeart />
+                )}
+              </button>
               <div className="img-wrapper"><img src={product.image} alt={product.name} /></div>
               <div className="recommendation-details">
                 <span className="recommendation-material">{product.material}</span><h6>{product.name}</h6>
                 <div className="rating"><span className="stars">★★★★★</span><span className="reviews-count">({product.reviewsCount || 0})</span></div>
                 <div className="pricing"><span className="price">₹{product.price}</span>{product.originalPrice && <span className="original-price">₹{product.originalPrice}</span>}</div>
-                <button className="add-to-cart-btn" onClick={() => addToCart(product)}><FaShoppingBag /> Add to Cart</button>
+                <button className="add-to-cart-btn" onClick={() => handleAddToCart(product)}><FaShoppingBag /> Add to Cart</button>
               </div>
             </div>
           ))}

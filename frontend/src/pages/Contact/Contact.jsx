@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import contactBanner from "../../assets/about-banner.png";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import apiClient from "../../api/client";
 
 const Contact = () => {
 
@@ -29,7 +30,9 @@ const [formData, setFormData] = useState(initialForm);
 const [errors, setErrors] = useState({});
 const [loading, setLoading] = useState(false);
 const [success, setSuccess] = useState(false);
-  const [activeFAQ, setActiveFAQ] = useState(null);
+const [apiError, setApiError] = useState("");
+const [activeFAQ, setActiveFAQ] = useState(null);
+
 const handleChange = (e) => {
   const { name, value } = e.target;
 
@@ -42,7 +45,9 @@ const handleChange = (e) => {
     ...prev,
     [name]: "",
   }));
+  setApiError("");
 };
+
 const validateForm = () => {
   const newErrors = {};
 
@@ -60,8 +65,8 @@ const validateForm = () => {
 
   if (!formData.phone.trim()) {
     newErrors.phone = "Phone number is required";
-  } else if (!/^[0-9]{10}$/.test(formData.phone)) {
-    newErrors.phone = "Enter a valid 10-digit phone number";
+  } else if (!/^[0-9+-\s()]{7,15}$/.test(formData.phone)) {
+    newErrors.phone = "Enter a valid phone number";
   }
 
   if (!formData.subject.trim()) {
@@ -76,22 +81,32 @@ const validateForm = () => {
 
   return Object.keys(newErrors).length === 0;
 };
-const handleSubmit = (e) => {
+
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (!validateForm()) return;
 
   setLoading(true);
+  setSuccess(false);
+  setApiError("");
 
-  setTimeout(() => {
+  try {
+    const res = await apiClient.post("/inquiry", formData);
+    if (res.data?.success) {
+      setSuccess(true);
+      setFormData(initialForm);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+    } else {
+      setApiError(res.data?.message || "Failed to submit inquiry. Please try again.");
+    }
+  } catch (err) {
+    setApiError(err.response?.data?.message || err.message || "Failed to submit inquiry. Please try again.");
+  } finally {
     setLoading(false);
-    setSuccess(true);
-    setFormData(initialForm);
-
-    setTimeout(() => {
-      setSuccess(false);
-    }, 3000);
-  }, 1500);
+  }
 };
 const faqs = [
   {
@@ -375,6 +390,11 @@ const faqs = [
 {success && (
   <div className="success-message">
     ✅ Thank you! Your inquiry has been sent successfully.
+  </div>
+)}
+{apiError && (
+  <div className="error-text" style={{ marginTop: "10px", fontSize: "14px", color: "#ff4d4f" }}>
+    ⚠️ {apiError}
   </div>
 )}
 

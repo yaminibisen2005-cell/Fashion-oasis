@@ -6,7 +6,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import ScrollToTop from "./components/ScrollToTop";
-import WhatsAppButton from "./components/WhatsAppButton/WhatsAppButton";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Home from "./pages/Home";
 import About from "./pages/About/About";
@@ -51,7 +50,6 @@ function App() {
     <ShopProvider>
       <Router>
         <ScrollToTop />
-        <WhatsAppButton />
 
         <Routes>
           <Route path="/" element={<Home />} />

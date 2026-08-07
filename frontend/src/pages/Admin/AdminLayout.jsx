@@ -33,6 +33,7 @@ import CustomersSection from "./Sections/CustomersSection";
 import ReviewsSection from "./Sections/ReviewsSection";
 import CouponsSection from "./Sections/CouponsSection";
 import OffersSection from "./Sections/OffersSection";
+import InquiriesSection from "./Sections/InquiriesSection";
 import AnalyticsSection from "./Sections/AnalyticsSection";
 import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
@@ -596,6 +597,7 @@ const AdminLayout = () => {
     { name: "Reviews", path: "reviews", icon: <FaStar /> },
     { name: "Coupons", path: "coupons", icon: <FaPercentage /> },
     { name: "Special Offers", path: "offers", icon: <FaGift /> },
+    { name: "Contact Inquiries", path: "inquiries", icon: <FaEnvelope /> },
     { name: "Analytics", path: "analytics", icon: <FaChartLine /> },
     { name: "Settings", path: "settings", icon: <FaCog /> },
   ];
@@ -757,6 +759,7 @@ const AdminLayout = () => {
               }
             />
             <Route path="offers" element={<OffersSection />} />
+            <Route path="inquiries" element={<InquiriesSection />} />
             <Route path="analytics" element={<AnalyticsSection />} />
             <Route
               path="sellers"
