@@ -1,4 +1,4 @@
-import "./Register.css";
+ import "./Register.css";
 import registerAuth from "../../assets/register-auth.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -6,6 +6,8 @@ import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash } from "react
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
 import { customerRegister } from "../../api/customer";
 import AuthLayout from "../../components/AuthLayout/AuthLayout";
+import { auth, googleProvider, signInWithPopup } from "../../firebase";
+import axios from "axios";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -21,7 +23,7 @@ const Register = () => {
 
   const navigate = useNavigate();
 
- const handleRegister = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setPasswordError("");
     setPhoneError("");
@@ -47,7 +49,6 @@ const Register = () => {
     }
 
     try {
-      // Single API call sending all fields including phoneNumber
       await customerRegister({ 
         firstName, 
         lastName, 
@@ -63,6 +64,35 @@ const Register = () => {
       alert(error.response?.data?.message || error.message || "Something went wrong");
     }
   };
+
+  // Google Login / Register Handler
+  const handleGoogleAuth = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+
+      const response = await axios.post("http://localhost:5000/api/v1/customer/google", {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        token: idToken
+      });
+
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("customerEmail", user.email);
+        localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
+
+        alert("Google Authentication Successful!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Google Auth Error:", error);
+      alert(error.response?.data?.message || "Google sign-in failed. Please try again.");
+    }
+  };
+
   const glassCardItems = [
     { icon: <FiAward />, text: "Certified Jewellery" },
     { icon: <FiShield />, text: "Secure Payments" },
@@ -213,7 +243,7 @@ const Register = () => {
         <span></span>
       </div>
 
-      <button type="button" className="google-btn anim-fade-up-btn-700">
+      <button type="button" className="google-btn anim-fade-up-btn-700" onClick={handleGoogleAuth}>
         <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"
           alt="Google"

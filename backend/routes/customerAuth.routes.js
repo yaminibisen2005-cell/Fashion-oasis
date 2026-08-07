@@ -8,10 +8,10 @@ import {
   updateProfile,
   updatePassword,
   deleteAccount,
-  updateTwoFactor ,
-  getCart,   // <-- IMPORT THIS
-  saveCart// <-- IMPORT THIS
-
+  updateTwoFactor,
+  getCart,
+  saveCart,
+  googleAuth
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { protectCustomer } from '../middlewares/auth.middleware.js';
@@ -22,20 +22,18 @@ const router = express.Router();
 
 router.post('/register', validate(customerRegisterSchema), registerCustomer);
 router.post('/login', validate(customerLoginSchema), loginCustomer);
-
-// Forgot & Reset Password routes
+router.post('/google', googleAuth);
 router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
 router.put('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 
-// Profile routes
 router.get('/profile', protectCustomer, getProfile);
 router.put('/profile', protectCustomer, validate(updateProfileSchema), updateProfile);
 
-// Account Settings Management routes
 router.put('/password', protectCustomer, validate(updatePasswordSchema), updatePassword);
-router.put('/two-factor', protectCustomer, validate(updateTwoFactorSchema), updateTwoFactor); // <-- ADD THIS ROUTE
+router.put('/two-factor', protectCustomer, validate(updateTwoFactorSchema), updateTwoFactor);
 router.delete('/account', protectCustomer, validate(deleteAccountSchema), deleteAccount);
 
 router.get('/cart', protectCustomer, getCart);
 router.post('/cart', protectCustomer, saveCart);
+
 export default router;

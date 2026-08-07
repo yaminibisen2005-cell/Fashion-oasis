@@ -392,3 +392,53 @@ export const saveCart = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Google Authentication (Sign up / Login)
+// @route   POST /api/v1/customer/auth/google
+export const googleAuth = async (req, res, next) => {
+  try {
+    const { name, email, photo } = req.body;
+
+    if (!email) {
+      return next(new AppError('Email is required for Google authentication', 400));
+    }
+
+    // Check if customer already exists
+    let customer = await Customer.findOne({ email });
+
+    if (!customer) {
+      // Split name into first and last name if available
+      const nameParts = (name || '').trim().split(' ');
+      const firstName = nameParts[0] || 'Customer';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Create a random secure password since they are logging in via Google
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+
+      customer = await Customer.create({
+        firstName,
+        lastName,
+        email,
+        password: randomPassword,
+        phone: '',
+      });
+    }
+
+    const token = signToken(customer._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Google authentication successful',
+      token,
+      data: {
+        id: customer._id,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email,
+        phone: customer.phone || '',
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
