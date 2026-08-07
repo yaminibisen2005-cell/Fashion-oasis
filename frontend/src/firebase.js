@@ -1,15 +1,16 @@
  import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
- const firebaseConfig = {
-  apiKey: "AIzaSyB304X43I42HdcN3F_sdkG2uau6Q2ttrG8",
-  authDomain: "fashion-oasis.firebaseapp.com",
-  projectId: "fashion-oasis",
-  storageBucket: "fashion-oasis.firebasestorage.app",
-  messagingSenderId: "785329050369",
-  appId: "1:785329050369:web:7de9dfd24288ead723c100",
-  measurementId: "G-E9B9Y92J4E"
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();

@@ -74,7 +74,7 @@ const Wishlist = () => {
       navigate("/cart");
     }, 400);
   };
-
+//
   if (loading) {
     return (
       <>
