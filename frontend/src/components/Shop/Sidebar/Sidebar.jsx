@@ -1,13 +1,14 @@
 import "./Sidebar.css";
+import { products as allProducts } from "../../../data/products";
 
-const categories = [
-  { name: "All Products", count: 12 },
-  { name: "Necklace", count: 3 },
-  { name: "Earrings", count: 3 },
-  { name: "Rings", count: 2 },
-  { name: "Bracelets", count: 2 },
-  { name: "Mangalsutra", count: 1 },
-  { name: "Wedding", count: 1 },
+const categoryNames = [
+  "All Products",
+  "Necklace",
+  "Earrings",
+  "Rings",
+  "Bracelets",
+  "Mangalsutra",
+  "Wedding",
 ];
 
 const materials = [
@@ -38,6 +39,15 @@ export default function Sidebar({
   setSelectedOccasions,
   onClearFilters,
 }) {
+  const categories = categoryNames.map((name) => {
+    if (name === "All Products") {
+      return { name, count: allProducts.length };
+    }
+    const count = allProducts.filter(
+      (item) => item.category && item.category.trim().toLowerCase() === name.trim().toLowerCase()
+    ).length;
+    return { name, count };
+  });
   const handleMaterialToggle = (material) => {
     setSelectedMaterials(prev =>
       prev.includes(material)

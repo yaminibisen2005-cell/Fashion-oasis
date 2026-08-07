@@ -128,7 +128,7 @@ const faqs = [
   <div className="contact-overlay"></div>
 
   <div className="contact-hero-content">
-   
+    <span className="contact-tag">GET IN TOUCH</span>
 
     <h1>Let's Start a Conversation</h1>
 

@@ -73,21 +73,20 @@ const Hero = () => {
                 <div className="row align-items-center hero-row">
                   <div className="col-lg-5 hero-content-col">
                     <div className="hero-content">
-                     
-                        
-                      
                       <h1>
                         Crafted
                         <span>With Love</span>
                       </h1>
+                      
                       <p>
-                        Timeless handcrafted jewellery designed with elegance
-                        and love to celebrate your unique style.
+                        Timeless handcrafted jewellery designed with elegance and love to celebrate your unique style.
                       </p>
+                      
                       <button onClick={() => navigate("/shop")}>
                         Explore Collection
-                        <FaArrowRight />
+                        <FaArrowRight className="btn-arrow" />
                       </button>
+                      
                       <div className="hero-features">
                         <div>
                           <FaHeart />

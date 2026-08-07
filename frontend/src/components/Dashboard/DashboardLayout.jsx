@@ -159,7 +159,13 @@ function DashboardLayout({ children, showProfile = true }) {
         </ul>
 
         <div className="logout">
-          <Link to="/" onClick={() => localStorage.clear()}>
+          <Link
+            to="/"
+            onClick={() => {
+              localStorage.clear();
+              window.dispatchEvent(new Event("storage"));
+            }}
+          >
             <FaSignOutAlt />
             <span>Logout</span>
           </Link>

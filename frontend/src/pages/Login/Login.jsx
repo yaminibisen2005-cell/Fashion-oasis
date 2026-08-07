@@ -1,6 +1,6 @@
  import "./Login.css";
 import loginAuth from "../../assets/login-auth.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
@@ -12,6 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,7 +21,6 @@ const Login = () => {
       const data = await customerLogin({ email, password });
       console.log("Login response data:", data);
 
-      // Robustly check top-level or nested response properties for token and user info
       const token = data.token || data.data?.token;
       const userInfo = data.data || data.user || data;
 
@@ -34,10 +34,15 @@ const Login = () => {
         localStorage.setItem("customerEmail", userInfo?.email || email);
       }
 
+      window.dispatchEvent(new Event("storage"));
+
       alert("Login Successful!");
       
-      // Navigate straight to your dashboard route
-      navigate("/");
+      // Extract target return URL if redirected from Checkout or Product Details
+      const fromPath = location.state?.from?.pathname || location.state?.from;
+      const redirectUrl = typeof fromPath === "string" ? fromPath : "/dashboard";
+
+      navigate(redirectUrl, { replace: true });
 
     } catch (error) {
       console.error("Login error:", error);

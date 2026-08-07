@@ -6,6 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import ScrollToTop from "./components/ScrollToTop";
+import WhatsAppButton from "./components/WhatsAppButton/WhatsAppButton";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Home from "./pages/Home";
 import About from "./pages/About/About";
@@ -36,6 +37,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
 import SellerLogin from "./pages/SellerAuth/SellerLogin";
 import SellerRegister from "./pages/SellerAuth/SellerRegister";
 import ProtectedSellerRoute from "./components/ProtectedSellerRoute/ProtectedSellerRoute";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   useEffect(() => {
@@ -49,6 +51,7 @@ function App() {
     <ShopProvider>
       <Router>
         <ScrollToTop />
+        <WhatsAppButton />
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -60,15 +63,75 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/thank-you" element={<ThankYou />} />
+          
+          {/* Purchase & Checkout Protected Routes */}
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/thank-you"
+            element={
+              <ProtectedRoute>
+                <ThankYou />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/track-order" element={<TrackOrder />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/profile" element={<DashboardProfile />} />
-          <Route path="/dashboard/orders" element={<DashboardOrders />} />
-          <Route path="/dashboard/wishlist" element={<DashboardWishlist />} />
-          <Route path="/dashboard/reviews" element={<DashboardReviews />} />
-          <Route path="/dashboard/settings" element={<DashboardSettings />} />
+
+          {/* Customer Dashboard Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/profile"
+            element={
+              <ProtectedRoute>
+                <DashboardProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/orders"
+            element={
+              <ProtectedRoute>
+                <DashboardOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/wishlist"
+            element={
+              <ProtectedRoute>
+                <DashboardWishlist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/reviews"
+            element={
+              <ProtectedRoute>
+                <DashboardReviews />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/settings"
+            element={
+              <ProtectedRoute>
+                <DashboardSettings />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />

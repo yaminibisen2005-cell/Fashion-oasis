@@ -130,7 +130,7 @@ function Dashboard() {
               <tbody>{orders.map((item, index) => (
                 <tr key={item.id || item._id || index}>
                   <td><div className="product"><img src={item.image} alt={item.product || item.name || "Product"} /><div className="product-details"><h6>{item.product || item.name}</h6><span className="order-id">{item.id || item.orderId}</span></div></div></td>
-                  <td>{item.date}</td><td><span className={`status ${item.status?.toLowerCase() || ""}`}>{item.status}</span></td><td className="amount">{item.amount}</td><td><button className="view-details-btn">View Details</button></td>
+                  <td>{item.date}</td><td><span className={`status ${item.status?.toLowerCase() || ""}`}>{item.status}</span></td><td className="amount">{item.amount}</td><td><button className="view-details-btn" onClick={() => navigate("/dashboard/orders")}>View Details</button></td>
                 </tr>
               ))}</tbody>
             </table>

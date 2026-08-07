@@ -23,7 +23,7 @@ import {
 function AccountSetting() {
   // Get logged-in customer details from local storage
   const storedUser = JSON.parse(localStorage.getItem("customerInfo")) || {};
-  const userEmail = storedUser.email || "";
+  const userEmail = storedUser.email || localStorage.getItem("customerEmail") || "";
 
   // Feedback states
   const [message, setMessage] = useState("");
@@ -163,6 +163,9 @@ function AccountSetting() {
 
         if (data.success) {
           localStorage.removeItem("customerInfo");
+          localStorage.removeItem("customerEmail");
+          localStorage.removeItem("token");
+          window.dispatchEvent(new Event("storage"));
           window.location.href = "/login";
         }
       } catch (err) {

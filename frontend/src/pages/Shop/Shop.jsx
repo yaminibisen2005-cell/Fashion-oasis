@@ -32,16 +32,11 @@ export default function Shop() {
     const filterParam = searchParams.get('filter');
 
     if (categoryParam) {
-      // Map URL category to product category
-      const categoryMap = {
-        'necklace': 'Necklace',
-        'earrings': 'Earrings',
-        'rings': 'Rings',
-        'bracelets': 'Bracelets',
-        'mangalsutra': 'Mangalsutra',
-        'wedding': 'Wedding',
-      };
-      setSelectedCategory(categoryMap[categoryParam] || categoryParam);
+      const knownCategories = ["Necklace", "Earrings", "Rings", "Bracelets", "Mangalsutra", "Wedding"];
+      const matched = knownCategories.find(
+        (cat) => cat.toLowerCase() === categoryParam.trim().toLowerCase()
+      );
+      setSelectedCategory(matched || categoryParam);
     }
 
     if (filterParam === 'best-sellers') {
@@ -54,16 +49,11 @@ export default function Shop() {
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Category filter - handle both exact match and partial match for categories
+    // Category filter - strict case-insensitive match to prevent substring overlaps (e.g. Rings vs Earrings)
     if (selectedCategory !== "All Products") {
-      result = result.filter(item => {
-        // Exact match
-        if (item.category === selectedCategory) return true;
-        // Partial match for categories like "Jewellery Sets" matching "Jewellery"
-        if (selectedCategory.toLowerCase().includes(item.category.toLowerCase())) return true;
-        if (item.category.toLowerCase().includes(selectedCategory.toLowerCase())) return true;
-        return false;
-      });
+      result = result.filter(
+        (item) => item.category && item.category.trim().toLowerCase() === selectedCategory.trim().toLowerCase()
+      );
     }
 
     // Search filter
