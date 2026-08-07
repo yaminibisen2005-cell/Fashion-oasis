@@ -18,6 +18,7 @@ import adminCustomerRoutes from "./routes/adminCustomer.routes.js";
 import adminReviewRoutes from "./routes/adminReview.routes.js";
 import adminCouponRoutes from "./routes/adminCoupon.routes.js";
 import adminAnalyticsRoutes from "./routes/adminAnalytics.routes.js";
+import adminSellerRoutes from "./routes/adminSeller.routes.js";
 import sellerDashboardRoutes from "./routes/sellerDashboard.routes.js";
 import sellerProductRoutes from "./routes/sellerProduct.routes.js";
 import sellerOrderRoutes from "./routes/sellerOrder.routes.js";

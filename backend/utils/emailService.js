@@ -1,25 +1,32 @@
 import AppError from './AppError.js';
 
+// Email utility using Brevo (Sendinblue) API. Reads configuration from environment variables.
 export const sendEmail = async ({ to, subject, htmlContent }) => {
-  if (!process.env.BREVO_API_KEY) {
-    console.warn('BREVO_API_KEY not found. Email not sent.');
+  // Prefer the specific API key env var; fallback to generic BREVO_API if present.
+  const apiKey = process.env.BREVO_API_KEY || process.env.BREVO_API;
+  const baseUrl = process.env.BREVO_BASE_URL?.replace(/\/+$/, '') || 'https://api.brevo.com/v3';
+  const senderEmail = process.env.BREVO_SENDER || 'no-reply@fashionoasis.com';
+  const senderName = 'Fashion Oasis';
+
+  if (!apiKey) {
+    console.warn('Brevo API key not configured (BREVO_API_KEY or BREVO_API). Email not sent.');
     return;
   }
 
   const payload = {
-    sender: { name: 'Fashion Oasis', email: 'fashionoasis082@gmail.com' },
+    sender: { name: senderName, email: senderEmail },
     to: Array.isArray(to) ? to : [{ email: to }],
     subject,
     htmlContent,
   };
 
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const response = await fetch(`${baseUrl}/smtp/email`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
-        'api-key': process.env.BREVO_API_KEY,
+        'api-key': apiKey,
       },
       body: JSON.stringify(payload),
     });
@@ -27,12 +34,11 @@ export const sendEmail = async ({ to, subject, htmlContent }) => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error('Brevo API Error:', errorData);
-      throw new AppError('Failed to send email', 500);
+      throw new AppError('Failed to send email via Brevo', 500);
     }
-    
     return await response.json();
   } catch (error) {
     console.error('Email sending failed:', error);
-    // Don't throw to prevent crashing main flow, just log
+    // Swallow error to avoid uncaught exceptions in request flow.
   }
 };

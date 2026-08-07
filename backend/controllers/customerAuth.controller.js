@@ -1,32 +1,15 @@
  import Customer from '../models/customer.js';
 import AppError from '../utils/AppError.js';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
+// Nodemailer removed; using Brevo email service.
 
 // Helper function to send email via Brevo SMTP
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../utils/emailService.js';
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
-const sendEmail = async (options) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-
-  const mailOptions = {
-    from: `Fashion Oasis <${process.env.EMAIL_FROM}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-  };
-
-  await transporter.sendMail(mailOptions);
-};
+// Local Nodemailer sendEmail removed; using shared Brevo sendEmail utility.
 
 // @desc    Register new customer
 // @route   POST /api/v1/customer/auth/register
@@ -140,9 +123,9 @@ export const forgotPassword = async (req, res, next) => {
 
     try {
       await sendEmail({
-        email: customer.email,
+        to: customer.email,
         subject: 'Password Reset Token (Valid for 10 mins)',
-        message,
+        htmlContent: message,
       });
 
       res.status(200).json({
