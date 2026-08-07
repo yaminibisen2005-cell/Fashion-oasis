@@ -24,6 +24,10 @@ import sellerProductRoutes from "./routes/sellerProduct.routes.js";
 import sellerOrderRoutes from "./routes/sellerOrder.routes.js";
 import sellerReviewRoutes from "./routes/sellerReview.routes.js";
 import inquiryRoutes from "./routes/inquiry.routes.js";
+import publicProductRoutes from "./routes/publicProduct.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import newsletterRoutes from "./routes/newsletter.routes.js";
+import offerRoutes from "./routes/offer.routes.js";
 
 dotenv.config();
 
@@ -37,6 +41,11 @@ app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
+app.use("/api/v1/products", publicProductRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/newsletter", newsletterRoutes);
+app.use("/api/v1/offers", offerRoutes);
+app.use("/api/offers", offerRoutes); // Alias route support
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin/dashboard", adminDashboardRoutes);
 app.use("/api/v1/admin/analytics", adminAnalyticsRoutes);

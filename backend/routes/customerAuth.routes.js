@@ -1,4 +1,4 @@
- import express from 'express';
+import express from 'express';
 import { 
   registerCustomer, 
   loginCustomer, 
@@ -12,7 +12,11 @@ import {
   getCart,
   saveCart,
   googleAuth,
+<<<<<<< HEAD
   uploadAvatar
+=======
+  getCustomerDashboardStats
+>>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { uploadAvatarMiddleware } from '../middlewares/upload.middleware.js';
@@ -28,6 +32,7 @@ router.post('/google', validate(customerGoogleAuthSchema), googleAuth);
 router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
 router.put('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 
+router.get('/dashboard/stats', protectCustomer, getCustomerDashboardStats);
 router.get('/profile', protectCustomer, getProfile);
 router.put('/profile', protectCustomer, validate(updateProfileSchema), updateProfile);
 router.post('/avatar', protectCustomer, uploadAvatarMiddleware, uploadAvatar);

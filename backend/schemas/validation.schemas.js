@@ -4,37 +4,34 @@ export const orderCreateSchema = z.object({
   body: z.object({
     customerEmail: z.string().email(),
     shippingAddress: z.object({
-      fullName: z.string().min(1),
-      phoneNumber: z.string().min(10).regex(/^\d+$/, 'Must be digits'),
-      address: z.string().min(1),
+      fullName: z.string().min(1, 'Full name is required'),
+      phoneNumber: z.string().min(1, 'Phone number is required'),
+      address: z.string().min(1, 'Address is required'),
       addressLine2: z.string().optional(),
-      city: z.string().min(1),
-      state: z.string().min(1),
-      pincode: z.string().min(5).regex(/^\d+$/, 'Must be digits'),
+      city: z.string().min(1, 'City is required'),
+      state: z.string().min(1, 'State is required'),
+      pincode: z.string().min(1, 'Pincode is required'),
     }),
     billingAddress: z.object({
-      fullName: z.string().min(1),
-      phoneNumber: z.string().min(10).regex(/^\d+$/, 'Must be digits'),
-      address: z.string().min(1),
+      fullName: z.string().min(1, 'Full name is required'),
+      phoneNumber: z.string().min(1, 'Phone number is required'),
+      address: z.string().min(1, 'Address is required'),
       addressLine2: z.string().optional(),
-      city: z.string().min(1),
-      state: z.string().min(1),
-      pincode: z.string().min(5).regex(/^\d+$/, 'Must be digits'),
-    }),
-    paymentMethod: z.enum(['credit_card', 'debit_card', 'upi', 'cod']),
+      city: z.string().min(1, 'City is required'),
+      state: z.string().min(1, 'State is required'),
+      pincode: z.string().min(1, 'Pincode is required'),
+    }).optional().nullable(),
+    paymentMethod: z.string().min(1),
     items: z.array(
       z.object({
         productName: z.string().min(1),
         quantity: z.number().int().min(1),
         price: z.number().positive(),
+        image: z.string().optional(),
       })
-    ).min(1),
+    ).min(1, 'At least one item is required'),
     totalAmount: z.number().positive(),
-  }).refine((data) => {
-    const subtotal = data.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const discountedTotal = subtotal * 0.9;
-    return Math.abs(data.totalAmount - subtotal) < 1 || Math.abs(data.totalAmount - discountedTotal) < 1;
-  }, { message: 'Total amount does not match items', path: ['totalAmount'] })
+  })
 });
 
 export const adminCouponCreateSchema = z.object({

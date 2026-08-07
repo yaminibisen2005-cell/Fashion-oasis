@@ -70,3 +70,9 @@ export const getFeaturedProducts = catchAsync(async (req, res) => {
   const products = await productService.getFeaturedProducts(limit);
   res.status(200).json({ success: true, data: products });
 });
+
+export const getRecommendedProducts = catchAsync(async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 4;
+  const products = await productService.getRecommendedProducts(limit);
+  res.status(200).json({ success: true, data: products });
+});

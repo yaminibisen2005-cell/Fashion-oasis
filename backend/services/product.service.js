@@ -25,7 +25,7 @@ export const deleteProduct = async (productId) => {
   return product;
 };
 
-export const toggleProductStatus = async (productId) => {
+export const toggleProductStatus = async (productId, user) => {
   const product = await Product.findById(productId);
   if (!product) throw new AppError('Product not found', 404);
   
@@ -33,7 +33,7 @@ export const toggleProductStatus = async (productId) => {
     throw new AppError('Not authorized', 403);
   }
   
-  product.stock = stock;
+  product.status = product.status === 'Active' ? 'Inactive' : 'Active';
   await product.save();
   return product;
 };
@@ -46,7 +46,12 @@ export const updateProduct = async (productId, updateData) => {
   return product;
 };
 
+import mongoose from 'mongoose';
+
 export const getProductById = async (productId) => {
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    throw new AppError('Product not found', 404);
+  }
   const product = await Product.findById(productId);
   if (!product) {
     throw new AppError('Product not found', 404);
@@ -59,7 +64,7 @@ export const getPublicProducts = async (query) => {
   const skip = (page - 1) * limit;
 
   const filter = { status: 'Active' };
-  if (category) filter.category = category;
+  if (category && category !== 'All Products') filter.category = category;
   if (search) filter.name = { $regex: search, $options: 'i' };
 
   const [products, total] = await Promise.all([
@@ -71,8 +76,27 @@ export const getPublicProducts = async (query) => {
 };
 
 export const getFeaturedProducts = async (limit = 10) => {
-  const products = await Product.find({ status: 'Active', isFeatured: true })
+  let products = await Product.find({ status: 'Active', isFeatured: true })
     .sort({ createdAt: -1 })
     .limit(Number(limit));
+
+  if (!products || products.length === 0) {
+    products = await Product.find({ status: 'Active' })
+      .sort({ createdAt: -1 })
+      .limit(Number(limit));
+  }
+  return products;
+};
+
+export const getRecommendedProducts = async (limit = 4) => {
+  let products = await Product.find({ status: 'Active' })
+    .sort({ totalSold: -1, rating: -1, createdAt: -1 })
+    .limit(Number(limit));
+
+  if (!products || products.length === 0) {
+    products = await Product.find({ status: 'Active' })
+      .sort({ createdAt: -1 })
+      .limit(Number(limit));
+  }
   return products;
 };

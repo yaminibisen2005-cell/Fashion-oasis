@@ -1,9 +1,8 @@
  import Customer from '../models/customer.js';
+import Order from '../models/Order.js';
+import Review from '../models/Review.js';
 import AppError from '../utils/AppError.js';
 import crypto from 'crypto';
-// Nodemailer removed; using Brevo email service.
-
-// Helper function to send email via Brevo SMTP
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/emailService.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
@@ -485,6 +484,7 @@ export const googleAuth = async (req, res, next) => {
     next(error);
   }
 };
+<<<<<<< HEAD
 // @desc    Upload customer avatar
 // @route   POST /api/v1/customer/avatar
 export const uploadAvatar = async (req, res, next) => {
@@ -511,8 +511,66 @@ export const uploadAvatar = async (req, res, next) => {
       data: {
         avatar: customer.avatar
       }
+=======
+
+export const getCustomerDashboardStats = async (req, res, next) => {
+  try {
+    const customer = req.customer;
+    if (!customer) {
+      return next(new AppError('Customer session not found', 401));
+    }
+
+    console.log("[getCustomerDashboardStats] req.customer:", customer._id, customer.email);
+
+    const orders = await Order.find({
+      $or: [
+        { customer: customer._id },
+        { customerEmail: customer.email }
+      ]
+    }).sort({ createdAt: -1 });
+
+    console.log("[getCustomerDashboardStats] orders count:", orders.length);
+
+    const reviews = await Review.find({
+      $or: [
+        { customer: customer._id },
+        { customerEmail: customer.email }
+      ]
+    });
+
+    const totalOrders = orders.length;
+    const recentOrders = orders.slice(0, 5);
+    const lastOrderDate = orders.length > 0 && orders[0].createdAt
+      ? new Date(orders[0].createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+      : "";
+
+    const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Processing' || o.status === 'Shipped').length;
+    const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
+    const cancelledOrders = orders.filter(o => o.status === 'Cancelled').length;
+
+    const statsData = {
+      totalOrders,
+      recentOrders,
+      lastOrderDate,
+      pendingOrders,
+      deliveredOrders,
+      cancelledOrders,
+      wishlistCount: customer.wishlist ? customer.wishlist.length : 0,
+      reviewsCount: reviews.length,
+      rewardPoints: totalOrders * 50
+    };
+
+    res.status(200).json({
+      success: true,
+      ...statsData,
+      data: statsData
+>>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
     });
   } catch (error) {
     next(error);
   }
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)

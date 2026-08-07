@@ -4,22 +4,12 @@ const errorHandler = (err, req, res, next) => {
 
   console.error('ERROR 💥:', err);
 
-  if (process.env.NODE_ENV === 'development') {
-    return res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-      errors: err.errors,
-      error: err,
-      stack: err.stack,
-    });
-  }
-
   if (err.name === 'CastError') {
-    return res.status(400).json({ status: 'fail', message: 'Invalid resource ID' });
+    return res.status(404).json({ status: 'fail', message: 'Resource not found' });
   }
 
   if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map((e) => e.message);
+    const messages = Object.values(err.errors || {}).map((e) => e.message);
     return res.status(400).json({ status: 'fail', message: messages });
   }
 
@@ -34,7 +24,16 @@ const errorHandler = (err, req, res, next) => {
     return res.status(err.statusCode).json(response);
   }
 
-  console.error('ERROR 💥:', err);
+  if (process.env.NODE_ENV === 'development') {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+      errors: err.errors,
+      error: err,
+      stack: err.stack,
+    });
+  }
+
   return res.status(500).json({
     status: 'error',
     message: 'Something went wrong on the server',
