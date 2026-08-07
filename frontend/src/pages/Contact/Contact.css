@@ -26,86 +26,105 @@
 .contact-hero{
     position:relative;
     width:100%;
-    height:540px;
+    min-height:500px;
+    max-height:620px;
     background-size:cover;
-    background-position:center;
+    background-position:center right;
     background-repeat:no-repeat;
     display:flex;
-    justify-content:center;
     align-items:center;
+    padding-top:80px;
 }
 
 .contact-overlay{
     position:absolute;
     inset:0;
-    background: linear-gradient(180deg, rgba(255, 248, 248, 0.15) 0%, rgba(239, 111, 143, 0.1) 50%, rgba(255, 245, 246, 0.25) 100%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 248, 248, 0.96) 0%,
+        rgba(255, 248, 248, 0.85) 38%,
+        rgba(255, 248, 248, 0.35) 68%,
+        rgba(255, 248, 248, 0) 100%
+    );
+    pointer-events: none;
+}
+
+.contact-hero-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1320px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 30px;
+    display: flex;
+    align-items: center;
 }
 
 .contact-hero-content{
     position:relative;
     z-index:2;
-    max-width:780px;
-    text-align:center;
-    padding:40px 36px;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-radius:28px;
-    border: 1px solid rgba(255, 255, 255, 0.75);
-    box-shadow: 0 15px 40px rgba(239, 111, 143, 0.12);
+    max-width:540px;
+    text-align:left;
+    padding:0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius:0;
+    border: none;
+    box-shadow: none;
     animation: fadeInHero 1s ease-out;
 }
 
 @keyframes fadeInHero {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateX(-30px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
 }
 
 .contact-tag{
     display:inline-block;
-    padding:7px 22px;
+    padding:6px 20px;
     border-radius:50px;
     background:#FFFFFF;
     color:#EF6F8F;
-    border:1px solid rgba(239, 111, 143, 0.3);
+    border:1px solid rgba(239, 111, 143, 0.35);
     font-family: "Poppins", sans-serif;
     font-size:12px;
     font-weight:700;
     letter-spacing:2.5px;
     margin-bottom:18px;
     text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(239, 111, 143, 0.18);
+    box-shadow: 0 4px 15px rgba(239, 111, 143, 0.12);
 }
 
 .contact-hero-content h1{
     font-family: "DM Serif Display", serif;
-    font-size:52px;
+    font-size:clamp(38px, 4.2vw, 56px);
     font-weight:400;
     margin-bottom:16px;
-    line-height:1.15;
-    color: #3F2B2F;
-    letter-spacing: 0.5px;
+    line-height:1.1;
+    color: #EF6F8F;
+    letter-spacing: -0.5px;
 }
 
 .contact-hero-content p{
     font-family: "Poppins", sans-serif;
-    font-size:16px;
-    line-height:1.8;
-    color:#5A4A4E;
-    max-width:620px;
-    margin:0 auto;
+    font-size:16.5px;
+    line-height:1.7;
+    color:#4A3A3D;
+    max-width:520px;
+    margin:0 0 28px;
 }
 
 .hero-buttons{
     display:flex;
-    justify-content:center;
-    gap:18px;
+    justify-content:flex-start;
+    gap:16px;
     margin-top:28px;
     flex-wrap:wrap;
 }

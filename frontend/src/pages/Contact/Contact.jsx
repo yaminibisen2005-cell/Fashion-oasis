@@ -127,25 +127,27 @@ const faqs = [
 >
   <div className="contact-overlay"></div>
 
-  <div className="contact-hero-content">
-    <span className="contact-tag">GET IN TOUCH</span>
+  <div className="contact-hero-container">
+    <div className="contact-hero-content">
+      <span className="contact-tag">GET IN TOUCH</span>
 
-    <h1>Let's Start a Conversation</h1>
+      <h1>Let's Start a Conversation</h1>
 
-    <p>
-      We'd love to hear from you. Whether you have questions about our
-      handcrafted jewellery, need styling advice, or want to place a custom
-      order, our team is here to help.
-    </p>
+      <p>
+        We'd love to hear from you. Whether you have questions about our
+        handcrafted jewellery, need styling advice, or want to place a custom
+        order, our team is here to help.
+      </p>
 
-    <div className="hero-buttons">
-      <a href="#contact-form" className="primary-btn">
-        Send Inquiry
-      </a>
+      <div className="hero-buttons">
+        <a href="#contact-form" className="primary-btn">
+          Send Inquiry &rarr;
+        </a>
 
-      <a href="#store-location" className="secondary-btn">
-        Visit Store
-      </a>
+        <a href="#store-location" className="secondary-btn">
+          Visit Store
+        </a>
+      </div>
     </div>
   </div>
 </section>

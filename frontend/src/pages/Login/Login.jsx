@@ -58,8 +58,9 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const idToken = await user.getIdToken();
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
-      const response = await axios.post("http://localhost:5000/api/v1/customer/google", {
+      const response = await axios.post(`${apiUrl}/customer/google`, {
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
