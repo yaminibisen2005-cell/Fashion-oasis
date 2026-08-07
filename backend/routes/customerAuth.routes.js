@@ -12,11 +12,10 @@ import {
   getCart,
   saveCart,
   googleAuth,
-<<<<<<< HEAD
-  uploadAvatar
-=======
+  uploadAvatar,
   getCustomerDashboardStats
->>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
+
+
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { uploadAvatarMiddleware } from '../middlewares/upload.middleware.js';
