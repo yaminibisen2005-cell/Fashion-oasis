@@ -6,18 +6,12 @@ import catchAsync from "../utils/catchAsync.js";
 
 export const protectAdmin = catchAsync(async (req, res, next) => {
   let token;
-<<<<<<< HEAD
-  try {
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-=======
 
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
->>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
   }
 
   if (!token || token === "null" || token === "undefined") {
@@ -42,10 +36,6 @@ export const protectAdmin = catchAsync(async (req, res, next) => {
       401
     );
   }
-<<<<<<< HEAD
-}
-);
-=======
 
   let currentUser;
   if (decoded.id) {
@@ -131,7 +121,6 @@ export const protectSeller = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
->>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
 
 export const protectCustomer = catchAsync(async (req, res, next) => {
   let token;
@@ -156,7 +145,7 @@ export const protectCustomer = catchAsync(async (req, res, next) => {
     const primarySecret = process.env.JWT_SECRET || "fashion_oasis_super_secret_jwt_key_2026";
     try {
       decoded = jwt.verify(token, primarySecret);
-    } catch (e) {
+    } catch (err) {
       decoded = jwt.verify(token, "fashion_oasis_super_secret_jwt_key_2026");
     }
   } catch (err) {
@@ -182,42 +171,4 @@ export const protectCustomer = catchAsync(async (req, res, next) => {
 
   req.customer = currentCustomer;
   next();
-<<<<<<< HEAD
 });
-
-export const protectSeller = catchAsync(async (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
-
-  if (!token) {
-    throw new AppError('You are not logged in. Please log in to get access.', 401);
-  }
-
-  let decoded;
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET || 'fashion_oasis_super_secret_jwt_key_2026');
-  } catch (err) {
-    return next(new AppError('Invalid or expired token. Please log in again.', 401));
-  }
-
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    throw new AppError('The user belonging to this token no longer exists.', 401);
-  }
-
-  if (currentUser.role !== 'seller') {
-    throw new AppError('You do not have permission to access seller resources.', 403);
-  }
-
-  if (currentUser.status !== 'Active') {
-    throw new AppError('Seller account is not active.', 403);
-  }
-
-  req.user = currentUser;
-  next();
-});
-=======
-});
->>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)

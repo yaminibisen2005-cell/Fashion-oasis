@@ -1,10 +1,20 @@
 import express from 'express';
-import { submitInquiry } from '../controllers/inquiry.controller.js';
-import { validate } from '../middlewares/validate.middleware.js';
-import { createInquirySchema } from '../schemas/inquiry.schema.js';
+import { protectAdmin } from '../middlewares/auth.middleware.js';
+import {
+  submitInquiry,
+  getInquiriesAdmin,
+  toggleInquiryStatus,
+  deleteInquiry,
+} from '../controllers/inquiry.controller.js';
 
 const router = express.Router();
 
-router.post('/', validate(createInquirySchema), submitInquiry);
+// Public endpoint for submitting contact inquiry
+router.post('/', submitInquiry);
+
+// Protected Admin endpoints
+router.get('/admin', protectAdmin, getInquiriesAdmin);
+router.patch('/:id/status', protectAdmin, toggleInquiryStatus);
+router.delete('/:id', protectAdmin, deleteInquiry);
 
 export default router;
