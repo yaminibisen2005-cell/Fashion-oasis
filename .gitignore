@@ -26,3 +26,6 @@ skills
 Project-description.md
 .claude
 skills-lock.json
+.env
+.env.local
+.env.*.local
