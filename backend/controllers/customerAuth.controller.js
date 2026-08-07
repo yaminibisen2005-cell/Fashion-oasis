@@ -484,7 +484,6 @@ export const googleAuth = async (req, res, next) => {
     next(error);
   }
 };
-<<<<<<< HEAD
 // @desc    Upload customer avatar
 // @route   POST /api/v1/customer/avatar
 export const uploadAvatar = async (req, res, next) => {
@@ -511,8 +510,14 @@ export const uploadAvatar = async (req, res, next) => {
       data: {
         avatar: customer.avatar
       }
-=======
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
+// @desc    Get customer dashboard stats
+// @route   GET /api/v1/customer/dashboard/stats
 export const getCustomerDashboardStats = async (req, res, next) => {
   try {
     const customer = req.customer;
@@ -564,13 +569,8 @@ export const getCustomerDashboardStats = async (req, res, next) => {
       success: true,
       ...statsData,
       data: statsData
->>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
     });
   } catch (error) {
     next(error);
   }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 5cc5766 (Add offer, newsletter and review backend integration)
