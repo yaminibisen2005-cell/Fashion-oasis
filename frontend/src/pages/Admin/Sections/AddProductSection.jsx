@@ -11,12 +11,19 @@ const AddProductSection = ({ addProduct, categories }) => {
     price: "",
     stock: "",
     description: "",
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&q=80", // Default Unsplash placeholder
+    image: "", 
   });
+  const [mediaFiles, setMediaFiles] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setMediaFiles(files);
   };
 
   const handleSubmit = (e) => {
@@ -26,17 +33,19 @@ const AddProductSection = ({ addProduct, categories }) => {
       return;
     }
 
-    const newProduct = {
-      id: Date.now(),
-      name: formData.name,
-      category: formData.category,
-      material: formData.material,
-      price: parseFloat(formData.price),
-      stock: parseInt(formData.stock),
-      description: formData.description,
-      image: formData.image,
-      status: "Active",
-    };
+    const newProduct = new FormData();
+    newProduct.append('name', formData.name);
+    newProduct.append('category', formData.category);
+    newProduct.append('material', formData.material);
+    newProduct.append('price', formData.price);
+    newProduct.append('stock', formData.stock);
+    newProduct.append('description', formData.description);
+    if (formData.image) newProduct.append('image', formData.image);
+    newProduct.append('status', 'Active');
+    
+    mediaFiles.forEach(file => {
+      newProduct.append('images', file);
+    });
 
     addProduct(newProduct);
     navigate("/admin/products");
@@ -159,11 +168,24 @@ const AddProductSection = ({ addProduct, categories }) => {
           {/* Right Column - Images Upload Box */}
           <div className="form-right-col">
             <label>Product Images</label>
-            <div className="upload-box">
+            <div className="upload-box" onClick={() => document.getElementById('file-upload').click()} style={{ cursor: 'pointer' }}>
               <FaUpload className="upload-icon" />
               <span>+ Upload Images</span>
               <p>You can upload up to 5 images</p>
             </div>
+            <input 
+              id="file-upload" 
+              type="file" 
+              multiple 
+              accept="image/*" 
+              style={{ display: 'none' }} 
+              onChange={handleFileChange} 
+            />
+            {mediaFiles.length > 0 && (
+              <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+                {mediaFiles.length} file(s) selected
+              </div>
+            )}
             
             <div className="form-actions-row">
               <button

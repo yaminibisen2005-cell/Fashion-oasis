@@ -417,6 +417,7 @@ const AddProductSection = ({ addProduct, onBack }) => {
     image: "",
   });
   const [mediaFiles, setMediaFiles] = useState([]);
+  const [mediaFileObjects, setMediaFileObjects] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -429,6 +430,7 @@ const AddProductSection = ({ addProduct, onBack }) => {
     if (!images.length) return;
     const urls = images.map((f) => URL.createObjectURL(f));
     setMediaFiles((prev) => [...prev, ...urls]);
+    setMediaFileObjects((prev) => [...prev, ...images]);
     setForm((prev) => ({ ...prev, image: prev.image || urls[0] }));
   };
 
@@ -441,6 +443,7 @@ const AddProductSection = ({ addProduct, onBack }) => {
   const removeMedia = (idx) => {
     URL.revokeObjectURL(mediaFiles[idx]);
     setMediaFiles((prev) => prev.filter((_, i) => i !== idx));
+    setMediaFileObjects((prev) => prev.filter((_, i) => i !== idx));
     setForm((prev) => {
       if (idx !== 0) return prev;
       const next = mediaFiles.find((_, i) => i !== idx);
@@ -451,19 +454,22 @@ const AddProductSection = ({ addProduct, onBack }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name || !form.price) return;
-    addProduct({
-      id: Date.now(),
-      name: form.name,
-      sku: `FO-${String(Math.floor(Math.random() * 900) + 100)}`,
-      category: form.category,
-      price: Number(form.price),
-      stock: Number(form.stock) || 0,
-      sold: 0,
-      views: 0,
-      rating: 0,
-      status: "Active",
-      image: form.image || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&q=80",
+    
+    const formDataObj = new FormData();
+    formDataObj.append('name', form.name);
+    formDataObj.append('category', form.category);
+    formDataObj.append('price', form.price);
+    formDataObj.append('stock', form.stock || 0);
+    formDataObj.append('description', form.description);
+    formDataObj.append('status', form.status || 'Active');
+    
+    if (form.image && !mediaFileObjects.length) formDataObj.append('image', form.image);
+    
+    mediaFileObjects.forEach(file => {
+      formDataObj.append('images', file);
     });
+
+    addProduct(formDataObj);
     onBack();
   };
 

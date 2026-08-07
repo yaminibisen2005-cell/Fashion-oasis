@@ -22,6 +22,7 @@ import sellerDashboardRoutes from "./routes/sellerDashboard.routes.js";
 import sellerProductRoutes from "./routes/sellerProduct.routes.js";
 import sellerOrderRoutes from "./routes/sellerOrder.routes.js";
 import sellerReviewRoutes from "./routes/sellerReview.routes.js";
+import inquiryRoutes from "./routes/inquiry.routes.js";
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use("/api/v1/seller/reviews", sellerReviewRoutes);
 app.use("/api/v1/customer", customerAuthRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/wishlist", wishlistRoutes);
+app.use("/api/v1/inquiry", inquiryRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({

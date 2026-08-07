@@ -1,4 +1,5 @@
 import * as productService from '../services/product.service.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
 const catchAsync = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -22,6 +23,14 @@ export const addProduct = catchAsync(async (req, res) => {
   if (req.user && req.user.role === 'seller') {
     productData.seller = req.user._id;
   }
+  if (req.files && req.files.length > 0) {
+    const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer, 'fashion_oasis/products'));
+    const results = await Promise.all(uploadPromises);
+    productData.image = results[0].secure_url;
+  } else if (!productData.image) {
+    productData.image = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&q=80';
+  }
+
   const product = await productService.createProduct(productData);
   res.status(201).json({ success: true, data: product });
 });

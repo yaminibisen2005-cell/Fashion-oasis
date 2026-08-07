@@ -4,6 +4,7 @@ import AppError from '../utils/AppError.js';
 import catchAsync from '../utils/catchAsync.js';
 import Product from '../models/Product.js';
 import crypto from 'crypto';
+import { sendEmail } from '../utils/emailService.js';
 
 export const createOrder = catchAsync(async (req, res, next) => {
   const { customerEmail, shippingAddress, billingAddress, paymentMethod, items, totalAmount } = req.body;
@@ -68,6 +69,31 @@ export const createOrder = catchAsync(async (req, res, next) => {
     paymentMethod,
     items: processedItems,
     totalAmount
+  });
+
+  const itemsHtml = items.map(item => `<li>${item.quantity}x ${item.productName} - $${item.price}</li>`).join('');
+
+  // Admin Order Notification
+  await sendEmail({
+    to: 'fashionoasis082@gmail.com',
+    subject: `New Order Placed: ${orderId}`,
+    htmlContent: `<p>A new order has been placed by ${order.customerName} (${customerEmail}).</p>
+                  <p><strong>Total Amount:</strong> $${totalAmount}</p>
+                  <p><strong>Items:</strong></p>
+                  <ul>${itemsHtml}</ul>
+                  <p>Check the admin dashboard for more details.</p>`,
+  });
+
+  // Customer Order Confirmation
+  await sendEmail({
+    to: customerEmail,
+    subject: `Order Confirmation - ${orderId}`,
+    htmlContent: `<p>Hi ${order.customerName},</p>
+                  <p>Your order <strong>${orderId}</strong> has been placed successfully.</p>
+                  <p><strong>Total Amount:</strong> $${totalAmount}</p>
+                  <p><strong>Items:</strong></p>
+                  <ul>${itemsHtml}</ul>
+                  <p>Thank you for shopping with Fashion Oasis!</p>`,
   });
 
   res.status(201).json({
