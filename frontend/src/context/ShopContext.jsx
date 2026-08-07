@@ -94,6 +94,7 @@ export const ShopProvider = ({ children }) => {
 
   const [shippingAddress, setShippingAddress] = useState({
     fullName: "",
+    email: "",
     phone: "",
     address: "",
     address2: "",
@@ -298,8 +299,8 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  const placeOrder = () => {
-    const generatedOrderId = "FO" + Math.floor(10000 + Math.random() * 90000);
+  const placeOrder = (backendOrderData = null) => {
+    const generatedOrderId = backendOrderData?.orderId || "FO" + Math.floor(10000 + Math.random() * 90000);
     const today = new Date();
     const formattedDate = today.toLocaleDateString("en-IN", {
       day: "numeric",

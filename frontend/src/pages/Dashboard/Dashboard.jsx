@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ShopContext } from "../../context/ShopContext";
+import { getProfile, getOrders, getCustomerReviews } from "../../api/customer";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Dashboard.css";
 import {
@@ -25,7 +26,7 @@ const safeStoredJson = (key) => {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { addToCart } = useContext(ShopContext);
+  const { addToCart, wishlist } = useContext(ShopContext);
   const [userName, setUserName] = useState("User");
   const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0" });
   const [orders, setOrders] = useState([]);
@@ -36,6 +37,7 @@ function Dashboard() {
     const customerInfo = safeStoredJson("customerInfo");
     const user = customerInfo || safeStoredJson("userInfo") || safeStoredJson("user");
     const token = localStorage.getItem("token") || localStorage.getItem("authToken") || customerInfo?.token;
+    const email = user?.email || localStorage.getItem("customerEmail");
 
     const name = user?.fullName || user?.name || user?.username || `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
     if (name) setUserName(name);
@@ -43,18 +45,38 @@ function Dashboard() {
     const loadDashboard = async () => {
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
       try {
-        if (user?.email) {
-          const response = await axios.get(`http://localhost:5000/api/v1/customer/profile?email=${encodeURIComponent(user.email)}`, config);
-          const data = response.data?.data;
-          if (response.data?.success && data) {
-            setStats({
-              totalOrders: String(data.totalOrders || 0),
-              wishlistCount: String(data.wishlist?.length || 0),
-              reviewsCount: String(data.reviewsCount || 0),
-              rewardPoints: String(data.rewardPoints || 0),
-            });
-            setOrders(data.recentOrders || []);
+        if (email) {
+          const [profileRes, orderRes, reviewRes] = await Promise.all([
+            getProfile().catch(() => null),
+            getOrders(email).catch(() => null),
+            getCustomerReviews().catch(() => null)
+          ]);
+
+          if (profileRes && profileRes.success) {
+            const data = profileRes.data;
+            if (data.firstName || data.lastName) {
+              setUserName(`${data.firstName || ""} ${data.lastName || ""}`.trim());
+            }
           }
+
+          let fetchedOrders = [];
+          if (orderRes && orderRes.success) {
+            fetchedOrders = orderRes.orders || [];
+          }
+
+          let fetchedReviews = [];
+          if (reviewRes && reviewRes.success) {
+            fetchedReviews = reviewRes.data || [];
+          }
+
+          setStats({
+            totalOrders: String(fetchedOrders.length),
+            wishlistCount: String(wishlist?.length || 0),
+            reviewsCount: String(fetchedReviews.length),
+            rewardPoints: "0",
+          });
+          
+          setOrders(fetchedOrders.slice(0, 5));
         }
 
         const response = await axios.get("http://localhost:5000/api/v1/products/recommended", config);
@@ -67,7 +89,7 @@ function Dashboard() {
     };
 
     loadDashboard();
-  }, []);
+  }, [wishlist]);
 
   const statCards = [
     { icon: <FaShoppingBag />, title: "Total Orders", value: stats.totalOrders, subtitle: "Active orders" },

@@ -11,7 +11,8 @@ import {
   updateTwoFactor,
   getCart,
   saveCart,
-  googleAuth
+  googleAuth,
+  getCustomerReviews
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { protectCustomer } from '../middlewares/auth.middleware.js';
@@ -27,6 +28,7 @@ router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
 router.put('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 
 router.get('/profile', protectCustomer, getProfile);
+router.get('/reviews', protectCustomer, getCustomerReviews);
 router.put('/profile', protectCustomer, validate(updateProfileSchema), updateProfile);
 
 router.put('/password', protectCustomer, validate(updatePasswordSchema), updatePassword);

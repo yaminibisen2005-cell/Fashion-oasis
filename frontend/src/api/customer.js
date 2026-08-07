@@ -8,6 +8,7 @@ export const resetPassword = (token, payload) => apiClient.put(`/customer/reset-
 
 // profile
 export const getProfile = () => apiClient.get("/customer/profile").then((r) => r.data);
+export const getCustomerReviews = () => apiClient.get("/customer/reviews").then((r) => r.data);
 export const updateProfile = (payload) => apiClient.put("/customer/profile", payload).then((r) => r.data);
 export const updatePassword = (payload) => apiClient.put("/customer/password", payload).then((r) => r.data);
 //
@@ -20,6 +21,7 @@ export const toggleWishlist = (payload) => apiClient.post("/wishlist/toggle", pa
 
 // orders
 export const checkout = (payload) => apiClient.post("/orders/checkout", payload).then((r) => r.data);
+export const getOrders = (email) => apiClient.get("/orders", { params: { email } }).then((r) => r.data);
 // cart
 export const getCart = () => apiClient.get("/customer/cart").then((r) => r.data);
 export const saveCart = (payload) => apiClient.post("/customer/cart", payload).then((r) => r.data);

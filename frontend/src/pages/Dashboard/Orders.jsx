@@ -1,4 +1,5 @@
  import React, { useState, useEffect } from "react";
+import { getOrders } from "../../api/customer";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Orders.css";
 import product5 from "../../assets/product5.jpg"; // Fallback image
@@ -19,12 +20,7 @@ function Orders() {
           return;
         }
 
-        const response = await fetch(`http://localhost:5000/api/v1/orders?email=${customerEmail}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch orders");
-        }
+        const data = await getOrders(customerEmail);
 
         // Handle array response structure safely
         const ordersList = Array.isArray(data) ? data : data.orders || data.data || [];

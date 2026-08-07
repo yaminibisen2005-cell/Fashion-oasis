@@ -1,74 +1,22 @@
- import React, { useState, useEffect, useContext } from "react";
+ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import "./Wishlist.css";
 import { FaHeart, FaShoppingCart } from "react-icons/fa";
-import { getWishlist, toggleWishlist } from "../../api/customer";
 import { ShopContext } from "../../context/ShopContext";
 
 function Wishlist() {
-  const [wishlistItems, setWishlistItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { addToCart } = useContext(ShopContext);
-
-  const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
-
-  useEffect(() => {
-    const fetchWishlistData = async () => {
-      if (!customerToken) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const data = await getWishlist();
-        if (data && data.wishlist) {
-          setWishlistItems(data.wishlist);
-        }
-      } catch (err) {
-        console.error("Error fetching wishlist:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWishlistData();
-  }, [customerToken]);
+  const { wishlist, removeFromWishlist, addToCart } = useContext(ShopContext);
 
   const handleRemoveFromWishlist = async (item) => {
     const itemId = item.id || item._id;
-    try {
-      const data = await toggleWishlist({
-        product: {
-          id: itemId,
-          name: item.name,
-          image: item.image,
-          price: item.price,
-          oldPrice: item.oldPrice,
-        },
-      });
-      if (data && data.wishlist) {
-        setWishlistItems(data.wishlist);
-      }
-    } catch (err) {
-      console.error("Failed to remove item", err);
-    }
+    await removeFromWishlist(itemId);
   };
 
   const handleAddToCart = async (item) => {
-    const itemId = item.id || item._id;
-    
-    // 1. Add item to cart context and localStorage
     addToCart(item, 1);
-    
-    // 2. Remove item from backend wishlist database via toggle
     await handleRemoveFromWishlist(item);
-    
-    // 3. Remove locally from state list
-    setWishlistItems(wishlistItems.filter((i) => (i.id || i._id) !== itemId));
-    
-    // 4. Navigate directly to cart page
     navigate("/cart");
   };
 
@@ -80,17 +28,13 @@ function Wishlist() {
           <p>Your favourite Fashion Oasis products.</p>
         </div>
 
-        {loading ? (
-          <p style={{ textAlign: "center", padding: "40px" }}>
-            Loading wishlist...
-          </p>
-        ) : wishlistItems.length === 0 ? (
+        {(!wishlist || wishlist.length === 0) ? (
           <p style={{ textAlign: "center", padding: "40px" }}>
             Your wishlist is empty.
           </p>
         ) : (
           <div className="wishlist-grid">
-            {wishlistItems.map((item) => {
+            {wishlist.map((item) => {
               const itemId = item.id || item._id;
 
               return (

@@ -1,4 +1,6 @@
- import Customer from '../models/customer.js';
+import Customer from '../models/customer.js';
+import Review from '../models/Review.js';
+import Product from '../models/Product.js';
 import AppError from '../utils/AppError.js';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
@@ -437,6 +439,39 @@ export const googleAuth = async (req, res, next) => {
         email: customer.email,
         phone: customer.phone || '',
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get customer reviews
+export const getCustomerReviews = async (req, res, next) => {
+  try {
+    const customer = req.customer;
+    if (!customer) {
+      return next(new AppError('Customer not found', 404));
+    }
+
+    const customerName = `${customer.firstName} ${customer.lastName}`.trim();
+
+    // Fetch reviews by customer name
+    const reviews = await Review.find({ customer: customerName }).sort({ createdAt: -1 }).lean();
+
+    // Attach product images and IDs
+    const enhancedReviews = await Promise.all(reviews.map(async (review) => {
+      const product = await Product.findOne({ name: review.product }).lean();
+      return {
+        ...review,
+        productId: product ? product._id : null,
+        image: product ? product.image : null
+      };
+    }));
+
+    res.status(200).json({
+      success: true,
+      count: enhancedReviews.length,
+      data: enhancedReviews
     });
   } catch (error) {
     next(error);

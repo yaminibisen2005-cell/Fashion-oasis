@@ -71,7 +71,7 @@ function AccountSetting() {
     const fetchProfile = async () => {
       if (!userEmail) return;
       try {
-        const data = await getProfile(userEmail);
+        const data = await getProfile();
         if (data.success && data.data) {
           setFormData({
             firstName: data.data.firstName || storedUser.firstName || "",

@@ -33,7 +33,7 @@ function Profile() {
           return;
         }
 
-        const result = await getProfile(userEmail);
+        const result = await getProfile();
 
         if (result.success) {
           setFormData(result.data);

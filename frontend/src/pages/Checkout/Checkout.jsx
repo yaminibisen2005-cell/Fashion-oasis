@@ -60,7 +60,11 @@ const Checkout = () => {
     setErrorMessage("");
 
     try {
-      const customerEmail = localStorage.getItem("customerEmail");
+      const customerEmail = localStorage.getItem("customerEmail") || shippingAddress.email;
+
+      if (!customerEmail) {
+        throw new Error("Email address is required to place an order.");
+      }
 
       const formattedItems = displayItems.map((item) => ({
         productName: item.product.name,
@@ -120,7 +124,7 @@ const Checkout = () => {
         throw new Error(data.message || "Failed to place order");
       }
 
-      placeOrder();
+      placeOrder(data.data);
       navigate("/thank-you");
       
     } catch (err) {
@@ -156,6 +160,20 @@ const Checkout = () => {
                       placeholder="Enter your full name"
                     />
                   </div>
+
+                  {!localStorage.getItem("customerEmail") && (
+                    <div className="form-group full-width">
+                      <label>Email Address</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={shippingAddress.email || ""}
+                        onChange={handleShippingChange}
+                        required
+                        placeholder="Enter your email address"
+                      />
+                    </div>
+                  )}
 
                   <div className="form-group full-width">
                     <label>Phone Number</label>
