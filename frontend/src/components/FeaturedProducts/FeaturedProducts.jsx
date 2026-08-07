@@ -1,6 +1,6 @@
 import "./FeaturedProducts.css";
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { ShopContext } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
@@ -11,52 +11,30 @@ import thumb2 from "../../assets/thumb2.png";
 import thumb3 from "../../assets/thumb3.png";
 import thumb4 from "../../assets/thumb4.png";
 
-const products = [
-  {
-    id: 1,
-    name: "Pearl Necklace",
-    image: thumb1,
-    price: 999,
-    oldPrice: 1299,
-    discount: 23,
-    rating: 4.8,
-    reviews: 124,
-  },
-  {
-    id: 2,
-    name: "Rose Bracelet",
-    image: thumb2,
-    price: 699,
-    oldPrice: 899,
-    discount: 22,
-    rating: 4.6,
-    reviews: 89,
-  },
-  {
-    id: 3,
-    name: "Luxury Ring",
-    image: thumb3,
-    price: 899,
-    oldPrice: 1199,
-    discount: 25,
-    rating: 4.9,
-    reviews: 156,
-  },
-  {
-    id: 4,
-    name: "Pearl Earrings",
-    image: thumb4,
-    price: 799,
-    oldPrice: 999,
-    discount: 20,
-    rating: 4.7,
-    reviews: 98,
-  },
-];
+// Removed hardcoded products
 
 const FeaturedProducts = () => {
-  const navigate = useNavigate();
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("http://localhost:5000/api/v1/products/featured?limit=4");
+        if (res.data.success) {
+          setFeaturedProducts(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
+  const navigate = useNavigate();
   return (
     <section className="featured-section">
       <div className="container">
@@ -72,9 +50,13 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="products-grid">
-          {products.map((item) => (
-            <FeaturedProductCard key={item.id} product={item} />
-          ))}
+          {loading ? (
+            <div>Loading featured products...</div>
+          ) : (
+            featuredProducts.map((item) => (
+              <FeaturedProductCard key={item._id || item.id} product={item} />
+            ))
+          )}
         </div>
 
         <div className="view-all">

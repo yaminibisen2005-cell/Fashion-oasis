@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 import "./Shop.css";
 
@@ -9,7 +10,7 @@ import SearchSort from "../../components/Shop/SearchSort/SearchSort";
 import ProductGrid from "../../components/Shop/ProductGrid/ProductGrid";
 import Pagination from "../../components/Shop/Pagination/Pagination";
 
-import { products } from "../../data/products";
+// import { products } from "../../data/products"; // Removed hardcoded products
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
@@ -20,7 +21,7 @@ export default function Shop() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [sortBy, setSortBy] = useState("Popularity");
-  const [priceRange, setPriceRange] = useState([499, 5000]);
+  const [priceRange, setPriceRange] = useState([0, 200000]);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,6 +47,28 @@ export default function Shop() {
     }
   }, [searchParams]);
 
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        // Assuming we fetch all products for the shop page for client-side filtering, 
+        // or we could adjust the limit. For now, fetch up to 100 to allow local filters to work.
+        const res = await axios.get("http://localhost:5000/api/v1/products?limit=100");
+        if (res.data.success) {
+          setProducts(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -59,7 +82,7 @@ export default function Shop() {
     // Search filter
     if (searchTerm) {
       result = result.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        item.name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -82,9 +105,9 @@ export default function Shop() {
     } else if (sortBy === "Price High to Low") {
       result.sort((a, b) => b.price - a.price);
     } else if (sortBy === "Newest") {
-      result.sort((a, b) => b.id - a.id);
+      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (sortBy === "Popularity") {
-      result.sort((a, b) => b.reviews - a.reviews);
+      result.sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
     }
 
     return result;
@@ -144,7 +167,7 @@ export default function Shop() {
     setSearchTerm("");
     setSelectedCategory("All Products");
     setSortBy("Popularity");
-    setPriceRange([499, 5000]);
+    setPriceRange([0, 200000]);
     setSelectedMaterials([]);
     setSelectedOccasions([]);
     setCurrentPage(1);
@@ -156,6 +179,7 @@ export default function Shop() {
       <HeroBanner/>
       <div className="shop-layout">
         <Sidebar
+          products={products}
           selectedCategory={selectedCategory}
           setSelectedCategory={handleSetSelectedCategory}
           priceRange={priceRange}
@@ -174,14 +198,20 @@ export default function Shop() {
             setSortBy={handleSetSortBy}
             totalProducts={filteredProducts.length}
             onClearFilters={clearFilters}
-            hasActiveFilters={selectedMaterials.length > 0 || selectedOccasions.length > 0 || priceRange[0] !== 499 || priceRange[1] !== 5000}
+            hasActiveFilters={selectedMaterials.length > 0 || selectedOccasions.length > 0 || priceRange[0] !== 0 || priceRange[1] !== 200000}
           />
-          <ProductGrid products={currentProducts} />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          {loading ? (
+            <div className="loading-spinner">Loading products...</div>
+          ) : (
+            <>
+              <ProductGrid products={currentProducts} />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
          
           
         </div>

@@ -26,29 +26,47 @@ const AddProductSection = ({ addProduct, categories }) => {
     setMediaFiles(files);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.category || !formData.material || !formData.price || !formData.stock) {
       alert("Please fill in all required fields.");
       return;
     }
 
-    const newProduct = new FormData();
-    newProduct.append('name', formData.name);
-    newProduct.append('category', formData.category);
-    newProduct.append('material', formData.material);
-    newProduct.append('price', formData.price);
-    newProduct.append('stock', formData.stock);
-    newProduct.append('description', formData.description);
-    if (formData.image) newProduct.append('image', formData.image);
-    newProduct.append('status', 'Active');
-    
-    mediaFiles.forEach(file => {
-      newProduct.append('images', file);
-    });
+    let newProduct;
+    if (mediaFiles.length > 0) {
+      newProduct = new FormData();
+      newProduct.append('name', formData.name);
+      newProduct.append('category', formData.category);
+      newProduct.append('material', formData.material);
+      newProduct.append('price', formData.price);
+      newProduct.append('stock', formData.stock);
+      newProduct.append('description', formData.description);
+      if (formData.image) newProduct.append('image', formData.image);
+      newProduct.append('status', 'Active');
+      
+      mediaFiles.forEach(file => {
+        newProduct.append('images', file);
+      });
+    } else {
+      newProduct = {
+        name: formData.name,
+        category: formData.category,
+        material: formData.material,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock),
+        description: formData.description,
+        image: formData.image,
+        status: "Active",
+      };
+    }
 
-    addProduct(newProduct);
-    navigate("/admin/products");
+    const success = await addProduct(newProduct);
+    if (success) {
+      navigate("/admin/products");
+    } else {
+      alert("Failed to add product. Please check the inputs.");
+    }
   };
 
   return (

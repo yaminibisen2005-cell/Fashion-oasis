@@ -46,6 +46,7 @@ app.use("/api/v1/admin/orders", adminOrderRoutes);
 app.use("/api/v1/admin/customers", adminCustomerRoutes);
 app.use("/api/v1/admin/reviews", adminReviewRoutes);
 app.use("/api/v1/admin/coupons", adminCouponRoutes);
+app.use("/api/v1/admin/sellers", adminSellerRoutes);
 app.use("/api/v1/seller/dashboard", sellerDashboardRoutes);
 app.use("/api/v1/seller/products", sellerProductRoutes);
 app.use("/api/v1/seller/orders", sellerOrderRoutes);
@@ -74,7 +75,6 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(
-    `Server running in ${process.env.NODE_ENV || "development"
-    } mode on port ${PORT}`
+    `Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`
   );
 });

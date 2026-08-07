@@ -27,7 +27,7 @@ const ProductGrid = ({ products, onAddToCart }) => {
     <section className={`product-grid ${isAnimating ? "fade-in" : ""}`}>
       {products.map((product) => (
         <ProductCard
-          key={product.id}
+          key={product._id || product.id}
           product={product}
           onAddToCart={onAddToCart}
         />
