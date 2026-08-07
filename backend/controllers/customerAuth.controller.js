@@ -9,6 +9,47 @@ import { sendEmail } from '../utils/emailService.js';
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+
+const FIREBASE_PUBLIC_KEYS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
+
+const verifyFirebaseIdToken = async (idToken) => {
+  if (!idToken || typeof idToken !== 'string') {
+    throw new AppError('Firebase ID token is required for Google authentication', 400);
+  }
+
+  const decodedToken = jwt.decode(idToken, { complete: true });
+  if (!decodedToken || !decodedToken.payload || !decodedToken.header) {
+    throw new AppError('Invalid Firebase ID token', 400);
+  }
+
+  const projectId = process.env.FIREBASE_PROJECT_ID || decodedToken.payload.aud;
+  if (!projectId) {
+    throw new AppError('Firebase project ID is not configured on the server', 500);
+  }
+
+  const response = await fetch(FIREBASE_PUBLIC_KEYS_URL);
+  if (!response.ok) {
+    throw new AppError('Unable to verify Firebase token at this time', 502);
+  }
+
+  const publicKeys = await response.json();
+  const publicKey = publicKeys[decodedToken.header.kid];
+
+  if (!publicKey) {
+    throw new AppError('Invalid Firebase token signature key', 401);
+  }
+
+  try {
+    const verifiedToken = jwt.verify(idToken, publicKey, {
+      algorithms: ['RS256'],
+      issuer: `https://securetoken.google.com/${projectId}`,
+      audience: projectId,
+    });
+    return verifiedToken;
+  } catch (error) {
+    throw new AppError('Invalid or expired Firebase ID token', 401);
+  }
+};
 // Local Nodemailer sendEmail removed; using shared Brevo sendEmail utility.
 
 // @desc    Register new customer
@@ -377,10 +418,13 @@ export const saveCart = async (req, res, next) => {
 };
 
 // @desc    Google Authentication (Sign up / Login)
-// @route   POST /api/v1/customer/auth/google
+// @route   POST /api/v1/customer/google
 export const googleAuth = async (req, res, next) => {
   try {
-    const { name, email, photo } = req.body;
+    const { token: idToken, name: requestName, email: requestEmail, photo: requestPhoto } = req.body;
+
+    const verifiedToken = await verifyFirebaseIdToken(idToken);
+    const email = verifiedToken.email || requestEmail;
 
     if (!email) {
       return next(new AppError('Email is required for Google authentication', 400));
@@ -389,12 +433,13 @@ export const googleAuth = async (req, res, next) => {
     // Check if customer already exists
     let customer = await Customer.findOne({ email });
 
-    if (!customer) {
-      // Split name into first and last name if available
-      const nameParts = (name || '').trim().split(' ');
-      const firstName = nameParts[0] || 'Customer';
-      const lastName = nameParts.slice(1).join(' ') || '';
+    const name = verifiedToken.name || requestName || '';
+    const photo = verifiedToken.picture || requestPhoto || '';
+    const nameParts = name.trim().split(' ').filter(Boolean);
+    const firstName = nameParts[0] || 'Customer';
+    const lastName = nameParts.slice(1).join(' ') || firstName;
 
+    if (!customer) {
       // Create a random secure password since they are logging in via Google
       const randomPassword = crypto.randomBytes(16).toString('hex');
 
@@ -404,7 +449,20 @@ export const googleAuth = async (req, res, next) => {
         email,
         password: randomPassword,
         phone: '',
+        avatar: photo || undefined,
       });
+    } else {
+      const updates = {};
+      if (photo && customer.avatar !== photo) updates.avatar = photo;
+      if (name && customer.firstName !== firstName) updates.firstName = firstName;
+      if (name && customer.lastName !== lastName) updates.lastName = lastName;
+
+      if (Object.keys(updates).length) {
+        customer = await Customer.findByIdAndUpdate(customer._id, updates, {
+          new: true,
+          runValidators: true,
+        });
+      }
     }
 
     const token = signToken(customer._id);
@@ -419,6 +477,7 @@ export const googleAuth = async (req, res, next) => {
         lastName: customer.lastName,
         email: customer.email,
         phone: customer.phone || '',
+        avatar: customer.avatar,
       },
     });
   } catch (error) {

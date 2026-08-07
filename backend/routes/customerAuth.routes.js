@@ -15,14 +15,14 @@ import {
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
 import { protectCustomer } from '../middlewares/auth.middleware.js';
-import { customerRegisterSchema, customerLoginSchema } from '../schemas/customer.schema.js';
+import { customerRegisterSchema, customerLoginSchema, customerGoogleAuthSchema } from '../schemas/customer.schema.js';
 import { forgotPasswordSchema, resetPasswordSchema, updateProfileSchema, updatePasswordSchema, updateTwoFactorSchema, deleteAccountSchema } from '../schemas/validation.schemas.js';
 
 const router = express.Router();
 
 router.post('/register', validate(customerRegisterSchema), registerCustomer);
 router.post('/login', validate(customerLoginSchema), loginCustomer);
-router.post('/google', googleAuth);
+router.post('/google', validate(customerGoogleAuthSchema), googleAuth);
 router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
 router.put('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 
