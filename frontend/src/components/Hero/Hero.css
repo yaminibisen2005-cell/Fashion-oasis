@@ -41,7 +41,7 @@
 
 .hero-swiper {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
 }
 
 .hero-slide {
@@ -524,13 +524,13 @@
    SWIPER SLIDE FADE FIX
 ========================================== */
 
-.hero .swiper-slide {
+.home-hero .swiper-slide {
     opacity: 0 !important;
     pointer-events: none;
     transition: opacity 1s ease-in-out !important;
 }
 
-.hero .swiper-slide-active {
+.home-hero .swiper-slide-active {
     opacity: 1 !important;
     pointer-events: auto;
 }
