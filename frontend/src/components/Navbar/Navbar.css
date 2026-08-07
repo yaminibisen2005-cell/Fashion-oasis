@@ -197,75 +197,67 @@
 =========================== */
 
 .services-menu{
-
     position:relative;
-
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .fo-dropdown-menu{
-
     position:absolute;
-
-    top:58px;
-
+    top:calc(100% + 14px);
     left:50%;
-
-    transform:translateX(-50%);
-
-    width:240px;
-
-    background:#fff;
-
-    border-radius:var(--radius-sm);
-
-    padding:14px 0;
-
-    box-shadow:var(--shadow-luxury);
-
+    transform:translateX(-50%) translateY(-8px);
+    min-width:230px;
+    background:#ffffff;
+    border-radius:20px;
+    padding:16px 14px;
+    box-shadow:0 16px 45px rgba(239, 111, 143, 0.18), 0 4px 15px rgba(0, 0, 0, 0.04);
+    border:1px solid rgba(239, 111, 143, 0.2);
     opacity:0;
-
     visibility:hidden;
-
-    transform-origin:top;
-
-    transition:var(--transition-normal);
-
+    transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index:999;
+}
 
+.fo-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    border-left: 1px solid rgba(239, 111, 143, 0.2);
+    border-top: 1px solid rgba(239, 111, 143, 0.2);
 }
 
 .fo-dropdown-menu.show{
-
     opacity:1;
-
     visibility:visible;
-
     transform:translateX(-50%) translateY(0);
-
 }
 
 .fo-dropdown-item{
-
-    display:block;
-
-    padding:12px 22px;
-
-    font-size:14px;
-
-    color:#444;
-
-    transition:var(--transition-fast);
-
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:11px 20px;
+    margin:3px 0;
+    font-size:14.5px;
+    font-weight:600;
+    color:#4A3A3D;
+    border-radius:12px;
+    text-decoration:none;
+    transition:all 0.25s ease;
 }
 
 .fo-dropdown-item:hover{
-
-    background:#FFF6F8;
-
-    color:var(--primary-pink);
-
-    padding-left:30px;
-
+    background:linear-gradient(90deg, #FFF0F4, #FFF8FA);
+    color:#EF6F8F;
+    transform:translateY(-1px);
 }
 
 /* ===========================

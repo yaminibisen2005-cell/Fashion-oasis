@@ -2,7 +2,7 @@ import React from "react";
 import "./Newsletter.css";
 import { HiOutlineMail } from "react-icons/hi";
 
-import banner from "../../assets/newsletter-bg.png";
+import banner from "../../assets/newsletter-bg.jpg";
 
 const Newsletter = () => {
   return (
@@ -10,7 +10,7 @@ const Newsletter = () => {
 
       <img
         src={banner}
-        alt="Newsletter Banner"
+        alt="Fashion Oasis Newsletter"
         className="newsletter-bg"
       />
 

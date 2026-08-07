@@ -39,7 +39,7 @@ const Hero = () => {
   ];
 
   return (
-    <section className="hero">
+    <section className="home-hero">
       <Swiper
         ref={swiperRef}
         modules={[Navigation, Pagination, Autoplay, EffectFade]}

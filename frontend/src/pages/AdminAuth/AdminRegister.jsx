@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginBg from "../../assets/login-bg.png";
 import "./AdminAuth.css";
+import { validatePasswordStrength } from "../../utils/passwordValidation";
 
 const AdminRegister = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [adminKey, setAdminKey] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,7 +17,12 @@ const AdminRegister = () => {
   const validate = () => {
     if (name.trim().length < 2) return "Name must be at least 2 characters.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address.";
-    if (password.length < 8) return "Password must be at least 8 characters.";
+    const passErr = validatePasswordStrength(password);
+    if (passErr) {
+      setPasswordError(passErr);
+      return passErr;
+    }
+    setPasswordError("");
     if (!adminKey.trim()) return "Admin secret key is required.";
     return null;
   };
@@ -85,13 +92,19 @@ const AdminRegister = () => {
             </div>
 
             <div className="input-group">
-              <label>Password <span style={{ color: "#aaa", fontWeight: 400, fontSize: 11 }}>(min. 8 characters)</span></label>
+              <label>Password</label>
               <input
                 type="password"
-                placeholder="••••••••"
+                placeholder="Create password (e.g. Fashion@123)"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                className={passwordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setPassword(val);
+                  setPasswordError(validatePasswordStrength(val));
+                }}
               />
+              {passwordError && <span className="password-error-msg">{passwordError}</span>}
             </div>
 
             <div className="input-group">

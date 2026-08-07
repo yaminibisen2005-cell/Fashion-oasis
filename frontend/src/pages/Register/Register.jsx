@@ -9,6 +9,8 @@ import AuthLayout from "../../components/AuthLayout/AuthLayout";
 import { auth, googleProvider, signInWithPopup } from "../../firebase";
 import axios from "axios";
 
+import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
+
 const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("")
@@ -18,6 +20,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -25,8 +28,17 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setPasswordError("");
     setPhoneError("");
+    
+    // Validate Password
+    const passErr = validatePasswordStrength(password);
+    const confirmErr = validateConfirmPassword(password, confirmPassword);
+
+    if (passErr || confirmErr) {
+      setPasswordError(passErr);
+      setConfirmPasswordError(confirmErr);
+      return;
+    }
 
     // Phone number validation
     if (!phoneNumber.trim()) {
@@ -35,16 +47,6 @@ const Register = () => {
     }
     if (!/^[0-9]{10}$/.test(phoneNumber)) {
       setPhoneError("Please enter a valid 10-digit phone number");
-      return;
-    }
-
-    if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
       return;
     }
 
@@ -184,16 +186,20 @@ const Register = () => {
         {/* Password */}
         <div className="input-group anim-fade-up-input-2">
           <label htmlFor="password">Password</label>
-          <div className="input-wrapper">
+          <div className={`input-wrapper ${passwordError ? "input-error" : ""}`}>
             <FaLock className="input-icon" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Create password"
+              placeholder="Create password (e.g. Fashion@123)"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
-                if (e.target.value.length >= 6) setPasswordError("");
+                const val = e.target.value;
+                setPassword(val);
+                setPasswordError(validatePasswordStrength(val));
+                if (confirmPassword) {
+                  setConfirmPasswordError(validateConfirmPassword(val, confirmPassword));
+                }
               }}
               required
             />
@@ -206,20 +212,24 @@ const Register = () => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-          {passwordError && <span className="error-text">{passwordError}</span>}
+          {passwordError && <span className="password-error-msg">{passwordError}</span>}
         </div>
 
         {/* Confirm Password */}
         <div className="input-group anim-fade-up-input-2">
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <div className="input-wrapper">
+          <div className={`input-wrapper ${confirmPasswordError ? "input-error" : ""}`}>
             <FaLock className="input-icon" />
             <input
               id="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setConfirmPassword(val);
+                setConfirmPasswordError(validateConfirmPassword(password, val));
+              }}
               required
             />
             <button
@@ -231,6 +241,7 @@ const Register = () => {
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+          {confirmPasswordError && <span className="password-error-msg">{confirmPasswordError}</span>}
         </div>
 
         <button type="submit" className="anim-fade-up-btn-500">

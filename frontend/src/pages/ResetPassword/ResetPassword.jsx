@@ -2,22 +2,30 @@ import "../Login/Login.css";
 import loginBg from "../../assets/login-bg.png";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { resetPassword } from "../../api/customer";
+import { validatePasswordStrength } from "../../utils/passwordValidation";
 
 const ResetPassword = () => {
   const { token } = useParams(); // Grabs the token from the URL route
   const navigate = useNavigate();
 
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setMessage("");
     setError("");
+
+    const passErr = validatePasswordStrength(password);
+    if (passErr) {
+      setPasswordError(passErr);
+      return;
+    }
+    setPasswordError("");
+    setLoading(true);
 
     try {
       await resetPassword(token, { password });
@@ -53,12 +61,17 @@ const ResetPassword = () => {
               <label>New Password</label>
               <input
                 type="password"
-                placeholder="Enter new password (min 6 chars)"
+                placeholder="Enter new password (e.g. Fashion@123)"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                className={passwordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setPassword(val);
+                  setPasswordError(validatePasswordStrength(val));
+                }}
                 required
-                minLength={6}
               />
+              {passwordError && <span className="password-error-msg">{passwordError}</span>}
             </div>
 
             <button type="submit" disabled={loading}>

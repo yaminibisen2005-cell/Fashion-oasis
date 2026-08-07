@@ -4,39 +4,40 @@
 
 .newsletter {
     width: 100%;
-    max-width: 1450px;
-   margin: 40px auto 60px;
+    max-width: 1380px;
+    margin: 50px auto 70px;
     position: relative;
-    border-radius: var(--radius-card);
+    border-radius: 28px;
     overflow: hidden;
-   
+    min-height: 460px;
+    box-shadow: 0 20px 50px rgba(239, 111, 143, 0.12);
 }
 
 /* Banner */
 
 .newsletter-bg{
     width:100%;
+    height:100%;
+    min-height:460px;
     display:block;
-    /* border-radius:35px; */
     object-fit:cover;
+    object-position:center left;
 }
 
-/* White overlay for better readability */
+/* Soft overlay for legibility on the right */
 
 .newsletter::before{
     content:"";
     position:absolute;
     inset:0;
-
     background:
     linear-gradient(
         90deg,
-        rgba(255,255,255,.08) 0%,
-        rgba(255,255,255,.18) 45%,
-        rgba(255,255,255,.38) 70%,
-        rgba(255,255,255,.72) 100%
+        rgba(255, 245, 247, 0.02) 0%,
+        rgba(255, 245, 247, 0.15) 42%,
+        rgba(255, 245, 247, 0.55) 68%,
+        rgba(255, 245, 247, 0.88) 100%
     );
-
     z-index:1;
 }
 

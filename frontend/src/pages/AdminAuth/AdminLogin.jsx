@@ -6,6 +6,7 @@ import "./AdminAuth.css";
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,6 +14,11 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    setPasswordError("");
     setLoading(true);
 
     try {
@@ -67,9 +73,14 @@ const AdminLogin = () => {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                className={passwordError ? "input-error" : ""}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (e.target.value) setPasswordError("");
+                }}
                 required
               />
+              {passwordError && <span className="password-error-msg">{passwordError}</span>}
             </div>
 
             <button type="submit" className="admin-auth-btn" disabled={loading}>

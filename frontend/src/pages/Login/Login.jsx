@@ -11,6 +11,7 @@ import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
@@ -18,6 +19,12 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    setPasswordError("");
 
     try {
       const data = await customerLogin({ email, password });
@@ -40,9 +47,10 @@ const Login = () => {
 
       alert("Login Successful!");
       
-      // Extract target return URL if redirected from Checkout or Product Details
+      // Extract target return URL if redirected from Checkout, Product Details, Wishlist, etc.
+      // Default to Home page ("/") if no redirect target was provided
       const fromPath = location.state?.from?.pathname || location.state?.from;
-      const redirectUrl = typeof fromPath === "string" ? fromPath : "/dashboard";
+      const redirectUrl = typeof fromPath === "string" ? fromPath : "/";
 
       navigate(redirectUrl, { replace: true });
 
@@ -77,7 +85,7 @@ const Login = () => {
         alert("Google Login Successful!");
 
         const fromPath = location.state?.from?.pathname || location.state?.from;
-        const redirectUrl = typeof fromPath === "string" ? fromPath : "/dashboard";
+        const redirectUrl = typeof fromPath === "string" ? fromPath : "/";
         navigate(redirectUrl, { replace: true });
       }
     } catch (error) {
@@ -154,14 +162,17 @@ const Login = () => {
 
               <div className="input-group anim-fade-up-input-2">
                 <label htmlFor="password">Password</label>
-                <div className="input-wrapper">
+                <div className={`input-wrapper ${passwordError ? "input-error" : ""}`}>
                   <FaLock className="input-icon" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (e.target.value) setPasswordError("");
+                    }}
                     required
                   />
                   <button
@@ -173,6 +184,7 @@ const Login = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+                {passwordError && <span className="password-error-msg">{passwordError}</span>}
 
                 <Link to="/forgot-password" className="forgot-link">
                   Forgot Password?

@@ -8,6 +8,7 @@ import { FiTrendingUp, FiUsers } from "react-icons/fi";
 const SellerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,11 @@ const SellerLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    setPasswordError("");
     setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
@@ -187,14 +193,17 @@ const SellerLogin = () => {
 
               <div className="input-group anim-fade-up-input-2">
                 <label htmlFor="password">Password</label>
-                <div className="input-wrapper">
+                <div className={`input-wrapper ${passwordError ? "input-error" : ""}`}>
                   <FaLock className="input-icon" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (e.target.value) setPasswordError("");
+                    }}
                     required
                     disabled={loading}
                   />
@@ -208,6 +217,7 @@ const SellerLogin = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+                {passwordError && <span className="password-error-msg">{passwordError}</span>}
 
                 <div className="form-options">
                   <label className="remember-me">

@@ -4,15 +4,37 @@
    HERO SECTION
 ========================================== */
 
-.hero {
+:root {
+    /* Hero Paragraph Variables */
+    --hero-p-font-family: "Poppins", sans-serif;
+    --hero-p-color: #3D2D31;
+    --hero-p-font-weight: 400;
+    --hero-p-line-height-base: 1.7;
+    --hero-p-font-size-base: 17px;
+    --hero-p-margin-top-base: 22px;
+    --hero-p-max-width-base: 500px;
+}
+
+.home-hero {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    padding-top: 90px;
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 0;
     overflow: hidden;
     display: flex;
     align-items: center;
     background: var(--light-background);
+}
+
+/* Ensure hero starts from top */
+.hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 /* ==========================================
@@ -37,7 +59,7 @@
 .hero-bg {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: -1;
     overflow: hidden;
 }
 
@@ -65,7 +87,7 @@
 .hero-overlay {
     position: absolute;
     inset: 0;
-    z-index: 2;
+    z-index: 1;
 
     background: linear-gradient(
         90deg,
@@ -80,7 +102,7 @@
    CONTAINER
 ========================================== */
 
-.hero .container {
+.home-hero .container {
     position: relative;
     z-index: 5;
     max-width: 1320px;
@@ -91,8 +113,8 @@
 }
 
 .hero-row {
-    min-height: calc(100vh - 90px);
-    align-items: center;
+    min-height: calc(100vh - 100px);
+    align-items: flex-end;
     display: flex;
 }
 
@@ -103,7 +125,7 @@
     margin-left: 0;
 }
 
-.hero-content-col + .col-lg-7 {
+.home-hero .hero-content-col + .col-lg-7 {
     width: 55%;
 }
 
@@ -111,19 +133,22 @@
    CONTENT
 ========================================== */
 
-.hero-content {
+.home-hero .hero-content {
     max-width: 520px;
-    margin-top: 0;
+    margin-top: 40px;
+    margin-bottom: 0;
     position: relative;
     z-index: 20;
-    animation: fadeLeft 1s ease;
+    left: -80px;
+    top: 40px;
+    animation: fadeLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeLeft {
 
     from {
         opacity: 0;
-        transform: translateX(-50px);
+        transform: translateX(-25px);
     }
 
     to {
@@ -136,14 +161,14 @@
    TAG
 ========================================== */
 
-.hero-tag {
+.home-hero .hero-tag {
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 24px;
 }
 
-.hero-tag span {
+.home-hero .hero-tag span {
     font-size: 13px;
     letter-spacing: 2.5px;
     font-weight: 700;
@@ -151,7 +176,7 @@
     text-transform: uppercase;
 }
 
-.hero-tag .line {
+.home-hero .hero-tag .line {
     width: 80px;
     height: 2px;
     background: #d4a04b;
@@ -161,7 +186,7 @@
    HEADING & TYPOGRAPHY
 ========================================== */
 
-.hero h1 {
+.home-hero h1 {
     font-family: "DM Serif Display", serif;
     font-size: 74px;
     line-height: 0.95;
@@ -170,7 +195,7 @@
     letter-spacing: -0.5px;
 }
 
-.hero h1 span {
+.home-hero h1 span {
     display: block;
     margin-top: 6px;
     font-family: "Allura", cursive;
@@ -179,20 +204,22 @@
     color: #d4a04b;
 }
 
-.hero p {
-    margin-top: 22px;
-    max-width: 500px;
-    font-size: 17px;
-    line-height: 1.7;
-    font-family: "Poppins", sans-serif;
+.home-hero .hero-content p,
+.home-hero p {
     color: #3D2D31;
-    font-weight: 400;
+    margin-top: var(--hero-p-margin-top-base);
+    max-width: var(--hero-p-max-width-base);
+    font-size: var(--hero-p-font-size-base);
+    line-height: var(--hero-p-line-height-base);
+    font-family: var(--hero-p-font-family);
+    font-weight: var(--hero-p-font-weight);
 }
+
 /* ==========================================
    PREMIUM CTA BUTTON
 ========================================== */
 
-.hero button {
+.home-hero button {
     margin-top: 32px;
     border: 1px solid rgba(212, 160, 75, 0.4);
     outline: none;
@@ -217,19 +244,19 @@
     box-shadow: 0 10px 25px rgba(239,111,143,.32);
 }
 
-.hero button:hover {
+.home-hero button:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow: 0 14px 32px rgba(239, 111, 143, 0.4), 0 0 15px rgba(212, 160, 75, 0.35);
     background: linear-gradient(90deg, #e45889, #dc4c7c);
     border-color: #d4a04b;
 }
 
-.hero button .btn-arrow {
+.home-hero button .btn-arrow {
     font-size: 16px;
     transition: transform 0.3s ease;
 }
 
-.hero button:hover .btn-arrow {
+.home-hero button:hover .btn-arrow {
     transform: translateX(6px);
 }
 
@@ -237,14 +264,14 @@
    FEATURE CARDS
 ========================================== */
 
-.hero-features {
+.home-hero .hero-features {
     display: flex;
     align-items: stretch;
     gap: 16px;
     margin-top: 36px;
 }
 
-.hero-features > div {
+.home-hero .hero-features > div {
     flex: 1;
     display: flex;
     align-items: center;
@@ -259,19 +286,19 @@
     transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
-.hero-features > div:hover {
+.home-hero .hero-features > div:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 25px rgba(239, 111, 143, 0.16);
     border-color: #d4a04b;
 }
 
-.hero-features svg {
+.home-hero .hero-features svg {
     font-size: 28px;
     color: #ef6f8f;
     flex-shrink: 0;
 }
 
-.hero-features h6 {
+.home-hero .hero-features h6 {
     margin: 0;
     font-size: 14.5px;
     font-weight: 700;
@@ -279,7 +306,7 @@
     line-height: 1.2;
 }
 
-.hero-features small {
+.home-hero .hero-features small {
     display: block;
     margin-top: 2px;
     color: #666;
@@ -290,14 +317,14 @@
    HERO STATISTICS CARDS
 ========================================== */
 
-.hero-stats {
+.home-hero .hero-stats {
     display: flex;
     align-items: center;
     gap: 14px;
     margin-top: 20px;
 }
 
-.hero-stats .stat-card {
+.home-hero .hero-stats .stat-card {
     flex: 1;
     padding: 10px 12px;
     background: rgba(255, 255, 255, 0.9);
@@ -309,12 +336,12 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.hero-stats .stat-card:hover {
+.home-hero .hero-stats .stat-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 22px rgba(212, 160, 75, 0.18);
 }
 
-.hero-stats .stat-card h4 {
+.home-hero .hero-stats .stat-card h4 {
     margin: 0;
     font-family: 'DM Serif Display', serif;
     font-size: 20px;
@@ -322,7 +349,7 @@
     font-weight: 700;
 }
 
-.hero-stats .stat-card p {
+.home-hero .hero-stats .stat-card p {
     margin: 2px 0 0;
     font-size: 11px;
     color: #666;
@@ -335,8 +362,8 @@
    SWIPER NAVIGATION
 ========================================== */
 
-.hero .swiper-button-prev,
-.hero .swiper-button-next {
+.home-hero .swiper-button-prev,
+.home-hero .swiper-button-next {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -346,24 +373,39 @@
     transition: .3s;
 }
 
-.hero .swiper-button-prev:hover,
-.hero .swiper-button-next:hover {
+.home-hero .swiper-button-prev:hover,
+.home-hero .swiper-button-next:hover {
     background: #fff;
     color: #ef6f8f;
     transform: translateY(-2px);
 }
 
-.hero .swiper-button-prev::after,
-.hero .swiper-button-next::after {
+/* ==========================================
+   HOME PAGE WRAPPER
+========================================== */
+
+.home-page-wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   SWIPER NAVIGATION
+========================================== */
+
+.home-hero .swiper-button-prev::after,
+.home-hero .swiper-button-next::after {
     font-size: 18px;
     font-weight: 700;
 }
 
-.hero .swiper-button-prev {
+.home-hero .swiper-button-prev {
     left: 25px;
 }
 
-.hero .swiper-button-next {
+.home-hero .swiper-button-next {
     right: 25px;
 }
 
@@ -371,11 +413,11 @@
    PAGINATION
 ========================================== */
 
-.hero .swiper-pagination {
+.home-hero .swiper-pagination {
     bottom: 28px !important;
 }
 
-.hero .swiper-pagination-bullet {
+.home-hero .swiper-pagination-bullet {
     width: 12px;
     height: 12px;
     background: rgba(255,255,255,.55);
@@ -383,7 +425,7 @@
     transition: .3s;
 }
 
-.hero .swiper-pagination-bullet-active {
+.home-hero .swiper-pagination-bullet-active {
     width: 34px;
     border-radius: 20px;
     background: #d4a04b;
@@ -393,76 +435,89 @@
    TABLET
 ========================================== */
 
+@media (max-width: 1200px) and (min-width: 993px) {
+    .home-hero .hero-content {
+        left: -45px;
+        top: 20px;
+    }
+}
+
 @media (max-width: 992px) {
 
-    .hero {
-        padding: 140px 0 70px;
+    .home-hero {
+        padding: 50px 0;
         min-height: auto;
     }
 
-    .hero-slide,
-    .hero-row {
+    .home-hero .hero-slide,
+    .home-hero .hero-row {
         min-height: auto;
     }
 
-    .hero-content-col {
+    .home-hero .hero-content-col {
         width: 100%;
         padding-right: 0;
         padding-left: 0;
         margin-left: 0;
     }
 
-    .hero-content-col + .col-lg-7 {
+    .home-hero .hero-content-col + .col-lg-7 {
         display: none;
     }
 
-    .hero-content {
+    .home-hero .hero-content {
+        left: 0;
+        top: 0;
+        transform: none;
         max-width: 100%;
         margin: 0 auto;
         text-align: center;
     }
 
-    .hero-tag {
+    .home-hero .hero-tag {
         justify-content: center;
     }
 
-    .hero h1 {
+    .home-hero h1 {
         font-size: 64px;
     }
 
-    .hero h1 span {
+    .home-hero h1 span {
         font-size: 90px;
     }
 
-    .hero p {
+    .home-hero p {
         max-width: 650px;
         margin: 24px auto 0;
         font-size: 18px;
         line-height: 32px;
+        font-family: var(--hero-p-font-family);
+        color: #3D2D31;
+        font-weight: var(--hero-p-font-weight);
     }
 
-    .hero button {
+    .home-hero button {
         margin: 32px auto 0;
     }
 
-    .hero-features {
+    .home-hero .hero-features {
         justify-content: center;
         flex-wrap: wrap;
         gap: 30px;
         margin-top: 45px;
     }
 
-    .hero-stats {
+    .home-hero .hero-stats {
         justify-content: center;
         max-width: 600px;
         margin: 30px auto 0;
     }
 
-    .hero .swiper-button-prev {
+    .home-hero .swiper-button-prev {
         left: 12px;
     }
 
-    .hero .swiper-button-next {
+    .home-hero .swiper-button-next {
         right: 12px;
     }
 }
@@ -473,49 +528,53 @@
 
 @media (max-width: 576px) {
 
-    .hero {
-        padding: 120px 0 60px;
+    .home-hero {
+        padding: 0;
+        min-height: auto;
     }
 
-    .hero .container {
+    .home-hero .container {
         padding-left: 10px;
         padding-right: 10px;
     }
 
-    .hero-content {
+    .home-hero .hero-content {
         width: 100%;
         text-align: center;
         margin-top: 0;
     }
 
-    .hero-tag {
+    .home-hero .hero-tag {
         justify-content: center;
     }
 
-    .hero-tag .line {
+    .home-hero .hero-tag .line {
         width: 45px;
     }
 
-    .hero h1 {
+    .home-hero h1 {
         font-size: 42px;
     }
 
-    .hero h1 span {
+    .home-hero h1 span {
         font-size: 68px;
     }
 
-    .hero p {
+    .home-hero p {
         font-size: 16px;
         line-height: 28px;
+        font-family: var(--hero-p-font-family);
+        color: #3D2D31;
+        font-weight: var(--hero-p-font-weight);
     }
 
-    .hero button {
+    .home-hero button {
         width: 100%;
         justify-content: center;
         padding: 16px 24px;
     }
 
-    .hero-features {
+    .home-hero .hero-features {
         flex-direction: row;
         align-items: center;
         gap: 10px;
@@ -556,38 +615,39 @@
         font-size: 9.5px;
     }
 
-    .hero .swiper-button-prev,
-    .hero .swiper-button-next {
+    .home-hero .swiper-button-prev,
+    .home-hero .swiper-button-next {
         width: 36px;
         height: 36px;
     }
 
-    .hero .swiper-button-prev::after,
-    .hero .swiper-button-next::after {
+    .home-hero .swiper-button-prev::after,
+    .home-hero .swiper-button-next::after {
         font-size: 14px;
     }
 
-    .hero .swiper-button-prev {
+    .home-hero .swiper-button-prev {
         left: 8px;
     }
 
-    .hero .swiper-button-next {
+    .home-hero .swiper-button-next {
         right: 8px;
     }
 
-    .hero .swiper-pagination {
+    .home-hero .swiper-pagination {
         bottom: 16px !important;
     }
 
-    .hero .swiper-pagination-bullet {
+    .home-hero .swiper-pagination-bullet {
         width: 10px;
         height: 10px;
     }
 
-    .hero .swiper-pagination-bullet-active {
+    .home-hero .swiper-pagination-bullet-active {
         width: 28px;
     }
 }
+
 /* ==========================================
    SWIPER SLIDE FADE FIX
 ========================================== */

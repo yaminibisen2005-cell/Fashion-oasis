@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import { getProfile, updateProfile, updatePassword, deleteAccount } from "../../api/customer";
+import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
 import {
   FaUserCircle,
   FaLock,
@@ -47,6 +48,8 @@ function AccountSetting() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   // Preferences states (loaded from localStorage if available)
   const [notifications, setNotifications] = useState(
@@ -138,16 +141,22 @@ function AccountSetting() {
     setMessage("");
     setError("");
 
+    const passErr = validatePasswordStrength(passwordData.newPassword);
+    const confirmErr = validateConfirmPassword(passwordData.newPassword, passwordData.confirmPassword);
+
+    if (passErr || confirmErr) {
+      setNewPasswordError(passErr);
+      setConfirmPasswordError(confirmErr);
+      return;
+    }
+    setNewPasswordError("");
+    setConfirmPasswordError("");
+
     const activeUser = JSON.parse(localStorage.getItem("customerInfo")) || {};
     const currentEmail = formData.email || activeUser.email;
 
     if (!currentEmail) {
       setError("User session not found. Please log in again.");
-      return;
-    }
-
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setError("New passwords do not match!");
       return;
     }
 
@@ -344,10 +353,19 @@ function AccountSetting() {
                 type="password"
                 name="newPassword"
                 value={passwordData.newPassword}
-                onChange={handlePasswordChangeInput}
-                placeholder="Enter new password"
+                className={newPasswordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  handlePasswordChangeInput(e);
+                  setNewPasswordError(validatePasswordStrength(val));
+                  if (passwordData.confirmPassword) {
+                    setConfirmPasswordError(validateConfirmPassword(val, passwordData.confirmPassword));
+                  }
+                }}
+                placeholder="Enter new password (e.g. Fashion@123)"
                 required
               />
+              {newPasswordError && <span className="password-error-msg">{newPasswordError}</span>}
             </div>
 
             <div className="fo-input-group">
@@ -359,10 +377,16 @@ function AccountSetting() {
                 type="password"
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
-                onChange={handlePasswordChangeInput}
+                className={confirmPasswordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  handlePasswordChangeInput(e);
+                  setConfirmPasswordError(validateConfirmPassword(passwordData.newPassword, val));
+                }}
                 placeholder="Confirm new password"
                 required
               />
+              {confirmPasswordError && <span className="password-error-msg">{confirmPasswordError}</span>}
             </div>
 
             <button type="submit" className="update-btn">
