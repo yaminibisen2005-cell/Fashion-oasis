@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Allura&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* ==========================================
-   HERO SECTION
+   HERO SECTION SYSTEM
 ========================================== */
 
 :root {
-    /* Hero Paragraph Variables */
     --hero-p-font-family: "Poppins", sans-serif;
     --hero-p-color: #3D2D31;
     --hero-p-font-weight: 400;
@@ -28,7 +27,6 @@
     background: var(--light-background);
 }
 
-/* Ensure hero starts from top */
 .hero-section {
     position: relative;
     width: 100%;
@@ -50,10 +48,12 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
 /* ==========================================
-   BACKGROUND
+   BACKGROUND & ANIMATIONS
 ========================================== */
 
 .hero-bg {
@@ -91,15 +91,15 @@
 
     background: linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.92) 0%,
-        rgba(255, 250, 248, 0.75) 35%,
-        rgba(255, 245, 243, 0.28) 65%,
-        rgba(255, 245, 243, 0) 100%
+        rgba(255, 255, 255, 0.94) 0%,
+        rgba(255, 250, 248, 0.85) 40%,
+        rgba(255, 245, 243, 0.4) 65%,
+        rgba(255, 245, 243, 0.1) 100%
     );
 }
 
 /* ==========================================
-   CONTAINER
+   CONTAINER & LAYOUT
 ========================================== */
 
 .home-hero .container {
@@ -114,58 +114,50 @@
 
 .hero-row {
     min-height: calc(100vh - 100px);
-    align-items: flex-end;
+    align-items: center;
     display: flex;
 }
 
 .hero-content-col {
-    width: 45%;
+    width: 50%;
     padding-right: 25px;
     padding-left: 0;
     margin-left: 0;
 }
 
 .home-hero .hero-content-col + .col-lg-7 {
-    width: 55%;
+    width: 50%;
 }
 
 /* ==========================================
-   CONTENT
+   CONTENT & TYPOGRAPHY
 ========================================== */
 
 .home-hero .hero-content {
-    max-width: 520px;
-    margin-top: 40px;
+    max-width: 540px;
+    margin-top: 0;
     margin-bottom: 0;
     position: relative;
     z-index: 20;
-    left: -80px;
-    top: 40px;
     animation: fadeLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeLeft {
-
     from {
         opacity: 0;
         transform: translateX(-25px);
     }
-
     to {
         opacity: 1;
         transform: translateX(0);
     }
 }
 
-/* ==========================================
-   TAG
-========================================== */
-
 .home-hero .hero-tag {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .home-hero .hero-tag span {
@@ -182,14 +174,10 @@
     background: #d4a04b;
 }
 
-/* ==========================================
-   HEADING & TYPOGRAPHY
-========================================== */
-
 .home-hero h1 {
     font-family: "DM Serif Display", serif;
-    font-size: 74px;
-    line-height: 0.95;
+    font-size: clamp(38px, 5.5vw, 72px);
+    line-height: 0.98;
     color: #ef6f8f;
     margin: 0;
     letter-spacing: -0.5px;
@@ -199,8 +187,8 @@
     display: block;
     margin-top: 6px;
     font-family: "Allura", cursive;
-    font-size: 94px;
-    line-height: .9;
+    font-size: clamp(58px, 7.5vw, 92px);
+    line-height: 0.9;
     color: #d4a04b;
 }
 
@@ -209,7 +197,7 @@
     color: #3D2D31;
     margin-top: var(--hero-p-margin-top-base);
     max-width: var(--hero-p-max-width-base);
-    font-size: var(--hero-p-font-size-base);
+    font-size: clamp(14px, 1.3vw, 17px);
     line-height: var(--hero-p-line-height-base);
     font-family: var(--hero-p-font-family);
     font-weight: var(--hero-p-font-weight);
@@ -220,27 +208,21 @@
 ========================================== */
 
 .home-hero button {
-    margin-top: 32px;
+    margin-top: 28px;
     border: 1px solid rgba(212, 160, 75, 0.4);
     outline: none;
     padding: 16px 38px;
-
     background: linear-gradient(90deg, #F06C9B, #E85D8C);
     color: #fff;
-
     border-radius: 50px;
-
     display: inline-flex;
     align-items: center;
     gap: 12px;
-
     font-size: 15px;
     font-weight: 600;
     font-family: "Poppins", sans-serif;
-
     cursor: pointer;
     transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-
     box-shadow: 0 10px 25px rgba(239,111,143,.32);
 }
 
@@ -267,8 +249,8 @@
 .home-hero .hero-features {
     display: flex;
     align-items: stretch;
-    gap: 16px;
-    margin-top: 36px;
+    gap: 14px;
+    margin-top: 32px;
 }
 
 .home-hero .hero-features > div {
@@ -276,7 +258,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 14px 14px;
+    padding: 12px 14px;
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -293,14 +275,14 @@
 }
 
 .home-hero .hero-features svg {
-    font-size: 28px;
+    font-size: 26px;
     color: #ef6f8f;
     flex-shrink: 0;
 }
 
 .home-hero .hero-features h6 {
     margin: 0;
-    font-size: 14.5px;
+    font-size: 13.5px;
     font-weight: 700;
     color: #2d2d2d;
     line-height: 1.2;
@@ -310,67 +292,28 @@
     display: block;
     margin-top: 2px;
     color: #666;
-    font-size: 11.5px;
-}
-
-/* ==========================================
-   HERO STATISTICS CARDS
-========================================== */
-
-.home-hero .hero-stats {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 20px;
-}
-
-.home-hero .hero-stats .stat-card {
-    flex: 1;
-    padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(212, 160, 75, 0.3);
-    border-radius: 14px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.home-hero .hero-stats .stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 22px rgba(212, 160, 75, 0.18);
-}
-
-.home-hero .hero-stats .stat-card h4 {
-    margin: 0;
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: #ef6f8f;
-    font-weight: 700;
-}
-
-.home-hero .hero-stats .stat-card p {
-    margin: 2px 0 0;
     font-size: 11px;
-    color: #666;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
 }
 
 /* ==========================================
-   SWIPER NAVIGATION
+   SWIPER NAVIGATION & PAGINATION
 ========================================== */
 
 .home-hero .swiper-button-prev,
 .home-hero .swiper-button-next {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: rgba(255,255,255,.92);
     color: #d4a04b;
     box-shadow: 0 8px 20px rgba(0,0,0,.12);
     transition: .3s;
+}
+
+.home-hero .swiper-button-prev::after,
+.home-hero .swiper-button-next::after {
+    font-size: 16px;
+    font-weight: 700;
 }
 
 .home-hero .swiper-button-prev:hover,
@@ -380,9 +323,31 @@
     transform: translateY(-2px);
 }
 
-/* ==========================================
-   HOME PAGE WRAPPER
-========================================== */
+.home-hero .swiper-button-prev {
+    left: 20px;
+}
+
+.home-hero .swiper-button-next {
+    right: 20px;
+}
+
+.home-hero .swiper-pagination {
+    bottom: 24px !important;
+}
+
+.home-hero .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: rgba(255,255,255,.55);
+    opacity: 1;
+    transition: .3s;
+}
+
+.home-hero .swiper-pagination-bullet-active {
+    width: 30px;
+    border-radius: 20px;
+    background: #d4a04b;
+}
 
 .home-page-wrapper {
     margin: 0;
@@ -392,73 +357,43 @@
 }
 
 /* ==========================================
-   SWIPER NAVIGATION
+   RESPONSIVE BREAKPOINTS
 ========================================== */
 
-.home-hero .swiper-button-prev::after,
-.home-hero .swiper-button-next::after {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.home-hero .swiper-button-prev {
-    left: 25px;
-}
-
-.home-hero .swiper-button-next {
-    right: 25px;
-}
-
-/* ==========================================
-   PAGINATION
-========================================== */
-
-.home-hero .swiper-pagination {
-    bottom: 28px !important;
-}
-
-.home-hero .swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    background: rgba(255,255,255,.55);
-    opacity: 1;
-    transition: .3s;
-}
-
-.home-hero .swiper-pagination-bullet-active {
-    width: 34px;
-    border-radius: 20px;
-    background: #d4a04b;
-}
-
-/* ==========================================
-   TABLET
-========================================== */
-
+/* Laptop / Desktop (993px - 1200px) */
 @media (max-width: 1200px) and (min-width: 993px) {
-    .home-hero .hero-content {
-        left: -45px;
-        top: 20px;
+    .hero-content-col {
+        width: 55%;
+    }
+    .home-hero .hero-content-col + .col-lg-7 {
+        width: 45%;
     }
 }
 
+/* Tablet (768px - 992px) */
 @media (max-width: 992px) {
-
     .home-hero {
-        padding: 50px 0;
+        padding: 60px 0 40px 0;
         min-height: auto;
+    }
+
+    .hero-overlay {
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.94) 0%,
+            rgba(255, 250, 248, 0.88) 50%,
+            rgba(255, 245, 243, 0.6) 100%
+        );
     }
 
     .home-hero .hero-slide,
-    .home-hero .hero-row {
+    .hero-row {
         min-height: auto;
     }
 
-    .home-hero .hero-content-col {
+    .hero-content-col {
         width: 100%;
         padding-right: 0;
-        padding-left: 0;
-        margin-left: 0;
     }
 
     .home-hero .hero-content-col + .col-lg-7 {
@@ -466,10 +401,7 @@
     }
 
     .home-hero .hero-content {
-        left: 0;
-        top: 0;
-        transform: none;
-        max-width: 100%;
+        max-width: 620px;
         margin: 0 auto;
         text-align: center;
     }
@@ -478,173 +410,113 @@
         justify-content: center;
     }
 
-    .home-hero h1 {
-        font-size: 64px;
-    }
-
-    .home-hero h1 span {
-        font-size: 90px;
-    }
-
     .home-hero p {
-        max-width: 650px;
-        margin: 24px auto 0;
-        font-size: 18px;
-        line-height: 32px;
-        font-family: var(--hero-p-font-family);
-        color: #3D2D31;
-        font-weight: var(--hero-p-font-weight);
+        margin: 20px auto 0;
     }
 
     .home-hero button {
-        margin: 32px auto 0;
+        margin: 28px auto 0;
     }
 
     .home-hero .hero-features {
         justify-content: center;
-        flex-wrap: wrap;
-        gap: 30px;
-        margin-top: 45px;
-    }
-
-    .home-hero .hero-stats {
-        justify-content: center;
-        max-width: 600px;
-        margin: 30px auto 0;
+        margin-top: 36px;
     }
 
     .home-hero .swiper-button-prev {
-        left: 12px;
+        left: 10px;
     }
 
     .home-hero .swiper-button-next {
-        right: 12px;
+        right: 10px;
     }
 }
 
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media (max-width: 576px) {
-
+/* Mobile (481px - 767px) */
+@media (max-width: 767px) {
     .home-hero {
-        padding: 0;
-        min-height: auto;
+        padding: 40px 0 30px 0;
     }
 
     .home-hero .container {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .home-hero .hero-content {
-        width: 100%;
-        text-align: center;
-        margin-top: 0;
-    }
-
-    .home-hero .hero-tag {
-        justify-content: center;
-    }
-
-    .home-hero .hero-tag .line {
-        width: 45px;
-    }
-
-    .home-hero h1 {
-        font-size: 42px;
-    }
-
-    .home-hero h1 span {
-        font-size: 68px;
-    }
-
-    .home-hero p {
-        font-size: 16px;
-        line-height: 28px;
-        font-family: var(--hero-p-font-family);
-        color: #3D2D31;
-        font-weight: var(--hero-p-font-weight);
+        padding-left: 16px;
+        padding-right: 16px;
     }
 
     .home-hero button {
         width: 100%;
+        max-width: 320px;
         justify-content: center;
-        padding: 16px 24px;
     }
 
     .home-hero .hero-features {
-        flex-direction: row;
-        align-items: center;
         gap: 10px;
-        margin-top: 25px;
+        margin-top: 28px;
     }
 
-    .hero-features > div {
-        padding: 8px 10px;
-    }
-
-    .hero-features svg {
-        font-size: 22px;
-    }
-
-    .hero-features h6 {
-        font-size: 13px;
-    }
-
-    .hero-features small {
-        font-size: 11px;
-    }
-
-    .hero-stats {
-        flex-direction: row;
-        gap: 8px;
-        margin-top: 18px;
-    }
-
-    .hero-stats .stat-card {
-        padding: 8px 6px;
-    }
-
-    .hero-stats .stat-card h4 {
-        font-size: 16px;
-    }
-
-    .hero-stats .stat-card p {
-        font-size: 9.5px;
+    .home-hero .hero-features > div {
+        padding: 10px 12px;
     }
 
     .home-hero .swiper-button-prev,
     .home-hero .swiper-button-next {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
+        opacity: 0.7;
     }
 
     .home-hero .swiper-button-prev::after,
     .home-hero .swiper-button-next::after {
+        font-size: 13px;
+    }
+}
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+    .home-hero {
+        padding: 30px 0 25px 0;
+    }
+
+    .home-hero .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .home-hero .hero-tag span {
+        font-size: 11px;
+        letter-spacing: 1.8px;
+    }
+
+    .home-hero .hero-tag .line {
+        width: 40px;
+    }
+
+    .home-hero button {
+        width: 100%;
+        max-width: 100%;
+        padding: 14px 20px;
         font-size: 14px;
     }
 
-    .home-hero .swiper-button-prev {
-        left: 8px;
+    .home-hero .hero-features {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 24px;
     }
 
+    .home-hero .hero-features > div {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 10px 16px;
+    }
+
+    .home-hero .swiper-button-prev,
     .home-hero .swiper-button-next {
-        right: 8px;
+        display: none;
     }
 
     .home-hero .swiper-pagination {
-        bottom: 16px !important;
-    }
-
-    .home-hero .swiper-pagination-bullet {
-        width: 10px;
-        height: 10px;
-    }
-
-    .home-hero .swiper-pagination-bullet-active {
-        width: 28px;
+        bottom: 12px !important;
     }
 }
 

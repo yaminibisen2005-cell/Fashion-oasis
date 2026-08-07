@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { showConfirm, notifySuccess, notifyError, notifyInfo } from "../../utils/alerts";
 import {
   FaChartPie,
   FaBox,
@@ -307,11 +308,11 @@ const AdminLayout = () => {
         // fetch updated lists
         await loadSellers();
         await loadPendingSellers();
-        alert('Seller approved successfully');
+        notifySuccess('Seller approved successfully');
       }
     } catch (err) {
       console.error('Approve seller error:', err);
-      alert('Failed to approve seller');
+      notifyError('Failed to approve seller');
     }
   };
 
@@ -320,11 +321,11 @@ const AdminLayout = () => {
       const response = await apiRejectSeller(id, { reason });
       if (response.success) {
         await loadPendingSellers();
-        alert('Seller rejected');
+        notifySuccess('Seller rejected');
       }
     } catch (err) {
       console.error('Reject seller error:', err);
-      alert('Failed to reject seller');
+      notifyError('Failed to reject seller');
     }
   };
 
@@ -333,11 +334,11 @@ const AdminLayout = () => {
       const response = await apiToggleSellerStatus(id);
       if (response.success) {
         await loadSellers();
-        alert('Seller status updated');
+        notifySuccess('Seller status updated');
       }
     } catch (err) {
       console.error('Toggle status error:', err);
-      alert('Failed to toggle seller status');
+      notifyError('Failed to toggle seller status');
     }
   };
 
@@ -358,7 +359,7 @@ const AdminLayout = () => {
       
       setProducts([newProductItem, ...products]);
       setPendingProducts(pendingProducts.filter(p => p.id !== id));
-      alert(`Product "${approved.name}" approved and listed live!`);
+      notifySuccess(`Product "${approved.name}" approved and listed live!`);
     }
   };
 
@@ -366,7 +367,7 @@ const AdminLayout = () => {
     const rejected = pendingProducts.find(p => p.id === id);
     if (rejected) {
       setPendingProducts(pendingProducts.filter(p => p.id !== id));
-      alert(`Product "${rejected.name}" rejected. Feedback: "${feedback}"`);
+      notifyInfo(`Product "${rejected.name}" rejected.`);
     }
   };
 
@@ -387,7 +388,7 @@ const AdminLayout = () => {
         status: "Paid"
       }, ...payoutHistory]);
       setWithdrawalRequests(withdrawalRequests.filter(r => r.id !== id));
-      alert(`Payout of ₹${request.amount.toLocaleString()} to ${request.sellerName} marked as paid successfully.`);
+      notifySuccess(`Payout of ₹${request.amount.toLocaleString()} to ${request.sellerName} marked as paid successfully.`);
     }
   };
 
@@ -416,7 +417,7 @@ const AdminLayout = () => {
   };
 
   const deleteProduct = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this product?");
+    const isConfirmed = await showConfirm("Delete Product", "Are you sure you want to delete this product?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -456,7 +457,7 @@ const AdminLayout = () => {
   };
 
   const deleteCategory = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this category?");
+    const isConfirmed = await showConfirm("Delete Category", "Are you sure you want to delete this category?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -511,7 +512,7 @@ const AdminLayout = () => {
   };
 
   const deleteReview = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this review?");
+    const isConfirmed = await showConfirm("Delete Review", "Are you sure you want to delete this review?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -551,7 +552,7 @@ const AdminLayout = () => {
   };
   
   const deleteCoupon = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this coupon?");
+    const isConfirmed = await showConfirm("Delete Coupon", "Are you sure you want to delete this coupon?", "Delete");
     if (!isConfirmed) return;
 
     try {

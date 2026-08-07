@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus, FaTrash, FaEdit, FaToggleOn, FaToggleOff, FaTag, FaCalendarAlt } from "react-icons/fa";
 import { fetchOffersAdmin, createOfferAPI, updateOfferAPI, deleteOfferAPI, toggleOfferStatusAPI } from "../../../api/admin";
+import { showConfirm } from "../../../utils/alerts";
 
 const OffersSection = () => {
   const [offers, setOffers] = useState([]);
@@ -99,7 +100,8 @@ const OffersSection = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this special offer?")) return;
+    const isConfirmed = await showConfirm("Delete Offer", "Are you sure you want to delete this special offer?", "Delete");
+    if (!isConfirmed) return;
     try {
       const res = await deleteOfferAPI(id);
       if (res.success) {

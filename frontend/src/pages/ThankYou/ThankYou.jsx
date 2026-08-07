@@ -4,6 +4,7 @@ import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { FaCheckCircle, FaArrowRight, FaDownload } from "react-icons/fa";
+import { notifyError } from "../../utils/alerts";
 import "./ThankYou.css";
 
 const ThankYou = () => {
@@ -51,7 +52,7 @@ const ThankYou = () => {
         triggerDownload();
       };
       script.onerror = () => {
-        alert("Failed to load PDF engine. Please try again.");
+        notifyError("Failed to load PDF engine. Please try again.");
         setLoadingBill(false);
       };
       document.body.appendChild(script);

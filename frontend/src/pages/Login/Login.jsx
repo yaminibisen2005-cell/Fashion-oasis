@@ -6,6 +6,7 @@ import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
 import { customerLogin } from "../../api/customer";
 import { auth, googleProvider, signInWithPopup } from "../../firebase";
+import { notifySuccess, notifyError, notifyWarning } from "../../utils/alerts";
 import axios from "axios";
 
 const Login = () => {
@@ -45,7 +46,7 @@ const Login = () => {
 
       window.dispatchEvent(new Event("storage"));
 
-      alert("Login Successful!");
+      notifySuccess("Login Successful!");
       
       // Extract target return URL if redirected from Checkout, Product Details, Wishlist, etc.
       // Default to Home page ("/") if no redirect target was provided
@@ -56,7 +57,7 @@ const Login = () => {
 
     } catch (error) {
       console.error("Login error:", error);
-      alert(error.response?.data?.message || error.message || "Invalid email or password");
+      notifyError(error.response?.data?.message || error.message || "Invalid email or password");
     }
   };
 
@@ -68,7 +69,7 @@ const Login = () => {
     setIsGoogleLoading(true);
     try {
       if (!auth || !googleProvider) {
-        alert("Google Authentication is not configured or Firebase API keys are missing.");
+        notifyWarning("Google Authentication is not configured or Firebase API keys are missing.");
         setIsGoogleLoading(false);
         return;
       }
@@ -90,6 +91,7 @@ const Login = () => {
         localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
 
         window.dispatchEvent(new Event("storage"));
+        notifySuccess("Logged in successfully with Google!");
 
         const fromPath = location.state?.from?.pathname || location.state?.from;
         const redirectUrl = typeof fromPath === "string" ? fromPath : "/";
@@ -103,9 +105,9 @@ const Login = () => {
       ) {
         // User closed or canceled popup - handle gracefully
       } else if (error.code === "auth/popup-blocked") {
-        alert("Pop-up blocked by your browser. Please allow pop-ups for this website to sign in with Google.");
+        notifyWarning("Pop-up blocked by your browser. Please allow pop-ups for this website to sign in with Google.");
       } else {
-        alert(error.response?.data?.message || error.message || "Google sign-in failed. Please try again.");
+        notifyError(error.response?.data?.message || error.message || "Google sign-in failed. Please try again.");
       }
     } finally {
       setIsGoogleLoading(false);

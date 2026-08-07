@@ -1,0 +1,70 @@
+/* Fashion Oasis - Luxury SweetAlert2 & Toast Custom Styling */
+
+.fashion-oasis-toast-popup {
+  font-family: 'Poppins', sans-serif !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 12px 18px !important;
+}
+
+.fashion-oasis-alert-popup {
+  font-family: 'Poppins', sans-serif !important;
+  border-radius: 20px !important;
+  padding: 28px !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(239, 111, 143, 0.15) !important;
+}
+
+.fashion-oasis-alert-popup .swal2-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #111111 !important;
+  margin-bottom: 8px !important;
+}
+
+.fashion-oasis-alert-popup .swal2-html-container {
+  font-size: 14px !important;
+  color: #555555 !important;
+  line-height: 1.5 !important;
+}
+
+.fashion-oasis-alert-btn-confirm {
+  background: linear-gradient(135deg, #EF6F8F 0%, #D94C7A 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 25px !important;
+  padding: 11px 28px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 4px 15px rgba(239, 111, 143, 0.3) !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  margin: 8px !important;
+}
+
+.fashion-oasis-alert-btn-confirm:hover {
+  background: linear-gradient(135deg, #D94C7A 0%, #B83561 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(239, 111, 143, 0.4) !important;
+}
+
+.fashion-oasis-alert-btn-cancel {
+  background: #f1f2f6 !important;
+  color: #444444 !important;
+  border: none !important;
+  border-radius: 25px !important;
+  padding: 11px 24px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  margin: 8px !important;
+}
+
+.fashion-oasis-alert-btn-cancel:hover {
+  background: #e4e6eb !important;
+  color: #111111 !important;
+}

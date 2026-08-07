@@ -8,6 +8,7 @@ import AuthLayout from "../../components/AuthLayout/AuthLayout";
 
 import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
 import { registerSeller } from "../../api/seller";
+import { notifyError } from "../../utils/alerts";
 
 const SellerRegister = () => {
   const [fullName, setFullName] = useState("");
@@ -128,7 +129,7 @@ const SellerRegister = () => {
       });
 
     } catch (error) {
-      alert(error.response?.data?.message || error.message || "Registration failed. Please try again.");
+      notifyError(error.response?.data?.message || error.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }

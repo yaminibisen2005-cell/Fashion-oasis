@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaUserCheck, FaUserSlash, FaTimes, FaCheck, FaInfoCircle } from "react-icons/fa";
+import { notifyWarning } from "../../../utils/alerts";
 
 const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRejectSeller, handleToggleSellerStatus }) => {
   const [activeSubTab, setActiveSubTab] = useState("directory");
@@ -21,7 +22,7 @@ const SellersSection = ({ sellers, pendingSellers, handleApproveSeller, handleRe
 
   const submitRejection = () => {
     if (!rejectReason.trim()) {
-      alert("Please provide a reason for rejection.");
+      notifyWarning("Please provide a reason for rejection.");
       return;
     }
     handleRejectSeller(selectedSellerId, rejectReason);

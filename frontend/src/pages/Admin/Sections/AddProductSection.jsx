@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUpload, FaChevronLeft } from "react-icons/fa";
+import { notifyWarning, notifyError } from "../../../utils/alerts";
 
 const AddProductSection = ({ addProduct, categories }) => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const AddProductSection = ({ addProduct, categories }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.category || !formData.material || !formData.price || !formData.stock) {
-      alert("Please fill in all required fields.");
+      notifyWarning("Please fill in all required fields.");
       return;
     }
 
@@ -65,7 +66,7 @@ const AddProductSection = ({ addProduct, categories }) => {
     if (success) {
       navigate("/admin/products");
     } else {
-      alert("Failed to add product. Please check the inputs.");
+      notifyError("Failed to add product. Please check the inputs.");
     }
   };
 

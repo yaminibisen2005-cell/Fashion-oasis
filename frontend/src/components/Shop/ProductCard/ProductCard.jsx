@@ -1,9 +1,10 @@
- import "./ProductCard.css";
+import "./ProductCard.css";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../../context/ShopContext";
 import { toggleWishlist } from "../../../api/customer";
+import { notifyWarning } from "../../../utils/alerts";
 
 const ProductCard = ({
   product,
@@ -19,7 +20,7 @@ const ProductCard = ({
 
   const handleWishlistToggle = async () => {
     if (!customerToken) {
-      alert("Please log in to manage your wishlist.");
+      notifyWarning("Please log in to manage your wishlist.");
       return;
     }
 

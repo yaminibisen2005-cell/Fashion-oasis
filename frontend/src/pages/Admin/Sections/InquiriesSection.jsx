@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaEnvelopeOpen, FaEnvelope, FaTrash, FaSearch, FaCheckCircle, FaUser, FaPhoneAlt } from "react-icons/fa";
 import apiClient from "../../../api/client";
+import { showConfirm } from "../../../utils/alerts";
 
 const InquiriesSection = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -55,7 +56,8 @@ const InquiriesSection = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this contact inquiry?")) return;
+    const isConfirmed = await showConfirm("Delete Inquiry", "Are you sure you want to delete this contact inquiry?", "Delete");
+    if (!isConfirmed) return;
     try {
       const res = await apiClient.delete(`/inquiry/${id}`, getAdminHeaders());
       if (res.data?.success) {

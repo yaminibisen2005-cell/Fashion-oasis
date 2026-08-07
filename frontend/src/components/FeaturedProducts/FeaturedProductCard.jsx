@@ -3,6 +3,7 @@ import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
+import { notifyWarning } from "../../utils/alerts";
 
 const FeaturedProductCard = ({
   product,
@@ -18,7 +19,7 @@ const FeaturedProductCard = ({
 
   const handleWishlistToggle = async () => {
     if (!customerEmail) {
-      alert("Please log in to manage your wishlist.");
+      notifyWarning("Please log in to manage your wishlist.");
       return;
     }
 

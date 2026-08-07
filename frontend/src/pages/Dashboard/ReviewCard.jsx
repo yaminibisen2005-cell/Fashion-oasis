@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import StarRating from "./StarRating";
 import ReviewForm from "./ReviewForm";
+import { showConfirm } from "../../utils/alerts";
 import { FaEdit, FaTrashAlt, FaCheckCircle, FaCalendarAlt, FaHashtag, FaTag } from "react-icons/fa";
 
 const defaultPlaceholder =
@@ -63,9 +64,10 @@ const ReviewCard = ({
     setIsEditing(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (existingReview?._id || existingReview?.id) {
-      if (window.confirm("Are you sure you want to delete this review?")) {
+      const isConfirmed = await showConfirm("Delete Review", "Are you sure you want to delete this review?", "Delete");
+      if (isConfirmed) {
         onDeleteReview(existingReview._id || existingReview.id);
       }
     }

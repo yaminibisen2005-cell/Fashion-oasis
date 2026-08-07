@@ -1,4 +1,4 @@
- import "./Register.css";
+import "./Register.css";
 import registerAuth from "../../assets/register-auth.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import { FiFeather, FiAward, FiShield } from "react-icons/fi";
 import { customerRegister } from "../../api/customer";
 import AuthLayout from "../../components/AuthLayout/AuthLayout";
 import { auth, googleProvider, signInWithPopup } from "../../firebase";
+import { notifySuccess, notifyError } from "../../utils/alerts";
 import axios from "axios";
 
 import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
@@ -60,10 +61,10 @@ const Register = () => {
         confirmPassword 
       });
 
-      alert("Registration Successful!");
+      notifySuccess("Registration Successful! Please login.");
       navigate("/login");
     } catch (error) {
-      alert(error.response?.data?.message || error.message || "Something went wrong");
+      notifyError(error.response?.data?.message || error.message || "Something went wrong");
     }
   };
 
@@ -87,12 +88,12 @@ const Register = () => {
         localStorage.setItem("customerEmail", user.email);
         localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
 
-        alert("Google Authentication Successful!");
+        notifySuccess("Google Authentication Successful!");
         navigate("/dashboard");
       }
     } catch (error) {
       console.error("Google Auth Error:", error);
-      alert(error.response?.data?.message || "Google sign-in failed. Please try again.");
+      notifyError(error.response?.data?.message || "Google sign-in failed. Please try again.");
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./DashboardLayout.css";
 import { Link } from "react-router-dom";
 import { uploadAvatar } from "../../api/customer";
+import { notifyError } from "../../utils/alerts";
 
 import logo from "../../assets/logo.png";
 
@@ -95,7 +96,7 @@ function DashboardLayout({ children, showProfile = true }) {
       }
     } catch (err) {
       console.error("Avatar upload failed:", err);
-      alert("Failed to upload avatar");
+      notifyError("Failed to upload avatar");
     }
   };
 
