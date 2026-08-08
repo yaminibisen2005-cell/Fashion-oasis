@@ -73,7 +73,7 @@ body{
     );
 }
 
-.hero-content{
+.dashboard-hero .hero-content{
     position:relative;
     z-index:2;
     max-width:650px;
@@ -98,7 +98,7 @@ body{
     text-transform: uppercase;
 }
 
-.hero-content h2{
+.dashboard-hero .hero-content h2{
     font-family: "DM Serif Display", serif;
     font-size:46px;
     font-weight:400;
@@ -108,7 +108,7 @@ body{
     letter-spacing: 0.5px;
 }
 
-.hero-content p{
+.dashboard-hero .hero-content p{
     font-family: "Poppins", sans-serif;
     font-size:16px;
     line-height:1.7;
@@ -1177,7 +1177,7 @@ td{
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .hero-content {
+  .dashboard-hero .hero-content {
     padding: 40px;
   }
 }
@@ -1192,15 +1192,15 @@ td{
     min-height: 260px;
   }
 
-  .hero-content {
+  .dashboard-hero .hero-content {
     padding: 30px;
   }
 
-  .hero-content h2 {
+  .dashboard-hero .hero-content h2 {
     font-size: 30px;
   }
 
-  .hero-content p {
+  .dashboard-hero .hero-content p {
     font-size: 15px;
   }
 
@@ -1236,7 +1236,7 @@ td{
     padding: 14px;
   }
 
-  .hero-content {
+  .dashboard-hero .hero-content {
     padding: 24px;
   }
 
@@ -1245,7 +1245,7 @@ td{
     letter-spacing: 1px;
   }
 
-  .hero-content h2 {
+  .dashboard-hero .hero-content h2 {
     font-size: 24px;
   }
 

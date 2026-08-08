@@ -645,20 +645,46 @@
 
     .nav-icons{
 
-        display:none;
+        display:flex !important;
+
+        width:auto !important;
+
+        gap:10px !important;
+
+        align-items:center !important;
+
+        margin-left:auto !important;
+
+        margin-right:10px !important;
+
+    }
+
+    .nav-icons .icon-wrapper{
+
+        width:38px !important;
+
+        height:38px !important;
+
+    }
+
+    .nav-icons .icon-wrapper svg{
+
+        font-size:18px !important;
 
     }
 
     .login-btn {
-        height: 42px;
-        padding: 0 24px;
-        font-size: 14.5px;
+        height: 38px;
+        padding: 0 18px;
+        font-size: 13.5px;
         border-radius: 999px;
     }
 
     .menu-btn{
 
         display:flex;
+
+        margin-left:4px;
 
     }
 
@@ -675,7 +701,7 @@
     }
 
     .nav-container{
-        padding:0 24px;
+        padding:0 20px;
     }
 
 }

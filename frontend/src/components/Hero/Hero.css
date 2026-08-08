@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Allura&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* ==========================================
-   HERO SECTION SYSTEM
+   HERO SECTION SYSTEM - DESKTOP (100% RESTORED ORIGINAL)
 ========================================== */
 
 :root {
@@ -24,7 +24,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    background: var(--light-background);
+    background: var(--light-background, #FFFDFD);
 }
 
 .hero-section {
@@ -34,10 +34,6 @@
     margin: 0;
     padding: 0;
 }
-
-/* ==========================================
-   SWIPER
-========================================== */
 
 .hero-swiper {
     width: 100%;
@@ -52,9 +48,12 @@
     align-items: center;
 }
 
-/* ==========================================
-   BACKGROUND & ANIMATIONS
-========================================== */
+.hero-mobile-image,
+.hero-mobile-banner,
+.hero-mobile-right-banner,
+.mobile-features-container {
+    display: none;
+}
 
 .hero-bg {
     position: absolute;
@@ -80,15 +79,10 @@
     }
 }
 
-/* ==========================================
-   OVERLAY
-========================================== */
-
 .hero-overlay {
     position: absolute;
     inset: 0;
     z-index: 1;
-
     background: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0.94) 0%,
@@ -97,10 +91,6 @@
         rgba(255, 245, 243, 0.1) 100%
     );
 }
-
-/* ==========================================
-   CONTAINER & LAYOUT
-========================================== */
 
 .home-hero .container {
     position: relative;
@@ -128,10 +118,6 @@
 .home-hero .hero-content-col + .col-lg-7 {
     width: 50%;
 }
-
-/* ==========================================
-   CONTENT & TYPOGRAPHY
-========================================== */
 
 .home-hero .hero-content {
     max-width: 540px;
@@ -203,10 +189,6 @@
     font-weight: var(--hero-p-font-weight);
 }
 
-/* ==========================================
-   PREMIUM CTA BUTTON
-========================================== */
-
 .home-hero button {
     margin-top: 28px;
     border: 1px solid rgba(212, 160, 75, 0.4);
@@ -241,10 +223,6 @@
 .home-hero button:hover .btn-arrow {
     transform: translateX(6px);
 }
-
-/* ==========================================
-   FEATURE CARDS
-========================================== */
 
 .home-hero .hero-features {
     display: flex;
@@ -294,10 +272,6 @@
     color: #666;
     font-size: 11px;
 }
-
-/* ==========================================
-   SWIPER NAVIGATION & PAGINATION
-========================================== */
 
 .home-hero .swiper-button-prev,
 .home-hero .swiper-button-next {
@@ -349,181 +323,6 @@
     background: #d4a04b;
 }
 
-.home-page-wrapper {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-}
-
-/* ==========================================
-   RESPONSIVE BREAKPOINTS
-========================================== */
-
-/* Laptop / Desktop (993px - 1200px) */
-@media (max-width: 1200px) and (min-width: 993px) {
-    .hero-content-col {
-        width: 55%;
-    }
-    .home-hero .hero-content-col + .col-lg-7 {
-        width: 45%;
-    }
-}
-
-/* Tablet (768px - 992px) */
-@media (max-width: 992px) {
-    .home-hero {
-        padding: 60px 0 40px 0;
-        min-height: auto;
-    }
-
-    .hero-overlay {
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.94) 0%,
-            rgba(255, 250, 248, 0.88) 50%,
-            rgba(255, 245, 243, 0.6) 100%
-        );
-    }
-
-    .home-hero .hero-slide,
-    .hero-row {
-        min-height: auto;
-    }
-
-    .hero-content-col {
-        width: 100%;
-        padding-right: 0;
-    }
-
-    .home-hero .hero-content-col + .col-lg-7 {
-        display: none;
-    }
-
-    .home-hero .hero-content {
-        max-width: 620px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .home-hero .hero-tag {
-        justify-content: center;
-    }
-
-    .home-hero p {
-        margin: 20px auto 0;
-    }
-
-    .home-hero button {
-        margin: 28px auto 0;
-    }
-
-    .home-hero .hero-features {
-        justify-content: center;
-        margin-top: 36px;
-    }
-
-    .home-hero .swiper-button-prev {
-        left: 10px;
-    }
-
-    .home-hero .swiper-button-next {
-        right: 10px;
-    }
-}
-
-/* Mobile (481px - 767px) */
-@media (max-width: 767px) {
-    .home-hero {
-        padding: 40px 0 30px 0;
-    }
-
-    .home-hero .container {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
-    .home-hero button {
-        width: 100%;
-        max-width: 320px;
-        justify-content: center;
-    }
-
-    .home-hero .hero-features {
-        gap: 10px;
-        margin-top: 28px;
-    }
-
-    .home-hero .hero-features > div {
-        padding: 10px 12px;
-    }
-
-    .home-hero .swiper-button-prev,
-    .home-hero .swiper-button-next {
-        width: 38px;
-        height: 38px;
-        opacity: 0.7;
-    }
-
-    .home-hero .swiper-button-prev::after,
-    .home-hero .swiper-button-next::after {
-        font-size: 13px;
-    }
-}
-
-/* Small Mobile (320px - 480px) */
-@media (max-width: 480px) {
-    .home-hero {
-        padding: 30px 0 25px 0;
-    }
-
-    .home-hero .container {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-
-    .home-hero .hero-tag span {
-        font-size: 11px;
-        letter-spacing: 1.8px;
-    }
-
-    .home-hero .hero-tag .line {
-        width: 40px;
-    }
-
-    .home-hero button {
-        width: 100%;
-        max-width: 100%;
-        padding: 14px 20px;
-        font-size: 14px;
-    }
-
-    .home-hero .hero-features {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 24px;
-    }
-
-    .home-hero .hero-features > div {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 10px 16px;
-    }
-
-    .home-hero .swiper-button-prev,
-    .home-hero .swiper-button-next {
-        display: none;
-    }
-
-    .home-hero .swiper-pagination {
-        bottom: 12px !important;
-    }
-}
-
-/* ==========================================
-   SWIPER SLIDE FADE FIX
-========================================== */
-
 .home-hero .swiper-slide {
     opacity: 0 !important;
     pointer-events: none;
@@ -533,4 +332,239 @@
 .home-hero .swiper-slide-active {
     opacity: 1 !important;
     pointer-events: auto;
+}
+
+.desktop-hero-section {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   DESKTOP / MOBILE RESPONSIVE DISPLAY SWITCH
+========================================== */
+
+/* Hide Mobile Hero on Desktop (min-width: 769px) */
+@media (min-width: 769px) {
+    .desktop-hero-section {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 100vh !important;
+    }
+    .mobile-hero-section {
+        display: none !important;
+    }
+}
+
+/* Hide Desktop Hero on Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .desktop-hero-section {
+        display: none !important;
+    }
+
+    .mobile-hero-section {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #FFFDFD !important;
+        overflow: visible !important;
+    }
+
+    .mobile-full-swiper {
+        width: 100% !important;
+        height: 580px !important;
+        position: relative !important;
+        overflow: visible !important;
+    }
+
+    .mobile-full-slide {
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: visible !important;
+    }
+
+    .mobile-full-bg {
+        position: absolute !important;
+        inset: 0 !important;
+        z-index: 1 !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .mobile-full-bg img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: 70% center !important;
+        animation: none !important;
+        display: block !important;
+    }
+
+    .mobile-full-overlay {
+        position: absolute !important;
+        inset: 0 !important;
+        z-index: 2 !important;
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.78) 0%,
+            rgba(255, 255, 255, 0.45) 30%,
+            rgba(255, 255, 255, 0.12) 55%,
+            transparent 75%
+        ) !important;
+    }
+
+    .mobile-full-content {
+        position: absolute !important;
+        top: 125px !important;
+        left: 24px !important;
+        z-index: 5 !important;
+        width: 42% !important;
+        max-width: 42% !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-full-content h1 {
+        font-family: "DM Serif Display", serif !important;
+        font-size: 46px !important;
+        font-weight: 700 !important;
+        line-height: 0.9 !important;
+        color: #ef6f8f !important;
+        margin: 0 !important;
+        letter-spacing: -0.5px !important;
+        word-break: normal !important;
+        text-shadow: none !important;
+    }
+
+    .mobile-full-content h1 span {
+        font-family: "Allura", cursive !important;
+        font-size: 22px !important;
+        line-height: 1.1 !important;
+        margin-top: 6px !important;
+        display: block !important;
+        color: #d4a04b !important;
+        word-break: normal !important;
+        text-shadow: none !important;
+        font-weight: 400 !important;
+    }
+
+    .mobile-full-content p {
+        font-family: "Poppins", sans-serif !important;
+        font-size: 17px !important;
+        line-height: 1.5 !important;
+        margin-top: 16px !important;
+        color: #3D2D31 !important;
+        text-align: left !important;
+        margin-bottom: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        word-break: normal !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        text-shadow: none !important;
+    }
+
+    .mobile-full-content button {
+        margin-top: 24px !important;
+        width: 210px !important;
+        height: 54px !important;
+        padding: 0 !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        background: linear-gradient(90deg, #F06C9B, #E85D8C) !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 8px 22px rgba(239, 111, 143, 0.32) !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-full-content button .btn-arrow {
+        font-size: 15px !important;
+    }
+
+    /* Mobile Swiper Pagination Dots (Bottom Center) */
+    .mobile-full-swiper .swiper-pagination {
+        bottom: 16px !important;
+    }
+
+    .mobile-full-swiper .swiper-pagination-bullet {
+        width: 8px !important;
+        height: 8px !important;
+        background: rgba(239, 111, 143, 0.4) !important;
+    }
+
+    .mobile-full-swiper .swiper-pagination-bullet-active {
+        width: 24px !important;
+        border-radius: 20px !important;
+        background: #d4a04b !important;
+    }
+
+    /* Mobile Feature Cards (Stacked Vertically Below Hero) */
+    .mobile-features-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+        padding: 20px 16px !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-feature-card {
+        width: 100% !important;
+        padding: 16px 20px !important;
+        border-radius: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        background: #ffffff !important;
+        border: 1px solid rgba(239, 111, 143, 0.15) !important;
+        box-shadow: 0 6px 20px rgba(239, 111, 143, 0.07) !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-feature-card .feature-left {
+        display: flex !important;
+        align-items: center !important;
+        gap: 14px !important;
+    }
+
+    .mobile-feature-card .feature-icon-wrapper svg {
+        font-size: 24px !important;
+        color: #ef6f8f !important;
+    }
+
+    .mobile-feature-card .feature-text h6 {
+        margin: 0 !important;
+        font-family: "DM Serif Display", serif !important;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #2d2d2d !important;
+    }
+
+    .mobile-feature-card .feature-text small {
+        display: block !important;
+        margin-top: 2px !important;
+        color: #666 !important;
+        font-size: 11.5px !important;
+        font-family: "Poppins", sans-serif !important;
+    }
+
+    .mobile-feature-card .feature-chevron {
+        font-size: 14px !important;
+        color: #333333 !important;
+    }
 }
