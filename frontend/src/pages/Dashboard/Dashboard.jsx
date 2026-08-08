@@ -171,35 +171,89 @@ function Dashboard() {
           <h3>Recent Orders</h3>
           <button className="view-all-link" onClick={() => navigate("/dashboard/orders")}>View All <FaArrowRight /></button>
         </div>
-        <div className="table-responsive">
-          {loading ? <p className="dashboard-empty-state">Loading orders...</p> : orders.length === 0 ? <p className="dashboard-empty-state">No recent orders found.</p> : (
-            <table>
-              <thead><tr><th>Product</th><th>Date</th><th>Status</th><th>Amount</th><th>Action</th></tr></thead>
-              <tbody>
-                {orders.flatMap((order, orderIdx) => {
-                  const orderItems = order.items && order.items.length > 0 ? order.items : [order];
-                  return orderItems.map((item, itemIdx) => (
-                    <tr key={`${order._id || order.id || orderIdx}-${itemIdx}`}>
-                      <td>
-                        <div className="product">
-                          <img src={item.image || item.product?.image} alt={item.productName || item.name || "Product"} />
-                          <div className="product-details">
-                            <h6>{item.productName || item.name || item.product}</h6>
-                            <span className="order-id">Order: {order.orderId || order.id} (Qty: {item.quantity || 1})</span>
+        {loading ? (
+          <p className="dashboard-empty-state">Loading orders...</p>
+        ) : orders.length === 0 ? (
+          <p className="dashboard-empty-state">No recent orders found.</p>
+        ) : (
+          <>
+            {/* Desktop Table View */}
+            <div className="table-responsive desktop-orders-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.flatMap((order, orderIdx) => {
+                    const orderItems = order.items && order.items.length > 0 ? order.items : [order];
+                    return orderItems.map((item, itemIdx) => (
+                      <tr key={`${order._id || order.id || orderIdx}-${itemIdx}`}>
+                        <td>
+                          <div className="product">
+                            <img src={item.image || item.product?.image} alt={item.productName || item.name || "Product"} />
+                            <div className="product-details">
+                              <h6>{item.productName || item.name || item.product}</h6>
+                              <span className="order-id">Order: {order.orderId || order.id} (Qty: {item.quantity || 1})</span>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td>{order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A")}</td>
-                      <td><span className={`status ${order.status?.toLowerCase() || ""}`}>{order.status}</span></td>
-                      <td className="amount">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
-                      <td><button className="view-details-btn" onClick={() => navigate("/dashboard/orders")}>View Details</button></td>
-                    </tr>
-                  ));
-                })}
-              </tbody>
-            </table>
-          )}
-        </div>
+                        </td>
+                        <td>{order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A")}</td>
+                        <td><span className={`status ${order.status?.toLowerCase() || ""}`}>{order.status}</span></td>
+                        <td className="amount">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
+                        <td><button className="view-details-btn" onClick={() => navigate("/dashboard/orders")}>View Details</button></td>
+                      </tr>
+                    ));
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Order Cards View */}
+            <div className="mobile-orders-list">
+              {orders.flatMap((order, orderIdx) => {
+                const orderItems = order.items && order.items.length > 0 ? order.items : [order];
+                return orderItems.map((item, itemIdx) => (
+                  <div className="mobile-order-card" key={`mobile-${order._id || order.id || orderIdx}-${itemIdx}`}>
+                    <div className="mobile-order-card-top">
+                      <img
+                        src={item.image || item.product?.image}
+                        alt={item.productName || item.name || "Product"}
+                        className="mobile-order-img"
+                      />
+                      <div className="mobile-order-info">
+                        <span className={`status ${order.status?.toLowerCase() || ""}`}>
+                          {order.status}
+                        </span>
+                        <h6 className="mobile-order-title">{item.productName || item.name || item.product}</h6>
+                        <span className="mobile-order-meta">
+                          ID: {order.orderId || order.id} • Qty: {item.quantity || 1}
+                        </span>
+                        <span className="mobile-order-date">
+                          {order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A")}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mobile-order-card-bottom">
+                      <div className="mobile-order-price-wrap">
+                        <span className="mobile-price-label">Total Amount</span>
+                        <span className="mobile-order-price">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
+                      </div>
+                      <button className="mobile-order-btn" onClick={() => navigate("/dashboard/orders")}>
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ));
+              })}
+            </div>
+          </>
+        )}
       </section>
 
       <section className="recommendations-section">

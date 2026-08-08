@@ -506,121 +506,192 @@ Circle Jewellery
 
 
 /* ===========================
-      MOBILE
+      MOBILE (max-width: 768px)
 =========================== */
 
 @media(max-width:768px){
 
 .testimonial-section{
+    padding:30px 16px 60px !important;
+    overflow:visible !important;
+}
 
-    padding:20px 20px 50px;
-
+.testimonialSwiper {
+    padding-bottom: 45px !important;
+    overflow: visible !important;
 }
 
 .testimonial-heading h2{
-
-    font-size:34px;
-
+    font-size:32px !important;
 }
 
 .testimonial-card{
-
-    padding:25px;
-
-    border-radius:22px;
-
+    display:flex !important;
+    flex-direction:column !important;
+    padding:20px 20px 32px 20px !important;
+    border-radius:24px !important;
+    height:auto !important;
+    min-height:auto !important;
+    overflow:visible !important;
+    position:relative !important;
+    align-items:center !important;
+    text-align:center !important;
+    background:#ffffff !important;
+    border:1px solid #f7dce5 !important;
+    box-shadow:0 14px 38px rgba(239, 111, 143, 0.12) !important;
 }
 
-.review{
-
-    font-size:18px;
-
-    line-height:1.7;
-
+.testimonial-card::before {
+    display: none !important;
 }
 
-.rating{
-
-    font-size:18px;
-
-    flex-wrap:wrap;
-
-}
-
-.rating span{
-
-    font-size:15px;
-
-}
-
-.author img{
-
-    width:60px;
-
-    height:60px;
-
-}
-
-.author h5{
-
-    font-size:19px;
-
+/* TOP: Large Customer Image & Circular Jewellery Image */
+.testimonial-right{
+    order:1 !important;
+    width:100% !important;
+    position:relative !important;
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    margin-bottom:50px !important;
+    overflow:visible !important;
 }
 
 .woman-image{
-
-    width:100%;
-
-    height:340px;
-
+    width:100% !important;
+    height:320px !important;
+    border-radius:24px !important;
+    object-fit:cover !important;
+    object-position:center !important;
+    border:none !important;
+    box-shadow:0 10px 28px rgba(0, 0, 0, 0.08) !important;
 }
 
 .jewelry-circle{
+    position:absolute !important;
+    bottom:-45px !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:96px !important;
+    height:96px !important;
+    border-radius:50% !important;
+    border:6px solid #ffffff !important;
+    box-shadow:0 12px 28px rgba(239, 111, 143, 0.22) !important;
+    background:#ffffff !important;
+    z-index:10 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 !important;
+}
 
-    width:120px;
+.jewelry-circle img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    border-radius:50% !important;
+    position:static !important;
+    left:auto !important;
+    bottom:auto !important;
+}
 
-    height:120px;
+/* BOTTOM: Content (Rating -> Review -> Name -> City) */
+.testimonial-left{
+    order:2 !important;
+    width:100% !important;
+    z-index:5 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    text-align:center !important;
+    padding:0 !important;
+    margin:0 !important;
+}
 
+.quote {
+    display: none !important;
+}
+
+.rating{
+    order:1 !important;
+    justify-content:center !important;
+    margin-bottom:16px !important;
+    font-size:19px !important;
+    gap:6px !important;
+}
+
+.rating span {
+    margin-left: 10px !important;
+    font-size: 15px !important;
+}
+
+.review{
+    order:2 !important;
+    font-size:16px !important;
+    line-height:1.6 !important;
+    text-align:center !important;
+    margin-bottom:20px !important;
+    color:#352525 !important;
+    max-width:100% !important;
+    font-family: var(--heading-font) !important;
+}
+
+.author{
+    order:3 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:3px !important;
+}
+
+.author img{
+    display:none !important;
+}
+
+.author h5{
+    font-size:20px !important;
+    color:#352525 !important;
+    margin:0 !important;
+    font-weight:700 !important;
+    font-family: var(--heading-font) !important;
+}
+
+.author span{
+    font-size:14px !important;
+    color:#EF6F8F !important;
+    margin-top:2px !important;
+    font-weight:500 !important;
 }
 
 .swiper-button-next,
 .swiper-button-prev{
-
-    display:none;
-
+    display:none !important;
 }
 
 }
 
 
 /* ===========================
-     SMALL MOBILE
+     SMALL MOBILE (max-width: 480px)
 =========================== */
 
 @media(max-width:480px){
 
 .testimonial-heading span{
-
-    font-size:12px;
-
+    font-size:12px !important;
 }
 
 .testimonial-heading h2{
-
-    font-size:28px;
-
-}
-
-.review{
-
-    font-size:16px;
-
+    font-size:28px !important;
 }
 
 .woman-image{
+    height:300px !important;
+}
 
-    height:280px;
-
+.review{
+    font-size:15px !important;
 }
 
 }

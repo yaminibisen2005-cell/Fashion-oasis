@@ -158,71 +158,99 @@ font-size:15px;
 
 }
 
+.mobile-filter-trigger-btn {
+  display: none;
+}
+
 @media(max-width:768px){
 
+.mobile-filter-trigger-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #fdecef !important;
+  color: #ef6f8f !important;
+  border: 1px solid rgba(239, 111, 143, 0.2) !important;
+  padding: 6px 14px !important;
+  border-radius: 999px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+.filter-trigger-icon {
+  font-size: 15px !important;
+}
+
 .shop-toolbar{
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  margin-bottom: 18px !important;
+}
 
-flex-direction:column;
+.toolbar-left{
+  width: 100% !important;
+}
 
-align-items:stretch;
+.search-box{
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 16px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+}
 
+.search-box input{
+  font-size: 14px !important;
 }
 
 .toolbar-right{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  gap: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #f0dddd !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  box-sizing: border-box !important;
+}
 
-justify-content:space-between;
+.sort-box{
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
 
+.sort-label{
+  display: none !important;
+}
+
+.sort-box select{
+  height: 36px !important;
+  padding: 0 6px !important;
+  font-size: 13px !important;
+  border: none !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+  color: #444444 !important;
+}
+
+.product-count{
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #777777 !important;
+  margin-left: auto !important;
+  white-space: nowrap !important;
 }
 
 }
 
 @media(max-width:576px){
   .shop-toolbar{
-    margin-bottom: 25px;
-    gap: 16px;
-  }
-
-  .search-box{
-    height: 50px;
-    padding: 0 14px;
-  }
-
-  .search-box input{
-    font-size: 14px;
-  }
-
-  .sort-box select{
-    height: 44px;
-    padding: 0 14px;
-    font-size: 14px;
-  }
-
-  .product-count{
-    font-size: 13px;
-  }
-}
-
-@media(max-width:390px){
-  .shop-toolbar{
-    gap: 12px;
-  }
-
-  .search-box{
-    height: 46px;
-    padding: 0 12px;
-  }
-
-  .search-box input{
-    font-size: 13px;
-  }
-
-  .sort-box label{
-    font-size: 13px;
-  }
-
-  .sort-box select{
-    height: 42px;
-    padding: 0 12px;
-    font-size: 13px;
+    margin-bottom: 16px !important;
+    gap: 10px !important;
   }
 }

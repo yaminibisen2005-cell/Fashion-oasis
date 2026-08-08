@@ -1182,97 +1182,322 @@ td{
   }
 }
 
+/* Desktop vs Mobile Table/Card Toggles */
+.desktop-orders-table {
+  display: block;
+}
+
+.mobile-orders-list {
+  display: none;
+}
+
 @media (max-width: 768px) {
 
   .dashboard-main {
-    padding: 18px;
+    padding: 20px 16px !important;
+    overflow-x: hidden !important;
   }
 
+  /* 3. Welcome Banner */
   .dashboard-hero {
-    min-height: 260px;
+    min-height: 230px !important;
+    height: 230px !important;
+    border-radius: 20px !important;
+    margin-bottom: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    background-size: cover !important;
+    background-position: center !important;
   }
 
   .dashboard-hero .hero-content {
-    padding: 30px;
-  }
-
-  .dashboard-hero .hero-content h2 {
-    font-size: 30px;
-  }
-
-  .dashboard-hero .hero-content p {
-    font-size: 15px;
-  }
-
-  .dashboard-cards,
-  .quick-actions-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .orders-header,
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-
-  .product img {
-    width: 55px;
-    height: 55px;
-  }
-
-  .img-wrapper {
-    height: 220px;
-  }
-
-  table {
-    min-width: 700px;
-  }
-}
-
-@media (max-width: 480px) {
-
-  .dashboard-main {
-    padding: 14px;
-  }
-
-  .dashboard-hero .hero-content {
-    padding: 24px;
+    padding: 20px 20px !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
   }
 
   .hero-eyebrow {
-    font-size: 10px;
-    letter-spacing: 1px;
+    font-size: 10px !important;
+    padding: 4px 14px !important;
+    letter-spacing: 1.5px !important;
+    margin-bottom: 10px !important;
   }
 
   .dashboard-hero .hero-content h2 {
-    font-size: 24px;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    margin-bottom: 8px !important;
   }
 
-  .btn-primary {
-    width: 100%;
-    justify-content: center;
+  .dashboard-hero .hero-content p {
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .hero-actions {
+    width: 100% !important;
+  }
+
+  .hero-actions .btn-primary {
+    width: 100% !important;
+    max-width: 260px !important;
+    min-height: 48px !important;
+    font-size: 15px !important;
+    border-radius: 999px !important;
+    padding: 0 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 4. Statistics Cards (2x2 Grid) */
+  .dashboard-metrics {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .dashboard-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    width: 100% !important;
   }
 
   .card-box {
-    padding: 22px;
+    height: 130px !important;
+    min-height: 130px !important;
+    border-radius: 20px !important;
+    padding: 16px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .card-box .icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 12px !important;
+    font-size: 18px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .card-box h5 {
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    margin-bottom: 2px !important;
   }
 
   .card-box h2 {
-    font-size: 34px;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+    margin-bottom: 0 !important;
   }
 
-  .orders-card,
+  .subtitle {
+    font-size: 11px !important;
+  }
+
+  /* 5. Quick Actions (2-Column Grid) */
   .quick-actions-card {
-    padding: 20px;
+    border-radius: 20px !important;
+    padding: 18px !important;
+    width: 100% !important;
+  }
+
+  .quick-actions-card h5 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .quick-actions-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .quick-action-btn {
+    height: 90px !important;
+    min-height: 90px !important;
+    border-radius: 16px !important;
+    padding: 12px !important;
+    gap: 8px !important;
+  }
+
+  .quick-action-btn svg {
+    font-size: 22px !important;
+  }
+
+  .quick-action-btn span {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+  }
+
+  /* 6. Recent Orders Cards */
+  .orders-card {
+    border-radius: 20px !important;
+    padding: 20px 16px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .orders-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 18px !important;
+  }
+
+  .orders-header h3 {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+  }
+
+  .desktop-orders-table {
+    display: none !important;
+  }
+
+  .mobile-orders-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .mobile-order-card {
+    background: #ffffff !important;
+    border: 1px solid #F3DDE3 !important;
+    border-radius: 20px !important;
+    padding: 16px !important;
+    box-shadow: 0 4px 16px rgba(239, 111, 143, 0.07) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .mobile-order-card-top {
+    display: flex !important;
+    gap: 14px !important;
+    align-items: flex-start !important;
+  }
+
+  .mobile-order-img {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 14px !important;
+    object-fit: cover !important;
+    border: 1px solid #F8DCE3 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-order-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .mobile-order-title {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #352525 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 4px 0 2px 0 !important;
+  }
+
+  .mobile-order-meta {
+    font-size: 12.5px !important;
+    color: #777777 !important;
+  }
+
+  .mobile-order-date {
+    font-size: 12px !important;
+    color: #999999 !important;
+  }
+
+  .mobile-order-card-bottom {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-top: 12px !important;
+    border-top: 1px dashed #F5E3E6 !important;
+  }
+
+  .mobile-order-price-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .mobile-price-label {
+    font-size: 11px !important;
+    color: #888888 !important;
+  }
+
+  .mobile-order-price {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #352525 !important;
+  }
+
+  .mobile-order-btn {
+    height: 40px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+    background: #EF6F8F !important;
+    color: #ffffff !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+
+  /* Recommendations Responsive Grid */
+  .section-header h3 {
+    font-size: 22px !important;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .recommendation-card {
+    border-radius: 18px !important;
+  }
+
+  .img-wrapper {
+    height: 180px !important;
+  }
+
+  .recommendation-details {
+    padding: 14px !important;
+  }
+
+  .recommendation-details h6 {
+    font-size: 15px !important;
+    margin: 6px 0 !important;
+  }
+
+  .price {
+    font-size: 17px !important;
   }
 
   .add-to-cart-btn {
-    font-size: 14px;
-  }
-
-  .view-details-btn {
-    padding: 8px 14px;
-    font-size: 13px;
+    height: 42px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+    border-radius: 999px !important;
   }
 }

@@ -424,78 +424,176 @@
 
 @media (max-width:768px){
 
+.about {
+  position: relative !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
 .about-hero{
-  height:650px;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 620px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+}
+
+.about-hero img{
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
 }
 
 .about-hero::before{
-  background:rgba(255,248,244,.82);
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.65) 45%,
+    rgba(255, 255, 255, 0.15) 100%
+  ) !important;
+  z-index: 1 !important;
 }
 
 .about-overlay{
-  width:90%;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 60% !important;
+  padding: 80px 24px 50px 24px !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+.about-overlay span{
+  font-size: 14px !important;
+  letter-spacing: 2px !important;
+  font-weight: 600 !important;
+  color: #c89b5c !important;
+  margin-bottom: 12px !important;
+  display: inline-block !important;
 }
 
 .about-overlay h1{
-  font-size:38px;
+  font-size: 32px !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  margin-bottom: 18px !important;
+  color: #d96b8c !important;
+  word-break: normal !important;
+  text-align: left !important;
 }
 
 .about-overlay p{
-  font-size:15px;
-  max-width:100%;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+  margin-bottom: 28px !important;
+  margin-top: 0 !important;
+  color: #444444 !important;
+  max-width: 100% !important;
+  text-align: left !important;
+}
+
+.about-overlay button,
+.about-explore-btn{
+  height: 52px !important;
+  padding: 16px 32px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: 0 !important;
+  margin-bottom: 40px !important;
+  width: auto !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+.about-highlights-section,
+.about-story,
+.story-image,
+.story-content,
+.story-list {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
 }
 
 .about-story{
-  width:92%;
-  margin:80px auto;
+  width:92% !important;
+  margin:40px auto !important;
 }
 
 .story-content h2{
-  font-size:42px;
+  font-size:38px !important;
 }
 
 .story-content p{
-  font-size:15px;
-  max-width:100%;
+  font-size:15px !important;
+  max-width:100% !important;
+}
+
+/* Force AOS animations to remain 100% visible on mobile */
+[data-aos] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+  transition: none !important;
 }
 
 }
 
 @media (max-width:576px){
 
-.about-hero{
-  height:560px;
+.about-overlay{
+  max-width: 78% !important;
+  padding: 50px 20px 30px 20px !important;
 }
 
 .about-overlay h1{
-  font-size:30px;
+  font-size: 28px !important;
 }
 
 .about-overlay p{
-  font-size:14px;
-}
-
-.about-overlay button{
-  width:100%;
-  padding:15px;
+  font-size: 14.5px !important;
+  line-height: 1.5 !important;
 }
 
 .story-content h2{
-  font-size:36px;
+  font-size:32px !important;
 }
 
 .story-content p{
-  font-size:14px;
-  max-width:100%;
+  font-size:14px !important;
+  max-width:100% !important;
 }
 
 .about::before,
 .about::after{
-  display:none;
+  display:none !important;
 }
 
 }

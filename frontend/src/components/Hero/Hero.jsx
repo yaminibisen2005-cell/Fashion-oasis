@@ -12,6 +12,10 @@ import heroBanner from "../../assets/hero1.png";
 import heroBanner1 from "../../assets/hero2.png";
 import heroBanner2 from "../../assets/hero4.png";
 
+import mobileHero1 from "../../assets/mobile_hero1.jpg";
+import mobileHero2 from "../../assets/mobile_hero2.jpg";
+import mobileHero3 from "../../assets/mobile_hero3.jpg";
+
 import {
   FaHeart,
   FaGem,
@@ -29,6 +33,7 @@ const Hero = () => {
     {
       id: 1,
       image: heroBanner,
+      mobileImage: mobileHero1,
       title: "Crafted",
       subtitle: "With Love",
       desc: "Timeless handcrafted jewellery designed with elegance and love to celebrate your unique style.",
@@ -36,6 +41,7 @@ const Hero = () => {
     {
       id: 2,
       image: heroBanner1,
+      mobileImage: mobileHero2,
       title: "Elegance",
       subtitle: "Redefined",
       desc: "Exquisite diamonds and fine gold creations crafted for your most precious moments.",
@@ -43,6 +49,7 @@ const Hero = () => {
     {
       id: 3,
       image: heroBanner2,
+      mobileImage: mobileHero3,
       title: "Radiant",
       subtitle: "Beauty",
       desc: "Discover sustainable luxury handcrafted with passion, precision, and perfection.",
@@ -131,7 +138,7 @@ const Hero = () => {
       </div>
 
       {/* ====================================================
-          MOBILE HERO SECTION (Matching User Full Width Requirements)
+          MOBILE HERO SECTION (Using Uploaded Mobile Banners)
          ==================================================== */}
       <div className="mobile-hero-section">
         <Swiper
@@ -151,15 +158,15 @@ const Hero = () => {
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="mobile-full-slide">
-                {/* Full Width Background Banner Image */}
+                {/* Dedicated Portrait Mobile Banner Image */}
                 <div className="mobile-full-bg">
-                  <img src={slide.image} alt={slide.title} />
+                  <img src={slide.mobileImage} alt={slide.title} />
                 </div>
 
-                {/* Light Gradient Overlay Behind Text Area */}
+                {/* Subtle Soft Gradient Overlay */}
                 <div className="mobile-full-overlay"></div>
 
-                {/* Overlaid Content in Upper-Left (40–45% Width) */}
+                {/* Overlaid Content in Upper-Left Clean Space */}
                 <div className="mobile-full-content">
                   <h1>
                     {slide.title}

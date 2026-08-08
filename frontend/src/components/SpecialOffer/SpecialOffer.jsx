@@ -75,6 +75,10 @@ function SpecialOffer() {
               <h1>{discountText}</h1>
             </div>
 
+            <p className="offer-short-desc">
+              Discover handcrafted jewellery at exclusive limited-time prices.
+            </p>
+
             <button className="shop-btn" onClick={() => navigate("/shop")}>
               SHOP NOW <FaArrowRight />
             </button>

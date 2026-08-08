@@ -399,7 +399,7 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        object-position: 70% center !important;
+        object-position: center !important;
         animation: none !important;
         display: block !important;
     }

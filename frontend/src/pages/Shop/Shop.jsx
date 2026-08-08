@@ -25,6 +25,7 @@ export default function Shop() {
   const [selectedOccasions, setSelectedOccasions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(9);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -210,6 +211,8 @@ export default function Shop() {
           selectedOccasions={selectedOccasions}
           setSelectedOccasions={handleSetSelectedOccasions}
           onClearFilters={clearFilters}
+          isMobileFilterOpen={isMobileFilterOpen}
+          setIsMobileFilterOpen={setIsMobileFilterOpen}
         />
         <div className="shop-content" ref={shopContentRef}>
           <SearchSort
@@ -220,6 +223,7 @@ export default function Shop() {
             totalProducts={filteredProducts.length}
             onClearFilters={clearFilters}
             hasActiveFilters={selectedMaterials.length > 0 || selectedOccasions.length > 0 || priceRange[0] !== 0 || priceRange[1] !== 200000}
+            onOpenMobileFilter={() => setIsMobileFilterOpen(true)}
           />
           {loading ? (
             <div className="loading-spinner" style={{ textAlign: "center", padding: "40px" }}>Loading products...</div>

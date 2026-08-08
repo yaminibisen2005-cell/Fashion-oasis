@@ -1,9 +1,11 @@
+import React, { useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Newsletter from "../../components/Newsletter/Newsletter";
 import Testimonials from "../../components/Testimonials/Testimonials";
 import WhyChooseUs from "../../components/WhyChooseUs/WhyChooseUs";
 import InstagramGallery from "../../components/InstagramGallery/InstagramGallery";
+import AOS from "aos";
 
 import { GiDiamondRing, GiHeartNecklace } from "react-icons/gi";
 import { BsShieldCheck } from "react-icons/bs";
@@ -20,6 +22,10 @@ import "./About.css";
 
 const About = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    AOS.refresh();
+  }, []);
 
   return (
     <>

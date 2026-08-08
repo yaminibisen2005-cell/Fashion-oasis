@@ -49,7 +49,7 @@ const Newsletter = () => {
 
       <div className="newsletter-overlay">
         <span className="newsletter-tag">
-          BE THE FIRST TO KNOW
+          ✨ NEWSLETTER
         </span>
 
         <h2>
@@ -59,9 +59,7 @@ const Newsletter = () => {
         </h2>
 
         <p>
-          Subscribe to receive exclusive jewellery launches,
-          special offers and timeless style inspiration
-          directly to your inbox.
+          Get exclusive offers, handcrafted jewellery updates, and new arrivals directly in your inbox.
         </p>
 
         <form className="newsletter-form" onSubmit={handleSubmit}>
