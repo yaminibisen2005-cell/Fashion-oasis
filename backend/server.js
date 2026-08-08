@@ -38,11 +38,14 @@ connectDB();
 
 // Global Middlewares
 app.use(cors({
-  origin: "https://fashion-oasis-6b1j.vercel.app",
+  origin: [
+    "http://localhost:5173",
+    "https://fashion-oasis-6b1j.vercel.app",
+    "https://fashion-oasis-4trv.vercel.app"
+  ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true
-}
-));
+}));
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
