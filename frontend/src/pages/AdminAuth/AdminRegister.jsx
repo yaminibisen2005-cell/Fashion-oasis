@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import loginBg from "../../assets/login-bg.png";
 import "./AdminAuth.css";
 import { validatePasswordStrength } from "../../utils/passwordValidation";
+import { adminRegister } from "../../api/admin";
 
 const AdminRegister = () => {
   const [name, setName] = useState("");
@@ -39,22 +40,19 @@ const AdminRegister = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/admin/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, adminKey }),
+      const resData = await adminRegister({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        adminKey,
       });
-
-      const resData = await response.json();
-
-      if (!response.ok) throw new Error(resData.message || "Registration failed.");
 
       localStorage.setItem("adminToken", resData.data.token);
       localStorage.setItem("adminUser", JSON.stringify(resData.data.user));
 
       navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Registration failed.");
     } finally {
       setLoading(false);
     }

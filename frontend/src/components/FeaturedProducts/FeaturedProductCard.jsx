@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import { notifyWarning } from "../../utils/alerts";
 
+import { toggleWishlist } from "../../api/customer";
+
 const FeaturedProductCard = ({
   product,
   showAddToCart = false,
@@ -24,25 +26,17 @@ const FeaturedProductCard = ({
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/wishlist/toggle",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            customerEmail,
-            product: {
-              id: product.id || product._id,
-              name: product.name,
-              image: product.image,
-              price: product.price,
-              oldPrice: product.oldPrice,
-            },
-          }),
-        }
-      );
+      const res = await toggleWishlist({
+        product: {
+          id: product.id || product._id,
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          oldPrice: product.oldPrice,
+        },
+      });
 
-      if (response.ok) {
+      if (res.success) {
         setLiked(!liked);
       }
     } catch (err) {

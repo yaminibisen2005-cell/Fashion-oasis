@@ -187,21 +187,13 @@ const TrackOrder = () => {
     // Fallback API
     if (fetchedOrders.length === 0 && customerEmail) {
       try {
-        const API_URL = import.meta.env.VITE_API_URL;
-
-        const res2 = await fetch(
-          `${API_URL}/api/v1/orders?email=${encodeURIComponent(
-            customerEmail
-          )}`
+        const res2 = await apiClient.get(
+          `/orders?email=${encodeURIComponent(customerEmail)}`
         );
-
-        const data2 = await res2.json();
-
-        if (res2.ok) {
-          fetchedOrders = Array.isArray(data2)
-            ? data2
-            : data2.orders || data2.data || [];
-        }
+        const data2 = res2.data;
+        fetchedOrders = Array.isArray(data2)
+          ? data2
+          : data2.orders || data2.data || [];
       } catch (err) {
         console.warn("Fallback Orders API Failed:", err);
       }
@@ -275,20 +267,11 @@ const fetchTrackingForOrder = async (
     // Fallback API
     if (!latestData) {
       try {
-        const API_URL = import.meta.env.VITE_API_URL;
-
-        const res2 = await fetch(
-          `${API_URL}/api/v1/orders/${encodeURIComponent(orderId)}`
+        const res2 = await apiClient.get(
+          `/orders/${encodeURIComponent(orderId)}`
         );
-
-        const data2 = await res2.json();
-
-        if (res2.ok) {
-          latestData =
-            data2.order ||
-            data2.data ||
-            data2;
-        }
+        const data2 = res2.data;
+        latestData = data2.order || data2.data || data2;
       } catch (err) {
         console.warn("Fallback Tracking API Failed:", err);
       }

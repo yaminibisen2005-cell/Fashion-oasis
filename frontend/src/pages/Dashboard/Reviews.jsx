@@ -43,17 +43,7 @@ function Reviews() {
           ? reviewsRes.data
           : reviewsRes.data?.reviews || reviewsRes.data?.data || [];
       } catch (errR) {
-        try {
-          const resR2 = await fetch("http://localhost:5000/api/v1/reviews/my", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-          });
-          const dataR2 = await resR2.json();
-          if (resR2.ok) {
-            fetchedReviews = Array.isArray(dataR2) ? dataR2 : dataR2.reviews || dataR2.data || [];
-          }
-        } catch (e2) {}
+        console.warn("Reviews API failed:", errR);
       }
 
       // 2. Fetch Customer Orders
@@ -64,17 +54,7 @@ function Reviews() {
           ? ordersRes.data
           : ordersRes.data?.orders || ordersRes.data?.data || [];
       } catch (errO) {
-        if (customerEmail) {
-          try {
-            const resO2 = await fetch(
-              `http://localhost:5000/api/v1/orders?email=${encodeURIComponent(customerEmail)}`
-            );
-            const dataO2 = await resO2.json();
-            if (resO2.ok) {
-              fetchedOrders = Array.isArray(dataO2) ? dataO2 : dataO2.orders || dataO2.data || [];
-            }
-          } catch (e3) {}
-        }
+        console.warn("Orders API failed:", errO);
       }
 
       // Extract Purchased Products
@@ -161,33 +141,11 @@ function Reviews() {
 
       if (reviewId) {
         // PUT /api/v1/reviews/:id
-        try {
-          await apiClient.put(`/reviews/${reviewId}`, payload);
-        } catch (e1) {
-          await fetch(`http://localhost:5000/api/v1/reviews/${reviewId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-            body: JSON.stringify(payload),
-          });
-        }
+        await apiClient.put(`/reviews/${reviewId}`, payload);
         showSuccessToast("Review updated successfully!");
       } else {
         // POST /api/v1/reviews
-        try {
-          await apiClient.post("/reviews", payload);
-        } catch (e2) {
-          await fetch("http://localhost:5000/api/v1/reviews", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            },
-            body: JSON.stringify(payload),
-          });
-        }
+        await apiClient.post("/reviews", payload);
         showSuccessToast("Review submitted successfully!");
       }
 
@@ -219,17 +177,7 @@ function Reviews() {
     setActionLoading(true);
     try {
       // DELETE /api/v1/reviews/:id
-      try {
-        await apiClient.delete(`/reviews/${reviewId}`);
-      } catch (e1) {
-        await fetch(`http://localhost:5000/api/v1/reviews/${reviewId}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-          },
-        });
-      }
-
+      await apiClient.delete(`/reviews/${reviewId}`);
       showSuccessToast("Review deleted successfully.");
       await fetchCustomerData();
     } catch (err) {

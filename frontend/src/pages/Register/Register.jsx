@@ -4,11 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
-import { customerRegister } from "../../api/customer";
+import { customerRegister, googleAuth } from "../../api/customer";
 import AuthLayout from "../../components/AuthLayout/AuthLayout";
 import { auth, googleProvider, signInWithPopup } from "../../firebase";
-import { notifySuccess, notifyError } from "../../utils/alerts";
-import axios from "axios";
+import { notifySuccess, notifyError, notifyWarning } from "../../utils/alerts";
 
 import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
 
@@ -74,26 +73,36 @@ const Register = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const idToken = await user.getIdToken();
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
-      const response = await axios.post(`${apiUrl}/customer/google`, {
+      const data = await googleAuth({
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
         token: idToken
       });
 
-      if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
         localStorage.setItem("customerEmail", user.email);
-        localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
+        localStorage.setItem("customerInfo", JSON.stringify(data.data));
 
         notifySuccess("Google Authentication Successful!");
         navigate("/dashboard");
       }
     } catch (error) {
       console.error("Google Auth Error:", error);
-      notifyError(error.response?.data?.message || "Google sign-in failed. Please try again.");
+      if (
+        error.code === "auth/popup-closed-by-user" ||
+        error.code === "auth/cancelled-popup-request"
+      ) {
+        // User closed or canceled popup - handle gracefully
+      } else if (error.code === "auth/popup-blocked") {
+        notifyWarning("Pop-up blocked by your browser. Please allow pop-ups for this website to sign in with Google.");
+      } else if (error.code === "auth/unauthorized-domain") {
+        notifyWarning("Domain not authorized for Google Sign-In. Please add this domain to Firebase Console Authorized Domains.");
+      } else {
+        notifyError(error.response?.data?.message || error.message || "Google sign-in failed. Please try again.");
+      }
     }
   };
 

@@ -4,10 +4,9 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
-import { customerLogin } from "../../api/customer";
+import { customerLogin, googleAuth } from "../../api/customer";
 import { auth, googleProvider, signInWithPopup } from "../../firebase";
 import { notifySuccess, notifyError, notifyWarning } from "../../utils/alerts";
-import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -76,19 +75,18 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const idToken = await user.getIdToken();
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
-      const response = await axios.post(`${apiUrl}/customer/google`, {
+      const data = await googleAuth({
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
         token: idToken
       });
 
-      if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
         localStorage.setItem("customerEmail", user.email);
-        localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
+        localStorage.setItem("customerInfo", JSON.stringify(data.data));
 
         window.dispatchEvent(new Event("storage"));
         notifySuccess("Logged in successfully with Google!");
@@ -106,6 +104,8 @@ const Login = () => {
         // User closed or canceled popup - handle gracefully
       } else if (error.code === "auth/popup-blocked") {
         notifyWarning("Pop-up blocked by your browser. Please allow pop-ups for this website to sign in with Google.");
+      } else if (error.code === "auth/unauthorized-domain") {
+        notifyWarning("Domain not authorized for Google Sign-In. Please add this domain to Firebase Console Authorized Domains.");
       } else {
         notifyError(error.response?.data?.message || error.message || "Google sign-in failed. Please try again.");
       }

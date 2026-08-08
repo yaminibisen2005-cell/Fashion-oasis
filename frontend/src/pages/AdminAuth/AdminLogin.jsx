@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginBg from "../../assets/login-bg.png";
 import "./AdminAuth.css";
+import { adminLogin } from "../../api/admin";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -22,26 +23,14 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-     const API_URL = import.meta.env.VITE_API_URL;
-
-const response = await fetch(`${API_URL}/api/v1/auth/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const resData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(resData.message || "Login failed");
-      }
+      const resData = await adminLogin({ email, password });
 
       localStorage.setItem("adminToken", resData.data.token);
       localStorage.setItem("adminUser", JSON.stringify(resData.data.user));
 
       navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Login failed");
     } finally {
       setLoading(false);
     }

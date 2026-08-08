@@ -3,6 +3,7 @@ import apiClient from "./client";
 // auth
 export const customerRegister = (payload) => apiClient.post("/customer/register", payload).then((r) => r.data);
 export const customerLogin = (payload) => apiClient.post("/customer/login", payload).then((r) => r.data);
+export const googleAuth = (payload) => apiClient.post("/customer/google", payload).then((r) => r.data);
 export const forgotPassword = (payload) => apiClient.post("/customer/forgot-password", payload).then((r) => r.data);
 export const resetPassword = (token, payload) => apiClient.put(`/customer/reset-password/${token}`, payload).then((r) => r.data);
 

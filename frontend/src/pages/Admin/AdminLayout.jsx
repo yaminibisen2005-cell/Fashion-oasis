@@ -402,10 +402,8 @@ const AdminLayout = () => {
   // --- Handlers ---
   const addProduct = async (newP) => {
     try {
-      const token = localStorage.getItem("adminToken");
-      const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.post("http://localhost:5000/api/v1/admin/products", newP, config);
-      if (res.data.success) {
+      const data = await createProduct(newP);
+      if (data.success) {
         // Simple optimistic update, but refreshing is safer for paginated data
         await fetchProductsList(1); // Fetch the first page to show newly added if sorted by newest
         return true;

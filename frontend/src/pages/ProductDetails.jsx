@@ -2,7 +2,7 @@ import RelatedProducts from "../components/ProductDetails/RelatedProducts/Relate
 import "./ProductDetails.css";
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "../api/client";
 
 
 import ProductGallery from "../components/ProductDetails/ProductGallery/ProductGallery";
@@ -24,13 +24,13 @@ const ProductDetails = () => {
       try {
         setLoading(true);
         // Fetch single product
-        const productRes = await axios.get(`http://localhost:5000/api/v1/products/${id}`);
+        const productRes = await apiClient.get(`/products/${id}`);
         if (productRes.data.success) {
           setProduct(productRes.data.data);
         }
         
         // Fetch products for related/recently viewed
-        const allRes = await axios.get(`http://localhost:5000/api/v1/products?limit=10`);
+        const allRes = await apiClient.get(`/products?limit=10`);
         if (allRes.data.success) {
           setAllProducts(allRes.data.data);
         }

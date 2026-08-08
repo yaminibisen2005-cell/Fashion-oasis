@@ -1,6 +1,6 @@
 import "./FeaturedProducts.css";
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import apiClient from "../../api/client";
 import { ShopContext } from "../../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
@@ -21,7 +21,7 @@ const FeaturedProducts = () => {
     const fetchFeatured = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/api/v1/products/featured?limit=4");
+        const res = await apiClient.get("/products/featured?limit=4");
         if (res.data.success) {
           setFeaturedProducts(res.data.data);
         }
