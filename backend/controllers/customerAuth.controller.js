@@ -219,25 +219,30 @@ export const resetPassword = async (req, res, next) => {
   }
 };
 
-// @desc    Get current customer profile by email query
- // Inside getProfile, update the response object to include twoFactorEnabled:
+// @desc    Get current customer profile
 export const getProfile = async (req, res, next) => {
   try {
-    const customer = req.customer;
+    let customer = req.customer;
+
+    const emailQuery = req.query.email || req.query.userEmail;
+    if (!customer && emailQuery) {
+      customer = await Customer.findOne({ email: emailQuery.toLowerCase() });
+    }
 
     if (!customer) {
-      return next(new AppError('Customer not found', 404));
+      return next(new AppError('Customer not found. Please log in.', 404));
     }
 
     res.status(200).json({
       success: true,
       data: {
         id: customer._id,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
+        firstName: customer.firstName || '',
+        lastName: customer.lastName || '',
         email: customer.email,
         phone: customer.phone || '',
         gender: customer.gender || '',
+        dob: customer.dob || '',
         address: customer.address || '',
         twoFactorEnabled: customer.twoFactorEnabled || false
       }
@@ -250,20 +255,36 @@ export const getProfile = async (req, res, next) => {
 // @desc    Update customer profile supporting originalEmail reference
 export const updateProfile = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, phone, gender, address } = req.body;
+    const { firstName, lastName, email, phone, gender, dob, address, originalEmail } = req.body;
 
-    const customer = req.customer;
+    let customer = req.customer;
 
-    if (!customer) {
-      return next(new AppError('Customer not found', 404));
+    if (!customer && originalEmail) {
+      customer = await Customer.findOne({ email: originalEmail.toLowerCase() });
     }
 
-    if (firstName !== undefined) customer.firstName = firstName;
-    if (lastName !== undefined) customer.lastName = lastName;
-    if (email !== undefined) customer.email = email;
-    if (phone !== undefined) customer.phone = phone;
+    if (!customer && email) {
+      customer = await Customer.findOne({ email: email.toLowerCase() });
+    }
+
+    if (!customer) {
+      return next(new AppError('Customer not found. Please log in.', 404));
+    }
+
+    if (email && email.toLowerCase() !== customer.email) {
+      const existing = await Customer.findOne({ email: email.toLowerCase() });
+      if (existing && String(existing._id) !== String(customer._id)) {
+        return next(new AppError('Email address is already in use by another account', 400));
+      }
+      customer.email = email.toLowerCase();
+    }
+
+    if (firstName !== undefined) customer.firstName = firstName.trim();
+    if (lastName !== undefined) customer.lastName = lastName.trim();
+    if (phone !== undefined) customer.phone = phone.trim();
     if (gender !== undefined) customer.gender = gender;
-    if (address !== undefined) customer.address = address;
+    if (dob !== undefined) customer.dob = dob;
+    if (address !== undefined) customer.address = address.trim();
 
     await customer.save();
 
@@ -277,7 +298,9 @@ export const updateProfile = async (req, res, next) => {
         email: customer.email,
         phone: customer.phone,
         gender: customer.gender,
-        address: customer.address
+        dob: customer.dob,
+        address: customer.address,
+        twoFactorEnabled: customer.twoFactorEnabled || false
       }
     });
   } catch (error) {

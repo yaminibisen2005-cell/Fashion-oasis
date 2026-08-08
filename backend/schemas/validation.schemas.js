@@ -82,12 +82,14 @@ export const resetPasswordSchema = z.object({
 
 export const updateProfileSchema = z.object({
   body: z.object({
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
-    email: z.string().email(),
-    phone: z.string().min(10),
-    gender: z.enum(['Male', 'Female', 'Other']).optional(),
-    address: z.string().optional()
+    firstName: z.string().min(1, 'First name is required').optional(),
+    lastName: z.string().optional().or(z.literal('')),
+    email: z.string().email('Invalid email address').optional(),
+    phone: z.string().optional().or(z.literal('')),
+    gender: z.enum(['Male', 'Female', 'Other', '']).optional(),
+    dob: z.string().optional().or(z.literal('')),
+    address: z.string().optional().or(z.literal('')),
+    originalEmail: z.string().optional().or(z.literal(''))
   })
 });
 
