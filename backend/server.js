@@ -37,7 +37,12 @@ const app = express();
 connectDB();
 
 // Global Middlewares
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: "https://fashion-oasis-6b1j.vercel.app",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true
+}
+));
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
