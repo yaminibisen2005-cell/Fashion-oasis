@@ -1,4 +1,4 @@
- import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
@@ -11,8 +11,20 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+let app = null;
+let auth = null;
+let googleProvider = null;
+
+try {
+  if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "undefined") {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+  } else {
+    console.error("Firebase API Key is missing in VITE_FIREBASE_API_KEY. Google authentication will require a valid API Key in Vercel/environment variables.");
+  }
+} catch (error) {
+  console.error("Firebase initialization failed:", error?.message || error);
+}
 
 export { auth, googleProvider, signInWithPopup };

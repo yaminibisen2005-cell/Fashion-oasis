@@ -1,7 +1,8 @@
 import RelatedProducts from "../components/ProductDetails/RelatedProducts/RelatedProducts";
 import "./ProductDetails.css";
 import { Link, useParams } from "react-router-dom";
-import { products } from "../data/products";
+import { useState, useEffect } from "react";
+import apiClient from "../api/client";
 
 
 import ProductGallery from "../components/ProductDetails/ProductGallery/ProductGallery";
@@ -14,11 +15,36 @@ import Footer from "../components/Footer/Footer";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const product = products.find(p => p.id === parseInt(id));
+  const [product, setProduct] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Fetch single product
+        const productRes = await apiClient.get(`/products/${id}`);
+        if (productRes.data.success) {
+          setProduct(productRes.data.data);
+        }
+        
+        // Fetch products for related/recently viewed
+        const allRes = await apiClient.get(`/products?limit=10`);
+        if (allRes.data.success) {
+          setAllProducts(allRes.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found.</div>;
 
   return (
     <>
@@ -43,11 +69,11 @@ const ProductDetails = () => {
 
       <RelatedProducts
         currentProduct={product}
-        products={products}
+        products={allProducts}
       />
 
  <RecentlyViewed
-          products={products}
+          products={allProducts}
       />
       
 

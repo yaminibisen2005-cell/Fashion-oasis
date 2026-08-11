@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginBg from "../../assets/login-bg.png";
 import "./AdminAuth.css";
+import { adminLogin } from "../../api/admin";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,27 +15,22 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    setPasswordError("");
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const resData = await response.json();
-
-      if (!response.ok) {
-        throw new Error(resData.message || "Login failed");
-      }
+      const resData = await adminLogin({ email, password });
 
       localStorage.setItem("adminToken", resData.data.token);
       localStorage.setItem("adminUser", JSON.stringify(resData.data.user));
 
       navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -67,9 +64,14 @@ const AdminLogin = () => {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                className={passwordError ? "input-error" : ""}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (e.target.value) setPasswordError("");
+                }}
                 required
               />
+              {passwordError && <span className="password-error-msg">{passwordError}</span>}
             </div>
 
             <button type="submit" className="admin-auth-btn" disabled={loading}>

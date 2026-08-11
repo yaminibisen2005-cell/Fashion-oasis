@@ -758,151 +758,197 @@ order:-1;
 /*========================================*/
 /* Mobile */
 /*========================================*/
+/* Mobile (max-width: 768px) */
+/*========================================*/
 
 @media(max-width:768px){
 
 .category-heading h2{
-
-font-size:42px;
-
+    font-size:42px;
 }
 
 .category-heading p{
-
-font-size:15px;
-
-line-height:28px;
-
+    font-size:15px;
+    line-height:28px;
 }
 
 .right-grid{
-
-grid-template-columns:1fr;
-
+    grid-template-columns:1fr;
 }
 
 .large-card{
-
-height:420px;
-
+    height:auto !important;
+    min-height:470px !important;
 }
 
 .small-card{
-
-height:240px;
-
+    height:auto !important;
+    min-height:270px !important;
 }
 
 .large-card .overlay{
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    padding:24px 20px 28px !important;
+    height:auto !important;
+    box-sizing:border-box !important;
+    overflow:visible !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    background:linear-gradient(
+        to top,
+        rgba(255,255,255,0.96) 0%,
+        rgba(255,255,255,0.75) 65%,
+        transparent 100%
+    ) !important;
+}
 
-left:15px;
+.large-card .overlay span{
+    margin-bottom:10px !important;
+}
 
-right:15px;
+.large-card .overlay h3{
+    font-size:34px !important;
+    margin-bottom:8px !important;
+}
 
-bottom:15px;
-
-padding:20px;
-
+.large-card .overlay p{
+    font-size:14.5px !important;
+    line-height:1.4 !important;
+    margin-bottom:16px !important;
 }
 
 .small-card .overlay{
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    padding:20px 18px 26px !important;
+    height:auto !important;
+    box-sizing:border-box !important;
+    overflow:visible !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    background:linear-gradient(
+        to top,
+        rgba(255,255,255,0.98) 0%,
+        rgba(255,255,255,0.82) 65%,
+        transparent 100%
+    ) !important;
+}
 
-left:10px;
+.small-card .overlay span{
+    margin-bottom:8px !important;
+}
 
-right:10px;
+.small-card .overlay h4{
+    font-size:24px !important;
+    margin-bottom:6px !important;
+}
 
-bottom:10px;
-
-padding:15px;
-
+.personalized-card{
+    height:auto !important;
+    min-height:auto !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:visible !important;
 }
 
 .banner-left{
+    padding:32px 24px 32px !important;
+    height:auto !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    align-items:flex-start !important;
+    box-sizing:border-box !important;
+    order:2 !important;
+}
 
-padding:30px;
-
+.banner-left span{
+    margin-bottom:14px !important;
 }
 
 .banner-left h2{
+    font-size:32px !important;
+    line-height:1.15 !important;
+    margin-bottom:12px !important;
+}
 
-font-size:34px;
-
+.banner-left p{
+    font-size:14.5px !important;
+    line-height:1.5 !important;
+    margin-bottom:24px !important;
 }
 
 .banner-right{
-
-height:240px;
-
+    height:250px !important;
+    order:1 !important;
+    overflow:hidden !important;
+    border-top-left-radius:28px !important;
+    border-top-right-radius:28px !important;
 }
 
 }
 
 /*========================================*/
-/* Small Mobile */
+/* Small Mobile (max-width: 576px) */
 /*========================================*/
 
 @media(max-width:576px){
 
 .categories{
-
-padding:60px 15px;
-
+    padding:50px 15px !important;
 }
 
 .category-heading h2{
-
-font-size:34px;
-
+    font-size:34px !important;
 }
 
 .category-heading span{
-
-font-size:12px;
-
+    font-size:12px !important;
 }
 
 .large-card{
-
-height:360px;
-
+    height:auto !important;
+    min-height:450px !important;
 }
 
 .small-card{
-
-height:220px;
-
+    height:auto !important;
+    min-height:260px !important;
 }
 
 .large-card .overlay h3{
-
-font-size:30px;
-
+    font-size:30px !important;
 }
 
 .small-card .overlay h4{
+    font-size:22px !important;
+}
 
-font-size:22px;
-
+.personalized-card{
+    height:auto !important;
+    min-height:auto !important;
 }
 
 .banner-left{
-
-padding:25px;
-
+    padding:28px 20px 28px !important;
 }
 
 .banner-left h2{
-
-font-size:28px;
-
+    font-size:28px !important;
 }
 
 .banner-left button{
+    width:100% !important;
+    justify-content:center !important;
+}
 
-width:100%;
-
-justify-content:center;
-
+.banner-right{
+    height:220px !important;
 }
 
 }

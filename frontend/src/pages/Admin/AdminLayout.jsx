@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { showConfirm, notifySuccess, notifyError, notifyInfo } from "../../utils/alerts";
 import {
   FaChartPie,
   FaBox,
@@ -20,6 +21,7 @@ import {
   FaHandshake,
   FaCheckDouble,
   FaWallet,
+  FaGift,
 } from "react-icons/fa";
 
 // Sections imports
@@ -31,6 +33,8 @@ import OrdersSection from "./Sections/OrdersSection";
 import CustomersSection from "./Sections/CustomersSection";
 import ReviewsSection from "./Sections/ReviewsSection";
 import CouponsSection from "./Sections/CouponsSection";
+import OffersSection from "./Sections/OffersSection";
+import InquiriesSection from "./Sections/InquiriesSection";
 import AnalyticsSection from "./Sections/AnalyticsSection";
 import SettingsSection from "./Sections/SettingsSection";
 import ProfileSection from "./Sections/ProfileSection";
@@ -58,6 +62,12 @@ import {
   createCoupon as addCouponAPI,
   deleteCoupon as removeCoupon,
   toggleCouponStatus as setCouponStatus,
+  // seller management APIs
+  fetchSellers as getSellers,
+  fetchPendingSellers as getPendingSellers,
+  approveSeller as apiApproveSeller,
+  rejectSeller as apiRejectSeller,
+  toggleSellerStatus as apiToggleSellerStatus,
 } from "../../api/admin";
 
 import "./AdminLayout.css";
@@ -77,16 +87,23 @@ const AdminLayout = () => {
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, total: 0 });
 
   useEffect(() => {
-    fetchProducts(pagination.currentPage);
+    fetchProductsList(pagination.currentPage);
   }, [pagination.currentPage]);
 
-  const fetchProducts = async (page = 1, limit = 10) => {
+  const fetchProductsList = async (page = 1) => {
     try {
       setLoadingProducts(true);
-      const data = await getProducts(page, limit);
+      const data = await getProducts(page, 10);
       if (data.success) {
         setProducts(data.data);
-        if (data.pagination) setPagination(data.pagination);
+        if (data.pagination) {
+          setPagination((prev) => ({
+            ...prev,
+            totalPages: data.pagination.totalPages,
+            total: data.pagination.total,
+            currentPage: data.pagination.currentPage,
+          }));
+        }
       }
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -99,6 +116,19 @@ const AdminLayout = () => {
 
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+  const loadSellers = async () => {
+    const data = await getSellers();
+    if (data.success) setSellers(data.data);
+  };
+  const loadPendingSellers = async () => {
+    const data = await getPendingSellers();
+    if (data.success) setPendingSellers(data.data);
+  };
+  useEffect(() => {
+    loadSellers();
+    loadPendingSellers();
   }, []);
 
   const fetchCategories = async () => {
@@ -253,16 +283,9 @@ const AdminLayout = () => {
   });
 
   // --- Seller management states ---
-  const [sellers, setSellers] = useState([
-    { id: 1, storeName: "Aura Jewels", contactPerson: "Rohan Mehra", email: "aura@jewels.com", logoInitials: "AJ", totalSales: 154000, rating: 4.8, status: "Active" },
-    { id: 2, storeName: "Silver Elegance", contactPerson: "Simran Kaur", email: "silver@elegance.com", logoInitials: "SE", totalSales: 98000, rating: 4.6, status: "Active" },
-    { id: 3, storeName: "Glow & Co", contactPerson: "Karan Johar", email: "glow@co.com", logoInitials: "GC", totalSales: 21000, rating: 4.2, status: "Suspended" },
-  ]);
+  const [sellers, setSellers] = useState([]);
 
-  const [pendingSellers, setPendingSellers] = useState([
-    { id: 101, storeName: "Ornate Studio", contactPerson: "Meera Nair", email: "meera@ornate.com", appliedDate: "02 Aug 2026", docs: { gstin: "27AAAAA1111A1Z1", pan: "ABCDE1234F" } },
-    { id: 102, storeName: "Vedic Craft", contactPerson: "Rahul Bose", email: "rahul@vedic.com", appliedDate: "05 Aug 2026", docs: { gstin: "27BBBBB2222B2Z2", pan: "XYZWH9876P" } },
-  ]);
+  const [pendingSellers, setPendingSellers] = useState([]);
 
   const [pendingProducts, setPendingProducts] = useState([
     { id: 201, name: "Emerald Kundan Choker", sku: "KDN-EME-01", category: "Necklaces", price: 8500, sellerName: "Aura Jewels", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=120&q=80" },
@@ -278,41 +301,45 @@ const AdminLayout = () => {
     { id: 401, txnId: "TXN9832048", sellerName: "Glow & Co", amount: 12000, paidDate: "28 July 2026", status: "Paid" }
   ]);
 
-  const handleApproveSeller = (id) => {
-    const approved = pendingSellers.find(s => s.id === id);
-    if (approved) {
-      setSellers([...sellers, {
-        id: approved.id,
-        storeName: approved.storeName,
-        contactPerson: approved.contactPerson,
-        email: approved.email,
-        logoInitials: approved.storeName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase(),
-        totalSales: 0,
-        rating: 5.0,
-        status: "Active"
-      }]);
-      setPendingSellers(pendingSellers.filter(s => s.id !== id));
-      alert(`Seller application for "${approved.storeName}" approved successfully!`);
-    }
-  };
-
-  const handleRejectSeller = (id, reason) => {
-    const rejected = pendingSellers.find(s => s.id === id);
-    if (rejected) {
-      setPendingSellers(pendingSellers.filter(s => s.id !== id));
-      alert(`Seller "${rejected.storeName}" application rejected. Reason: ${reason}`);
-    }
-  };
-
-  const handleToggleSellerStatus = (id) => {
-    setSellers(sellers.map(s => {
-      if (s.id === id) {
-        const newStatus = s.status === "Active" ? "Suspended" : "Active";
-        alert(`Seller "${s.storeName}" has been ${newStatus.toLowerCase()}.`);
-        return { ...s, status: newStatus };
+  const handleApproveSeller = async (id) => {
+    try {
+      const response = await apiApproveSeller(id);
+      if (response.success) {
+        // fetch updated lists
+        await loadSellers();
+        await loadPendingSellers();
+        notifySuccess('Seller approved successfully');
       }
-      return s;
-    }));
+    } catch (err) {
+      console.error('Approve seller error:', err);
+      notifyError('Failed to approve seller');
+    }
+  };
+
+  const handleRejectSeller = async (id, reason) => {
+    try {
+      const response = await apiRejectSeller(id, { reason });
+      if (response.success) {
+        await loadPendingSellers();
+        notifySuccess('Seller rejected');
+      }
+    } catch (err) {
+      console.error('Reject seller error:', err);
+      notifyError('Failed to reject seller');
+    }
+  };
+
+  const handleToggleSellerStatus = async (id) => {
+    try {
+      const response = await apiToggleSellerStatus(id);
+      if (response.success) {
+        await loadSellers();
+        notifySuccess('Seller status updated');
+      }
+    } catch (err) {
+      console.error('Toggle status error:', err);
+      notifyError('Failed to toggle seller status');
+    }
   };
 
   const handleApproveProduct = (id) => {
@@ -332,7 +359,7 @@ const AdminLayout = () => {
       
       setProducts([newProductItem, ...products]);
       setPendingProducts(pendingProducts.filter(p => p.id !== id));
-      alert(`Product "${approved.name}" approved and listed live!`);
+      notifySuccess(`Product "${approved.name}" approved and listed live!`);
     }
   };
 
@@ -340,7 +367,7 @@ const AdminLayout = () => {
     const rejected = pendingProducts.find(p => p.id === id);
     if (rejected) {
       setPendingProducts(pendingProducts.filter(p => p.id !== id));
-      alert(`Product "${rejected.name}" rejected. Feedback: "${feedback}"`);
+      notifyInfo(`Product "${rejected.name}" rejected.`);
     }
   };
 
@@ -361,7 +388,7 @@ const AdminLayout = () => {
         status: "Paid"
       }, ...payoutHistory]);
       setWithdrawalRequests(withdrawalRequests.filter(r => r.id !== id));
-      alert(`Payout of ₹${request.amount.toLocaleString()} to ${request.sellerName} marked as paid successfully.`);
+      notifySuccess(`Payout of ₹${request.amount.toLocaleString()} to ${request.sellerName} marked as paid successfully.`);
     }
   };
 
@@ -377,7 +404,8 @@ const AdminLayout = () => {
     try {
       const data = await createProduct(newP);
       if (data.success) {
-        fetchProducts(pagination.currentPage);
+        // Simple optimistic update, but refreshing is safer for paginated data
+        await fetchProductsList(1); // Fetch the first page to show newly added if sorted by newest
         return true;
       }
     } catch (err) {
@@ -387,7 +415,7 @@ const AdminLayout = () => {
   };
 
   const deleteProduct = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this product?");
+    const isConfirmed = await showConfirm("Delete Product", "Are you sure you want to delete this product?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -427,7 +455,7 @@ const AdminLayout = () => {
   };
 
   const deleteCategory = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this category?");
+    const isConfirmed = await showConfirm("Delete Category", "Are you sure you want to delete this category?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -482,7 +510,7 @@ const AdminLayout = () => {
   };
 
   const deleteReview = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this review?");
+    const isConfirmed = await showConfirm("Delete Review", "Are you sure you want to delete this review?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -522,7 +550,7 @@ const AdminLayout = () => {
   };
   
   const deleteCoupon = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this coupon?");
+    const isConfirmed = await showConfirm("Delete Coupon", "Are you sure you want to delete this coupon?", "Delete");
     if (!isConfirmed) return;
 
     try {
@@ -567,6 +595,8 @@ const AdminLayout = () => {
     { name: "Payouts", path: "payouts", icon: <FaWallet /> },
     { name: "Reviews", path: "reviews", icon: <FaStar /> },
     { name: "Coupons", path: "coupons", icon: <FaPercentage /> },
+    { name: "Special Offers", path: "offers", icon: <FaGift /> },
+    { name: "Contact Inquiries", path: "inquiries", icon: <FaEnvelope /> },
     { name: "Analytics", path: "analytics", icon: <FaChartLine /> },
     { name: "Settings", path: "settings", icon: <FaCog /> },
   ];
@@ -616,6 +646,12 @@ const AdminLayout = () => {
       </header>
 
       <div className="admin-body">
+        {/* Mobile Backdrop Overlay */}
+        <div
+          className={`sidebar-backdrop ${sidebarOpen ? "active" : ""}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
         {/* Sidebar */}
         <aside className={`admin-sidebar ${sidebarOpen ? "active" : ""}`}>
           <ul className="sidebar-links-list">
@@ -624,6 +660,9 @@ const AdminLayout = () => {
                 <Link
                   to={`/admin/${link.path}`}
                   className={`sidebar-link ${isActive(link.path) ? "active" : ""}`}
+                  onClick={() => {
+                    if (window.innerWidth <= 992) setSidebarOpen(false);
+                  }}
                 >
                   {link.icon}
                   <span>{link.name}</span>
@@ -718,6 +757,8 @@ const AdminLayout = () => {
                 />
               }
             />
+            <Route path="offers" element={<OffersSection />} />
+            <Route path="inquiries" element={<InquiriesSection />} />
             <Route path="analytics" element={<AnalyticsSection />} />
             <Route
               path="sellers"

@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginBg from "../../assets/login-bg.png";
 import "./AdminAuth.css";
+import { validatePasswordStrength } from "../../utils/passwordValidation";
+import { adminRegister } from "../../api/admin";
 
 const AdminRegister = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [adminKey, setAdminKey] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,7 +18,12 @@ const AdminRegister = () => {
   const validate = () => {
     if (name.trim().length < 2) return "Name must be at least 2 characters.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address.";
-    if (password.length < 8) return "Password must be at least 8 characters.";
+    const passErr = validatePasswordStrength(password);
+    if (passErr) {
+      setPasswordError(passErr);
+      return passErr;
+    }
+    setPasswordError("");
     if (!adminKey.trim()) return "Admin secret key is required.";
     return null;
   };
@@ -32,22 +40,19 @@ const AdminRegister = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/admin/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, adminKey }),
+      const resData = await adminRegister({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        adminKey,
       });
-
-      const resData = await response.json();
-
-      if (!response.ok) throw new Error(resData.message || "Registration failed.");
 
       localStorage.setItem("adminToken", resData.data.token);
       localStorage.setItem("adminUser", JSON.stringify(resData.data.user));
 
       navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -85,13 +90,19 @@ const AdminRegister = () => {
             </div>
 
             <div className="input-group">
-              <label>Password <span style={{ color: "#aaa", fontWeight: 400, fontSize: 11 }}>(min. 8 characters)</span></label>
+              <label>Password</label>
               <input
                 type="password"
-                placeholder="••••••••"
+                placeholder="Create password (e.g. Fashion@123)"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                className={passwordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setPassword(val);
+                  setPasswordError(validatePasswordStrength(val));
+                }}
               />
+              {passwordError && <span className="password-error-msg">{passwordError}</span>}
             </div>
 
             <div className="input-group">

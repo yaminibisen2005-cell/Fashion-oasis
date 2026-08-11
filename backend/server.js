@@ -18,11 +18,16 @@ import adminCustomerRoutes from "./routes/adminCustomer.routes.js";
 import adminReviewRoutes from "./routes/adminReview.routes.js";
 import adminCouponRoutes from "./routes/adminCoupon.routes.js";
 import adminAnalyticsRoutes from "./routes/adminAnalytics.routes.js";
+import adminSellerRoutes from "./routes/adminSeller.routes.js";
 import sellerDashboardRoutes from "./routes/sellerDashboard.routes.js";
 import sellerProductRoutes from "./routes/sellerProduct.routes.js";
 import sellerOrderRoutes from "./routes/sellerOrder.routes.js";
 import sellerReviewRoutes from "./routes/sellerReview.routes.js";
 import inquiryRoutes from "./routes/inquiry.routes.js";
+import publicProductRoutes from "./routes/publicProduct.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import newsletterRoutes from "./routes/newsletter.routes.js";
+import offerRoutes from "./routes/offer.routes.js";
 
 dotenv.config();
 
@@ -32,10 +37,23 @@ const app = express();
 connectDB();
 
 // Global Middlewares
-app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://fashion-oasis-6b1j.vercel.app",
+    "https://fashion-oasis-4trv.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true
+}));
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
+app.use("/api/v1/products", publicProductRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/newsletter", newsletterRoutes);
+app.use("/api/v1/offers", offerRoutes);
+app.use("/api/offers", offerRoutes); // Alias route support
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin/dashboard", adminDashboardRoutes);
 app.use("/api/v1/admin/analytics", adminAnalyticsRoutes);
@@ -45,6 +63,7 @@ app.use("/api/v1/admin/orders", adminOrderRoutes);
 app.use("/api/v1/admin/customers", adminCustomerRoutes);
 app.use("/api/v1/admin/reviews", adminReviewRoutes);
 app.use("/api/v1/admin/coupons", adminCouponRoutes);
+app.use("/api/v1/admin/sellers", adminSellerRoutes);
 app.use("/api/v1/seller/dashboard", sellerDashboardRoutes);
 app.use("/api/v1/seller/products", sellerProductRoutes);
 app.use("/api/v1/seller/orders", sellerOrderRoutes);
@@ -73,7 +92,6 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(
-    `Server running in ${process.env.NODE_ENV || "development"
-    } mode on port ${PORT}`
+    `Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`
   );
 });

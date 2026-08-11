@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaSave, FaStore, FaCreditCard, FaShareAlt, FaFileContract, FaHandshake } from "react-icons/fa";
+import { notifyWarning } from "../../../utils/alerts";
 
 const SettingsSection = ({ settings, updateSettings }) => {
   const [activeTab, setActiveTab] = useState("General");
@@ -35,7 +36,7 @@ const SettingsSection = ({ settings, updateSettings }) => {
     if (file) {
       const ext = file.name.split('.').pop().toLowerCase();
       if (ext !== 'pdf' && ext !== 'doc' && ext !== 'docx') {
-        alert("Only PDF and Word (.doc, .docx) formats are supported.");
+        notifyWarning("Only PDF and Word (.doc, .docx) formats are supported.");
         return;
       }
       const reader = new FileReader();

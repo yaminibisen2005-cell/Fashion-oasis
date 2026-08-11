@@ -1,34 +1,56 @@
-import Customer from '../models/customer.js';
+ import Customer from '../models/customer.js';
+import Order from '../models/Order.js';
 import Review from '../models/Review.js';
-import Product from '../models/Product.js';
 import AppError from '../utils/AppError.js';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
-
-// Helper function to send email via Brevo SMTP
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../utils/emailService.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
-const sendEmail = async (options) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
 
-  const mailOptions = {
-    from: `Fashion Oasis <${process.env.EMAIL_FROM}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-  };
+const FIREBASE_PUBLIC_KEYS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
 
-  await transporter.sendMail(mailOptions);
+const verifyFirebaseIdToken = async (idToken) => {
+  if (!idToken || typeof idToken !== 'string') {
+    throw new AppError('Firebase ID token is required for Google authentication', 400);
+  }
+
+  const decodedToken = jwt.decode(idToken, { complete: true });
+  if (!decodedToken || !decodedToken.payload || !decodedToken.header) {
+    throw new AppError('Invalid Firebase ID token', 400);
+  }
+
+  const projectId = process.env.FIREBASE_PROJECT_ID || decodedToken.payload.aud;
+  if (!projectId) {
+    throw new AppError('Firebase project ID is not configured on the server', 500);
+  }
+
+  const response = await fetch(FIREBASE_PUBLIC_KEYS_URL);
+  if (!response.ok) {
+    throw new AppError('Unable to verify Firebase token at this time', 502);
+  }
+
+  const publicKeys = await response.json();
+  const publicKey = publicKeys[decodedToken.header.kid];
+
+  if (!publicKey) {
+    throw new AppError('Invalid Firebase token signature key', 401);
+  }
+
+  try {
+    const verifiedToken = jwt.verify(idToken, publicKey, {
+      algorithms: ['RS256'],
+      issuer: `https://securetoken.google.com/${projectId}`,
+      audience: projectId,
+    });
+    return verifiedToken;
+  } catch (error) {
+    throw new AppError('Invalid or expired Firebase ID token', 401);
+  }
 };
+// Local Nodemailer sendEmail removed; using shared Brevo sendEmail utility.
 
 // @desc    Register new customer
 // @route   POST /api/v1/customer/auth/register
@@ -136,15 +158,16 @@ export const forgotPassword = async (req, res, next) => {
     await customer.save({ validateBeforeSave: false });
 
     // Create reset URL (pointing to frontend reset page)
-    const resetUrl = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
+    const frontendUrl = process.env.FRONTEND_URL || req.get("origin") || "http://localhost:5173";
+    const resetUrl = `${frontendUrl.replace(/\/+$/, "")}/reset-password/${resetToken}`;
 
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to:\n\n${resetUrl}\n\nIf you did not request this, please ignore this email.`;
 
     try {
       await sendEmail({
-        email: customer.email,
+        to: customer.email,
         subject: 'Password Reset Token (Valid for 10 mins)',
-        message,
+        htmlContent: message,
       });
 
       res.status(200).json({
@@ -197,25 +220,30 @@ export const resetPassword = async (req, res, next) => {
   }
 };
 
-// @desc    Get current customer profile by email query
- // Inside getProfile, update the response object to include twoFactorEnabled:
+// @desc    Get current customer profile
 export const getProfile = async (req, res, next) => {
   try {
-    const customer = req.customer;
+    let customer = req.customer;
+
+    const emailQuery = req.query.email || req.query.userEmail;
+    if (!customer && emailQuery) {
+      customer = await Customer.findOne({ email: emailQuery.toLowerCase() });
+    }
 
     if (!customer) {
-      return next(new AppError('Customer not found', 404));
+      return next(new AppError('Customer not found. Please log in.', 404));
     }
 
     res.status(200).json({
       success: true,
       data: {
         id: customer._id,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
+        firstName: customer.firstName || '',
+        lastName: customer.lastName || '',
         email: customer.email,
         phone: customer.phone || '',
         gender: customer.gender || '',
+        dob: customer.dob || '',
         address: customer.address || '',
         twoFactorEnabled: customer.twoFactorEnabled || false
       }
@@ -228,20 +256,36 @@ export const getProfile = async (req, res, next) => {
 // @desc    Update customer profile supporting originalEmail reference
 export const updateProfile = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, phone, gender, address } = req.body;
+    const { firstName, lastName, email, phone, gender, dob, address, originalEmail } = req.body;
 
-    const customer = req.customer;
+    let customer = req.customer;
 
-    if (!customer) {
-      return next(new AppError('Customer not found', 404));
+    if (!customer && originalEmail) {
+      customer = await Customer.findOne({ email: originalEmail.toLowerCase() });
     }
 
-    if (firstName !== undefined) customer.firstName = firstName;
-    if (lastName !== undefined) customer.lastName = lastName;
-    if (email !== undefined) customer.email = email;
-    if (phone !== undefined) customer.phone = phone;
+    if (!customer && email) {
+      customer = await Customer.findOne({ email: email.toLowerCase() });
+    }
+
+    if (!customer) {
+      return next(new AppError('Customer not found. Please log in.', 404));
+    }
+
+    if (email && email.toLowerCase() !== customer.email) {
+      const existing = await Customer.findOne({ email: email.toLowerCase() });
+      if (existing && String(existing._id) !== String(customer._id)) {
+        return next(new AppError('Email address is already in use by another account', 400));
+      }
+      customer.email = email.toLowerCase();
+    }
+
+    if (firstName !== undefined) customer.firstName = firstName.trim();
+    if (lastName !== undefined) customer.lastName = lastName.trim();
+    if (phone !== undefined) customer.phone = phone.trim();
     if (gender !== undefined) customer.gender = gender;
-    if (address !== undefined) customer.address = address;
+    if (dob !== undefined) customer.dob = dob;
+    if (address !== undefined) customer.address = address.trim();
 
     await customer.save();
 
@@ -255,7 +299,9 @@ export const updateProfile = async (req, res, next) => {
         email: customer.email,
         phone: customer.phone,
         gender: customer.gender,
-        address: customer.address
+        dob: customer.dob,
+        address: customer.address,
+        twoFactorEnabled: customer.twoFactorEnabled || false
       }
     });
   } catch (error) {
@@ -396,10 +442,13 @@ export const saveCart = async (req, res, next) => {
 };
 
 // @desc    Google Authentication (Sign up / Login)
-// @route   POST /api/v1/customer/auth/google
+// @route   POST /api/v1/customer/google
 export const googleAuth = async (req, res, next) => {
   try {
-    const { name, email, photo } = req.body;
+    const { token: idToken, name: requestName, email: requestEmail, photo: requestPhoto } = req.body;
+
+    const verifiedToken = await verifyFirebaseIdToken(idToken);
+    const email = verifiedToken.email || requestEmail;
 
     if (!email) {
       return next(new AppError('Email is required for Google authentication', 400));
@@ -408,12 +457,13 @@ export const googleAuth = async (req, res, next) => {
     // Check if customer already exists
     let customer = await Customer.findOne({ email });
 
-    if (!customer) {
-      // Split name into first and last name if available
-      const nameParts = (name || '').trim().split(' ');
-      const firstName = nameParts[0] || 'Customer';
-      const lastName = nameParts.slice(1).join(' ') || '';
+    const name = verifiedToken.name || requestName || '';
+    const photo = verifiedToken.picture || requestPhoto || '';
+    const nameParts = name.trim().split(' ').filter(Boolean);
+    const firstName = nameParts[0] || 'Customer';
+    const lastName = nameParts.slice(1).join(' ') || firstName;
 
+    if (!customer) {
       // Create a random secure password since they are logging in via Google
       const randomPassword = crypto.randomBytes(16).toString('hex');
 
@@ -423,7 +473,20 @@ export const googleAuth = async (req, res, next) => {
         email,
         password: randomPassword,
         phone: '',
+        avatar: photo || undefined,
       });
+    } else {
+      const updates = {};
+      if (photo && customer.avatar !== photo) updates.avatar = photo;
+      if (name && customer.firstName !== firstName) updates.firstName = firstName;
+      if (name && customer.lastName !== lastName) updates.lastName = lastName;
+
+      if (Object.keys(updates).length) {
+        customer = await Customer.findByIdAndUpdate(customer._id, updates, {
+          new: true,
+          runValidators: true,
+        });
+      }
     }
 
     const token = signToken(customer._id);
@@ -438,40 +501,98 @@ export const googleAuth = async (req, res, next) => {
         lastName: customer.lastName,
         email: customer.email,
         phone: customer.phone || '',
+        avatar: customer.avatar,
       },
     });
   } catch (error) {
     next(error);
   }
 };
-
-// @desc    Get customer reviews
-export const getCustomerReviews = async (req, res, next) => {
+// @desc    Upload customer avatar
+// @route   POST /api/v1/customer/avatar
+export const uploadAvatar = async (req, res, next) => {
   try {
     const customer = req.customer;
+
     if (!customer) {
       return next(new AppError('Customer not found', 404));
     }
 
-    const customerName = `${customer.firstName} ${customer.lastName}`.trim();
+    if (!req.file) {
+      return next(new AppError('Please upload an image file', 400));
+    }
 
-    // Fetch reviews by customer name
-    const reviews = await Review.find({ customer: customerName }).sort({ createdAt: -1 }).lean();
+    // Upload to cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, 'fashion_oasis/avatars');
 
-    // Attach product images and IDs
-    const enhancedReviews = await Promise.all(reviews.map(async (review) => {
-      const product = await Product.findOne({ name: review.product }).lean();
-      return {
-        ...review,
-        productId: product ? product._id : null,
-        image: product ? product.image : null
-      };
-    }));
+    customer.avatar = result.secure_url;
+    await customer.save();
 
     res.status(200).json({
       success: true,
-      count: enhancedReviews.length,
-      data: enhancedReviews
+      message: 'Avatar uploaded successfully',
+      data: {
+        avatar: customer.avatar
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get customer dashboard stats
+// @route   GET /api/v1/customer/dashboard/stats
+export const getCustomerDashboardStats = async (req, res, next) => {
+  try {
+    const customer = req.customer;
+    if (!customer) {
+      return next(new AppError('Customer session not found', 401));
+    }
+
+    console.log("[getCustomerDashboardStats] req.customer:", customer._id, customer.email);
+
+    const orders = await Order.find({
+      $or: [
+        { customer: customer._id },
+        { customerEmail: customer.email }
+      ]
+    }).sort({ createdAt: -1 });
+
+    console.log("[getCustomerDashboardStats] orders count:", orders.length);
+
+    const reviews = await Review.find({
+      $or: [
+        { customer: customer._id },
+        { customerEmail: customer.email }
+      ]
+    });
+
+    const totalOrders = orders.length;
+    const recentOrders = orders.slice(0, 5);
+    const lastOrderDate = orders.length > 0 && orders[0].createdAt
+      ? new Date(orders[0].createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+      : "";
+
+    const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Processing' || o.status === 'Shipped').length;
+    const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
+    const cancelledOrders = orders.filter(o => o.status === 'Cancelled').length;
+
+    const statsData = {
+      totalOrders,
+      recentOrders,
+      lastOrderDate,
+      pendingOrders,
+      deliveredOrders,
+      cancelledOrders,
+      wishlistCount: customer.wishlist ? customer.wishlist.length : 0,
+      reviewsCount: reviews.length,
+      rewardPoints: totalOrders * 50
+    };
+
+    res.status(200).json({
+      success: true,
+      ...statsData,
+      data: statsData
     });
   } catch (error) {
     next(error);

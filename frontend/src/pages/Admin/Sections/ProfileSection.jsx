@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaUserCircle, FaEnvelope, FaKey, FaSave } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaCheckCircle, FaCamera } from "react-icons/fa";
+import { notifyWarning, notifySuccess } from "../../../utils/alerts";
 
 const ProfileSection = ({ profile, updateProfile }) => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const ProfileSection = ({ profile, updateProfile }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.password && formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      notifyWarning("Passwords do not match!");
       return;
     }
 
@@ -28,10 +29,7 @@ const ProfileSection = ({ profile, updateProfile }) => {
       email: formData.email,
       img: formData.img,
     });
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-    }, 2000);
+    notifySuccess("Profile updated successfully!");
   };
 
   return (

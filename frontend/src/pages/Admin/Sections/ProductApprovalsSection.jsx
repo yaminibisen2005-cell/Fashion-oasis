@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaCheck, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { FaCheck, FaTimes, FaEye, FaStore, FaClock, FaBoxOpen, FaLayerGroup, FaInfoCircle } from "react-icons/fa";
+import { notifyWarning } from "../../../utils/alerts";
 
 const ProductApprovalsSection = ({ pendingProducts, handleApproveProduct, handleRejectProduct }) => {
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
@@ -20,7 +21,7 @@ const ProductApprovalsSection = ({ pendingProducts, handleApproveProduct, handle
 
   const submitRejection = () => {
     if (!feedbackMsg.trim()) {
-      alert("Please provide rejection feedback.");
+      notifyWarning("Please provide rejection feedback.");
       return;
     }
     handleRejectProduct(selectedProductId, feedbackMsg);

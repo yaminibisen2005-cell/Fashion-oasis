@@ -1,22 +1,30 @@
- import "./Login.css";
+import "./Login.css";
 import loginAuth from "../../assets/login-auth.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiFeather, FiAward, FiShield } from "react-icons/fi";
-import { customerLogin } from "../../api/customer";
+import { customerLogin, googleAuth } from "../../api/customer";
 import { auth, googleProvider, signInWithPopup } from "../../firebase";
-import axios from "axios";
+import { notifySuccess, notifyError, notifyWarning } from "../../utils/alerts";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    setPasswordError("");
 
     try {
       const data = await customerLogin({ email, password });
@@ -35,40 +43,74 @@ const Login = () => {
         localStorage.setItem("customerEmail", userInfo?.email || email);
       }
 
-      alert("Login Successful!");
-      navigate("/");
+      window.dispatchEvent(new Event("storage"));
+
+      notifySuccess("Login Successful!");
+      
+      // Extract target return URL if redirected from Checkout, Product Details, Wishlist, etc.
+      // Default to Home page ("/") if no redirect target was provided
+      const fromPath = location.state?.from?.pathname || location.state?.from;
+      const redirectUrl = typeof fromPath === "string" ? fromPath : "/";
+
+      navigate(redirectUrl, { replace: true });
 
     } catch (error) {
       console.error("Login error:", error);
-      alert(error.response?.data?.message || error.message || "Invalid email or password");
+      notifyError(error.response?.data?.message || error.message || "Invalid email or password");
     }
   };
 
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
   // Google Login Handler
   const handleGoogleAuth = async () => {
+    if (isGoogleLoading) return;
+    setIsGoogleLoading(true);
     try {
+      if (!auth || !googleProvider) {
+        notifyWarning("Google Authentication is not configured or Firebase API keys are missing.");
+        setIsGoogleLoading(false);
+        return;
+      }
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const idToken = await user.getIdToken();
 
-      const response = await axios.post("http://localhost:5000/api/v1/customer/google", {
+      const data = await googleAuth({
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
         token: idToken
       });
 
-      if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
         localStorage.setItem("customerEmail", user.email);
-        localStorage.setItem("customerInfo", JSON.stringify(response.data.data));
+        localStorage.setItem("customerInfo", JSON.stringify(data.data));
 
-        alert("Google Login Successful!");
-        navigate("/");
+        window.dispatchEvent(new Event("storage"));
+        notifySuccess("Logged in successfully with Google!");
+
+        const fromPath = location.state?.from?.pathname || location.state?.from;
+        const redirectUrl = typeof fromPath === "string" ? fromPath : "/";
+        navigate(redirectUrl, { replace: true });
       }
     } catch (error) {
       console.error("Google Auth Error:", error);
-      alert(error.response?.data?.message || "Google sign-in failed. Please try again.");
+      if (
+        error.code === "auth/popup-closed-by-user" ||
+        error.code === "auth/cancelled-popup-request"
+      ) {
+        // User closed or canceled popup - handle gracefully
+      } else if (error.code === "auth/popup-blocked") {
+        notifyWarning("Pop-up blocked by your browser. Please allow pop-ups for this website to sign in with Google.");
+      } else if (error.code === "auth/unauthorized-domain") {
+        notifyWarning("Domain not authorized for Google Sign-In. Please add this domain to Firebase Console Authorized Domains.");
+      } else {
+        notifyError(error.response?.data?.message || error.message || "Google sign-in failed. Please try again.");
+      }
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -140,14 +182,17 @@ const Login = () => {
 
               <div className="input-group anim-fade-up-input-2">
                 <label htmlFor="password">Password</label>
-                <div className="input-wrapper">
+                <div className={`input-wrapper ${passwordError ? "input-error" : ""}`}>
                   <FaLock className="input-icon" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (e.target.value) setPasswordError("");
+                    }}
                     required
                   />
                   <button
@@ -159,6 +204,7 @@ const Login = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+                {passwordError && <span className="password-error-msg">{passwordError}</span>}
 
                 <Link to="/forgot-password" className="forgot-link">
                   Forgot Password?

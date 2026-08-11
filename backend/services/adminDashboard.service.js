@@ -64,33 +64,60 @@ export const getStats = async () => {
   };
 };
 
+const fillMissingDays = (seriesAgg, days) => {
+  const salesMap = {};
+  seriesAgg.forEach((item) => {
+    salesMap[item._id] = item.sales;
+  });
+
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const formattedSeries = [];
+
+  const now = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+
+    const year = d.getFullYear();
+    const monthStr = String(d.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(d.getDate()).padStart(2, '0');
+    const key = `${year}-${monthStr}-${dayStr}`;
+
+    const dateLabel = `${monthNames[d.getMonth()]} ${String(d.getDate()).padStart(2, '0')}`;
+    formattedSeries.push({
+      date: dateLabel,
+      sales: salesMap[key] || 0,
+    });
+  }
+
+  return formattedSeries;
+};
+
 export const getSalesAnalytics = async (range = '7days') => {
   const days = range === '30days' ? 30 : 7;
-  const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const now = new Date();
+  const startDate = new Date(now);
+  startDate.setDate(startDate.getDate() - (days - 1));
+  startDate.setHours(0, 0, 0, 0);
 
-  const series = await Order.aggregate([
+  const seriesAgg = await Order.aggregate([
     { $match: { createdAt: { $gte: startDate }, status: { $ne: 'Cancelled' } } },
     {
       $group: {
-        _id: { $dateToString: { format: '%b %d', date: '$createdAt' } },
+        _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
         sales: { $sum: '$totalAmount' },
       },
     },
-    { $sort: { _id: 1 } },
   ]);
 
-  const formattedSeries = series.map((item) => ({
-    date: item._id,
-    sales: item.sales,
-  }));
-
+  const series = fillMissingDays(seriesAgg, days);
   const totalRevenue = series.reduce((acc, curr) => acc + curr.sales, 0);
 
   return {
     range,
     totalRevenue,
     revenueTrend: 0,
-    series: formattedSeries,
+    series,
   };
 };
 

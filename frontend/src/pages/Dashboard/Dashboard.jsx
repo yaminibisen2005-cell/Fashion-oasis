@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { ShopContext } from "../../context/ShopContext";
-import { getProfile, getOrders, getCustomerReviews } from "../../api/customer";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+import { getCustomerDashboardStats } from "../../api/customer";
+import apiClient from "../../api/client";
 import "./Dashboard.css";
 import {
   FaArrowRight,
@@ -13,6 +13,7 @@ import {
   FaShoppingBag,
   FaStar,
   FaTruck,
+  FaCheckCircle,
 } from "react-icons/fa";
 import dashboardbanner from "../../assets/shop/hero-banner1.png";
 
@@ -26,61 +27,41 @@ const safeStoredJson = (key) => {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { addToCart, wishlist } = useContext(ShopContext);
+  const { addToCart, wishlist, addToWishlist, removeFromWishlist } = useContext(ShopContext);
   const [userName, setUserName] = useState("User");
-  const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0" });
+  const [stats, setStats] = useState({ totalOrders: "0", wishlistCount: "0", reviewsCount: "0", rewardPoints: "0", lastOrderDate: "" });
   const [orders, setOrders] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toastMsg, setToastMsg] = useState("");
 
   useEffect(() => {
     const customerInfo = safeStoredJson("customerInfo");
     const user = customerInfo || safeStoredJson("userInfo") || safeStoredJson("user");
-    const token = localStorage.getItem("token") || localStorage.getItem("authToken") || customerInfo?.token;
-    const email = user?.email || localStorage.getItem("customerEmail");
 
     const name = user?.fullName || user?.name || user?.username || `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
     if (name) setUserName(name);
 
     const loadDashboard = async () => {
-      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
       try {
-        if (email) {
-          const [profileRes, orderRes, reviewRes] = await Promise.all([
-            getProfile().catch(() => null),
-            getOrders(email).catch(() => null),
-            getCustomerReviews().catch(() => null)
-          ]);
+        setLoading(true);
+        const statsRes = await getCustomerDashboardStats();
+        const data = statsRes?.data || statsRes || {};
 
-          if (profileRes && profileRes.success) {
-            const data = profileRes.data;
-            if (data.firstName || data.lastName) {
-              setUserName(`${data.firstName || ""} ${data.lastName || ""}`.trim());
-            }
-          }
+        setStats({
+          totalOrders: String(data.totalOrders ?? 0),
+          wishlistCount: String(data.wishlistCount ?? 0),
+          reviewsCount: String(data.reviewsCount ?? 0),
+          rewardPoints: String(data.rewardPoints ?? 0),
+          lastOrderDate: data.lastOrderDate || "",
+        });
 
-          let fetchedOrders = [];
-          if (orderRes && orderRes.success) {
-            fetchedOrders = orderRes.orders || [];
-          }
+        setOrders(data.recentOrders || []);
 
-          let fetchedReviews = [];
-          if (reviewRes && reviewRes.success) {
-            fetchedReviews = reviewRes.data || [];
-          }
-
-          setStats({
-            totalOrders: String(fetchedOrders.length),
-            wishlistCount: String(wishlist?.length || 0),
-            reviewsCount: String(fetchedReviews.length),
-            rewardPoints: "0",
-          });
-          
-          setOrders(fetchedOrders.slice(0, 5));
+        const recRes = await apiClient.get("/products/recommended");
+        if (recRes.data?.success) {
+          setRecommendations(recRes.data.data || []);
         }
-
-        const response = await axios.get("http://localhost:5000/api/v1/products/recommended", config);
-        if (response.data?.success) setRecommendations(response.data.data || []);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -89,7 +70,31 @@ function Dashboard() {
     };
 
     loadDashboard();
-  }, [wishlist]);
+  }, []);
+
+  const isInWishlist = (productId) => {
+    return wishlist?.some(
+      (item) => String(item.product?.id || item.product?._id || item.id || item._id) === String(productId)
+    );
+  };
+
+  const handleWishlistToggle = async (product) => {
+    const prodId = product.id || product._id;
+    if (isInWishlist(prodId)) {
+      await removeFromWishlist(prodId);
+      setToastMsg(`"${product.name}" removed from wishlist.`);
+    } else {
+      await addToWishlist(product);
+      setToastMsg(`"${product.name}" added to wishlist!`);
+    }
+    setTimeout(() => setToastMsg(""), 3000);
+  };
+
+  const handleAddToCart = (product) => {
+    addToCart(product, 1);
+    setToastMsg(`"${product.name}" added to cart!`);
+    setTimeout(() => setToastMsg(""), 3000);
+  };
 
   const statCards = [
     { icon: <FaShoppingBag />, title: "Total Orders", value: stats.totalOrders, subtitle: "Active orders" },
@@ -106,6 +111,27 @@ function Dashboard() {
 
   return (
     <DashboardLayout>
+      {toastMsg && (
+        <div style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          backgroundColor: "#EF6F8F",
+          color: "#fff",
+          padding: "12px 20px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 15px rgba(239, 111, 143, 0.3)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          fontWeight: "600",
+          fontSize: "14px"
+        }}>
+          <FaCheckCircle /> {toastMsg}
+        </div>
+      )}
+
       <section className="dashboard-hero" style={{ backgroundImage: `url(${dashboardbanner})` }}>
         <div className="hero-content">
           <span className="hero-eyebrow">FASHION OASIS • MEMBER PERKS</span>
@@ -145,37 +171,89 @@ function Dashboard() {
           <h3>Recent Orders</h3>
           <button className="view-all-link" onClick={() => navigate("/dashboard/orders")}>View All <FaArrowRight /></button>
         </div>
-        <div className="table-responsive">
-          {loading ? <p className="dashboard-empty-state">Loading orders...</p> : orders.length === 0 ? <p className="dashboard-empty-state">No recent orders found.</p> : (
-            <table>
-              <thead><tr><th>Product</th><th>Date</th><th>Status</th><th>Amount</th><th>Action</th></tr></thead>
-              <tbody>
-  {orders.flatMap((order, orderIdx) => {
-    // If the order has multiple items, map each item. Otherwise fallback to the order itself.
-    const orderItems = order.items && order.items.length > 0 ? order.items : [order];
-    
-    return orderItems.map((item, itemIdx) => (
-      <tr key={`${order._id || orderIdx}-${itemIdx}`}>
-        <td>
-          <div className="product">
-            <img src={item.image || item.product?.image} alt={item.productName || item.name || "Product"} />
-            <div className="product-details">
-              <h6>{item.productName || item.name || item.product}</h6>
-              <span className="order-id">Order: {order.orderId || order.id} (Qty: {item.quantity})</span>
+        {loading ? (
+          <p className="dashboard-empty-state">Loading orders...</p>
+        ) : orders.length === 0 ? (
+          <p className="dashboard-empty-state">No recent orders found.</p>
+        ) : (
+          <>
+            {/* Desktop Table View */}
+            <div className="table-responsive desktop-orders-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.flatMap((order, orderIdx) => {
+                    const orderItems = order.items && order.items.length > 0 ? order.items : [order];
+                    return orderItems.map((item, itemIdx) => (
+                      <tr key={`${order._id || order.id || orderIdx}-${itemIdx}`}>
+                        <td>
+                          <div className="product">
+                            <img src={item.image || item.product?.image} alt={item.productName || item.name || "Product"} />
+                            <div className="product-details">
+                              <h6>{item.productName || item.name || item.product}</h6>
+                              <span className="order-id">Order: {order.orderId || order.id} (Qty: {item.quantity || 1})</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>{order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A")}</td>
+                        <td><span className={`status ${order.status?.toLowerCase() || ""}`}>{order.status}</span></td>
+                        <td className="amount">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
+                        <td><button className="view-details-btn" onClick={() => navigate("/dashboard/orders")}>View Details</button></td>
+                      </tr>
+                    ));
+                  })}
+                </tbody>
+              </table>
             </div>
-          </div>
-        </td>
-        <td>{order.date || new Date(order.createdAt).toLocaleDateString()}</td>
-        <td><span className={`status ${order.status?.toLowerCase() || ""}`}>{order.status}</span></td>
-        <td className="amount">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
-        <td><button className="view-details-btn" onClick={() => navigate(`/dashboard/orders`)}>View Details</button></td>
-      </tr>
-    ));
-  })}
-</tbody>
-            </table>
-          )}
-        </div>
+
+            {/* Mobile Order Cards View */}
+            <div className="mobile-orders-list">
+              {orders.flatMap((order, orderIdx) => {
+                const orderItems = order.items && order.items.length > 0 ? order.items : [order];
+                return orderItems.map((item, itemIdx) => (
+                  <div className="mobile-order-card" key={`mobile-${order._id || order.id || orderIdx}-${itemIdx}`}>
+                    <div className="mobile-order-card-top">
+                      <img
+                        src={item.image || item.product?.image}
+                        alt={item.productName || item.name || "Product"}
+                        className="mobile-order-img"
+                      />
+                      <div className="mobile-order-info">
+                        <span className={`status ${order.status?.toLowerCase() || ""}`}>
+                          {order.status}
+                        </span>
+                        <h6 className="mobile-order-title">{item.productName || item.name || item.product}</h6>
+                        <span className="mobile-order-meta">
+                          ID: {order.orderId || order.id} • Qty: {item.quantity || 1}
+                        </span>
+                        <span className="mobile-order-date">
+                          {order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A")}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mobile-order-card-bottom">
+                      <div className="mobile-order-price-wrap">
+                        <span className="mobile-price-label">Total Amount</span>
+                        <span className="mobile-order-price">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}</span>
+                      </div>
+                      <button className="mobile-order-btn" onClick={() => navigate("/dashboard/orders")}>
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ));
+              })}
+            </div>
+          </>
+        )}
       </section>
 
       <section className="recommendations-section">
@@ -183,13 +261,23 @@ function Dashboard() {
         <div className="recommendations-grid">
           {loading ? <p className="dashboard-empty-state">Loading recommendations...</p> : recommendations.length === 0 ? <p className="dashboard-empty-state">No recommendations available right now.</p> : recommendations.map((product) => (
             <div className="recommendation-card" key={product.id || product._id}>
-              <button className="wishlist-btn" aria-label={`Add ${product.name} to wishlist`}><FaRegHeart /></button>
+              <button
+                className={`wishlist-btn ${isInWishlist(product.id || product._id) ? "active" : ""}`}
+                onClick={() => handleWishlistToggle(product)}
+                aria-label={`Wishlist ${product.name}`}
+              >
+                {isInWishlist(product.id || product._id) ? (
+                  <FaHeart style={{ color: "#EF6F8F" }} />
+                ) : (
+                  <FaRegHeart />
+                )}
+              </button>
               <div className="img-wrapper"><img src={product.image} alt={product.name} /></div>
               <div className="recommendation-details">
                 <span className="recommendation-material">{product.material}</span><h6>{product.name}</h6>
                 <div className="rating"><span className="stars">★★★★★</span><span className="reviews-count">({product.reviewsCount || 0})</span></div>
                 <div className="pricing"><span className="price">₹{product.price}</span>{product.originalPrice && <span className="original-price">₹{product.originalPrice}</span>}</div>
-                <button className="add-to-cart-btn" onClick={() => addToCart(product)}><FaShoppingBag /> Add to Cart</button>
+                <button className="add-to-cart-btn" onClick={() => handleAddToCart(product)}><FaShoppingBag /> Add to Cart</button>
               </div>
             </div>
           ))}

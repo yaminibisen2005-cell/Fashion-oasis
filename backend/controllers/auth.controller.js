@@ -1,5 +1,6 @@
 import catchAsync from '../utils/catchAsync.js';
 import * as authService from '../services/auth.service.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 
 export const registerAdmin = catchAsync(async (req, res) => {
   const { name, email, password, adminKey } = req.body;
@@ -28,6 +29,16 @@ export const getSellerProfile = catchAsync(async (req, res) => {
 });
 
 export const updateSellerProfile = catchAsync(async (req, res) => {
-  const updatedUser = await authService.updateSellerProfileService(req.user._id, req.body);
+  let updateData = { ...req.body };
+  if (req.file) {
+    const result = await uploadToCloudinary(req.file.buffer, 'fashion_oasis/avatars');
+    updateData.img = result.secure_url;
+  }
+  const updatedUser = await authService.updateSellerProfileService(req.user._id, updateData);
   res.status(200).json({ success: true, data: updatedUser });
+});
+
+export const registerSeller = catchAsync(async (req, res) => {
+  const data = await authService.registerSellerService(req.body);
+  res.status(201).json({ success: true, data });
 });

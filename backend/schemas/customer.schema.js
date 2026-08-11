@@ -19,3 +19,12 @@ export const customerLoginSchema = z.object({
     password: z.string().min(1, 'Password is required')
   })
 });
+
+export const customerGoogleAuthSchema = z.object({
+  body: z.object({
+    token: z.string().min(1, 'Firebase ID token is required'),
+    name: z.string().optional(),
+    email: z.string().email('Invalid email').optional(),
+    photo: z.string().url('Invalid photo URL').optional()
+  })
+});

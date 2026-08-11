@@ -262,20 +262,65 @@
   transform: scale(0.95);
 }
 
-/* Responsive */
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .product-card {
-    min-height: 350px;
+    border-radius: 20px !important;
+    min-height: 290px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .discount-badge {
+    top: 10px !important;
+    left: 10px !important;
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 10px !important;
+  }
+
+  .wishlist-btn {
+    top: 10px !important;
+    right: 10px !important;
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .wishlist-btn svg {
+    width: 14px !important;
+    height: 14px !important;
   }
 
   .product-info {
-    padding: 24px 10px 10px 10px;
+    padding: 18px 10px 10px 10px !important;
+    gap: 6px !important;
+  }
+
+  .info-left-content h4 {
+    font-size: 13px !important;
+  }
+
+  .price-row .price {
+    font-size: 15px !important;
   }
 
   .view-btn {
-    height: 30px;
-    padding: 6px 10px;
-    font-size: 10px;
+    height: 28px !important;
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    min-height: 260px !important;
+    border-radius: 18px !important;
+  }
+
+  .info-left-content h4 {
+    font-size: 12px !important;
+  }
+
+  .price-row .price {
+    font-size: 14px !important;
   }
 }
 

@@ -1,4 +1,4 @@
- import express from 'express';
+import express from 'express';
 import { 
   registerCustomer, 
   loginCustomer, 
@@ -12,24 +12,29 @@ import {
   getCart,
   saveCart,
   googleAuth,
-  getCustomerReviews
+  uploadAvatar,
+  getCustomerDashboardStats
+
+
 } from '../controllers/customerAuth.controller.js';
 import { validate } from '../middlewares/validate.middleware.js';
+import { uploadAvatarMiddleware } from '../middlewares/upload.middleware.js';
 import { protectCustomer } from '../middlewares/auth.middleware.js';
-import { customerRegisterSchema, customerLoginSchema } from '../schemas/customer.schema.js';
+import { customerRegisterSchema, customerLoginSchema, customerGoogleAuthSchema } from '../schemas/customer.schema.js';
 import { forgotPasswordSchema, resetPasswordSchema, updateProfileSchema, updatePasswordSchema, updateTwoFactorSchema, deleteAccountSchema } from '../schemas/validation.schemas.js';
 
 const router = express.Router();
 
 router.post('/register', validate(customerRegisterSchema), registerCustomer);
 router.post('/login', validate(customerLoginSchema), loginCustomer);
-router.post('/google', googleAuth);
+router.post('/google', validate(customerGoogleAuthSchema), googleAuth);
 router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
 router.put('/reset-password/:token', validate(resetPasswordSchema), resetPassword);
 
+router.get('/dashboard/stats', protectCustomer, getCustomerDashboardStats);
 router.get('/profile', protectCustomer, getProfile);
-router.get('/reviews', protectCustomer, getCustomerReviews);
 router.put('/profile', protectCustomer, validate(updateProfileSchema), updateProfile);
+router.post('/avatar', protectCustomer, uploadAvatarMiddleware, uploadAvatar);
 
 router.put('/password', protectCustomer, validate(updatePasswordSchema), updatePassword);
 router.put('/two-factor', protectCustomer, validate(updateTwoFactorSchema), updateTwoFactor);

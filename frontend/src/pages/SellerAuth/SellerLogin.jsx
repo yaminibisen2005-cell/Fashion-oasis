@@ -4,10 +4,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaStore } from "react-icons/fa";
 import { FiTrendingUp, FiUsers } from "react-icons/fi";
+import { loginSeller } from "../../api/seller";
 
 const SellerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,19 +20,6 @@ const SellerLogin = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const approvedSellers = JSON.parse(localStorage.getItem("approvedSellers") || "[]");
-    if (!approvedSellers.some(s => s.email === "seller@gmail.com")) {
-      approvedSellers.push({
-        id: "seller_default",
-        fullName: "Bimal Seller",
-        storeName: "Fashion Oasis Store",
-        email: "seller@gmail.com",
-        password: "Bimal@gmail.com",
-        phone: "9876543210",
-        status: "approved"
-      });
-      localStorage.setItem("approvedSellers", JSON.stringify(approvedSellers));
-    }
 
     if (location.state?.registrationSuccess) {
       setSuccessMessage(location.state.message || "Registration Submitted Successfully");
@@ -41,54 +30,34 @@ const SellerLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    }
+    setPasswordError("");
     setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Check if seller exists in pending registrations
-      const pendingRegistrations = JSON.parse(localStorage.getItem("pendingSellerRegistrations") || "[]");
-      const pendingSeller = pendingRegistrations.find(s => s.email === email);
-
-      if (pendingSeller) {
-        setErrorMessage("Your account is currently under review. Please wait for admin approval.");
-        setLoading(false);
-        return;
-      }
-
-      // Check if seller exists in approved sellers (simulated with localStorage)
-      const approvedSellers = JSON.parse(localStorage.getItem("approvedSellers") || "[]");
-      const approvedSeller = approvedSellers.find(s => s.email === email && s.password === password);
-
-      if (!approvedSeller) {
-        setErrorMessage("Invalid email or password.");
-        setLoading(false);
-        return;
-      }
+      const response = await loginSeller(email, password);
+      const sellerData = response.data.data.user;
+      const token = response.data.data.token;
 
       // Create seller session
       const sellerSession = {
-        id: approvedSeller.id,
-        email: approvedSeller.email,
-        fullName: approvedSeller.fullName,
-        storeName: approvedSeller.storeName,
-        status: approvedSeller.status,
+        id: sellerData._id,
+        email: sellerData.email,
+        fullName: sellerData.name,
+        storeName: sellerData.storeName,
+        status: sellerData.status,
         isLoggedIn: true,
         loginAt: new Date().toISOString()
       };
 
       // Store in localStorage
       localStorage.setItem("sellerSession", JSON.stringify(sellerSession));
-      
-      if (import.meta.env.DEV) {
-        const existingToken = localStorage.getItem("sellerToken");
-        if (!existingToken || existingToken.startsWith("dummy-")) {
-          localStorage.setItem("sellerToken", "dummy-seller-token-12345");
-        }
-      }
+      localStorage.setItem("sellerToken", token);
       
       if (rememberMe) {
         localStorage.setItem("sellerRememberMe", "true");
@@ -98,7 +67,7 @@ const SellerLogin = () => {
       navigate("/seller/dashboard");
 
     } catch (error) {
-      setErrorMessage(error.message || "Login failed. Please try again.");
+      setErrorMessage(error.response?.data?.message || error.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -187,14 +156,17 @@ const SellerLogin = () => {
 
               <div className="input-group anim-fade-up-input-2">
                 <label htmlFor="password">Password</label>
-                <div className="input-wrapper">
+                <div className={`input-wrapper ${passwordError ? "input-error" : ""}`}>
                   <FaLock className="input-icon" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (e.target.value) setPasswordError("");
+                    }}
                     required
                     disabled={loading}
                   />
@@ -208,6 +180,7 @@ const SellerLogin = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+                {passwordError && <span className="password-error-msg">{passwordError}</span>}
 
                 <div className="form-options">
                   <label className="remember-me">

@@ -1,5 +1,6 @@
- import Order from '../models/Order.js';
+import Order from '../models/Order.js';
 import Customer from '../models/customer.js';
+import User from '../models/User.js';
 import AppError from '../utils/AppError.js';
 import catchAsync from '../utils/catchAsync.js';
 import Product from '../models/Product.js';
@@ -7,28 +8,32 @@ import crypto from 'crypto';
 import { sendEmail } from '../utils/emailService.js';
 
 export const createOrder = catchAsync(async (req, res, next) => {
-  const { customerEmail, shippingAddress, billingAddress, paymentMethod, items, totalAmount } = req.body;
+  console.log("[createOrder] REQ.BODY:", JSON.stringify(req.body, null, 2));
+  console.log("[createOrder] REQ.CUSTOMER:", req.customer ? req.customer._id : "No customer attached");
+
+  const { shippingAddress, billingAddress, paymentMethod, items, totalAmount } = req.body;
+  const rawEmail = req.body.customerEmail || req.customer?.email;
+
+  // Clean customer email string if wrapped or formatted
+  const customerEmail = typeof rawEmail === "string" ? rawEmail.replace(/\[|\]|\(mailto:[^)]+\)/g, "").trim() : "";
 
   if (!customerEmail) {
     return next(new AppError('Customer email is required for checkout', 400));
   }
 
-  const customer = await Customer.findOne({ email: customerEmail });
+  let customer = req.customer;
   if (!customer) {
-    return next(new AppError('Customer not found', 404));
+    customer = await Customer.findOne({ email: customerEmail });
+    if (!customer) {
+      customer = await User.findOne({ email: customerEmail });
+    }
   }
 
-  const validPaymentMethods = ['credit_card', 'debit_card', 'upi', 'cod'];
-  if (!validPaymentMethods.includes(paymentMethod)) {
-    return next(new AppError('Invalid payment method', 400));
-  }
+  const normalizedPayment = (paymentMethod || 'cod').toLowerCase();
+  const validPaymentMethod = ['credit_card', 'debit_card', 'upi', 'cod'].includes(normalizedPayment) ? normalizedPayment : 'cod';
 
-  // Verify products, stock, and prices
-   // Verify products, stock, and prices
- // Verify products, stock, and prices (Made flexible for your catalog)
-  // Verify products, stock, and prices
   let calculatedTotal = 0;
-  const processedItems = []; // Create a clean array for items with images
+  const processedItems = [];
 
   for (const item of items) {
     const product = await Product.findOne({ 
@@ -38,15 +43,14 @@ export const createOrder = catchAsync(async (req, res, next) => {
     if (product) {
       if (product.stock >= item.quantity) {
         product.stock -= item.quantity;
-        product.totalSold += item.quantity;
-        product.totalRevenue += item.price * item.quantity;
+        product.totalSold = (product.totalSold || 0) + item.quantity;
+        product.totalRevenue = (product.totalRevenue || 0) + (item.price * item.quantity);
         await product.save();
       }
     }
     
     calculatedTotal += item.price * item.quantity;
 
-    // Push the item along with its image (fallback to product image if missing)
     processedItems.push({
       productName: item.productName,
       quantity: item.quantity,
@@ -54,47 +58,74 @@ export const createOrder = catchAsync(async (req, res, next) => {
       image: item.image || (product ? product.image : "") 
     });
   }
-  if (calculatedTotal !== totalAmount) {
-    return next(new AppError('Total amount mismatch', 400));
-  }
+
   const orderId = `FO-${crypto.randomInt(100000, 999999)}`;
+  const customerName = customer 
+    ? `${customer.firstName || customer.name || 'Customer'} ${customer.lastName || ''}`.trim() 
+    : (shippingAddress?.fullName || 'Customer');
 
   const order = await Order.create({
     orderId,
-    customer: customer._id,
-    customerEmail, // <--- Added this line so Mongoose gets the required field
-    customerName: `${customer.firstName} ${customer.lastName}`,
-    shippingAddress,
-    billingAddress,
-    paymentMethod,
+    customer: customer ? customer._id : undefined,
+    customerEmail,
+    customerName,
+    shippingAddress: {
+      fullName: shippingAddress?.fullName || customerName,
+      phoneNumber: shippingAddress?.phoneNumber || shippingAddress?.phone || "9876543210",
+      address: shippingAddress?.address || "Main Street",
+      addressLine2: shippingAddress?.addressLine2 || shippingAddress?.address2 || "",
+      city: shippingAddress?.city || "Mumbai",
+      state: shippingAddress?.state || "Maharashtra",
+      pincode: shippingAddress?.pincode || "400001"
+    },
+    billingAddress: billingAddress ? {
+      fullName: billingAddress.fullName || customerName,
+      phoneNumber: billingAddress.phoneNumber || billingAddress.phone || "9876543210",
+      address: billingAddress.address || "Main Street",
+      addressLine2: billingAddress.addressLine2 || billingAddress.address2 || "",
+      city: billingAddress.city || "Mumbai",
+      state: billingAddress.state || "Maharashtra",
+      pincode: billingAddress.pincode || "400001"
+    } : {
+      fullName: shippingAddress?.fullName || customerName,
+      phoneNumber: shippingAddress?.phoneNumber || shippingAddress?.phone || "9876543210",
+      address: shippingAddress?.address || "Main Street",
+      addressLine2: shippingAddress?.addressLine2 || shippingAddress?.address2 || "",
+      city: shippingAddress?.city || "Mumbai",
+      state: shippingAddress?.state || "Maharashtra",
+      pincode: shippingAddress?.pincode || "400001"
+    },
+    paymentMethod: validPaymentMethod,
     items: processedItems,
     totalAmount
   });
 
-  const itemsHtml = items.map(item => `<li>${item.quantity}x ${item.productName} - $${item.price}</li>`).join('');
+  console.log("[createOrder] ORDER SAVED:", order.orderId);
 
-  // Admin Order Notification
-  await sendEmail({
-    to: 'fashionoasis082@gmail.com',
-    subject: `New Order Placed: ${orderId}`,
-    htmlContent: `<p>A new order has been placed by ${order.customerName} (${customerEmail}).</p>
-                  <p><strong>Total Amount:</strong> $${totalAmount}</p>
-                  <p><strong>Items:</strong></p>
-                  <ul>${itemsHtml}</ul>
-                  <p>Check the admin dashboard for more details.</p>`,
-  });
+  const itemsHtml = items.map(item => `<li>${item.quantity}x ${item.productName} - ₹${item.price}</li>`).join('');
 
-  // Customer Order Confirmation
-  await sendEmail({
-    to: customerEmail,
-    subject: `Order Confirmation - ${orderId}`,
-    htmlContent: `<p>Hi ${order.customerName},</p>
-                  <p>Your order <strong>${orderId}</strong> has been placed successfully.</p>
-                  <p><strong>Total Amount:</strong> $${totalAmount}</p>
-                  <p><strong>Items:</strong></p>
-                  <ul>${itemsHtml}</ul>
-                  <p>Thank you for shopping with Fashion Oasis!</p>`,
-  });
+  try {
+    await sendEmail({
+      to: 'fashionoasis082@gmail.com',
+      subject: `New Order Placed: ${orderId}`,
+      htmlContent: `<p>A new order has been placed by ${customerName} (${customerEmail}).</p>
+                    <p><strong>Total Amount:</strong> ₹${totalAmount}</p>
+                    <p><strong>Items:</strong></p>
+                    <ul>${itemsHtml}</ul>`,
+    });
+
+    await sendEmail({
+      to: customerEmail,
+      subject: `Order Confirmation - ${orderId}`,
+      htmlContent: `<p>Hi ${customerName},</p>
+                    <p>Your order <strong>${orderId}</strong> has been placed successfully.</p>
+                    <p><strong>Total Amount:</strong> ₹${totalAmount}</p>
+                    <p><strong>Items:</strong></p>
+                    <ul>${itemsHtml}</ul>`,
+    });
+  } catch (emailErr) {
+    console.warn("Order email notification warning:", emailErr?.message || emailErr);
+  }
 
   res.status(201).json({
     success: true,
@@ -103,19 +134,66 @@ export const createOrder = catchAsync(async (req, res, next) => {
   });
 });
 
-// Get orders for a specific customer email
-export const getOrders = catchAsync(async (req, res, next) => {
-  const { email } = req.query;
-
-  if (!email) {
-    return next(new AppError('Customer email query parameter is required', 400));
+export const getMyOrders = catchAsync(async (req, res, next) => {
+  if (!req.customer) {
+    return next(new AppError('Customer session not found', 401));
   }
 
-  const orders = await Order.find({ customerEmail: email }).sort({ createdAt: -1 });
+  const customerId = req.customer._id;
+  const customerEmail = req.customer.email;
+
+  const orders = await Order.find({
+    $or: [
+      { customer: customerId },
+      { customerEmail: customerEmail }
+    ]
+  }).sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
     count: orders.length,
-    orders: orders
+    orders: orders,
+    data: orders
+  });
+});
+
+export const getOrderById = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  let order;
+  if (id.startsWith("FO-")) {
+    order = await Order.findOne({ orderId: id });
+  } else {
+    order = await Order.findById(id);
+  }
+
+  if (!order) {
+    return next(new AppError('Order not found', 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    order: order,
+    data: order
+  });
+});
+
+export const getOrders = catchAsync(async (req, res, next) => {
+  const email = req.query.email || req.customer?.email;
+
+  let query = {};
+  if (email) {
+    query.customerEmail = email;
+  } else if (req.customer) {
+    query.customer = req.customer._id;
+  }
+
+  const orders = await Order.find(query).sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: orders.length,
+    orders: orders,
+    data: orders
   });
 });

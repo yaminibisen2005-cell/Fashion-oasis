@@ -77,7 +77,7 @@ const Footer = () => {
 
         {/* ================= Quick Links Column ================= */}
 
-        <div className="footer-column">
+        <div className="footer-column quick-links-col">
 
           <h3>Quick Links</h3>
 
@@ -89,8 +89,6 @@ const Footer = () => {
 
             <li><Link to="/shop">Shop</Link></li>
 
-            <li><Link to="/shop">Collections</Link></li>
-
             <li><Link to="/contact">Contact</Link></li>
 
             <li><Link to="/seller/dashboard">Seller Portal</Link></li>
@@ -101,7 +99,7 @@ const Footer = () => {
 
         {/* ================= Shop Column ================= */}
 
-        <div className="footer-column">
+        <div className="footer-column shop-col">
 
           <h3>Shop</h3>
 
@@ -115,31 +113,31 @@ const Footer = () => {
 
             <li><Link to="/shop?category=rings">Rings</Link></li>
 
-            <li><Link to="/shop?category=gifts">Gift Collection</Link></li>
-
           </ul>
 
         </div>
 
         {/* ================= Contact Column ================= */}
 
-        <div className="footer-column">
+        <div className="footer-column contact-col">
 
-          <h3>Get In Touch</h3>
+          <div className="mobile-contact-card">
+            <h3>Get In Touch</h3>
 
-          <div className="contact-item">
-            <FaMapMarkerAlt />
-            <span>Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India</span>
-          </div>
+            <div className="contact-item">
+              <FaMapMarkerAlt />
+              <span>Newton Garden Apartment, Jagdeo Path, Patna, Bihar – 800014, India</span>
+            </div>
 
-          <div className="contact-item">
-            <FaPhoneAlt />
-            <span>+91 7739479666</span>
-          </div>
+            <div className="contact-item">
+              <FaPhoneAlt />
+              <span>+91 7739479666</span>
+            </div>
 
-          <div className="contact-item">
-            <FaEnvelope />
-            <span>fashionoasis082@gmail.com</span>
+            <div className="contact-item">
+              <FaEnvelope />
+              <span>fashionoasis082@gmail.com</span>
+            </div>
           </div>
 
         </div>

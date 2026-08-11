@@ -15,8 +15,8 @@ const ProtectedSellerRoute = ({ children }) => {
       return <Navigate to="/seller/login" replace />;
     }
 
-    // Check if seller status is approved
-    if (session.status !== "approved") {
+    // Check if seller status is Active
+    if (session.status !== "Active" && session.status !== "approved") {
       return <Navigate to="/seller/login" replace />;
     }
   } catch (error) {

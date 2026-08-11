@@ -72,8 +72,11 @@ export const loginSellerService = async ({ email, password }) => {
   if (user.role !== 'seller')
     throw new AppError('Access denied. Seller credentials required.', 403);
 
-  if (user.status === 'Inactive')
-    throw new AppError('This seller account has been deactivated.', 403);
+  if (user.pendingVerification)
+    throw new AppError('Your account is currently under review. Please wait for admin approval.', 403);
+
+  if (user.status === 'Inactive' || user.status === 'Suspended')
+    throw new AppError('This seller account has been deactivated or suspended.', 403);
 
   const token = signToken(user._id, user.role);
   user.password = undefined;
@@ -101,4 +104,30 @@ export const updateSellerProfileService = async (userId, data) => {
   }
 
   return updatedUser;
+};
+
+export const registerSellerService = async (data) => {
+  const { name, email, password, phone, storeName, businessAddress, city, state, pincode, gstNumber } = data;
+  
+  if (!name || !email || !password || !phone || !storeName) {
+    throw new AppError('Required fields are missing.', 400);
+  }
+
+  const existingUser = await User.findOne({ email: email.toLowerCase() });
+  if (existingUser) {
+    throw new AppError('This email is already registered.', 409);
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    storeName,
+    role: 'seller',
+    status: 'Inactive',
+    pendingVerification: true
+  });
+
+  return { user };
 };

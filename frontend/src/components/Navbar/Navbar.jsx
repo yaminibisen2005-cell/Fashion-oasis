@@ -1,8 +1,10 @@
 import "./Navbar.css";
 import logo from "../../assets/logo.png";
 
-import { Link } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect, useRef } from "react";
+import apiClient from "../../api/client";
+import { products as fallbackProducts } from "../../data/products";
 
 import { ShopContext } from "../../context/ShopContext";
 
@@ -27,22 +29,31 @@ const serviceCategories = [
 ];
 
 const Navbar = () => {
-
+  const location = useLocation();
+  const navigate = useNavigate();
   const { wishlist, cart } = useContext(ShopContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [serviceOpen, setServiceOpen] = useState(false);
-
   const [mobileServiceOpen, setMobileServiceOpen] = useState(false);
-
   const [scrolled, setScrolled] = useState(false);
-
   const [isHomePage, setIsHomePage] = useState(true);
 
   const [navLogo, setNavLogo] = useState(logo);
-  const [storeName, setStoreName] = useState("FASHION OASIS");
+  const [storeName, setStoreName] = useState("Fashion Oasis");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Search State & Refs
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [allProductsCache, setAllProductsCache] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const searchInputRef = useRef(null);
+  const desktopSearchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
 
   const cartCount = cart.reduce(
     (sum, item) => sum + item.quantity,
@@ -50,7 +61,6 @@ const Navbar = () => {
   );
 
   useEffect(() => {
-
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
@@ -77,9 +87,28 @@ const Navbar = () => {
       } catch (e) {}
     }
 
+    // Fetch Products for Instant Search Cache
+    const fetchProductsCache = async () => {
+      try {
+        const res = await apiClient.get("/products?limit=100");
+        if (res.data?.success && Array.isArray(res.data.data)) {
+          setAllProductsCache(res.data.data);
+        } else if (Array.isArray(res.data?.products)) {
+          setAllProductsCache(res.data.products);
+        } else if (Array.isArray(res.data)) {
+          setAllProductsCache(res.data);
+        } else {
+          setAllProductsCache(fallbackProducts);
+        }
+      } catch (err) {
+        setAllProductsCache(fallbackProducts);
+      }
+    };
+
     handleScroll();
     checkHomePage();
     checkAuth();
+    fetchProductsCache();
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("popstate", checkHomePage);
@@ -90,53 +119,147 @@ const Navbar = () => {
       window.removeEventListener("popstate", checkHomePage);
       window.removeEventListener("storage", checkAuth);
     };
-
   }, []);
 
+  // Debounce Search Query (250ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery.trim());
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Filter Search Results
+  useEffect(() => {
+    if (!debouncedQuery) {
+      setSearchResults([]);
+      setSelectedIndex(-1);
+      return;
+    }
+
+    const q = debouncedQuery.toLowerCase();
+    const cache = allProductsCache.length > 0 ? allProductsCache : fallbackProducts;
+
+    const matches = cache.filter((p) => {
+      const nameMatch = p.name?.toLowerCase().includes(q);
+      const catMatch = p.category?.toLowerCase().includes(q);
+      const descMatch = p.description?.toLowerCase().includes(q);
+      const matMatch = p.material?.toLowerCase().includes(q);
+      const occMatch = p.occasion?.toLowerCase().includes(q);
+      return nameMatch || catMatch || descMatch || matMatch || occMatch;
+    }).slice(0, 6);
+
+    setSearchResults(matches);
+    setSelectedIndex(-1);
+  }, [debouncedQuery, allProductsCache]);
+
+  // Auto Focus on Search Open
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 60);
+    } else {
+      setSearchQuery("");
+      setSearchResults([]);
+      setSelectedIndex(-1);
+    }
+  }, [searchOpen]);
+
+  // Click Outside Detection
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        (desktopSearchRef.current && !desktopSearchRef.current.contains(e.target)) &&
+        (mobileSearchRef.current && !mobileSearchRef.current.contains(e.target))
+      ) {
+        setSearchOpen(false);
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [searchOpen]);
+
+  // Keyboard Shortcuts (ArrowUp, ArrowDown, Enter, ESC)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!searchOpen) return;
+
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setSelectedIndex((prev) =>
+          prev < searchResults.length - 1 ? prev + 1 : prev
+        );
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (selectedIndex >= 0 && searchResults[selectedIndex]) {
+          const item = searchResults[selectedIndex];
+          navigate(`/product/${item._id || item.id}`);
+          setSearchOpen(false);
+          setSearchQuery("");
+        } else if (searchQuery.trim()) {
+          navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+          setSearchOpen(false);
+          setSearchQuery("");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [searchOpen, searchResults, selectedIndex, searchQuery, navigate]);
+
+  const handleResultClick = (item) => {
+    navigate(`/product/${item._id || item.id}`);
+    setSearchOpen(false);
+    setSearchQuery("");
+  };
+
   return (
-
     <header className="navbar-wrapper">
-
       <nav
         className={`fo-navbar ${scrolled ? "scrolled" : ""} ${
           !isHomePage ? "solid" : ""
         }`}
       >
-
         <div className="container nav-container">
 
           {/* Logo */}
           <Link
             to="/"
             className="logo"
+            aria-label={storeName}
           >
             <img
               src={navLogo}
               alt={storeName}
-              style={{ maxHeight: '50px', objectFit: 'contain' }}
+              className="nav-logo-img"
             />
-
-            <div className="brand-text">
-
-              <h1>{storeName.toUpperCase()}</h1>
-
-              <p>PREMIUM JEWELLERY</p>
-
-            </div>
-
           </Link>
-                    {/* ==========================
-                Desktop Menu
-          =========================== */}
 
+          {/* Desktop Menu */}
           <ul className="desktop-menu">
-
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/" className={location.pathname === "/" ? "active" : ""}>Home</Link>
             </li>
 
             <li>
-              <Link to="/shop">
+              <Link to="/shop" className={location.pathname === "/shop" ? "active" : ""}>
                 Shop
               </Link>
             </li>
@@ -146,11 +269,7 @@ const Navbar = () => {
               onMouseEnter={() => setServiceOpen(true)}
               onMouseLeave={() => setServiceOpen(false)}
             >
-
-              <span>
-                Collections
-              </span>
-
+              <span>Collections</span>
               <FaChevronDown />
 
               <div
@@ -158,7 +277,6 @@ const Navbar = () => {
                   serviceOpen ? "show" : ""
                 }`}
               >
-
                 {serviceCategories.map((item, index) => {
                   const to = item.path 
                     ? item.path 
@@ -177,134 +295,218 @@ const Navbar = () => {
                     </Link>
                   );
                 })}
-
               </div>
-
             </li>
 
             <li>
-              <Link to="/about">
+              <Link to="/about" className={location.pathname === "/about" ? "active" : ""}>
                 About Us
               </Link>
             </li>
 
             <li>
-              <Link to="/contact">
+              <Link to="/contact" className={location.pathname === "/contact" ? "active" : ""}>
                 Contact
               </Link>
             </li>
-
           </ul>
 
-          {/* ==========================
-                Desktop Icons
-          =========================== */}
-
+          {/* Nav Icons */}
           <div className="nav-icons">
+            {/* Expandable Desktop Search Container */}
+            <div className="desktop-search-wrapper" ref={desktopSearchRef}>
+              <button
+                className={`icon-wrapper search-trigger-btn ${searchOpen ? "active" : ""}`}
+                aria-label="Search"
+                type="button"
+                onClick={() => setSearchOpen(!searchOpen)}
+              >
+                <FaSearch />
+              </button>
 
+              {searchOpen && (
+                <div className="desktop-search-dropdown">
+                  <div className="desktop-search-input-box">
+                    <FaSearch className="search-box-icon" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      placeholder="Search products, categories..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      aria-label="Search input"
+                    />
+                    {searchQuery && (
+                      <button
+                        className="search-clear-btn"
+                        onClick={() => setSearchQuery("")}
+                        type="button"
+                      >
+                        <FaTimes />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Desktop Live Results */}
+                  {debouncedQuery && (
+                    <div className="search-results-list">
+                      {searchResults.length > 0 ? (
+                        searchResults.map((item, index) => (
+                          <div
+                            key={item._id || item.id}
+                            className={`search-result-item ${
+                              index === selectedIndex ? "highlighted" : ""
+                            }`}
+                            onClick={() => handleResultClick(item)}
+                          >
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="result-thumb"
+                            />
+                            <div className="result-details">
+                              <span className="result-name">{item.name}</span>
+                              <span className="result-category">{item.category}</span>
+                            </div>
+                            <span className="result-price">₹{item.price}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="search-no-results">
+                          No products found.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Wishlist */}
+            <Link
+              to="/wishlist"
+              className="icon-wrapper"
+              aria-label="Wishlist"
+            >
+              <FaRegHeart />
+              {wishlist.length > 0 && (
+                <span className="nav-badge">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className="icon-wrapper"
+              aria-label="Cart"
+            >
+              <FaShoppingBag />
+              {cartCount > 0 && (
+                <span className="nav-badge">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Account / Login */}
             {!isAuthenticated ? (
               <Link to="/login" className="login-btn">
                 Login
               </Link>
             ) : (
-              <>
-                <Link
-                  to="/search"
-                  className="icon-wrapper"
-                >
-                  <FaSearch />
-                </Link>
-
-                <Link
-                  to="/wishlist"
-                  className="icon-wrapper"
-                >
-
-                  <FaRegHeart />
-
-                  {wishlist.length > 0 && (
-
-                    <span className="nav-badge">
-
-                      {wishlist.length}
-
-                    </span>
-
-                  )}
-
-                </Link>
-
-                <Link
-                  to="/cart"
-                  className="icon-wrapper"
-                >
-
-                  <FaShoppingBag />
-
-                  {cartCount > 0 && (
-
-                    <span className="nav-badge">
-
-                      {cartCount}
-
-                    </span>
-
-                  )}
-
-                </Link>
-
-                <Link
-                  to="/dashboard"
-                  className="icon-wrapper"
-                >
-                  <FaRegUser />
-                </Link>
-              </>
+              <Link
+                to="/dashboard"
+                className="icon-wrapper"
+                aria-label="Account Dashboard"
+              >
+                <FaRegUser />
+              </Link>
             )}
-
           </div>
 
-          {/* ==========================
-                Mobile Toggle
-          =========================== */}
-
+          {/* Mobile Toggle */}
           <div
             className="menu-btn"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation menu"
           >
-
-            {menuOpen ? (
-              <FaTimes />
-            ) : (
-              <FaBars />
-            )}
-
+            {menuOpen ? <FaTimes /> : <FaBars />}
           </div>
 
         </div>
 
-        {/* ==========================
-              Mobile Overlay
-        =========================== */}
+        {/* Mobile Slide-Down Search Overlay */}
+        {searchOpen && (
+          <div className="mobile-search-overlay" ref={mobileSearchRef}>
+            <div className="mobile-search-bar">
+              <FaSearch className="mobile-search-icon" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search jewellery, categories..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search products on mobile"
+              />
+              <button
+                className="mobile-search-close-btn"
+                onClick={() => setSearchOpen(false)}
+                type="button"
+                aria-label="Close search"
+              >
+                <FaTimes />
+              </button>
+            </div>
 
+            {/* Mobile Results */}
+            {debouncedQuery && (
+              <div className="mobile-search-results">
+                {searchResults.length > 0 ? (
+                  searchResults.map((item) => (
+                    <div
+                      key={item._id || item.id}
+                      className="mobile-result-item"
+                      onClick={() => handleResultClick(item)}
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="mobile-result-thumb"
+                      />
+                      <div className="mobile-result-info">
+                        <span className="mobile-result-name">{item.name}</span>
+                        <span className="mobile-result-cat">{item.category}</span>
+                      </div>
+                      <span className="mobile-result-price">₹{item.price}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="mobile-search-no-results">
+                    No products found.
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Mobile Menu Overlay */}
         <div
           className={`mobile-menu-overlay ${
             menuOpen ? "active" : ""
           }`}
           onClick={() => setMenuOpen(false)}
         ></div>
-                {/* ==========================
-              Mobile Menu
-        =========================== */}
 
+        {/* Mobile Menu Drawer */}
         <div
           className={`mobile-menu ${
             menuOpen ? "active" : ""
           }`}
         >
-
           <ul className="mobile-menu-list">
-
             <li>
               <Link
                 to="/"
@@ -316,7 +518,7 @@ const Navbar = () => {
 
             <li>
               <Link
-                to="/collections"
+                to="/shop"
                 onClick={() => setMenuOpen(false)}
               >
                 Shop
@@ -329,21 +531,16 @@ const Navbar = () => {
                 setMobileServiceOpen(!mobileServiceOpen)
               }
             >
-
               <span>Collections</span>
-
               <FaChevronDown
                 className={
                   mobileServiceOpen ? "rotate" : ""
                 }
               />
-
             </li>
 
             {mobileServiceOpen && (
-
               <ul className="mobile-dropdown">
-
                 {serviceCategories.map((item, index) => {
                   const to = item.path 
                     ? item.path 
@@ -363,9 +560,7 @@ const Navbar = () => {
                     </li>
                   );
                 })}
-
               </ul>
-
             )}
 
             <li>
@@ -385,14 +580,49 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
-
           </ul>
 
-          {/* ==========================
-                Mobile Icons
-          =========================== */}
-
+          {/* Mobile Icons */}
           <div className="mobile-nav-icons">
+            <button
+              className="icon-wrapper"
+              onClick={() => {
+                setMenuOpen(false);
+                setSearchOpen(true);
+              }}
+              type="button"
+              aria-label="Search"
+            >
+              <FaSearch />
+            </button>
+
+            <Link
+              to="/wishlist"
+              className="icon-wrapper"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Wishlist"
+            >
+              <FaRegHeart />
+              {wishlist.length > 0 && (
+                <span className="nav-badge">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+
+            <Link
+              to="/cart"
+              className="icon-wrapper"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Cart"
+            >
+              <FaShoppingBag />
+              {cartCount > 0 && (
+                <span className="nav-badge">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
 
             {!isAuthenticated ? (
               <Link
@@ -403,67 +633,21 @@ const Navbar = () => {
                 Login
               </Link>
             ) : (
-              <>
-                <Link
-                  to="/search"
-                  className="icon-wrapper"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  <FaSearch />
-                </Link>
-
-                <Link
-                  to="/wishlist"
-                  className="icon-wrapper"
-                  onClick={() => setMenuOpen(false)}
-                >
-
-                  <FaRegHeart />
-
-                  {wishlist.length > 0 && (
-                    <span className="nav-badge">
-                      {wishlist.length}
-                    </span>
-                  )}
-
-                </Link>
-
-                <Link
-                  to="/cart"
-                  className="icon-wrapper"
-                  onClick={() => setMenuOpen(false)}
-                >
-
-                  <FaShoppingBag />
-
-                  {cartCount > 0 && (
-                    <span className="nav-badge">
-                      {cartCount}
-                    </span>
-                  )}
-
-                </Link>
-
-                <Link
-                  to="/dashboard"
-                  className="icon-wrapper"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  <FaRegUser />
-                </Link>
-              </>
+              <Link
+                to="/dashboard"
+                className="icon-wrapper"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Account Dashboard"
+              >
+                <FaRegUser />
+              </Link>
             )}
-
           </div>
 
         </div>
-
       </nav>
-
     </header>
-
   );
-
 };
 
 export default Navbar;

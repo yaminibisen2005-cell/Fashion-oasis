@@ -61,13 +61,27 @@ export const getAnalyticsSummary = async (days = 30) => {
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   
-  const salesSeries = salesSeriesAgg.map(item => {
-    const d = new Date(item._id);
-    return {
-      date: `${monthNames[d.getMonth()]} ${d.getDate()}`,
-      sales: item.sales
-    };
+  const salesMap = {};
+  salesSeriesAgg.forEach((item) => {
+    salesMap[item._id] = item.sales;
   });
+
+  const salesSeries = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+
+    const year = d.getFullYear();
+    const monthStr = String(d.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(d.getDate()).padStart(2, '0');
+    const key = `${year}-${monthStr}-${dayStr}`;
+
+    const dateLabel = `${monthNames[d.getMonth()]} ${String(d.getDate()).padStart(2, '0')}`;
+    salesSeries.push({
+      date: dateLabel,
+      sales: salesMap[key] || 0,
+    });
+  }
 
   const totalCategoryRev = topCategoriesAgg.reduce((acc, cat) => acc + cat.totalRevenue, 0) || 1; // avoid / 0
   const topCategories = topCategoriesAgg.map(cat => ({

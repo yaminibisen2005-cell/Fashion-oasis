@@ -1,8 +1,13 @@
 import apiClient from "./client";
 
-const adminHeaders = () => ({
-  headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
-});
+const adminHeaders = () => {
+  const token = localStorage.getItem("adminToken") || localStorage.getItem("token");
+  return {
+    headers: token && token !== "null" && token !== "undefined"
+      ? { Authorization: `Bearer ${token}` }
+      : {},
+  };
+};
 
 // auth
 export const adminLogin = (payload) => apiClient.post("/auth/admin/login", payload).then((r) => r.data);
@@ -39,6 +44,14 @@ export const createCoupon = (coupon) => apiClient.post("/admin/coupons", coupon,
 export const toggleCouponStatus = (id) => apiClient.patch(`/admin/coupons/${id}`, {}, adminHeaders()).then((r) => r.data);
 export const deleteCoupon = (id) => apiClient.delete(`/admin/coupons/${id}`, adminHeaders()).then((r) => r.data);
 
+// special offers (admin)
+export const fetchOffersAdmin = () => apiClient.get("/offers/admin", adminHeaders()).then((r) => r.data);
+export const fetchActiveOffers = () => apiClient.get("/offers").then((r) => r.data);
+export const createOfferAPI = (offerData) => apiClient.post("/offers", offerData, adminHeaders()).then((r) => r.data);
+export const updateOfferAPI = (id, offerData) => apiClient.put(`/offers/${id}`, offerData, adminHeaders()).then((r) => r.data);
+export const deleteOfferAPI = (id) => apiClient.delete(`/offers/${id}`, adminHeaders()).then((r) => r.data);
+export const toggleOfferStatusAPI = (id) => apiClient.patch(`/offers/${id}/toggle`, {}, adminHeaders()).then((r) => r.data);
+
 // dashboard
 export const fetchDashboardData = () => {
   const admin = adminHeaders();
@@ -56,6 +69,13 @@ export const fetchDashboardData = () => {
     salesAnalytics: salesAnalytics.data,
   }));
 };
+
+// seller management
+export const fetchSellers = () => apiClient.get('/admin/sellers', adminHeaders()).then(r => r.data);
+export const fetchPendingSellers = () => apiClient.get('/admin/sellers/pending', adminHeaders()).then(r => r.data);
+export const approveSeller = (id) => apiClient.patch(`/admin/sellers/${id}/approve`, {}, adminHeaders()).then(r => r.data);
+export const rejectSeller = (id, payload) => apiClient.delete(`/admin/sellers/${id}`, { ...adminHeaders(), data: payload }).then(r => r.data);
+export const toggleSellerStatus = (id) => apiClient.patch(`/admin/sellers/${id}/status`, {}, adminHeaders()).then(r => r.data);
 
 // analytics
 export const fetchAnalytics = (days = 30) => {

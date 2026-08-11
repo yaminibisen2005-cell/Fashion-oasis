@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../context/ShopContext";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
+import AuthRequiredModal from "../../components/AuthRequiredModal/AuthRequiredModal";
+import { isCustomerAuthenticated } from "../../components/ProtectedRoute/ProtectedRoute";
 import { FaTrash, FaPlus, FaMinus, FaTruck, FaLock, FaUndo } from "react-icons/fa";
 import "./Cart.css";
 
@@ -23,6 +25,7 @@ const Cart = () => {
   const [couponInput, setCouponInput] = useState(couponCode);
   const [loadingCheckout, setLoadingCheckout] = useState(false);
   const [loadingCoupon, setLoadingCoupon] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
@@ -34,6 +37,11 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
+    if (!isCustomerAuthenticated()) {
+      setShowAuthModal(true);
+      return;
+    }
+
     setLoadingCheckout(true);
     setBuyNowItem(null); // <-- Added: Clears single-item buy-now state so full cart takes over
     setTimeout(() => {
@@ -240,6 +248,12 @@ const Cart = () => {
           )}
         </div>
       </div>
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        redirectPath="/checkout"
+        message="Please login to continue your purchase."
+      />
       <Footer />
     </>
   );

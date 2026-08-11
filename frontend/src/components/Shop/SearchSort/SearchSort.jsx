@@ -1,5 +1,5 @@
 import "./SearchSort.css";
-import { FiSearch, FiX } from "react-icons/fi";
+import { FiSearch, FiX, FiSliders } from "react-icons/fi";
 
 const SearchSort = ({
   searchTerm,
@@ -9,6 +9,7 @@ const SearchSort = ({
   totalProducts,
   onClearFilters,
   hasActiveFilters,
+  onOpenMobileFilter,
 }) => {
   return (
     <div className="shop-toolbar">
@@ -34,9 +35,18 @@ const SearchSort = ({
 
       <div className="toolbar-right">
 
+        <button
+          className="mobile-filter-trigger-btn"
+          onClick={onOpenMobileFilter}
+          type="button"
+        >
+          <FiSliders className="filter-trigger-icon" />
+          <span>Filter</span>
+        </button>
+
         <div className="sort-box">
 
-          <label>Sort by:</label>
+          <label className="sort-label">Sort by:</label>
 
           <select
             value={sortBy}
@@ -51,12 +61,12 @@ const SearchSort = ({
         </div>
 
         <span className="product-count">
-          Showing {totalProducts} Products
+          {totalProducts} Products
         </span>
 
         {hasActiveFilters && (
           <button className="clear-filters-link" onClick={onClearFilters}>
-            Clear Filters
+            Clear
           </button>
         )}
 

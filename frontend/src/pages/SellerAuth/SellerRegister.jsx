@@ -6,6 +6,10 @@ import { FaUser, FaEnvelope, FaPhoneAlt, FaLock, FaEye, FaEyeSlash, FaMapMarkerA
 import { FiTrendingUp, FiShield } from "react-icons/fi";
 import AuthLayout from "../../components/AuthLayout/AuthLayout";
 
+import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
+import { registerSeller } from "../../api/seller";
+import { notifyError } from "../../utils/alerts";
+
 const SellerRegister = () => {
   const [fullName, setFullName] = useState("");
   const [storeName, setStoreName] = useState("");
@@ -77,12 +81,14 @@ const SellerRegister = () => {
       newErrors.pincode = "Please enter a valid 6-digit pincode";
     }
 
-    if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long";
+    const passErr = validatePasswordStrength(password);
+    if (passErr) {
+      newErrors.password = passErr;
     }
 
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+    const confirmErr = validateConfirmPassword(password, confirmPassword);
+    if (confirmErr) {
+      newErrors.confirmPassword = confirmErr;
     }
 
     setErrors(newErrors);
@@ -99,13 +105,8 @@ const SellerRegister = () => {
     }
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Create seller registration data with approved status
       const sellerData = {
-        id: "seller_" + Date.now(),
-        fullName,
+        name: fullName,
         storeName,
         email,
         phone,
@@ -115,27 +116,20 @@ const SellerRegister = () => {
         state,
         pincode,
         password,
-        status: "approved",
-        registeredAt: new Date().toISOString()
       };
 
-      // Store in localStorage as approved sellers
-      const approvedSellers = JSON.parse(localStorage.getItem("approvedSellers") || "[]");
-      approvedSellers.push(sellerData);
-      localStorage.setItem("approvedSellers", JSON.stringify(approvedSellers));
-
-      console.log("Seller registration completed and approved:", sellerData);
+      await registerSeller(sellerData);
 
       // Redirect to login with success message
       navigate("/seller/login", { 
         state: { 
           registrationSuccess: true,
-          message: "Registration completed and approved successfully" 
+          message: "Registration completed successfully. Please wait for admin approval." 
         } 
       });
 
     } catch (error) {
-      alert(error.message || "Registration failed. Please try again.");
+      notifyError(error.response?.data?.message || error.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -251,16 +245,21 @@ const SellerRegister = () => {
             {/* Password */}
             <div className="input-group">
               <label htmlFor="password">Password</label>
-              <div className="input-wrapper">
+              <div className={`input-wrapper ${errors.password ? "input-error" : ""}`}>
                 <FaLock className="input-icon" />
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Create password"
+                  placeholder="Create password (e.g. Fashion@123)"
                   value={password}
                   onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (e.target.value.length >= 8) setErrors(prev => ({ ...prev, password: "" }));
+                    const val = e.target.value;
+                    setPassword(val);
+                    const err = validatePasswordStrength(val);
+                    setErrors(prev => ({ ...prev, password: err }));
+                    if (confirmPassword) {
+                      setErrors(prev => ({ ...prev, confirmPassword: validateConfirmPassword(val, confirmPassword) }));
+                    }
                   }}
                   required
                   disabled={loading}
@@ -275,7 +274,7 @@ const SellerRegister = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.password && <span className="error-text">{errors.password}</span>}
+              {errors.password && <span className="password-error-msg">{errors.password}</span>}
             </div>
           </div>
 
@@ -392,7 +391,7 @@ const SellerRegister = () => {
             {/* Confirm Password */}
             <div className="input-group">
               <label htmlFor="confirmPassword">Confirm Password</label>
-              <div className="input-wrapper">
+              <div className={`input-wrapper ${errors.confirmPassword ? "input-error" : ""}`}>
                 <FaLock className="input-icon" />
                 <input
                   id="confirmPassword"
@@ -400,8 +399,9 @@ const SellerRegister = () => {
                   placeholder="Confirm password"
                   value={confirmPassword}
                   onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    setErrors(prev => ({ ...prev, confirmPassword: "" }));
+                    const val = e.target.value;
+                    setConfirmPassword(val);
+                    setErrors(prev => ({ ...prev, confirmPassword: validateConfirmPassword(password, val) }));
                   }}
                   required
                   disabled={loading}
@@ -416,7 +416,7 @@ const SellerRegister = () => {
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
+              {errors.confirmPassword && <span className="password-error-msg">{errors.confirmPassword}</span>}
             </div>
           </div>
         </div>

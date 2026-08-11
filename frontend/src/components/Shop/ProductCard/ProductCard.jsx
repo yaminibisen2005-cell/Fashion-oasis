@@ -1,9 +1,10 @@
- import "./ProductCard.css";
+import "./ProductCard.css";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../../context/ShopContext";
 import { toggleWishlist } from "../../../api/customer";
+import { notifyWarning } from "../../../utils/alerts";
 
 const ProductCard = ({
   product,
@@ -19,7 +20,7 @@ const ProductCard = ({
 
   const handleWishlistToggle = async () => {
     if (!customerToken) {
-      alert("Please log in to manage your wishlist.");
+      notifyWarning("Please log in to manage your wishlist.");
       return;
     }
 
@@ -65,7 +66,17 @@ const ProductCard = ({
       </button>
 
       <div className="product-image">
-        <img src={product.image} alt={product.name} />
+        <img
+          src={product.image}
+          alt={product.name}
+        />
+        <div className="image-overlay">
+          <Link to={`/product/${product._id || product.id}`}>
+            <button className="quick-view-btn">
+              Quick View
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="product-info">
@@ -95,11 +106,11 @@ const ProductCard = ({
             <div className="info-left-content">
               {!hideName && <h4>{product.name}</h4>}
 
-              {!hideRating && product.rating && (
+              {!hideRating && (
                 <div className="rating">
                   <FaStar className="star-icon" />
-                  <span>{product.rating}</span>
-                  {product.reviews && <small>({product.reviews})</small>}
+                  <span>{product.rating || 5}</span>
+                  <small>({product.reviews || 0})</small>
                 </div>
               )}
 
@@ -114,7 +125,7 @@ const ProductCard = ({
             </div>
 
             <Link
-              to={`/product/${product.id || product._id}`}
+              to={`/product/${product._id || product.id}`}
               className="view-btn"
             >
               View Details

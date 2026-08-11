@@ -1,7 +1,9 @@
- import "./AccountSetting.css";
+import "./AccountSetting.css";
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import { getProfile, updateProfile, updatePassword, deleteAccount } from "../../api/customer";
+import { validatePasswordStrength, validateConfirmPassword } from "../../utils/passwordValidation";
+import { showConfirm, notifySuccess, notifyError } from "../../utils/alerts";
 import {
   FaUserCircle,
   FaLock,
@@ -23,7 +25,7 @@ import {
 function AccountSetting() {
   // Get logged-in customer details from local storage
   const storedUser = JSON.parse(localStorage.getItem("customerInfo")) || {};
-  const userEmail = storedUser.email || "";
+  const userEmail = storedUser.email || localStorage.getItem("customerEmail") || "";
 
   // Feedback states
   const [message, setMessage] = useState("");
@@ -47,6 +49,8 @@ function AccountSetting() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   // Preferences states (loaded from localStorage if available)
   const [notifications, setNotifications] = useState(
@@ -69,18 +73,19 @@ function AccountSetting() {
   // Fetch full customer profile on mount
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!userEmail) return;
       try {
         const data = await getProfile();
         if (data.success && data.data) {
+          const profile = data.data;
+          const fullName = `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
           setFormData({
-            firstName: data.data.firstName || storedUser.firstName || "",
-            lastName: data.data.lastName || storedUser.lastName || "",
-            email: data.data.email || userEmail,
-            phone: data.data.phone || "",
-            gender: data.data.gender || "Male",
-            dob: data.data.dob || "",
-            address: data.data.address || "",
+            firstName: fullName || profile.firstName || storedUser.firstName || "",
+            lastName: profile.lastName || storedUser.lastName || "",
+            email: profile.email || userEmail,
+            phone: profile.phone || "",
+            gender: profile.gender || "Male",
+            dob: profile.dob || "",
+            address: profile.address || "",
           });
         }
       } catch (err) {
@@ -103,30 +108,56 @@ function AccountSetting() {
     e.preventDefault();
     setMessage("");
     setError("");
+
+    if (!formData.firstName.trim()) {
+      notifyError("Full Name is required.");
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      notifyError("Email address is required.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      notifyError("Please enter a valid email address.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const nameParts = formData.firstName.trim().split(" ");
-      const fName = nameParts[0] || formData.firstName;
-      const lName = nameParts.slice(1).join(" ") || formData.lastName;
+      const fName = nameParts[0] || formData.firstName.trim();
+      const lName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : (formData.lastName || "");
 
       const data = await updateProfile({
         originalEmail: userEmail,
         firstName: fName,
         lastName: lName,
-        email: formData.email,
-        phone: formData.phone,
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
         gender: formData.gender,
         dob: formData.dob,
-        address: formData.address,
+        address: formData.address.trim(),
       });
 
       if (data.success) {
-        setMessage("Personal information updated successfully!");
-        localStorage.setItem("customerInfo", JSON.stringify(data.data));
+        notifySuccess("Personal information saved successfully!");
+        const updatedUser = {
+          ...storedUser,
+          ...data.data,
+          fullName: `${fName} ${lName}`.trim(),
+        };
+        localStorage.setItem("customerInfo", JSON.stringify(updatedUser));
+        localStorage.setItem("customerEmail", data.data.email || formData.email);
+        window.dispatchEvent(new Event("storage"));
+      } else {
+        notifyError(data.message || "Failed to update profile.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update profile.");
+      notifyError(err.response?.data?.message || err.message || "Failed to update profile.");
     } finally {
       setLoading(false);
     }
@@ -138,16 +169,22 @@ function AccountSetting() {
     setMessage("");
     setError("");
 
+    const passErr = validatePasswordStrength(passwordData.newPassword);
+    const confirmErr = validateConfirmPassword(passwordData.newPassword, passwordData.confirmPassword);
+
+    if (passErr || confirmErr) {
+      setNewPasswordError(passErr);
+      setConfirmPasswordError(confirmErr);
+      return;
+    }
+    setNewPasswordError("");
+    setConfirmPasswordError("");
+
     const activeUser = JSON.parse(localStorage.getItem("customerInfo")) || {};
     const currentEmail = formData.email || activeUser.email;
 
     if (!currentEmail) {
       setError("User session not found. Please log in again.");
-      return;
-    }
-
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setError("New passwords do not match!");
       return;
     }
 
@@ -182,16 +219,21 @@ function AccountSetting() {
     const password = window.prompt("To delete your account, please enter your current password:");
     if (!password) return;
 
-    if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+    const isConfirmed = await showConfirm("Delete Account", "Are you sure you want to delete your account? This action is irreversible.", "Delete Account");
+    if (isConfirmed) {
       try {
         const data = await deleteAccount({ email: userEmail, password });
 
         if (data.success) {
           localStorage.removeItem("customerInfo");
+          localStorage.removeItem("customerEmail");
+          localStorage.removeItem("token");
+          window.dispatchEvent(new Event("storage"));
+          notifySuccess("Account deleted successfully.");
           window.location.href = "/login";
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to delete account. Check your password.");
+        notifyError(err.response?.data?.message || err.message || "Failed to delete account");
       }
     }
   };
@@ -341,10 +383,19 @@ function AccountSetting() {
                 type="password"
                 name="newPassword"
                 value={passwordData.newPassword}
-                onChange={handlePasswordChangeInput}
-                placeholder="Enter new password"
+                className={newPasswordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  handlePasswordChangeInput(e);
+                  setNewPasswordError(validatePasswordStrength(val));
+                  if (passwordData.confirmPassword) {
+                    setConfirmPasswordError(validateConfirmPassword(val, passwordData.confirmPassword));
+                  }
+                }}
+                placeholder="Enter new password (e.g. Fashion@123)"
                 required
               />
+              {newPasswordError && <span className="password-error-msg">{newPasswordError}</span>}
             </div>
 
             <div className="fo-input-group">
@@ -356,10 +407,16 @@ function AccountSetting() {
                 type="password"
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
-                onChange={handlePasswordChangeInput}
+                className={confirmPasswordError ? "input-error" : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  handlePasswordChangeInput(e);
+                  setConfirmPasswordError(validateConfirmPassword(passwordData.newPassword, val));
+                }}
                 placeholder="Confirm new password"
                 required
               />
+              {confirmPasswordError && <span className="password-error-msg">{confirmPasswordError}</span>}
             </div>
 
             <button type="submit" className="update-btn">
