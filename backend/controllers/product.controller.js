@@ -27,8 +27,11 @@ export const addProduct = catchAsync(async (req, res) => {
     const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer, 'fashion_oasis/products'));
     const results = await Promise.all(uploadPromises);
     productData.image = results[0].secure_url;
+    // Map the remaining images to the gallery array
+    productData.gallery = results.length > 1 ? results.slice(1).map(r => r.secure_url) : [];
   } else if (!productData.image) {
     productData.image = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&q=80';
+    productData.gallery = [];
   }
 
   const product = await productService.createProduct(productData);

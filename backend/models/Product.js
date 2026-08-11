@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
     image: { type: String, required: true },
+    gallery: [{ type: String }],
     isFeatured: { type: Boolean, default: false },
     totalSold: { type: Number, default: 0 },
     totalRevenue: { type: Number, default: 0 },

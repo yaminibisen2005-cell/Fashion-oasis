@@ -7,12 +7,10 @@ import { uploadProductImagesMiddleware } from '../middlewares/upload.middleware.
 
 const router = express.Router();
 
-router.use(protectAdmin); // Protect all product routes with admin JWT
-
 router.get('/', productController.getProducts);
-router.post('/', uploadProductImagesMiddleware, validate(productCreateSchema), productController.addProduct);
-router.put('/:id', validate(productUpdateSchema), productController.updateProduct);
-router.delete('/:id', productController.deleteProduct);
-router.patch('/:id/status', productController.toggleProductStatus);
+router.post('/', protectAdmin, uploadProductImagesMiddleware, validate(productCreateSchema), productController.addProduct);
+router.put('/:id', protectAdmin, validate(productUpdateSchema), productController.updateProduct);
+router.delete('/:id', protectAdmin, productController.deleteProduct);
+router.patch('/:id/status', protectAdmin, productController.toggleProductStatus);
 
 export default router;
