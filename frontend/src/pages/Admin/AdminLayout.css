@@ -1761,6 +1761,27 @@
   .admin-layout-container .profile-form-grid,
   .admin-layout-container .settings-form-grid {
     grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .admin-layout-container .form-card {
+    padding: 20px !important;
+  }
+
+  .admin-layout-container .form-row-2 {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  .admin-layout-container .form-group input,
+  .admin-layout-container .form-group select,
+  .admin-layout-container .form-group textarea,
+  .admin-layout-container .product-form input,
+  .admin-layout-container .product-form select,
+  .admin-layout-container .product-form textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
