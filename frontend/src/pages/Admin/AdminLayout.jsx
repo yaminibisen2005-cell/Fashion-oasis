@@ -75,7 +75,7 @@ import logo from "../../assets/logo.png";
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 992);
 
   useEffect(() => {
     if (!localStorage.getItem("adminToken")) navigate("/admin/login");
