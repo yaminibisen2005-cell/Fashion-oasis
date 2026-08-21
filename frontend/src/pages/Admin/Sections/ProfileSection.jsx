@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUser, FaEnvelope, FaLock, FaCheckCircle, FaCamera } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaCheckCircle, FaCamera, FaUserCircle } from "react-icons/fa";
 import { notifyWarning, notifySuccess } from "../../../utils/alerts";
 
 const ProfileSection = ({ profile, updateProfile }) => {

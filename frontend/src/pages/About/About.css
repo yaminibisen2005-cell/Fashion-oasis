@@ -15,15 +15,19 @@
 .about-hero {
     position: relative;
     width: 100%;
-    height: 60vh;
-    min-height: 550px;
-    overflow: hidden;
+    min-height: 650px;
+    height: 72vh;
+    display: flex;
+    align-items: center;
+    overflow: visible;
 }
 .about-hero img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center  top;
+  object-position: center top;
 }
 
 .about-hero::before {
@@ -37,16 +41,16 @@
     rgba(255, 248, 244, 0.25) 65%,
     rgba(255, 248, 244, 0) 100%
   );
+  z-index: 1;
 }
 
 .about-overlay {
-  position: absolute;
-  top: 20%;
-  left: 8%;
-  transform: translateY(-50%);
+  position: relative;
+  z-index: 5;
+  margin-left: 8%;
   width: 100%;
   max-width: 560px;
-  z-index: 2;
+  padding: 40px 0;
 }
 
 .about-overlay span {
@@ -56,49 +60,67 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 3px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .about-overlay h1 {
   font-family: "Playfair Display", serif;
-  font-size: clamp(44px, 5vw, 68px);
-  line-height: 1.1;
-      color: #d96b8c;
-  margin-bottom: 24px;
+  font-size: clamp(40px, 4.8vw, 64px);
+  line-height: 1.12;
+  color: #d96b8c;
+  margin-bottom: 18px;
 }
 
 .about-overlay p {
-  font-size: 18px;
-  line-height: 1.9;
+  font-size: 17px;
+  line-height: 1.8;
   color: #555;
   max-width: 500px;
-  margin-bottom: 35px;
+  margin-bottom: 24px;
 }
 
+/* Hero CTA Button - Matched 100% with Home Page Hero CTA */
 .about-overlay button,
 .about-explore-btn {
-  padding: 14px 38px;
-  border: none;
+  position: relative;
+  z-index: 10;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  border: 1px solid rgba(212, 160, 75, 0.4);
+  outline: none;
+  padding: 16px 38px;
+  background: linear-gradient(90deg, #F06C9B, #E85D8C);
+  color: #ffffff !important;
   border-radius: 50px;
-  background: linear-gradient(135deg, #EF6F8F 0%, #E85D8C 100%);
-  color: #FFFFFF;
-  font-family: var(--body-font, "Poppins", sans-serif);
   font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  font-family: var(--body-font, "Poppins", sans-serif);
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(239, 111, 143, 0.3);
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  box-shadow: 0 10px 25px rgba(239, 111, 143, 0.32);
 }
 
 .about-overlay button:hover,
 .about-explore-btn:hover {
-  background: linear-gradient(135deg, #D95579 0%, #C8466C 100%);
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 14px 30px rgba(239, 111, 143, 0.42);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(239, 111, 143, 0.4), 0 0 15px rgba(212, 160, 75, 0.35);
+  background: linear-gradient(90deg, #e45889, #dc4c7c);
+  border-color: #d4a04b;
+}
+
+.about-explore-btn .btn-arrow,
+.about-overlay button .btn-arrow {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.about-explore-btn:hover .btn-arrow,
+.about-overlay button:hover .btn-arrow {
+  transform: translateX(6px);
 }
 
 /* ===================================================
@@ -478,7 +500,7 @@
   padding: 80px 24px 50px 24px !important;
   text-align: left !important;
   box-sizing: border-box !important;
-  z-index: 2 !important;
+  z-index: 5 !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
@@ -529,6 +551,10 @@
   font-weight: 600 !important;
   white-space: nowrap !important;
   box-sizing: border-box !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 10 !important;
+  position: relative !important;
 }
 
 .about-highlights-section,
@@ -556,14 +582,16 @@
   max-width:100% !important;
 }
 
-/* Force AOS animations to remain 100% visible on mobile */
-[data-aos] {
+}
+
+/* Ensure all AOS animated sections remain 100% visible across desktop and mobile */
+.about [data-aos],
+.about-hero [data-aos],
+.about-highlights-section[data-aos],
+.about-story [data-aos] {
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;
-  transition: none !important;
-}
-
 }
 
 @media (max-width:576px){

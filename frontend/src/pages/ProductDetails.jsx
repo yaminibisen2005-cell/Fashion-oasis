@@ -23,17 +23,35 @@ const ProductDetails = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fetch single product
-        const productRes = await apiClient.get(`/products/${id}`);
-        if (productRes.data.success) {
-          setProduct(productRes.data.data);
+        let foundProduct = null;
+
+        try {
+          const productRes = await apiClient.get(`/products/${id}`);
+          if (productRes.data.success && productRes.data.data) {
+            foundProduct = productRes.data.data;
+          }
+        } catch (err) {
+          console.warn("Direct product fetch failed, executing list fallback:", err);
         }
-        
-        // Fetch products for related/recently viewed
-        const allRes = await apiClient.get(`/products?limit=10`);
-        if (allRes.data.success) {
-          setAllProducts(allRes.data.data);
+
+        const allRes = await apiClient.get(`/products?limit=100`);
+        let allProds = [];
+        if (allRes.data) {
+          allProds = allRes.data.data || allRes.data.products || (Array.isArray(allRes.data) ? allRes.data : []);
+          setAllProducts(allProds);
         }
+
+        if (!foundProduct && allProds.length > 0) {
+          const targetId = String(id).trim().toLowerCase();
+          foundProduct = allProds.find(
+            (p) =>
+              String(p._id).toLowerCase() === targetId ||
+              String(p.id).toLowerCase() === targetId ||
+              (p.name && p.name.toLowerCase() === targetId)
+          ) || null;
+        }
+
+        setProduct(foundProduct);
       } catch (error) {
         console.error("Error fetching product details:", error);
       } finally {
@@ -43,8 +61,18 @@ const ProductDetails = () => {
     fetchData();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
-  if (!product) return <div>Product not found.</div>;
+  if (loading) return <div style={{ textAlign: "center", padding: "80px 20px", fontSize: "18px" }}>Loading product details...</div>;
+  if (!product) return (
+    <>
+      <Navbar />
+      <div style={{ textAlign: "center", padding: "100px 20px" }}>
+        <h2>Product Details</h2>
+        <p style={{ color: "#777", marginTop: "10px" }}>Item details are currently unavailable or moved.</p>
+        <Link to="/shop" className="btn-primary" style={{ marginTop: "20px", display: "inline-block" }}>Browse Collection</Link>
+      </div>
+      <Footer />
+    </>
+  );
 
   return (
     <>

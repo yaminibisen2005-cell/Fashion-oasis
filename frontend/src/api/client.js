@@ -18,10 +18,9 @@ apiClient.interceptors.request.use(
       token = localStorage.getItem("sellerToken") || localStorage.getItem("token");
     } else {
       token =
-        localStorage.getItem("token") ||
         localStorage.getItem("customerToken") ||
+        localStorage.getItem("token") ||
         localStorage.getItem("authToken") ||
-        localStorage.getItem("adminToken") ||
         localStorage.getItem("jwt");
     }
 
@@ -31,6 +30,27 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      const isAuthEndpoint =
+        error.config &&
+        error.config.url &&
+        (error.config.url.includes("/login") ||
+          error.config.url.includes("/register") ||
+          error.config.url.includes("/forgot-password"));
+      if (!isAuthEndpoint) {
+        localStorage.removeItem("customerToken");
+        localStorage.removeItem("token");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("customerEmail");
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default apiClient;

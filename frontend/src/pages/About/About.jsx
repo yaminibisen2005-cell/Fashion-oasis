@@ -12,6 +12,7 @@ import { BsShieldCheck } from "react-icons/bs";
 import { PiFlowerLotus } from "react-icons/pi";
 import { MdVerified } from "react-icons/md";
 import { LuSparkles } from "react-icons/lu";
+import { FaArrowRight } from "react-icons/fa";
 
 import aboutHero from "../../assets/about-banner.png";
 import story from "../../assets/about-story.png";
@@ -56,7 +57,8 @@ const About = () => {
             </p>
 
             <button className="about-explore-btn btn-primary" onClick={() => navigate("/shop")}>
-              Explore Collection →
+              Explore Collection
+              <FaArrowRight className="btn-arrow" />
             </button>
 
           </div>

@@ -54,8 +54,8 @@ const RelatedProducts = ({ currentProduct, products }) => {
             1024: { slidesPerView: 4 },
           }}
         >
-          {relatedProducts.map((product) => (
-            <SwiperSlide key={product.id}>
+          {relatedProducts.map((product, index) => (
+            <SwiperSlide key={product._id || product.id || index}>
               <div className="related-product-card-wrapper">
                 <ProductCard product={product} showAddToCart={true} hideName={true} hideRating={true} />
               </div>

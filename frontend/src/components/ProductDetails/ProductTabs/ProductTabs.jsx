@@ -1,14 +1,30 @@
 import { useState } from "react";
 import "./ProductTabs.css";
 
-const ProductTabs = () => {
+const initialReviews = [
+  {
+    id: "r1",
+    rating: 5,
+    comment: "Absolutely beautiful craftsmanship. Looks exactly like the photos and feels premium.",
+    author: "Priya Sharma",
+    date: "2 days ago"
+  },
+  {
+    id: "r2",
+    rating: 5,
+    comment: "Bought it as a gift. Excellent packaging and fast delivery.",
+    author: "Neha Patel",
+    date: "1 week ago"
+  }
+];
+
+const ProductTabs = ({ reviewsList = initialReviews }) => {
   const [activeTab, setActiveTab] = useState("description");
+  const [reviews] = useState(reviewsList);
 
   return (
     <section className="product-tabs">
-
       <div className="tabs-header">
-
         <button
           className={activeTab === "description" ? "active" : ""}
           onClick={() => setActiveTab("description")}
@@ -20,7 +36,7 @@ const ProductTabs = () => {
           className={activeTab === "reviews" ? "active" : ""}
           onClick={() => setActiveTab("reviews")}
         >
-          Reviews (124)
+          Reviews ({reviews.length})
         </button>
 
         <button
@@ -29,21 +45,17 @@ const ProductTabs = () => {
         >
           Shipping & Returns
         </button>
-
       </div>
 
       <div className="tabs-content">
-
         {activeTab === "description" && (
           <div>
             <h3>Product Description</h3>
-
             <p>
               This handcrafted jewellery piece is made using premium materials
               with exceptional attention to detail. Designed for everyday wear,
               parties, weddings, and festive occasions.
             </p>
-
             <ul>
               <li>Premium Quality Finish</li>
               <li>Skin Friendly Material</li>
@@ -55,34 +67,14 @@ const ProductTabs = () => {
 
         {activeTab === "reviews" && (
           <div>
-
-            <h3>Customer Reviews</h3>
-
-            <div className="review-box">
-
-              <h4>★★★★★ 4.8/5</h4>
-
-              <p>
-                "Absolutely beautiful craftsmanship. Looks exactly like the
-                photos and feels premium."
-              </p>
-
-              <small>— Priya Sharma</small>
-
-            </div>
-
-            <div className="review-box">
-
-              <h4>★★★★★ 5/5</h4>
-
-              <p>
-                "Bought it as a gift. Excellent packaging and fast delivery."
-              </p>
-
-              <small>— Neha Patel</small>
-
-            </div>
-
+            <h3>Customer Reviews ({reviews.length})</h3>
+            {reviews.map((rev) => (
+              <div className="review-box" key={rev.id || rev._id}>
+                <h4>{"★".repeat(rev.rating || 5)} {rev.rating || 5}/5</h4>
+                <p>"{rev.comment}"</p>
+                <small>— {rev.author || rev.customerName || "Customer"}</small>
+              </div>
+            ))}
           </div>
         )}
 

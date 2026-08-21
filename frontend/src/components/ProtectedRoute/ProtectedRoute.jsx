@@ -4,9 +4,10 @@ import { Navigate, useLocation } from "react-router-dom";
 export const isCustomerAuthenticated = () => {
   try {
     const email = localStorage.getItem("customerEmail");
-    const token = localStorage.getItem("token");
-    const customerInfo = localStorage.getItem("customerInfo");
-    return Boolean(email || token || customerInfo);
+    const token =
+      localStorage.getItem("customerToken") ||
+      localStorage.getItem("token");
+    return Boolean(token && token !== "null" && token !== "undefined" && (email || localStorage.getItem("customerInfo")));
   } catch (error) {
     return false;
   }

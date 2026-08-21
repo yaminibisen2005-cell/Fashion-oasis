@@ -44,6 +44,13 @@ function App() {
       duration: 1000,
       once: true,
     });
+
+    const isDark = JSON.parse(localStorage.getItem("customerDarkMode") || "false");
+    if (isDark) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
   }, []);
 
   return (

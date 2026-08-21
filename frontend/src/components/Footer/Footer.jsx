@@ -18,9 +18,9 @@ const Footer = () => {
   const [storeName, setStoreName] = useState("Fashion Oasis");
   const [socials, setSocials] = useState({
     instagram: "https://www.instagram.com/fashionoasisstore/",
-    facebook: "#",
-    pinterest: "#",
-    youtube: "#",
+    facebook: "https://www.facebook.com/fashionoasisstore",
+    pinterest: "https://www.pinterest.com/fashionoasisstore",
+    youtube: "https://www.youtube.com/@fashionoasisstore",
   });
 
   useEffect(() => {
@@ -32,9 +32,9 @@ const Footer = () => {
         if (parsed.storeName) setStoreName(parsed.storeName);
         setSocials({
           instagram: parsed.socialInstagram || "https://www.instagram.com/fashionoasisstore/",
-          facebook: parsed.socialFacebook || "#",
-          pinterest: parsed.socialPinterest || "#",
-          youtube: parsed.socialYoutube || "#",
+          facebook: parsed.socialFacebook || "https://www.facebook.com/fashionoasisstore",
+          pinterest: parsed.socialPinterest || "https://www.pinterest.com/fashionoasisstore",
+          youtube: parsed.socialYoutube || "https://www.youtube.com/@fashionoasisstore",
         });
       } catch (e) {}
     }

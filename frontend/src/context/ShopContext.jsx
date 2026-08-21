@@ -123,22 +123,31 @@ export const ShopProvider = ({ children }) => {
     try {
       localStorage.setItem("fashion_oasis_cart", JSON.stringify(cart));
       
-      if (customerToken) {
+      const liveToken =
+        localStorage.getItem("customerToken") ||
+        localStorage.getItem("token");
+
+      if (liveToken && liveToken !== "null" && liveToken !== "undefined") {
         if (isInitialMount.current) {
           isInitialMount.current = false;
           return;
         }
         const timer = setTimeout(() => {
-          saveCart({ cart }).catch((err) =>
-            console.error("Failed to sync cart to backend:", err)
-          );
+          saveCart({ cart }).catch((err) => {
+            if (err?.response?.status === 401) {
+              localStorage.removeItem("customerToken");
+              localStorage.removeItem("token");
+            } else {
+              console.warn("Cart sync skipped:", err?.message || err);
+            }
+          });
         }, 400);
         return () => clearTimeout(timer);
       }
     } catch (error) {
       console.error("Failed to save cart:", error);
     }
-  }, [cart, customerToken]);
+  }, [cart]);
 
  useEffect(() => {
     // If cart has items, use cart exclusively. Ignore buyNowItem entirely if cart has elements.
@@ -242,17 +251,14 @@ export const ShopProvider = ({ children }) => {
 
   const updateQuantity = (id, quantity) => {
     const strId = String(id);
-    if (quantity <= 0) {
-      removeFromCart(strId);
-    } else {
-      setCart((prevCart) =>
-        prevCart.map((item) =>
-          String(item.product?.id || item.product?._id) === strId
-            ? { ...item, quantity }
-            : item
-        )
-      );
-    }
+    const validQty = Math.max(1, Number(quantity) || 1);
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        String(item.product?.id || item.product?._id) === strId
+          ? { ...item, quantity: validQty }
+          : item
+      )
+    );
   };
 
   const removeFromCart = (id) => {

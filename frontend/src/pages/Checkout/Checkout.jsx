@@ -55,17 +55,44 @@ const Checkout = () => {
 
   const displayItems = (cart && cart.length > 0) ? cart : (buyNowItem ? [buyNowItem] : []);
 
+  useEffect(() => {
+    const token = localStorage.getItem("customerToken") || localStorage.getItem("token");
+    if (!token || token === "null" || token === "undefined") {
+      navigate("/login", { state: { from: "/checkout" } });
+    }
+  }, [navigate]);
+
   const handlePlaceOrderSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
 
     try {
+      const customerToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
       const storedUser = JSON.parse(localStorage.getItem("customerInfo") || "{}");
       const customerEmail = localStorage.getItem("customerEmail") || storedUser.email || "";
 
+      if (!customerToken || customerToken === "null" || customerToken === "undefined") {
+        setTimeout(() => {
+          navigate("/login", { state: { from: "/checkout" } });
+        }, 1500);
+        throw new Error("Your login session has expired. Please log in before placing an order.");
+      }
+
       if (!customerEmail) {
         throw new Error("Please log in before placing an order.");
+      }
+
+      const cleanPhone = (shippingAddress.phone || "").replace(/\D/g, "");
+      if (!cleanPhone || cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+        throw new Error("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
+      }
+
+      if (!sameAsShipping) {
+        const cleanBillingPhone = (localBillingAddress.phone || "").replace(/\D/g, "");
+        if (!cleanBillingPhone || cleanBillingPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanBillingPhone)) {
+          throw new Error("Please enter a valid 10-digit billing mobile number.");
+        }
       }
 
       const formattedItems = displayItems.map((item) => ({
@@ -122,7 +149,19 @@ const Checkout = () => {
       }
     } catch (err) {
       setLoading(false);
-      setErrorMessage(err.response?.data?.message || err.message || "Something went wrong during checkout.");
+      const is401 = err.response?.status === 401;
+      const msg = is401
+        ? "Your session has expired. Redirecting to login..."
+        : err.response?.data?.message || err.message || "Something went wrong during checkout.";
+      setErrorMessage(msg);
+
+      if (is401) {
+        localStorage.removeItem("customerToken");
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          navigate("/login", { state: { from: "/checkout" } });
+        }, 1500);
+      }
     }
   };
 

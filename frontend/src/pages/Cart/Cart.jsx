@@ -120,9 +120,11 @@ const Cart = () => {
                               onClick={() =>
                                 updateQuantity(
                                   item.product.id,
-                                  item.quantity - 1
+                                  Math.max(1, item.quantity - 1)
                                 )
                               }
+                              disabled={item.quantity <= 1}
+                              style={{ opacity: item.quantity <= 1 ? 0.5 : 1, cursor: item.quantity <= 1 ? "not-allowed" : "pointer" }}
                             >
                               <FaMinus />
                             </button>

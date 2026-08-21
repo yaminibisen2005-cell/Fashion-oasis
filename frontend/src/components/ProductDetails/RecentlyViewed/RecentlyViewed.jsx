@@ -18,13 +18,11 @@ const RecentlyViewed = ({ products }) => {
 
       <div className="recent-grid">
 
-        {products.slice(0,4).map((product)=>(
-
+        {products.slice(0, 4).map((product, index) => (
           <ProductCard
-            key={product.id}
+            key={product._id || product.id || index}
             product={product}
           />
-
         ))}
 
       </div>
