@@ -49,10 +49,26 @@ export const updateProduct = async (productId, updateData) => {
 import mongoose from 'mongoose';
 
 export const getProductById = async (productId) => {
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw new AppError('Product not found', 404);
+  let product = null;
+
+  if (mongoose.Types.ObjectId.isValid(productId)) {
+    product = await Product.findById(productId);
   }
-  const product = await Product.findById(productId);
+
+  if (!product) {
+    product = await Product.findOne({ id: String(productId) });
+  }
+
+  if (!product) {
+    // Check if ID matches string _id or name
+    product = await Product.findOne({
+      $or: [
+        { _id: String(productId) },
+        { name: { $regex: new RegExp(`^${productId}$`, 'i') } }
+      ]
+    });
+  }
+
   if (!product) {
     throw new AppError('Product not found', 404);
   }

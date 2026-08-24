@@ -23,6 +23,7 @@ export const toggleWishlist = (payload) => apiClient.post("/wishlist/toggle", pa
 export const checkout = (payload) => apiClient.post("/orders/checkout", payload).then((r) => r.data);
 export const getMyOrders = () => apiClient.get("/orders/my-orders").then((r) => r.data);
 export const getOrderById = (id) => apiClient.get(`/orders/${id}`).then((r) => r.data);
+export const cancelOrder = (id, payload) => apiClient.patch(`/orders/${id}/cancel`, payload).then((r) => r.data);
 
 // cart
 export const getCart = () => apiClient.get("/customer/cart").then((r) => r.data);

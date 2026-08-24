@@ -65,6 +65,7 @@ function Reviews() {
         const orderId = order.orderId || (order._id ? `#${order._id.slice(-6).toUpperCase()}` : "#FO-849201");
         const orderDate = order.createdAt || order.date;
         const deliveryStatus = order.status || "Delivered";
+        if (deliveryStatus.toLowerCase() === "cancelled") return;
         const items = order.items && order.items.length > 0 ? order.items : [order];
 
         items.forEach((item) => {

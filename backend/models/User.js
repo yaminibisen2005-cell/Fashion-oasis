@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, trim: true },
     storeEmail: { type: String, lowercase: true, trim: true },
     storeLogo: { type: String, trim: true, maxlength: 3 },
+    gstNumber: { type: String, trim: true },
+    businessAddress: { type: String, trim: true },
+    city: { type: String, trim: true },
+    state: { type: String, trim: true },
+    pincode: { type: String, trim: true },
     status: { type: String, enum: ['Active', 'Inactive', 'Suspended'], default: 'Active' },
     pendingVerification: { type: Boolean, default: false }
   },

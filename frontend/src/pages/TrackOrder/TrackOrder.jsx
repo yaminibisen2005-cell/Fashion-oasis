@@ -14,6 +14,8 @@ import {
 } from "react-icons/fa";
 
 import apiClient from "../../api/client";
+import { cancelOrder } from "../../api/customer";
+import { notifySuccess, notifyError } from "../../utils/alerts";
 import "./TrackOrder.css";
 
 const defaultPlaceholder =
@@ -156,6 +158,40 @@ const TrackOrder = () => {
   const [loading, setLoading] = useState(true);
   const [trackingLoading, setTrackingLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Cancellation States
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("Changed my mind");
+  const [otherReasonText, setOtherReasonText] = useState("");
+  const [cancelling, setCancelling] = useState(false);
+
+  const handleCancelClick = () => {
+    setCancelReason("Changed my mind");
+    setOtherReasonText("");
+    setCancelModalOpen(true);
+  };
+
+  const handleCancelSubmit = async () => {
+    if (!selectedOrder) return;
+    setCancelling(true);
+    try {
+      const reasonText = cancelReason === "Other" ? otherReasonText : cancelReason;
+      const orderId = selectedOrder.orderId || selectedOrder._id || selectedOrder.id;
+      const res = await cancelOrder(orderId, { reason: reasonText });
+      if (res.success) {
+        notifySuccess("Order cancelled successfully.");
+        setCancelModalOpen(false);
+        // Refresh customer orders
+        await fetchCustomerOrders();
+      } else {
+        notifyError(res.message || "Failed to cancel order.");
+      }
+    } catch (err) {
+      notifyError(err.response?.data?.message || err.message || "Failed to cancel order.");
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   const fetchCustomerOrders = async () => {
   setLoading(true);
@@ -759,6 +795,40 @@ return (
 
                     <strong>{expectedDeliveryDate}</strong>
                   </div>
+
+                  {activeStatus.toLowerCase() === "cancelled" && (
+                    <div style={{ marginTop: "16px", padding: "10px", background: "#fff5f5", borderLeft: "4px solid #e74c3c", borderRadius: "4px" }}>
+                      <strong style={{ color: "#e74c3c", display: "block", fontSize: "13px" }}>Cancellation Info:</strong>
+                      <span style={{ fontSize: "12px", color: "#555", display: "block", marginTop: "4px" }}>
+                        Cancelled on: {selectedOrder.cancellationDate ? new Date(selectedOrder.cancellationDate).toLocaleString("en-GB") : "Recent"}
+                      </span>
+                      {selectedOrder.cancellationReason && (
+                        <span style={{ fontSize: "12px", color: "#555", display: "block", marginTop: "2px", fontStyle: "italic" }}>
+                          Reason: {selectedOrder.cancellationReason}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {['pending', 'processing', 'confirmed'].includes(activeStatus.toLowerCase()) && (
+                    <button
+                      className="btn-yes-cancel"
+                      style={{
+                        marginTop: "16px",
+                        width: "100%",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        backgroundColor: "#e74c3c",
+                        color: "white",
+                        border: "none",
+                        fontWeight: "600",
+                        cursor: "pointer"
+                      }}
+                      onClick={handleCancelClick}
+                    >
+                      Cancel Order
+                    </button>
+                  )}
                 </div>
 
                 <div className="shipping-info-card">
@@ -778,14 +848,34 @@ return (
                     </div>
                   </div>
 
-                  <a
-                    href="https://www.delhivery.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="track-external-link"
-                  >
-                    Track on Delhivery
-                  </a>
+                  {activeStatus.toLowerCase() === "cancelled" ? (
+                    <button
+                      disabled
+                      className="track-external-link"
+                      style={{
+                        width: "100%",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        backgroundColor: "#f2f2f2",
+                        color: "#888",
+                        border: "1px solid #ccc",
+                        fontWeight: "600",
+                        cursor: "not-allowed",
+                        textAlign: "center"
+                      }}
+                    >
+                      Tracking Unavailable
+                    </button>
+                  ) : (
+                    <a
+                      href="https://www.delhivery.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="track-external-link"
+                    >
+                      Track on Delhivery
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -856,6 +946,61 @@ return (
         </div>
       </div>
     </div>
+
+    {/* CUSTOM ORDER CANCELLATION MODAL */}
+    {cancelModalOpen && (
+      <div className="cancel-modal-overlay" onClick={() => setCancelModalOpen(false)}>
+        <div className="cancel-modal-card" onClick={(e) => e.stopPropagation()}>
+          <h3>Cancel Order</h3>
+          <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+
+          <div className="reason-select-wrapper">
+            <label htmlFor="cancel-reason">Please choose a reason for cancellation:</label>
+            <select
+              id="cancel-reason"
+              className="reason-select"
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+            >
+              <option value="Changed my mind">Changed my mind</option>
+              <option value="Ordered by mistake">Ordered by mistake</option>
+              <option value="Found better price">Found better price</option>
+              <option value="Delivery taking too long">Delivery taking too long</option>
+              <option value="Other">Other</option>
+            </select>
+
+            {cancelReason === "Other" && (
+              <input
+                type="text"
+                className="other-reason-input"
+                placeholder="Enter your reason here..."
+                value={otherReasonText}
+                onChange={(e) => setOtherReasonText(e.target.value)}
+              />
+            )}
+          </div>
+
+          <div className="cancel-modal-actions">
+            <button
+              type="button"
+              className="btn-no-cancel"
+              onClick={() => setCancelModalOpen(false)}
+              disabled={cancelling}
+            >
+              No, Keep Order
+            </button>
+            <button
+              type="button"
+              className="btn-yes-cancel"
+              onClick={handleCancelSubmit}
+              disabled={cancelling}
+            >
+              {cancelling ? "Cancelling..." : "Yes, Cancel Order"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
 
     <Footer />
   </>

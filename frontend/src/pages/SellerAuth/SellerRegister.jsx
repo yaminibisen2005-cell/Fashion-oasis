@@ -59,12 +59,18 @@ const SellerRegister = () => {
       newErrors.phone = "Please enter a valid 10-digit phone number";
     }
 
-    if (gstNumber && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i.test(gstNumber)) {
-      newErrors.gstNumber = "Please enter a valid GST number";
+    if (gstNumber) {
+      if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Z]{1}[Z0-9A-Z]{1}[0-9A-Z]{1}$/i.test(gstNumber)) {
+        newErrors.gstNumber = "Please enter a valid GST number (e.g., 27ABCDE1234F1Z5)";
+      }
     }
 
     if (!businessAddress.trim()) {
       newErrors.businessAddress = "Business address is required";
+    } else if (businessAddress.trim().length < 10) {
+      newErrors.businessAddress = "Address must be at least 10 characters";
+    } else if (!/^[a-zA-Z0-9\s,.\-#/()]+$/.test(businessAddress)) {
+      newErrors.businessAddress = "Address contains invalid characters (letters, numbers, spaces, commas, periods, hyphens, hashes, and parenthesis are allowed)";
     }
 
     if (!city.trim()) {
@@ -118,15 +124,27 @@ const SellerRegister = () => {
         password,
       };
 
-      await registerSeller(sellerData);
+      const response = await registerSeller(sellerData);
+      const seller = response.data.data.user;
+      const token = response.data.data.token;
 
-      // Redirect to login with success message
-      navigate("/seller/login", { 
-        state: { 
-          registrationSuccess: true,
-          message: "Registration completed successfully. Please wait for admin approval." 
-        } 
-      });
+      // Create seller session for auto-login
+      const sellerSession = {
+        id: seller._id,
+        email: seller.email,
+        fullName: seller.name,
+        storeName: seller.storeName,
+        status: seller.status,
+        isLoggedIn: true,
+        loginAt: new Date().toISOString()
+      };
+
+      // Store session and token in localStorage
+      localStorage.setItem("sellerSession", JSON.stringify(sellerSession));
+      localStorage.setItem("sellerToken", token);
+
+      console.log("Seller auto-logged in:", sellerSession);
+      navigate("/seller/dashboard");
 
     } catch (error) {
       notifyError(error.response?.data?.message || error.message || "Registration failed. Please try again.");

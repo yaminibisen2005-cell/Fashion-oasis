@@ -9,6 +9,7 @@ export const productCreateSchema = z.object({
     stock: z.coerce.number().min(0, 'Stock must be a positive number').optional(),
     status: z.enum(['Active', 'Inactive']).optional(),
     image: z.string().optional(),
+    gallery: z.array(z.string()).optional(),
     isFeatured: z.boolean().optional(),
     totalSold: z.coerce.number().min(0).optional(),
     totalRevenue: z.coerce.number().min(0).optional()
@@ -24,6 +25,7 @@ export const productUpdateSchema = z.object({
     stock: z.coerce.number().min(0).optional(),
     status: z.enum(['Active', 'Inactive']).optional(),
     image: z.string().min(1).optional(),
+    gallery: z.array(z.string()).optional(),
     isFeatured: z.boolean().optional()
   })
 });

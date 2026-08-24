@@ -156,7 +156,9 @@ const AdminLayout = () => {
           customer: o.customerName || o.customerEmail || "Guest",
           date: new Date(o.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
           amount: o.totalAmount,
-          status: o.status
+          status: o.status,
+          cancellationDate: o.cancellationDate,
+          cancellationReason: o.cancellationReason
         }));
         setOrders(mappedOrders);
       }

@@ -197,3 +197,86 @@ export const getOrders = catchAsync(async (req, res, next) => {
     data: orders
   });
 });
+
+export const cancelOrder = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { reason } = req.body;
+
+  let order;
+  if (id.startsWith("FO-")) {
+    order = await Order.findOne({ orderId: id });
+  } else {
+    order = await Order.findById(id);
+  }
+
+  if (!order) {
+    return next(new AppError('Order not found', 404));
+  }
+
+  // Security Check: Ensure order belongs to current customer
+  const isOwner = req.customer && (
+    (order.customer && order.customer.toString() === req.customer._id.toString()) ||
+    (order.customerEmail && order.customerEmail.toLowerCase() === req.customer.email.toLowerCase())
+  );
+
+  if (!isOwner) {
+    return next(new AppError('You are not authorized to cancel this order', 403));
+  }
+
+  // Check if order is eligible for cancellation
+  const allowedStatuses = ['Pending', 'Processing', 'Confirmed'];
+  const currentStatus = order.status || 'Pending';
+  if (!allowedStatuses.some(s => s.toLowerCase() === currentStatus.toLowerCase())) {
+    return next(new AppError(`Cannot cancel order. Current status is: ${currentStatus}`, 400));
+  }
+
+  // Restore inventory/stock
+  for (const item of order.items) {
+    const product = await Product.findOne({ 
+      name: { $regex: new RegExp(`^${item.productName.trim()}$`, 'i') } 
+    });
+    if (product) {
+      product.stock += item.quantity;
+      product.totalSold = Math.max(0, (product.totalSold || 0) - item.quantity);
+      product.totalRevenue = Math.max(0, (product.totalRevenue || 0) - (item.price * item.quantity));
+      await product.save();
+    }
+  }
+
+  // Update order details
+  order.status = 'Cancelled';
+  order.cancellationDate = new Date();
+  order.cancellationReason = reason || 'Not specified';
+
+  await order.save();
+
+  // Send email notifications
+  try {
+    const itemsHtml = order.items.map(item => `<li>${item.quantity}x ${item.productName} - ₹${item.price}</li>`).join('');
+    await sendEmail({
+      to: 'fashionoasis082@gmail.com',
+      subject: `Order Cancelled: ${order.orderId}`,
+      htmlContent: `<p>Order <strong>${order.orderId}</strong> has been cancelled by the customer.</p>
+                    <p><strong>Reason:</strong> ${order.cancellationReason}</p>
+                    <p><strong>Items:</strong></p>
+                    <ul>${itemsHtml}</ul>`,
+    });
+
+    await sendEmail({
+      to: order.customerEmail,
+      subject: `Order Cancellation Confirmation - ${order.orderId}`,
+      htmlContent: `<p>Hi ${order.customerName},</p>
+                    <p>Your order <strong>${order.orderId}</strong> has been successfully cancelled.</p>
+                    <p><strong>Reason:</strong> ${order.cancellationReason}</p>
+                    <p>If you have any questions or did not authorize this, please contact support.</p>`,
+    });
+  } catch (emailErr) {
+    console.warn("Cancellation email notification warning:", emailErr?.message || emailErr);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Order cancelled successfully',
+    data: order
+  });
+});

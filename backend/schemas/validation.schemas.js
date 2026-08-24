@@ -112,3 +112,9 @@ export const deleteAccountSchema = z.object({
     password: z.string().min(8)
   })
 });
+
+export const cancelOrderSchema = z.object({
+  body: z.object({
+    reason: z.string().trim().optional()
+  })
+});

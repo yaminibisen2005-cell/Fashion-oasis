@@ -491,4 +491,123 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
+}
+
+/* Cancellation Modal styling */
+.cancel-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.cancel-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  padding: 28px 32px;
+  border: 1px solid #f6dce2;
+}
+
+.cancel-modal-card h3 {
+  margin-top: 0;
+  color: #34211D;
+  font-family: var(--heading-font);
+  font-size: 24px;
+}
+
+.cancel-modal-card p {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.reason-select-wrapper {
+  margin-bottom: 20px;
+}
+
+.reason-select-wrapper label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #887378;
+  margin-bottom: 8px;
+}
+
+.reason-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #f6dce2;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.reason-select:focus {
+  border-color: #ea6b8d;
+}
+
+.other-reason-input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #f6dce2;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.other-reason-input:focus {
+  border-color: #ea6b8d;
+}
+
+.cancel-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-no-cancel {
+  padding: 10px 20px;
+  border: 1px solid #ea6b8d;
+  border-radius: 8px;
+  background: transparent;
+  color: #ea6b8d;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--body-font);
+  font-size: 13px;
+}
+
+.btn-yes-cancel {
+  padding: 10px 20px;
+  border: 1px solid #e74c3c;
+  border-radius: 8px;
+  background: #e74c3c;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2);
+  font-family: var(--body-font);
+  font-size: 13px;
+}
+
+.btn-yes-cancel:hover {
+  background: #c0392b;
+}
+
+.btn-no-cancel:hover {
+  background: #fdf2f4;
 }

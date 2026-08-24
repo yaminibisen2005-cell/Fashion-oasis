@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import { FaTimes, FaMapMarkerAlt, FaExclamationCircle } from "react-icons/fa";
-import { getMyOrders } from "../../api/customer";
+import { getMyOrders, cancelOrder } from "../../api/customer";
+import { notifySuccess, notifyError } from "../../utils/alerts";
 import "./Orders.css";
 
 const safeStoredJson = (key) => {
@@ -21,24 +22,140 @@ function Orders() {
   const [toastMessage, setToastMessage] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  // Cancellation States
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
+  const [cancelReason, setCancelReason] = useState("Changed my mind");
+  const [otherReasonText, setOtherReasonText] = useState("");
+  const [cancelling, setCancelling] = useState(false);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const data = await getMyOrders();
+      const ordersList = Array.isArray(data) ? data : data.orders || data.data || [];
+      setOrders(ordersList);
+    } catch (err) {
+      setErrorMessage(err.response?.data?.message || err.message || "Could not load orders.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
-        const data = await getMyOrders();
-
-        // Handle array response structure safely
-        const ordersList = Array.isArray(data) ? data : data.orders || data.data || [];
-        setOrders(ordersList);
-      } catch (err) {
-        setErrorMessage(err.response?.data?.message || err.message || "Could not load orders.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchOrders();
   }, []);
+
+  const handleCancelClick = (order) => {
+    setOrderToCancel(order);
+    setCancelReason("Changed my mind");
+    setOtherReasonText("");
+    setCancelModalOpen(true);
+  };
+
+  const handleCancelSubmit = async () => {
+    if (!orderToCancel) return;
+    setCancelling(true);
+    try {
+      const reasonText = cancelReason === "Other" ? otherReasonText : cancelReason;
+      const res = await cancelOrder(orderToCancel.orderId || orderToCancel._id, { reason: reasonText });
+      if (res.success) {
+        notifySuccess("Order cancelled successfully.");
+        setCancelModalOpen(false);
+        setOrderToCancel(null);
+        setSelectedOrder(null);
+        await fetchOrders();
+      } else {
+        notifyError(res.message || "Failed to cancel order.");
+      }
+    } catch (err) {
+      notifyError(err.response?.data?.message || err.message || "Failed to cancel order.");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const handleDownloadInvoice = (order) => {
+    if (order.status === "Cancelled") {
+      notifyError("Invoice is unavailable for cancelled orders.");
+      return;
+    }
+    notifySuccess("Invoice download started...");
+    const printableWindow = window.open("", "_blank");
+    if (printableWindow) {
+      const itemsHtml = (order.items || []).map(item => `
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.productName || "Product"}</td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity || 1}</td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${(item.price || 0).toLocaleString()}</td>
+          <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${((item.price || 0) * (item.quantity || 1)).toLocaleString()}</td>
+        </tr>
+      `).join("");
+
+      printableWindow.document.write(`
+        <html>
+          <head>
+            <title>Invoice - ${order.orderId}</title>
+            <style>
+              body { font-family: 'Poppins', sans-serif; padding: 40px; color: #333; }
+              .header { display: flex; justify-content: space-between; border-bottom: 2px solid #F7E3E7; padding-bottom: 20px; margin-bottom: 30px; }
+              .details { display: flex; justify-content: space-between; margin-bottom: 30px; }
+              table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+              th { background: #FFF8FA; padding: 10px; text-align: left; }
+              .total { text-align: right; font-size: 18px; color: #EF6F8F; font-weight: bold; }
+            </style>
+          </head>
+          <body onload="window.print()">
+            <div class="header">
+              <div>
+                <h1 style="color: #EF6F8F; margin: 0;">FASHION OASIS</h1>
+                <p style="margin: 5px 0 0 0; color: #888;">Timeless Elegance</p>
+              </div>
+              <div style="text-align: right;">
+                <h2 style="margin: 0;">INVOICE</h2>
+                <p style="margin: 5px 0 0 0;">ID: <strong>${order.orderId}</strong></p>
+                <p style="margin: 2px 0 0 0;">Date: ${order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "Recent"}</p>
+              </div>
+            </div>
+            <div class="details">
+              <div>
+                <strong>Sold By:</strong>
+                <p style="margin: 5px 0 0 0;">Fashion Oasis Ltd.</p>
+                <p style="margin: 2px 0 0 0;">support@fashionoasis.com</p>
+              </div>
+              <div style="text-align: right;">
+                <strong>Deliver To:</strong>
+                <p style="margin: 5px 0 0 0;">${order.shippingAddress?.fullName || order.customerName}</p>
+                <p style="margin: 2px 0 0 0;">${order.shippingAddress?.address || "Main Street"}</p>
+                <p style="margin: 2px 0 0 0;">${order.shippingAddress?.city}, ${order.shippingAddress?.state} - ${order.shippingAddress?.pincode}</p>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th style="text-align: center;">Qty</th>
+                  <th style="text-align: right;">Price</th>
+                  <th style="text-align: right;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+              </tbody>
+            </table>
+            <div style="text-align: right; margin-top: 30px;">
+              <span style="font-size: 15px; color: #666;">Grand Total:</span>
+              <div class="total">₹${(order.totalAmount || 0).toLocaleString()}</div>
+            </div>
+            <div style="text-align: center; margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #999;">
+              Thank you for shopping with Fashion Oasis!
+            </div>
+          </body>
+        </html>
+      `);
+      printableWindow.document.close();
+    }
+  };
 
   const defaultPlaceholder = "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200&q=80";
 
@@ -171,6 +288,18 @@ function Orders() {
                             <p>Order ID: {orderId}</p>
                             <p>Date: {orderDate}</p>
                             <h3>₹{totalAmountFormatted}</h3>
+                            {orderStatus.toLowerCase() === "cancelled" && (
+                              <div style={{ marginTop: "8px", padding: "8px 12px", background: "#fff5f5", borderLeft: "4px solid #e74c3c", borderRadius: "4px" }}>
+                                <p style={{ margin: 0, color: "#e74c3c", fontWeight: "600", fontSize: "12px" }}>
+                                  Cancelled on: {item.cancellationDate ? new Date(item.cancellationDate).toLocaleString("en-GB") : "Recent"}
+                                </p>
+                                {item.cancellationReason && (
+                                  <p style={{ margin: "2px 0 0 0", color: "#555", fontSize: "11px", fontStyle: "italic" }}>
+                                    Reason: {item.cancellationReason}
+                                  </p>
+                                )}
+                              </div>
+                            )}
                           </>
                         )}
                       </div>
@@ -179,23 +308,53 @@ function Orders() {
                 })}
               </div>
 
-              <div className="order-right">
+              <div className="order-right" style={{ flexDirection: "column", gap: "8px", alignItems: "stretch" }}>
 
                 <span
                   className={`status ${orderStatus.toLowerCase()}`}
+                  style={{ width: "100%", textAlign: "center" }}
                 >
                   {orderStatus}
                 </span>
 
                 <button
                   type="button"
+                  style={{ width: "100%" }}
                   disabled={!primaryProductId}
-                  title={!primaryProductId ? "Product information unavailable." : "View Details"}
-                  style={!primaryProductId ? { opacity: 0.6, cursor: "not-allowed" } : {}}
+                  title={!primaryProductId ? "Product information unavailable." : "View Product"}
                   onClick={() => handleViewProduct(primaryProd, item)}
                 >
-                  View Details
+                  View Product
                 </button>
+
+                <button
+                  type="button"
+                  style={{ width: "100%" }}
+                  onClick={() => setSelectedOrder(item)}
+                >
+                  Order Details
+                </button>
+
+                <button
+                  type="button"
+                  style={{ width: "100%" }}
+                  disabled={orderStatus.toLowerCase() === "cancelled"}
+                  title={orderStatus.toLowerCase() === "cancelled" ? "Cancelled orders cannot be tracked" : "Track Order"}
+                  onClick={() => navigate(`/track-order?orderId=${item.orderId || item._id}`)}
+                >
+                  Track Order
+                </button>
+
+                {['pending', 'processing', 'confirmed'].includes(orderStatus.toLowerCase()) && (
+                  <button
+                    type="button"
+                    className="btn-yes-cancel"
+                    style={{ width: "100%", backgroundColor: "#e74c3c", borderColor: "#e74c3c", color: "white", padding: "8px 12px" }}
+                    onClick={() => handleCancelClick(item)}
+                  >
+                    Cancel Order
+                  </button>
+                )}
 
               </div>
 
@@ -321,6 +480,104 @@ function Orders() {
               <div className="order-modal-summary">
                 <span>Total Amount Paid:</span>
                 <h3>₹{(selectedOrder.totalAmount || 0).toLocaleString()}</h3>
+              </div>
+
+              {selectedOrder.status === "Cancelled" && (
+                <div style={{ background: "#ffe6e6", padding: "12px", borderRadius: "12px", border: "1px solid #ffd1d8", marginTop: "20px", marginBottom: "10px" }}>
+                  <strong style={{ color: "#e74c3c", display: "block", fontSize: "14px" }}>Cancellation Details</strong>
+                  <span style={{ display: "block", color: "#333", fontSize: "13px", marginTop: "4px" }}>
+                    Cancelled on: {selectedOrder.cancellationDate ? new Date(selectedOrder.cancellationDate).toLocaleString("en-GB") : "Recent"}
+                  </span>
+                  {selectedOrder.cancellationReason && (
+                    <span style={{ display: "block", fontSize: "13px", marginTop: "4px", color: "#555", fontStyle: "italic" }}>
+                      Reason: {selectedOrder.cancellationReason}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div style={{ display: "flex", gap: "12px", marginTop: "20px", marginBottom: "10px" }}>
+                {selectedOrder.status === "Cancelled" ? (
+                  <button
+                    disabled
+                    style={{ flex: 1, padding: "12px", backgroundColor: "#f2f2f2", color: "#888", borderRadius: "8px", border: "1px solid #ccc", cursor: "not-allowed", fontWeight: "600", fontSize: "13px" }}
+                  >
+                    Invoice Unavailable
+                  </button>
+                ) : (
+                  <button
+                    style={{ flex: 1, padding: "12px", backgroundColor: "transparent", color: "#ea6b8d", borderRadius: "8px", border: "1px solid #ea6b8d", cursor: "pointer", fontWeight: "600", fontSize: "13px" }}
+                    onClick={() => handleDownloadInvoice(selectedOrder)}
+                  >
+                    Download Invoice
+                  </button>
+                )}
+
+                {['pending', 'processing', 'confirmed'].includes((selectedOrder.status || "Pending").toLowerCase()) && (
+                  <button
+                    type="button"
+                    style={{ flex: 1, padding: "12px", backgroundColor: "#e74c3c", color: "white", borderRadius: "8px", border: "none", fontWeight: "600", cursor: "pointer", fontSize: "13px" }}
+                    onClick={() => handleCancelClick(selectedOrder)}
+                  >
+                    Cancel Order
+                  </button>
+                )}
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* CUSTOM ORDER CANCELLATION MODAL */}
+        {cancelModalOpen && (
+          <div className="cancel-modal-overlay" onClick={() => setCancelModalOpen(false)}>
+            <div className="cancel-modal-card" onClick={(e) => e.stopPropagation()}>
+              <h3>Cancel Order</h3>
+              <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+
+              <div className="reason-select-wrapper">
+                <label htmlFor="cancel-reason">Please choose a reason for cancellation:</label>
+                <select
+                  id="cancel-reason"
+                  className="reason-select"
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                >
+                  <option value="Changed my mind">Changed my mind</option>
+                  <option value="Ordered by mistake">Ordered by mistake</option>
+                  <option value="Found better price">Found better price</option>
+                  <option value="Delivery taking too long">Delivery taking too long</option>
+                  <option value="Other">Other</option>
+                </select>
+
+                {cancelReason === "Other" && (
+                  <input
+                    type="text"
+                    className="other-reason-input"
+                    placeholder="Enter your reason here..."
+                    value={otherReasonText}
+                    onChange={(e) => setOtherReasonText(e.target.value)}
+                  />
+                )}
+              </div>
+
+              <div className="cancel-modal-actions">
+                <button
+                  type="button"
+                  className="btn-no-cancel"
+                  onClick={() => setCancelModalOpen(false)}
+                  disabled={cancelling}
+                >
+                  No, Keep Order
+                </button>
+                <button
+                  type="button"
+                  className="btn-yes-cancel"
+                  onClick={handleCancelSubmit}
+                  disabled={cancelling}
+                >
+                  {cancelling ? "Cancelling..." : "Yes, Cancel Order"}
+                </button>
               </div>
             </div>
           </div>

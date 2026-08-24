@@ -109,7 +109,7 @@ export const updateSellerProfileService = async (userId, data) => {
 export const registerSellerService = async (data) => {
   const { name, email, password, phone, storeName, businessAddress, city, state, pincode, gstNumber } = data;
   
-  if (!name || !email || !password || !phone || !storeName) {
+  if (!name || !email || !password || !phone || !storeName || !businessAddress || !city || !state || !pincode) {
     throw new AppError('Required fields are missing.', 400);
   }
 
@@ -124,10 +124,18 @@ export const registerSellerService = async (data) => {
     password,
     phone,
     storeName,
+    businessAddress,
+    city,
+    state,
+    pincode,
+    gstNumber: gstNumber || null,
     role: 'seller',
-    status: 'Inactive',
-    pendingVerification: true
+    status: 'Active',
+    pendingVerification: false
   });
 
-  return { user };
+  const token = signToken(user._id, user.role);
+  user.password = undefined;
+
+  return { user, token };
 };

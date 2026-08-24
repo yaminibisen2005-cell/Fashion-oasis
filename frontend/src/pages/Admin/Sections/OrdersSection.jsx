@@ -68,6 +68,13 @@ const OrdersSection = ({ orders, updateOrderStatus }) => {
                     <span className={`status-badge-inline ${order.status.toLowerCase()}`}>
                       {order.status}
                     </span>
+                    {order.status.toLowerCase() === "cancelled" && (
+                      <div style={{ fontSize: "11px", color: "#e74c3c", marginTop: "4px", lineHeight: "1.3", textAlign: "left" }}>
+                        <strong>Reason:</strong> {order.cancellationReason || "Not specified"}
+                        <br />
+                        <strong>Date:</strong> {order.cancellationDate ? new Date(order.cancellationDate).toLocaleString("en-GB") : "Recent"}
+                      </div>
+                    )}
                   </td>
                   <td>
                     <div className="status-select-wrapper">
